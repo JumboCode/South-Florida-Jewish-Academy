@@ -63,6 +63,7 @@ Think your code is good to go? Great! Let's just get someone to take a look at i
  - If you're good to go, title the PR (Pull Request) with the ticket # and name it the same name as the ticket name.
  - Enter in corresponding information, including what you did and what your reviewer can do to test it
  - `Create Pull Request`
+ - Select who you want to review your code!
 
 
 
