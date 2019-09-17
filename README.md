@@ -39,7 +39,7 @@ Make your branches the same name as the ticket # you're working on.
 Commit early and often on your feature branch! Commit with the help of SourceTree (I'll give instructions) or through the command line.
 ```
 git add .
-git commit -m "fixes #2, added a comment"
+git commit -m "#2, added a comment"
 git push
 ```
 If git tells you to do something like:
