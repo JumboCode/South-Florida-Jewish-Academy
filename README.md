@@ -5,17 +5,17 @@ Welcome to the South Florida Jewish Academy project, a project run through Tufts
 ## The team
 PM: Lawrence Chan
 
-Hally Bello
-Trisha Cox
-Jacqueline Chin
-Janny Huang
-Maria Kim
-Talia Kee
-Max Ramer
-Kianine Ramierez
-Victoria Tran
-Anthony Tranduc
-Josephine Weidner
+- Hally Bello
+- Trisha Cox
+- Jacqueline Chin
+- Janny Huang
+- Maria Kim
+- Talia Kee
+- Max Ramer
+- Kianine Ramierez
+- Victoria Tran
+- Anthony Tranduc
+- Josephine Weidner
 
 
 ## Recommended software
