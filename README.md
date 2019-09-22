@@ -16,10 +16,27 @@ The project sits inside a docker container that houses:
 - React (frontend, JavaScript)
 - Flask (backend, Python)
 
-These three services are critical to get our app up and running! Run them all with the command:
+### Backend
+We're using `venv` to contain requirements and keep track of the packages we're using. Name your environment `backendEnv` inside `/api/`, so you don't need to change your `.gitignore`.
+
 ```
-enter command here
+cd api
+python3 -m venv backendEnv
+source backendEnv/bin/activate
+pip install -r requirements.txt
+python3 run.py
 ```
+
+### Frontend
+```
+cd sfja-admin
+yarn start
+```
+
+### Database
+You need to prime your local database to get it going.
+... more to come soon!
+
 ## Contributing
 We're using issue trackers on GitHub to track the issues and stories as they come up and through during the sprint. 
 
@@ -65,5 +82,11 @@ Think your code is good to go? Great! Let's just get someone to take a look at i
  - `Create Pull Request`
  - Select who you want to review your code!
 
-
+### Packages
+#### Backend Packages
+Our backend is build in Python, which we will use packages for. Remember that we're running the backend to our app in a `venv` that we're calling `backendEnv`. So, we need to update the `requirements.txt` as necessary to accomodate new packages. You can tell if you need to update `requirements.txt` if A) the build fails or B) you need to `pip install [package]` to get your feature working. Either way, run the following command:
+```
+pip freeze > requirements.txt
+```
+This will update our requirements to make sure everyone's all on track.
 
