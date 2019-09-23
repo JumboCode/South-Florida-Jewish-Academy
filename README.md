@@ -6,7 +6,6 @@ Welcome to the South Florida Jewish Academy project, a project run through Tufts
 PM: Lawrence Chan
 
 
-
 ## Recommended software
 - [PyCharm](https://www.jetbrains.com/pycharm/) (.edu license)
 - [WebStorm](https://www.jetbrains.com/webstorm/?fromMenu) (.edu license) or [VSCode](https://code.visualstudio.com) (free)
