@@ -3,8 +3,8 @@
 ## Welcome
 Welcome to the South Florida Jewish Academy project, a project run through Tufts JumboCode. Here are some steps to get you started.
 ## The team
-PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)
-Developer: [Anthony Tranduc](https://github.com/Antranduc) (he/him/his)
+- PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)
+- Developer: [Anthony Tranduc](https://github.com/Antranduc) (he/him/his)
 
 
 ## Recommended software
