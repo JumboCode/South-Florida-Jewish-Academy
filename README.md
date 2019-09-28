@@ -5,6 +5,7 @@ Welcome to the South Florida Jewish Academy project, a project run through Tufts
 ## The team
 - PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)
 - Developer: [Anthony Tranduc](https://github.com/Antranduc) (he/him/his)
+- Developer: [Trisha Cox](https://github.com/trish234)(she/her/hers)
 
 
 ## Recommended software
@@ -42,7 +43,7 @@ You need to prime your local database to get it going.
 ... more to come soon!
 
 ## Contributing
-We're using issue trackers on GitHub to track the issues and stories as they come up and through during the sprint. 
+We're using issue trackers on GitHub to track the issues and stories as they come up and through during the sprint.
 
 ### Making a Branch
 Make branches with Sourcetree or on the command line. If you're on the command line:
@@ -72,10 +73,10 @@ To push the current branch and set the remote as upstream, use
 Just run the command they specify and you should be good to go.
 
 #### Commit messages
-Your commit message should A) reference the issue and B) be meaningful. 
+Your commit message should A) reference the issue and B) be meaningful.
 
 ### Pull Requests
-Think your code is good to go? Great! Let's just get someone to take a look at it before it gets merged with the master branch. 
+Think your code is good to go? Great! Let's just get someone to take a look at it before it gets merged with the master branch.
 
  - Go to the GitHub page
  - If you don't see your recently updated branch, go to the `branches` tab and find your branch.
@@ -93,4 +94,3 @@ Our backend is build in Python, which we will use packages for. Remember that we
 pip freeze > requirements.txt
 ```
 This will update our requirements to make sure everyone's all on track.
-
