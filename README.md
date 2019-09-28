@@ -5,7 +5,7 @@ Welcome to the South Florida Jewish Academy project, a project run through Tufts
 ## The team
 - PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)
 - Developer: [Anthony Tranduc](https://github.com/Antranduc) (he/him/his)
-- Developer: [Trisha Cox] (https://github.com/trish234)(she/her/hers)
+- Developer: [Trisha Cox](https://github.com/trish234)(she/her/hers)
 
 
 ## Recommended software
