@@ -8,9 +8,7 @@ class Home extends React.Component {
     return (
       <div>
                 Hi! Welcome to SFJA.
-      </div>);
-  }
-}
+      </div>);}}
 
 
 export default Home;
