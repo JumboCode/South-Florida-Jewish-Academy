@@ -15,7 +15,7 @@ class HelloWorld(Resource):
             listOfNums.append(i)
 
         testDB.getTest()
-        return {'list': listOfNums }
+        return {'users': testDB.getTest()}
 
 class MakeUsers(Resource):
     def get(self):

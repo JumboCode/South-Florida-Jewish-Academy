@@ -8,9 +8,11 @@ mongo = PyMongo(app)
 
 def getTest():
     contents = list(mongo.db.users.find())
+    returnList = []
     for content in contents:
-        print(content['name'], content['email'])
-    return
+        ele = {'name': content['name'], 'email': content['email']}
+        returnList.append(ele)
+    return returnList
 
 def makeUsers():
     users = mongo.db.users
