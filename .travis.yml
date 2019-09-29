@@ -17,7 +17,5 @@ matrix:
         - cd sfja
       install:
         - yarn
-      before_script:
-        - cd sfja
       script:
         - yarn lint
