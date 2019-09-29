@@ -16,4 +16,4 @@ matrix:
       install:
         - yarn
       script:
-        - yarn lint .
+        - yarn run lint .
