@@ -1845,6 +1845,11 @@ argparse@^1.0.7:
   dependencies:
     sprintf-js "~1.0.2"
 
+"argsparser@>= 0.0.3":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/argsparser/-/argsparser-0.0.7.tgz#41c85e0c3de757b350f12e6ed0e490b1e82dbe06"
+  integrity sha1-QcheDD3nV7NQ8S5u0OSQsegtvgY=
+
 aria-query@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/aria-query/-/aria-query-3.0.0.tgz#65b3fcc1ca1155a8c9ae64d6eee297f15d5133cc"
@@ -6146,6 +6151,14 @@ lint@^0.7.0:
     simple-git "^1.96.0"
     write-yaml "^1.0.0"
 
+linter@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/linter/-/linter-0.0.7.tgz#ac8f9205ace709dbc5006ac1e782207d7958a36e"
+  integrity sha1-rI+SBaznCdvFAGrB54IgfXlYo24=
+  dependencies:
+    argsparser ">= 0.0.3"
+    sharedjs ">= 0.0.1"
+
 load-json-file@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-2.0.0.tgz#7947e42149af80d696cbf797bcaabcfe1fe29ca8"
@@ -9069,6 +9082,14 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
+"sharedjs@>= 0.0.1":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/sharedjs/-/sharedjs-0.0.2.tgz#c5fdb24a3555a050fa3c8540a6bb7ad3931027c6"
+  integrity sha1-xf2ySjVVoFD6PIVAprt605MQJ8Y=
+  dependencies:
+    argsparser ">= 0.0.3"
+    uglify-js ">= 0.0.1"
+
 shebang-command@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/shebang-command/-/shebang-command-1.2.0.tgz#44aac65b695b03398968c39f363fee5deafdf1ea"
@@ -9854,6 +9875,14 @@ uglify-js@3.4.x:
   integrity sha512-Y2VsbPVs0FIshJztycsO2SfPk7/KAF/T72qzv9u5EpQ4kB2hQoHlhNQTsNyy6ul7lQtqJN/AoWeS23OzEiEFxw==
   dependencies:
     commander "~2.19.0"
+    source-map "~0.6.1"
+
+"uglify-js@>= 0.0.1":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.6.0.tgz#704681345c53a8b2079fb6cec294b05ead242ff5"
+  integrity sha512-W+jrUHJr3DXKhrsS7NUVxn3zqMOFn0hL/Ei6v0anCIMoKC93TjcflTagwIHLW7SfMFfiQuktQyFVCFHGUE0+yg==
+  dependencies:
+    commander "~2.20.0"
     source-map "~0.6.1"
 
 uglify-js@^3.1.4:

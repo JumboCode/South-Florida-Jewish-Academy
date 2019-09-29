@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "lint": "^0.7.0",
+    "linter": "^0.0.7",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-scripts": "3.1.2"
