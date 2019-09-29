@@ -36,7 +36,7 @@ python3 run.py
 
 ### Frontend
 ```
-cd sfja-admin
+cd sfja
 yarn start
 ```
 
@@ -88,6 +88,9 @@ Think your code is good to go? Great! Let's just get someone to take a look at i
  - Enter in corresponding information, including what you did and what your reviewer can do to test it
  - `Create Pull Request`
  - Select who you want to review your code!
+
+### Linting
+We're using linting on at least our frontend code. Thus, when you're in the sfja dir, run `yarn run lint` to see what errors our linter might be giving you. WebStorm helps with this by underlining some things with yellow text. Then, run `yarn run lint --fix` to try to see if the linter can automatically fix the code. PRs can't be merged until it passes the tests (which includes linting), so be sure to lint your code!
 
 ### Packages
 #### Backend Packages
