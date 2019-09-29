@@ -1,14 +1,16 @@
-import React from 'react'
+import React from 'react';
 
 
-class Home extends React.Component{
-    render() {
-        return (
-            <div>
+// eslint-disable-next-line require-jsdoc
+class Home extends React.Component {
+  // eslint-disable-next-line require-jsdoc
+  render() {
+    return (
+      <div>
                 Hi! Welcome to SFJA.
-            </div>
-        );
-    }
+      </div>);
+  }
 }
 
-export default Home
+
+export default Home;
