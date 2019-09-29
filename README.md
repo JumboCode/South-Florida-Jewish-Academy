@@ -11,6 +11,7 @@ Welcome to the South Florida Jewish Academy project, a project run through Tufts
 - Developer: [Josephine Weidner](https://github.com/josephineweidner) (she/her/hers)
 - Developer: [Max Ramer](https://github.com/mjramer) (he/him/his)
 - Developer: [Victoria Tran](https://github.com/victoriatran) (she/her/hers)
+- Developer: [Hally Bello](https://github.com/BadCubozoa) (she/her/hers)
 
 
 ## Recommended software
