@@ -9,6 +9,7 @@ Welcome to the South Florida Jewish Academy project, a project run through Tufts
 - Developer: [Talia Kee](https://github.com/taliakee) (she/her/hers)
 - Developer: [Janny Huang](https://github.com/jhuang09) (she/her/hers)
 - Developer: [Josephine Weidner](https://github.com/josephineweidner) (she/her/hers)
+- Developer: [Max Ramer](https://github.com/mjramer) (he/him/his)
 
 
 ## Recommended software
