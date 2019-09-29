@@ -8,7 +8,12 @@ class Home extends React.Component{
                 Hi! Welcome to SFJA.
             </div>
         );
-    }
-}
+    }}
+
+
+
+
+
+
 
 export default Home
