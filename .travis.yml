@@ -6,8 +6,6 @@ matrix:
         - cd api
       install:
         - pip3 install -r requirements.txt
-      before_script:
-        - cd api
       script:
         - python3 tests.py
 
@@ -18,4 +16,4 @@ matrix:
       install:
         - yarn
       script:
-        - yarn lint
+        - yarn lint .
