@@ -38,7 +38,10 @@ source backendEnv/bin/activate
 pip install -r requirements.txt
 python3 run.py
 ```
-
+To deactivate the environment
+```
+deactivate
+```
 ### Frontend
 ```
 cd sfja
