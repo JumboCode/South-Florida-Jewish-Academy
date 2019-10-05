@@ -49,9 +49,22 @@ yarn start
 ```
 
 ### Database
-You need to prime your local database to get it going.
-... more to come soon!
+We're using MongoDB as our database to hold our data.
+#### Database Priming
+It's necessary to make sure everyone's on the same database version (because people will be adding collections). This makes it necessary for us to reset our databases when we pull new code. This is now as easy as a Python script!
+1. Open your terminal and execute `startDatabase.sh`: `sh startDatabase.sh`
+2. Open up another terminal window and execute `resetDatabase.py`: `python3 resetDatabase.py`
 
+It's good to keep resetting your local database from time to time, except when you're depending on the data you're storing currently. The script will delete the database and start anew with mock data!
+#### Database Startup
+We need an instance of the database running for you to develop locally. For easy version control, the following will initialize an instance of `mongod` and direct it to `/database` for database read/writes. Open this up in a new window and keep this as your "mongod window". It's possible to run it in the background... but it's easy to accidentally leave open too long!
+```
+sh startDatabase.sh
+```
+To stop the database:
+``
+^c
+``
 ## Contributing
 We're using issue trackers on GitHub to track the issues and stories as they come up and through during the sprint.
 
