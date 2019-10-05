@@ -28,7 +28,18 @@ The project sits inside a docker container that houses:
 - React (frontend, JavaScript)
 - Flask (backend, Python)
 
-### Backend
+### Easy Setup
+1. Terminal window 1: `sh startDatabase.sh`
+2. Terminal window 2: `sh startBackend.sh`
+3. Terminal window 3: `sh startFrontend.sh`
+
+### Database Priming
+It's necessary to make sure everyone's on the same database version (because people will be adding collections). This makes it necessary for us to reset our databases when we pull new code. This is now as easy as a Python script!
+1. Open your terminal and execute `startDatabase.sh`: `sh startDatabase.sh`
+2. Open up another terminal window and execute `resetDatabase.py`: `python3 resetDatabase.py`
+
+### Details
+#### Backend
 We're using `venv` to contain requirements and keep track of the packages we're using. Name your environment `backendEnv` inside `/api/`, so you don't need to change your `.gitignore`.
 
 ```
@@ -42,24 +53,16 @@ To deactivate the environment:
 ```
 deactivate
 ```
-### Frontend
+#### Frontend
 ```
 cd sfja
 yarn start
 ```
 
-### Database
-We're using MongoDB as our database to hold our data.
-#### Database Priming
-It's necessary to make sure everyone's on the same database version (because people will be adding collections). This makes it necessary for us to reset our databases when we pull new code. This is now as easy as a Python script!
-1. Open your terminal and execute `startDatabase.sh`: `sh startDatabase.sh`
-2. Open up another terminal window and execute `resetDatabase.py`: `python3 resetDatabase.py`
-
-It's good to keep resetting your local database from time to time, except when you're depending on the data you're storing currently. The script will delete the database and start anew with mock data!
-#### Database Startup
-We need an instance of the database running for you to develop locally. For easy version control, the following will initialize an instance of `mongod` and direct it to `/database` for database read/writes. Open this up in a new window and keep this as your "mongod window". It's possible to run it in the background... but it's easy to accidentally leave open too long!
+#### Database
+We're using MongoDB as our database to hold our data and need an instance of the database running for you to develop locally. For easy version control, the following will initialize an instance of `mongod` and direct it to `/database` for database read/writes. Open this up in a new window and keep this as your "mongod window". It's possible to run it in the background... but it's easy to accidentally leave open too long!
 ```
-sh startDatabase.sh
+mongod --dbpath ./database
 ```
 To stop the database:
 ``
