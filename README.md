@@ -4,6 +4,7 @@
 Welcome to the South Florida Jewish Academy project, a project run through Tufts JumboCode. Here are some steps to get you started.
 ## The team
 - PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)
+- Designer: [Kianie Ramirez] (https://github.com/kianie413) (she/her/her)
 - Developer: [Anthony Tranduc](https://github.com/Antranduc) (he/him/his)
 - Developer: [Trisha Cox](https://github.com/trish234) (she/her/hers)
 - Developer: [Talia Kee](https://github.com/taliakee) (she/her/hers)
