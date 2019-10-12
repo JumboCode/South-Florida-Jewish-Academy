@@ -22,8 +22,23 @@ class MakeUsers(Resource):
         testDB.makeUsers()
         return {'success': True}
 
+# pip install flask-sendgrid
+
+class SendEmail(Resource):
+    def email(self):
+        mail = SendGrid(app)
+
+# send multiple recipients; backwards compatible with Flask-Mandrill
+        mail.send_email(
+            from_email='maxjramer@gmail.com',
+            to_email=[{'email': 'trishacox@gmail.com'}, {'email': 'maxjramer@gmail.com'}],
+            subject='Subject'
+            text='Testing emails with sendgrid',
+        )
+
 api.add_resource(HelloWorld, '/')
 api.add_resource(MakeUsers, '/insert')
+api.add_resource(SendEmail, '/email')
 
 
 if __name__ == '__main__':
