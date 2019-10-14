@@ -11,14 +11,18 @@ import {
 
 // eslint-disable-next-line require-jsdoc
 function App() {
+  //need some function to request id from backend for each student
   return (
     <Router>
       <Switch>
         <Route exact path="/">
           <Home/>
         </Route>
+        {/* // here we are needing to route each page to an id */}
         <Route path="/FakeUserForm">
           <FakeUserForm/>
+        </Route>
+        <Route path="/:id">
         </Route>
       </Switch>
   </Router>
