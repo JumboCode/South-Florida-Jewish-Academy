@@ -9,3 +9,7 @@ mongo = PyMongo(app)
 # Given student id and form id, add form to student
 # Give id, string, value, update student info
 # Get forms from student
+
+def updateInfo(id, key, update):
+    writeR = mongo.db.students.update({"id": str(id)}, {key: update})
+    # TODO: Inform of update.
