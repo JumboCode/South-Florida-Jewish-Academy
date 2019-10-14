@@ -6,7 +6,7 @@ class FakeUserForm extends React.Component {
   render() {
     return (
       <div>
-                This is a fake user form
+                This is a fake user form.
       </div>);
   }
 }

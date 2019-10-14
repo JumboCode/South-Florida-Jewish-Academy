@@ -29,10 +29,12 @@ class SendEmail(Resource):
     def get(self):
         mail = SendGrid(app)
 
-# send multiple recipients; backwards compatible with Flask-Mandrill
+        # loop through parent ids
+        # fetch parent ids from database
+        email1 = 'maxjramer@gmail.com'
         mail.send_email(
             from_email='maxjramer@gmail.com',
-            to_email=[{'email': 'trishacox@gmail.com'}, {'email': 'maxjramer@gmail.com'}],
+            to_email=[{'email': email1}],
             subject='Subject',
             text='Testing emails with sendgrid'
         )
