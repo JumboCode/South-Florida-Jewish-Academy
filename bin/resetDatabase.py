@@ -4,10 +4,14 @@ from pymongo import MongoClient
 def makeUsers(db):
     users = db.users
     print('Made users')
-
+    year, day, month
     for i in range(0, 10):
         initData = {
-            'name': 'user' + str(i),
+            'first_name': 'first' + str(i),
+            'middle_name': 'middle' + str(i),
+            'last_name': 'last' + str(i),
+            'DOB': str(i)*4 + str(i)*2 + str(i)*2,
+            'parent_ids': ["parent_1_" + str(1), "parent_2_" + str(i)]
             'email': 'user' + str(i) + '@FloridaJewishAcademy.org'
         }
         result = users.insert_one(initData)
