@@ -1,3 +1,5 @@
 /api/backendEnv/*
 .idea
 /database/
+__pycache__
+
