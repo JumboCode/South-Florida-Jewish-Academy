@@ -24,7 +24,6 @@ Welcome to the South Florida Jewish Academy project, a project run through Tufts
 - [SourceTree](https://www.sourcetreeapp.com) (free)
 
 ## Building the project
-The project sits inside a docker container that houses:
 - MongoDB (database)
 - React (frontend, JavaScript)
 - Flask (backend, Python)
