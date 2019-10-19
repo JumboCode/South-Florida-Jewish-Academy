@@ -3,4 +3,4 @@
 /database/
 /__pycache__/
 ./api/database/__pycache__/
-
+/node_modules/
