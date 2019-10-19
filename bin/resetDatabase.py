@@ -4,11 +4,12 @@ from pymongo import MongoClient
 def makeStudents(db):
     students = db.students
     print('Made users')
-    # def genRandomForms(n):
-    #     from random import randrange
-    #     forms = {}
-    #     for i in range(n):
-    #         forms['form' + str(i)]
+    def genRandomForms(n):
+        from random import randrange
+        forms = {}
+        for i in range(3):
+            forms[str(n + i)] = str(n) + str(i)
+        return forms
     for i in range(0, 10):
         initData = {
             'first_name': 'first' + str(i),
@@ -16,11 +17,11 @@ def makeStudents(db):
             'last_name': 'last' + str(i),
             'student_id': i,
             'DOB': str(i)*4 + "-" + str(i)*2 + "-" + str(i)*2,
-            'parent_ids': ["parent_1_" + str(1), "parent_2_" + str(i)]
-            'email': 'user' + str(i) + '@FloridaJewishAcademy.org'
-            'forms': 
+            'parent_ids': ["parent_1_" + str(1), "parent_2_" + str(i)],
+            'email': 'user' + str(i) + '@FloridaJewishAcademy.org',
+            'forms': genRandomForms(i)
         }
-        result = users.insert_one(initData)
+        result = students.insert_one(initData)
         print('Inserted ', result.inserted_id)
 
 def main():
@@ -43,7 +44,7 @@ def main():
     print('Made sfja databse')
 
     ## make collections
-    makeUsers(db)
+    makeStudents(db)
 
 if __name__ == '__main__':
     main()
