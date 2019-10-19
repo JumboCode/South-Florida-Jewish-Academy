@@ -29,14 +29,14 @@ class SendEmail(Resource):
     def get(self):
         mail = SendGrid(app)
 
-        # loop through parent ids
-        # fetch parent ids from database
-        email1 = 'maxjramer@gmail.com'
+        # TODO loop through parent ids
+        # TODO fetch parent ids from database
+        email1 = 'trishacox@gmail.com' #testing
         mail.send_email(
             from_email='maxjramer@gmail.com',
             to_email=[{'email': email1}],
             subject='Subject',
-            text='Testing emails with sendgrid'
+            html_content= '<a href="https://github.com/JumboCode/South-Florida-Jewish-Academy> The link</a>'
         )
 
 api.add_resource(HelloWorld, '/')
