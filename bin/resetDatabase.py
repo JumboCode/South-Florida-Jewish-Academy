@@ -30,7 +30,7 @@ def makeForms(db):
     def genFormData():
         q_n_a = {}
         for i in range(4):
-            str(q_n_a[i]) = i % 2
+            q_n_a[str(i)] = i % 2
         return q_n_a
 
     for i in range(0, 10):
