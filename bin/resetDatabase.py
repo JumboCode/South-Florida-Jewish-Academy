@@ -5,10 +5,9 @@ def makeStudents(db):
     students = db.students
     print('Made users')
     def genRandomForms(n):
-        from random import randrange
         forms = {}
         for i in range(3):
-            forms[str(n + i)] = str(n) + str(i)
+            forms[str((n + i) % 5)] = str(n) + str(i)
         return forms
     for i in range(0, 10):
         initData = {
@@ -23,6 +22,31 @@ def makeStudents(db):
         }
         result = students.insert_one(initData)
         print('Inserted ', result.inserted_id)
+
+def makeForms(db):
+    forms = db.forms
+    print("Made forms")
+
+    def genFormData():
+        q_n_a = {}
+        for i in range(4):
+            q_n_a[i] = i % 2
+        return q_n_a
+
+    for i in range(0, 10):
+        for j in range(0, 3):
+            initData = {
+                ## ensures that each form for generated student exists in form collection
+                'form_id': str(i) + str(j),
+                'last_updated': str(i) * 4 + '-' + str(i) * 2 + '-' + str(i) * 2,
+                'last_viewed': str(j) * 4 + '-' + str(j) * 2 + '-' + str(j) * 2,
+                'required': True,
+                'form_num': (i + j) % 5,
+                'percent_completed': .45,
+                'form_data': genFormData()
+            }
+    result = forms.insert_one(initData)
+    print('Inserted ', result.inserted_id)
 
 def main():
 
