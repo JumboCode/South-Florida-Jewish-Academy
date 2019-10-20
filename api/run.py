@@ -10,39 +10,34 @@ app.config['SENDGRID_DEFAULT_FROM'] = 'maxjramer@gmail.com'
 
 # look I'm a comment
 
+@app.route('/', methods = ['GET', 'POST'])
+def HelloWorld():
+    listOfNums = []
+    for i in range(0, 10):
+        listOfNums.append(i)
 
-class HelloWorld(Resource):
-    def get(self):
-        listOfNums = []
-        for i in range(0, 10):
-            listOfNums.append(i)
+    testDB.getTest()
+    return {'users': testDB.getTest()}
 
-        testDB.getTest()
-        return {'users': testDB.getTest()}
+@app.route('/insert', methods = ['GET', 'POST'])
+def makeUsers():
+    testDB.makeUsers()
+    return {'success': True}
 
-class MakeUsers(Resource):
-    def get(self):
-        testDB.makeUsers()
-        return {'success': True}
+@app.route('/email', methods = ['GET', 'POST'])
+def get():
+    mail = SendGrid(app)
 
-class SendEmail(Resource):
-    def get(self):
-        mail = SendGrid(app)
-
-        # TODO loop through parent ids
-        # TODO fetch parent ids from database
-        email1 = 'trishacox@gmail.com' #testing
-        mail.send_email(
-            from_email='maxjramer@gmail.com',
-            to_email=[{'email': email1}],
-            subject='Subject',
-            html= '<a href="localhost:3000/form>Forms</a>'
-        )
-
-api.add_resource(HelloWorld, '/')
-api.add_resource(MakeUsers, '/insert')
-api.add_resource(SendEmail, '/email')
-
+    # TODO loop through parent ids
+    # TODO fetch parent ids from database
+    email1 = 'trishacox@gmail.com' #testing
+    mail.send_email(
+        from_email='maxjramer@gmail.com',
+        to_email=[{'email': email1}],
+        subject='Subject',
+        html='<a href="www.google.com">Forms</a>'
+    )
+    return {'success': True}
 
 if __name__ == '__main__':
     app.run(debug=True)

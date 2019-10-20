@@ -1,15 +1,16 @@
 import React from 'react';
 
+
 // eslint-disable-next-line require-jsdoc
-class Home extends React.Component {
+class Form extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     return (
       <div>
-                Hi! Welcome to SFJA.
-      </div>);
+        Form!
+      </div>
+    );
   }
 }
 
-
-export default Home;
+export default Form;

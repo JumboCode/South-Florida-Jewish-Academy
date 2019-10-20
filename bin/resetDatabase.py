@@ -1,16 +1,74 @@
 from pymongo import MongoClient
 
 
-def makeUsers(db):
-    users = db.users
+def makeStudents(db):
+    students = db.students
     print('Made users')
-
+    def genRandomForms(n):
+        forms = {}
+        for i in range(3):
+            forms[str((n + i) % 5)] = str(n) + str(i)
+        return forms
     for i in range(0, 10):
         initData = {
-            'name': 'user' + str(i),
-            'email': 'user' + str(i) + '@FloridaJewishAcademy.org'
+        	'student_id': i,
+        	'basic_info': {
+        		'first_name': 'first' + str(i),
+        		'middle_name': 'middle' + str(i),
+        		'last_name': 'last' + str(i),
+        		'DOB': str(i)*4 + "-" + str(i)*2 + "-" + str(i)*2,
+        		'parent_ids': [str(i), str(i + 10)],
+        		'email': 'user' + str(i) + '@FloridaJewishAcademy.org'
+        	},
+            'form_ids': genRandomForms(i)
         }
-        result = users.insert_one(initData)
+        result = students.insert_one(initData)
+        print('Inserted ', result.inserted_id)
+
+
+def makeForms(db):
+    forms = db.forms
+    print("Made forms")
+
+    def genFormData():
+        q_n_a = {}
+        for i in range(4):
+            q_n_a[str(i)] = i % 2
+        return q_n_a
+
+    for i in range(0, 10):
+        for j in range(0, 3):
+            initData = {
+                ## ensures that each form for generated student exists in form collection
+                'form_id': str(i) + str(j),
+                'last_updated': str(i) * 4 + '-' + str(i) * 2 + '-' + str(i) * 2,
+                'last_viewed': str(j) * 4 + '-' + str(j) * 2 + '-' + str(j) * 2,
+                'required': True,
+                'form_num': (i + j) % 5,
+                'percent_completed': .45,
+                'form_data': genFormData()
+            }
+            result = forms.insert_one(initData)
+    print('Inserted ', result.inserted_id)
+
+def makeParents(db):
+    parents = db.parents
+    print('Made parents')
+
+    for i in range(0, 20):
+        initData = {
+
+            'parent_id': i,
+            'basic_info': 
+                {
+                    'name': 'parent' + str(i),
+                    'DOB': (str(i) * 4) + '-' + ('0' + str(i)) + '-' + ('1' + str(i)),
+                    'email': 'parent' + str(i) + '@FloridaJewishAcademy.org',
+                    'student_ids': [str(i), str(i + 1)]
+                },
+            'form_ids': [str(i)]
+        }
+        result = parents.insert_one(initData)
         print('Inserted ', result.inserted_id)
 
 def main():
@@ -33,7 +91,10 @@ def main():
     print('Made sfja databse')
 
     ## make collections
-    makeUsers(db)
+
+    makeStudents(db)
+    makeForms(db)
+    makeParents(db)
 
 if __name__ == '__main__':
     main()
