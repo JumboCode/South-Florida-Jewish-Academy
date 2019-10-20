@@ -36,7 +36,7 @@ class SendEmail(Resource):
             from_email='maxjramer@gmail.com',
             to_email=[{'email': email1}],
             subject='Subject',
-            html_content= '<a href="https://github.com/JumboCode/South-Florida-Jewish-Academy> The link</a>'
+            html= '<a href="localhost:3000/form>Forms</a>'
         )
 
 api.add_resource(HelloWorld, '/')
