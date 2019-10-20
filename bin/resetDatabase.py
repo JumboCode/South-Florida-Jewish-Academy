@@ -69,6 +69,7 @@ def main():
 
     ## make collections
     makeStudents(db)
+    makeForms(db)
 
 if __name__ == '__main__':
     main()
