@@ -7,7 +7,7 @@ def makeStudents(db):
     def genRandomForms(n):
         forms = {}
         for i in range(3):
-            forms[str((n + i) % 5)] = str(n) + str(i)
+            forms[str((n + i) % 5)] = [str(n) + str(i) + str(0), str(n) + str(i) + str(1)]
         return forms
     for i in range(0, 10):
         initData = {
@@ -18,7 +18,7 @@ def makeStudents(db):
         		'last_name': 'last' + str(i),
         		'DOB': str(i)*4 + "-" + str(i)*2 + "-" + str(i)*2,
         		'parent_ids': [str(i), str(i + 10)],
-        		'email': 'user' + str(i) + '@FloridaJewishAcademy.org'
+        		'email': 'student' + str(i) + '@FloridaJewishAcademy.org'
         	},
             'form_ids': genRandomForms(i)
         }
@@ -38,23 +38,29 @@ def makeForms(db):
 
     for i in range(0, 10):
         for j in range(0, 3):
-            initData = {
-                ## ensures that each form for generated student exists in form collection
-                'form_id': str(i) + str(j),
-                'last_updated': str(i) * 4 + '-' + str(i) * 2 + '-' + str(i) * 2,
-                'last_viewed': str(j) * 4 + '-' + str(j) * 2 + '-' + str(j) * 2,
-                'required': True,
-                'form_num': (i + j) % 5,
-                'percent_completed': .45,
-                'form_data': genFormData()
-            }
-            result = forms.insert_one(initData)
+            for k in range(0,2):
+                initData = {
+                    ## ensures that each form for generated student exists in form collection
+                    'form_id': str(i) + str(j) + str(k),
+                    'last_updated': str(i) * 4 + '-' + str(i) * 2 + '-' + str(i) * 2,
+                    'last_viewed': str(j) * 4 + '-' + str(j) * 2 + '-' + str(j) * 2,
+                    'required': True,
+                    'form_num': (i + j) % 5,
+                    'percent_completed': .45,
+                    'form_data': genFormData()
+                }
+                result = forms.insert_one(initData)
     print('Inserted ', result.inserted_id)
 
 def makeParents(db):
     parents = db.parents
     print('Made parents')
 
+    def getFormId(n,p):
+        forms = []
+        for k in range(0,3):
+            forms.append(str(n) + str(k) + str(0 if p else 1))
+        return forms
     for i in range(0, 20):
         initData = {
 
@@ -64,9 +70,9 @@ def makeParents(db):
                     'name': 'parent' + str(i),
                     'DOB': (str(i) * 4) + '-' + ('0' + str(i)) + '-' + ('1' + str(i)),
                     'email': 'parent' + str(i) + '@FloridaJewishAcademy.org',
-                    'student_ids': [str(i), str(i + 1)]
+                    'student_ids': [str(i % 10)]
                 },
-            'form_ids': [str(i)]
+            'form_ids': getFormId(i % 10, i < 10)
         }
         result = parents.insert_one(initData)
         print('Inserted ', result.inserted_id)
