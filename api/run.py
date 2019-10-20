@@ -21,7 +21,5 @@ def makeUsers():
     testDB.makeUsers()
     return {'success': True}
 
-
 if __name__ == '__main__':
     app.run(debug=True)
-
