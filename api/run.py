@@ -35,7 +35,7 @@ def get():
         from_email='maxjramer@gmail.com',
         to_email=[{'email': email1}],
         subject='Subject',
-        html='<a href="www.google.com">Forms</a>'
+        html='<a href="http://localhost:3000/form/?variable=x">Forms</a>'
     )
     return {'success': True}
 
