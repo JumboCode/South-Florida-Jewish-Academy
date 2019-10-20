@@ -11,5 +11,14 @@ mongo = PyMongo(app)
 # Get forms from student
 
 def updateInfo(id, key, update):
-    writeR = mongo.db.students.update({"id": str(id)}, {key: update})
+    writeR = mongo.db.students.update({'id': str(id)}, {key: update})
     # TODO: Inform of update.
+
+def getInfo(id, key):
+    content = mongo.db.students.find({'id': str(id)})
+    return content[key]
+
+def getStudentForm(id, formNum):
+    content = mongo.db.students.find({'id': str(id)})
+    forms = dict(content['form'])
+    return forms[formNum]

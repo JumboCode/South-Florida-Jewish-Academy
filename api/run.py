@@ -7,25 +7,19 @@ api = Api(app)
 
 # look I'm a comment
 
+@app.route('/', methods = ['GET', 'POST'])
+def HelloWorld():
+    listOfNums = []
+    for i in range(0, 10):
+        listOfNums.append(i)
 
-class HelloWorld(Resource):
-    def get(self):
-        listOfNums = []
-        for i in range(0, 10):
-            listOfNums.append(i)
+    testDB.getTest()
+    return {'users': testDB.getTest()}
 
-        testDB.getTest()
-        return {'users': testDB.getTest()}
-
-class MakeUsers(Resource):
-    def get(self):
-        testDB.makeUsers()
-        return {'success': True}
-
-api.add_resource(HelloWorld, '/')
-api.add_resource(MakeUsers, '/insert')
-
+@app.route('/insert', methods = ['GET', 'POST'])
+def makeUsers():
+    testDB.makeUsers()
+    return {'success': True}
 
 if __name__ == '__main__':
     app.run(debug=True)
-
