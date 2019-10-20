@@ -14,9 +14,10 @@ class Form extends React.Component {
   	let userID = this.props.match.params.userID;
   	console.log("Hello");
   	console.log(userID);
+
     return (
       <div>
-        form! - ID:
+        form! - ID:{userID}
       </div>
     );
   }
