@@ -13,6 +13,26 @@ def makeUsers(db):
         result = users.insert_one(initData)
         print('Inserted ', result.inserted_id)
 
+def makeParents(db):
+    parents = db.parents
+    print('Made parents')
+
+    for i in range(0, 10):
+        initData = {
+
+            'parent_id': i,
+            'basic_info': 
+                {
+                    'name': 'parent' + str(i),
+                    'DOB': (str(i) * 4) + '-' + ('0' + str(i)) + '-' + ('1' + str(i)),
+                    'email': 'parent' + str(i) + '@FloridaJewishAcademy.org',
+                    'student_ids': [str(i), str(i + 1)]
+                },
+            'form_ids': [str(i)]
+        }
+        result = parents.insert_one(initData)
+        print('Inserted ', result.inserted_id)
+
 def main():
 
     ## drop and remake database
@@ -34,6 +54,7 @@ def main():
 
     ## make collections
     makeUsers(db)
+    makeParents(db)
 
 if __name__ == '__main__':
     main()
