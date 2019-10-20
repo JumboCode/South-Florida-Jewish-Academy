@@ -28,7 +28,7 @@ def makeParents(db):
                     'email': 'parent' + str(i) + '@FloridaJewishAcademy.org',
                     'student_ids': [str(i), str(i + 1)]
                 },
-            'forms_completed': [str(i)]
+            'form_ids': [str(i)]
         }
         result = parents.insert_one(initData)
         print('Inserted ', result.inserted_id)
