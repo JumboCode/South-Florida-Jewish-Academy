@@ -45,7 +45,7 @@ def makeForms(db):
                 'percent_completed': .45,
                 'form_data': genFormData()
             }
-    result = forms.insert_one(initData)
+            result = forms.insert_one(initData)
     print('Inserted ', result.inserted_id)
 
 def main():
