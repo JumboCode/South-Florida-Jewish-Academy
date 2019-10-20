@@ -11,14 +11,16 @@ def makeStudents(db):
         return forms
     for i in range(0, 10):
         initData = {
-            'first_name': 'first' + str(i),
-            'middle_name': 'middle' + str(i),
-            'last_name': 'last' + str(i),
-            'student_id': i,
-            'DOB': str(i)*4 + "-" + str(i)*2 + "-" + str(i)*2,
-            'parent_ids': ["parent_1_" + str(1), "parent_2_" + str(i)],
-            'email': 'user' + str(i) + '@FloridaJewishAcademy.org',
-            'forms': genRandomForms(i)
+        	'student_id': i,
+        	'basic_info': {
+        		'first_name': 'first' + str(i),
+        		'middle_name': 'middle' + str(i),
+        		'last_name': 'last' + str(i),
+        		'DOB': str(i)*4 + "-" + str(i)*2 + "-" + str(i)*2,
+        		'parent_ids': [str(i), str(i + 10)],
+        		'email': 'user' + str(i) + '@FloridaJewishAcademy.org'
+        	},
+            'form_ids': genRandomForms(i)
         }
         result = students.insert_one(initData)
         print('Inserted ', result.inserted_id)
@@ -53,7 +55,7 @@ def makeParents(db):
     parents = db.parents
     print('Made parents')
 
-    for i in range(0, 10):
+    for i in range(0, 20):
         initData = {
 
             'parent_id': i,
