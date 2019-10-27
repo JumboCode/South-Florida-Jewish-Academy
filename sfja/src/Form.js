@@ -15,7 +15,7 @@ class Form extends React.Component {
     let formNum = this.props.match.params.formNum;
   	console.log("Hello");
   	console.log(this);
-    //console.log(formNum);
+    console.log(formNum);
 
     return (
       <div>

@@ -2,6 +2,8 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_sendgrid import SendGrid
 from database import testDB
+from database.emailKeysDOM import makeUser
+from generateKey import generateKey 
 
 app = Flask(__name__)
 api = Api(app)
@@ -24,24 +26,36 @@ def makeUsers():
     testDB.makeUsers()
     return {'success': True}
 
+# @app.route('/getForms', methods = ['GET', 'POST'])
+# def getForms():
+    # retrieve generated key from request parameters
+    # check generated key
+    # return email iff key exists in database
+    # else -> 403 error
+
+
 @app.route('/email', methods = ['GET', 'POST'])
 def get():
     mail = SendGrid(app)
 
-    studentID = 12345
-    formNum = 1
+    # studentID = 12345
+    # formNum = 1
 
-    # TODO loop through parent ids
-    # TODO fetch parent ids from database
-    email1 = 'trishacox@gmail.com' #testing
-    mail.send_email(
-        from_email='maxjramer@gmail.com',
-        to_email=[{'email': email1}],
-        subject='Subject',
-        html='<a href="http://localhost:3000/form/' + str(studentID) + '/' + str(formNum) + '">Forms</a>'
-    )
-    return {'success': True}
+    generatedKey = generateKey()
+    # succeeded to insert into database
+    succeeded =  makeUser('trishacox@gmail.com', generatedKey)
+    if succeeded:
+        email1 = 'trishacox@gmail.com'
+        mail.send_email(
+            from_email='maxjramer@gmail.com',
+            to_email=[{'email': email1}],
+            subject='Subject',
+            html='<a href="http://localhost:3000/form/' + str(generatedKey) + '">Forms</a>'
+        )
+        return 'success', 200
+    else:
+        return 'failure', 400
+
 
 if __name__ == '__main__':
     app.run(debug=True)
-
