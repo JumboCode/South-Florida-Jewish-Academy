@@ -21,8 +21,10 @@ def makeUsers():
     testDB.makeUsers()
     return {'success': True}
 
-@app.route('/students', methods = ['GET'])
+@app.route('/students', methods = ['GET', 'POST'])
 def getStudents():
+    testDB.makeTestStudents()
+    testDB.getStudents()
     return {'students': testDB.getStudents()}
 
 if __name__ == '__main__':
