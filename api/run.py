@@ -21,5 +21,9 @@ def makeUsers():
     testDB.makeUsers()
     return {'success': True}
 
+@app.route('/students', methods = ['GET'])
+def getStudents():
+    return {'students': testDB.getStudents()}
+
 if __name__ == '__main__':
     app.run(debug=True)

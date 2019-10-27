@@ -13,6 +13,16 @@ def getTest():
         returnList.append(ele)
     return returnList
 
+def getStudents():
+    contents = list(mongo.db.students.find())
+    students = {}
+    for content in contents:
+        students[content['student_id']] = {'name': content['basic-info']['first_name'],
+                                           # 'email': content['email'],
+                                           'forms': content['forms']}
+
+    return students
+
 def makeUsers():
     users = mongo.db.users
     for i in range (0, 10):
