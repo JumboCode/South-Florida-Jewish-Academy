@@ -11,13 +11,15 @@ class Form extends React.Component {
 
 
   render() {
-  	let userID = this.props.match.params.userID;
+  	let studentID = this.props.match.params.studentID;
+    let formNum = this.props.match.params.formNum;
   	console.log("Hello");
-  	console.log(userID);
+  	console.log(this);
+    //console.log(formNum);
 
     return (
       <div>
-        form! - ID:{userID}
+        form! - ID: {studentID}, {formNum}
       </div>
     );
   }

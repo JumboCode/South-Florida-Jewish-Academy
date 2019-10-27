@@ -28,6 +28,9 @@ def makeUsers():
 def get():
     mail = SendGrid(app)
 
+    studentID = 12345
+    formNum = 1
+
     # TODO loop through parent ids
     # TODO fetch parent ids from database
     email1 = 'trishacox@gmail.com' #testing
@@ -35,7 +38,7 @@ def get():
         from_email='maxjramer@gmail.com',
         to_email=[{'email': email1}],
         subject='Subject',
-        html='<a href="http://localhost:3000/form/?variable=x">Forms</a>'
+        html='<a href="http://localhost:3000/form/' + str(studentID) + '/' + str(formNum) + '">Forms</a>'
     )
     return {'success': True}
 

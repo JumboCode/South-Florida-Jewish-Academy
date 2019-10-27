@@ -13,7 +13,7 @@ const routing = (
         <Redirect to="/admin"/>
       </Route>
       <Route exact path="/admin" component={Admin} />
-      <Route path="/form/:userID" component={Form} />
+      <Route path="/form/:studentID/:formNum" component={Form} />
     </div>
   </Router>
 );

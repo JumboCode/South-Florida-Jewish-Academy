@@ -22,8 +22,6 @@ function App() {
         <Route path="/FakeUserForm">
           <FakeUserForm/>
         </Route>
-        <Route path="/:id">
-        </Route>
       </Switch>
   </Router>
 );
