@@ -5,6 +5,7 @@ matrix:
       services:
   	- mongodb
       before_install:
+	- python3 bin/resetDatabase.py
         - cd api
       install:
         - pip3 install -r requirements.txt
