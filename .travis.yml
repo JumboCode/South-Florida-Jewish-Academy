@@ -10,7 +10,8 @@ matrix:
         - pip3 install -r requirements.txt
       before_script:
   	- sleep 15
-  	- mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
+  	- mongo sfja --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});
+	- python3 ../bin/resetDatabase.py'
       script:
 	- python3 ../bin/resetDatabase.py
         - python3 tests.py
