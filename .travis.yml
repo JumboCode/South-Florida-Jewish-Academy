@@ -5,7 +5,6 @@ matrix:
       services:
   	- mongodb
       before_install:
-	- python3 bin/resetDatabase.py
         - cd api
       install:
         - pip3 install -r requirements.txt
@@ -13,6 +12,7 @@ matrix:
   	- sleep 15
   	- mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
       script:
+	- python3 ../bin/resetDatabase.py
         - python3 tests.py
 
     - language: node_js
