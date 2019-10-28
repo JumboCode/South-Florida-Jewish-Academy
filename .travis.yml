@@ -2,10 +2,15 @@ matrix:
   include:
     - language: python
       python: 3.6
+      services:
+  	- mongodb
       before_install:
         - cd api
       install:
         - pip3 install -r requirements.txt
+      before_script:
+  	- sleep 15
+  	- mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
       script:
         - python3 tests.py
 
