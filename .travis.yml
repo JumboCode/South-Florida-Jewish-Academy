@@ -10,9 +10,9 @@ matrix:
         - pip3 install -r requirements.txt
       before_script:
         - sleep 15
-        - python3 ../bin/resetDatabase.py'
-      script:
+        - mongo sfja --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
         - python3 ../bin/resetDatabase.py
+      script:
         - python3 tests.py
 
     - language: node_js
