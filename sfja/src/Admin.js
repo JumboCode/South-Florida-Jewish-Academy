@@ -1,5 +1,5 @@
 import React from 'react';
-import Info from './components/info';
+import AllCards from './components/AllCards';
 
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {
@@ -8,14 +8,14 @@ class Admin extends React.Component {
     super(props);
     this.state = {
       name: 'Janny',
-      info: [],
+      students: [],
     };
   }
   componentDidMount() {
-    fetch('http://jsonplaceholder.typicode.com/users')
+    fetch('http://www.mocky.io/v2/5dbf5516330000f47aa0e593')
         .then((res) => res.json())
         .then((data) => {
-          this.setState({info: data});
+          this.setState({students: data.students});
           console.log(data);
         })
         .catch(console.log);
@@ -26,7 +26,7 @@ class Admin extends React.Component {
       <div>
                 SFJA ADMIN
         <h1>{this.state.name}</h1>
-        <Info info ={this.state.info}></Info>
+        <AllCards info ={this.state.students}></AllCards>
       </div>);
   }
 }
