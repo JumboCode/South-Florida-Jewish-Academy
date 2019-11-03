@@ -18,11 +18,17 @@ def getStudents():
     students = {}
     for content in contents:
         print(content)
-        students[content['student_id']] = {'name': content['basic_info']['first_name'],
-                                           'email': content['basic_info']['email'],
-                                           'forms': content['form_ids'],
-                                          }
-
+        students[content['student_id']] = {
+            'basic_info': {
+                'first_name': content['basic_info']['first_name'],
+                'middle_name': content['basic_info']['middle_name'],
+                'last_name': content['basic_info']['last_name'],
+                'DOB': content['basic_info']['DOB'],
+                'parent_ids': content['basic_info']['parent_ids'],
+                'email': content['basic_info']['email']
+            },
+            'form_ids': content['form_ids']
+        }
     return students
 
 def makeUsers():
