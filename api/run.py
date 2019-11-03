@@ -4,10 +4,11 @@ from flask_sendgrid import SendGrid
 from database import testDB
 from database.emailKeysDOM import makeUser
 from generateKey import generateKey 
+import os
 
 app = Flask(__name__)
 api = Api(app)
-app.config['SENDGRID_API_KEY'] = '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'
+app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
 app.config['SENDGRID_DEFAULT_FROM'] = 'maxjramer@gmail.com'
 
 # look I'm a comment

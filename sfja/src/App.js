@@ -1,6 +1,5 @@
 import React from 'react';
 import Home from './components/home';
-import FakeUserForm from './components/fakeUserForm'
 import {
   BrowserRouter as Router,
   Switch,
@@ -19,9 +18,6 @@ function App() {
           <Home/>
         </Route>
         {/* // here we are needing to route each page to an id */}
-        <Route path="/FakeUserForm">
-          <FakeUserForm/>
-        </Route>
       </Switch>
   </Router>
 );
