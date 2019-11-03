@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from database import testDB
+# from bin import resetDatabase
 
 app = Flask(__name__)
 api = Api(app)
