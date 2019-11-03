@@ -28,9 +28,10 @@ def getStudentForm(id, formNum):
 
 def getStudents():
     contents = list(mongo.db.students.find())
-    students = {}
+    students = []
     for content in contents:
-        students[content['student_id']] = {
+        info = {
+            'student_id': content['student_id'],
             'basic_info': {
                 'first_name': content['basic_info']['first_name'],
                 'middle_name': content['basic_info']['middle_name'],
@@ -41,4 +42,6 @@ def getStudents():
             },
             'form_ids': content['form_ids']
         }
+        students.append(info)
+
     return students
