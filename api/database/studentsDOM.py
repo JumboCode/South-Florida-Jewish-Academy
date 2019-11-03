@@ -27,3 +27,24 @@ def getStudentForm(id, formNum):
     content = mongo.db.students.find({'id': str(id)})
     forms = dict(content['form'])
     return forms[formNum]
+
+def getStudents():
+    contents = list(mongo.db.students.find())
+    students = []
+    for content in contents:
+        info = {
+            'student_id': content['student_id'],
+            'basic_info': {
+                'first_name': content['basic_info']['first_name'],
+                'middle_name': content['basic_info']['middle_name'],
+                'last_name': content['basic_info']['last_name'],
+                'DOB': content['basic_info']['DOB'],
+                'parent_ids': content['basic_info']['parent_ids'],
+                'email': content['basic_info']['email']
+            },
+            'form_ids': content['form_ids']
+        }
+        students.append(info)
+
+    return students
+
