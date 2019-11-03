@@ -21,3 +21,21 @@ def makeUser(email, generatedKey):
     }
     result = emailKeysCollection.insert_one(data)
     return result.acknowledged
+
+def verifyKey(givenKey):
+    emailKeysCollection = mongo.db.emailKeys
+    keySearch = list(emailKeysCollection.find({'key': givenKey}))
+    if len(keySearch) != 0:
+        print('key exists!')
+        return True
+    return False
+
+def verifyUser(givenUser):
+    emailKeysCollection = mongo.db.emailKeys
+    keySearch = list(emailKeysCollection.find({'email': givenUser}))
+    if len(keySearch) != 0:
+        print('user exists!')
+        return True
+    return False
+
+

@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_sendgrid import SendGrid
 from database import testDB
-from database.emailKeysDOM import makeUser
+from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from generateKey import generateKey 
 import os
 
@@ -44,7 +44,11 @@ def get():
 
     generatedKey = generateKey()
     # succeeded to insert into database
-    succeeded =  makeUser('trishacox@gmail.com', generatedKey)
+    succeeded =  makeUser('maxjramer@gmail.com', generatedKey)
+
+    # doesKeyExists = verifyKey(generatedKey)
+    # doesUserExists = verifyUser("maxjramer@gmail.com")
+
     if succeeded:
         email1 = 'trishacox@gmail.com'
         mail.send_email(
@@ -56,6 +60,7 @@ def get():
         return 'success', 200
     else:
         return 'failure', 400
+
 
 
 if __name__ == '__main__':
