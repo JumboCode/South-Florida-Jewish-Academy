@@ -24,6 +24,7 @@ def makeUser(email, generatedKey):
 
 def verifyKey(givenKey):
     emailKeysCollection = mongo.db.emailKeys
+    print('givenKey', givenKey)
     keySearch = list(emailKeysCollection.find({'key': givenKey}))
     if len(keySearch) != 0:
         print('key exists!')

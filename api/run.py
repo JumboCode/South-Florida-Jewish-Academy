@@ -2,14 +2,17 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_sendgrid import SendGrid
 from database import testDB
+from flask_cors import CORS
 from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from generateKey import generateKey 
 import os
+import json
 
 app = Flask(__name__)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
 app.config['SENDGRID_DEFAULT_FROM'] = 'maxjramer@gmail.com'
+CORS(app)
 
 # look I'm a comment
 
@@ -29,8 +32,13 @@ def makeUsers():
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
-    #stuff = verifyKey(13)
-    return 'success', 200
+    print(request.json['key'])
+    result = verifyKey(int(request.json['key']))
+    if result:
+        return 'success', 200
+    else:
+        return 'denied', 403
+
     """ retrieve generated key from request parameters
     check generated key
     return email iff key exists in database
