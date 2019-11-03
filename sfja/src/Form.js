@@ -5,21 +5,14 @@ import React from 'react';
 class Form extends React.Component {
   // eslint-disable-next-line require-jsdoc
 
-  /*constructor(props) {
-  	super(props);
-  }*/
-
-
   render() {
-  	let studentID = this.props.match.params.studentID;
-    let formNum = this.props.match.params.formNum;
-  	console.log("Hello");
-  	console.log(this);
-    console.log(formNum);
+  	let key = this.props.match.params.key;
 
     return (
       <div>
-        form! - ID: {studentID}, {formNum}
+      key (testing purposes): {key}
+      <br></br>
+      component would show here if key is verified
       </div>
     );
   }

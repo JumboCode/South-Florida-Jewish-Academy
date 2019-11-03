@@ -27,13 +27,15 @@ def makeUsers():
     testDB.makeUsers()
     return {'success': True}
 
-# @app.route('/getForms', methods = ['GET', 'POST'])
-# def getForms():
-    # retrieve generated key from request parameters
-    # check generated key
-    # return email iff key exists in database
-    # else -> 403 error
-
+@app.route('/checkKey', methods = ['GET', 'POST'])
+def checkKey():
+    #stuff = verifyKey(13)
+    return 'success', 200
+    """ retrieve generated key from request parameters
+    check generated key
+    return email iff key exists in database
+    else -> 403 errorr
+ """
 
 @app.route('/email', methods = ['GET', 'POST'])
 def get():
