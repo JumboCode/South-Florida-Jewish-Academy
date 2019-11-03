@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_restful import Resource, Api
-from database import testDB
+from database import testDB, studentsDOM
 # from bin import resetDatabase
 
 app = Flask(__name__)
@@ -24,9 +24,7 @@ def makeUsers():
 
 @app.route('/students', methods = ['GET', 'POST'])
 def getStudents():
-    testDB.makeTestStudents()
-    testDB.getStudents()
-    return {'students': testDB.getStudents()}
+    return {'students': studentsDOM.getStudents()}
 
 if __name__ == '__main__':
     app.run(debug=True)
