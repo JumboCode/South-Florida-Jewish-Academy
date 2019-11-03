@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_pymongo import PyMongo
+import os
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/sfja"
+MONGO_URL = os.environ.get('MONGODB_URI')
+app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 # Creates a new student in the database. Takes pre-made
@@ -41,3 +43,9 @@ def postForm(id, formNum, formId):
     if writeR['nModified'] > 0:
         return True
     return False
+
+def getStudentForm(id, formNum):
+    content = mongo.db.students.find({'id': str(id)})
+    forms = dict(content['form'])
+    return forms[formNum]
+
