@@ -10,7 +10,7 @@ import json
 
 app = Flask(__name__)
 api = Api(app)
-app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
+app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'maxjramer@gmail.com'
 CORS(app)
 
@@ -32,8 +32,10 @@ def makeUsers():
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
+    #checkKey only works with json requests, so you can't test it without the front end 
     print(request.json['key'])
     result = verifyKey(int(request.json['key']))
+    print(result)
     if result:
         return 'success', 200
     else:
@@ -50,11 +52,9 @@ def get():
     mail = SendGrid(app)
 
     # studentID = 12345
-    # formNum = 1
-
     generatedKey = generateKey()
     # succeeded to insert into database
-    succeeded =  makeUser('maxjramer@gmail.com', generatedKey)
+    succeeded =  makeUser('trishacox@gmail.com', generatedKey)
 
     # doesKeyExists = verifyKey(generatedKey)
     # doesUserExists = verifyUser("maxjramer@gmail.com")
