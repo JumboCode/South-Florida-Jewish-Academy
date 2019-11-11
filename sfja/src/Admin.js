@@ -12,7 +12,7 @@ class Admin extends React.Component {
     };
   }
   componentDidMount() {
-    fetch('http://www.mocky.io/v2/5dbf5516330000f47aa0e593')
+    fetch('http://127.0.0.1:5000/students')
         .then((res) => res.json())
         .then((data) => {
           this.setState({students: data.students});
