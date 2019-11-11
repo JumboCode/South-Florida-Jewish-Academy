@@ -22,6 +22,7 @@ def makeUser(email, generatedKey):
     result = emailKeysCollection.insert_one(data)
     return result.acknowledged
 
+#This function is called upon when a user tries to go to form/:key. It verifies that key in the url exists in the database. 
 def verifyKey(givenKey):
     emailKeysCollection = mongo.db.emailKeys
     print('givenKey', givenKey)
@@ -31,6 +32,7 @@ def verifyKey(givenKey):
         return True
     return False
 
+#Verifies that a user email exists in the database.
 def verifyUser(givenUser):
     emailKeysCollection = mongo.db.emailKeys
     keySearch = list(emailKeysCollection.find({'email': givenUser}))

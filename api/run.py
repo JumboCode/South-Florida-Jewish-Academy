@@ -50,17 +50,14 @@ def checkKey():
 @app.route('/email', methods = ['GET', 'POST'])
 def get():
     mail = SendGrid(app)
-
-    # studentID = 12345
+    #generates a unique key
     generatedKey = generateKey()
     # succeeded to insert into database
     succeeded =  makeUser('trishacox@gmail.com', generatedKey)
 
-    # doesKeyExists = verifyKey(generatedKey)
-    # doesUserExists = verifyUser("maxjramer@gmail.com")
-
+    #currently only sends the email if a new user could be made
     if succeeded:
-        email1 = 'trishacox@gmail.com'
+        email1 = 'trishacox@gmail.com' #to be a given parent email
         mail.send_email(
             from_email='maxjramer@gmail.com',
             to_email=[{'email': email1}],

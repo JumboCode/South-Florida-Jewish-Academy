@@ -1,7 +1,7 @@
 import random
 import string
 
-
+#generates a unique key as a string of 1 + 15 random letters/numbers
 def generateKey():
 	key = str(1)
 	for i in range(0,15):
