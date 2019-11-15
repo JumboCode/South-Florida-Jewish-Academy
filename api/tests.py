@@ -25,6 +25,7 @@ def testStudentAddForm():
 	return expected == actual
 
 def testStudentCreateStudent():
+	expected = 'newfirst'
 	newBasicInfo = {
         		'first_name': 'newfirst',
         		'middle_name': 'newmiddle',
@@ -35,7 +36,8 @@ def testStudentCreateStudent():
         		}
 	newFormIds = {'123': '123'}
 	studentsDOM.createStudent(500, newBasicInfo, newFormIds)
-	return True
+	actual = studentsDOM.getInfo(500, 'first_name')
+	return expected == actual
 
 def testStudentDeleteStudent():
 	expected = None
