@@ -15,7 +15,6 @@ CORS(app)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'maxjramer@gmail.com'
-CORS(app)
 
 # look I'm a comment
 
