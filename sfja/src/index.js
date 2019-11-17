@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Admin from './Admin';
 import Form from './Form';
+import StudentDashboard from './StudentDashboard';
 import * as serviceWorker from './serviceWorker';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 
@@ -14,6 +15,7 @@ const routing = (
       </Route>
       <Route exact path="/admin" component={Admin} />
       <Route path="/form/:key" component={Form} />
+      <Route path="/studentDashboard" component={StudentDashboard} />
     </div>
   </Router>
 );
