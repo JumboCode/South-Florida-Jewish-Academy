@@ -6,7 +6,7 @@ from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from generateKey import generateKey 
 import os
 import json
-from database import testDB, studentsDOM
+from database import testDB, studentsDOM, usersDOM
 from flask import jsonify
 import subprocess
 
@@ -79,6 +79,9 @@ def get():
 def getStudents():
     return {'students': studentsDOM.getStudents()}
 
+@app.route('/users', methods = ['GET', 'POST'])
+def getUsers():
+    return {'users': usersDOM.getUsers()}
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -82,26 +82,16 @@ def makeUsers(db):
 
     def makeActions(id):
         actions = []
-<<<<<<< HEAD
         for j in range (id, 2 * id):
             datetime_NY = datetime.utcnow()
             print("Time:", datetime_NY.strftime("%H:%M:%S"))
             actions.append(tuple((datetime_NY.strftime("%H:%M:%S"), j % 7)))
-=======
-        for j in range (0, id):
-            datetime_NY = datetime.utcnow()
-            print("Time:", datetime_NY.strftime("%H:%M:%S"))
-            actions.append(tuple((datetime_NY.strftime("%H:%M:%S"), j % 10)))
->>>>>>> 798d7846fae33acd7325cdf39014c89461c3541c
+
         return actions
 
     for i in range (0, 20):
         initData = {
-<<<<<<< HEAD
             'user_id': i,
-=======
-            'id': i,
->>>>>>> 798d7846fae33acd7325cdf39014c89461c3541c
             'email': 'user' + str(i) + '@FloridaJewishAcademy.org',
             'actions': makeActions(i)
         }
