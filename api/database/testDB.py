@@ -11,7 +11,7 @@ def getTest():
     contents = list(mongo.db.users.find())
     returnList = []
     for content in contents:
-        ele = {'name': content['name'], 'email': content['email']}
+        ele = {'user_id': content['user_id'], 'email': content['email']}
         returnList.append(ele)
     return returnList
 
