@@ -5,6 +5,7 @@ import Admin from './Admin';
 import Form from './Form';
 import * as serviceWorker from './serviceWorker';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
+import Header from './Header';
 
 const routing = (
   <Router>
@@ -14,6 +15,8 @@ const routing = (
       </Route>
       <Route exact path="/admin" component={Admin} />
       <Route path="/form/:key" component={Form} />
+      // for testing purposes 
+      <Route exact path = "/header" component = {Header} />
     </div>
   </Router>
 );
