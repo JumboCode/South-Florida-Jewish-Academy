@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_pymongo import PyMongo
+import os
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/sfja"
+MONGO_URL = os.environ.get('MONGODB_URI')
+app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 def getTest():
@@ -20,29 +22,8 @@ def makeUsers():
         post['name'] = 'User ' + str(i)
         post['email'] = 'User' + str(i) + '@tufts.edu'
         users.insert_one(post)
-
     return
 
-def makeTestStudents():
-    students = mongo.db.students
-
-    for i in range(10):
-        initData = {
-            'student_id': i,
-            'basic-info':
-                {
-                    'last_name': 'lastname' + str(i),
-                    'middle_name': 'middlename' + str(i),
-                    'first_name': 'firstname' + str(i),
-                },
-            'forms':
-                {
-                    '1': '11',
-                    '2': '12',
-                    '3': '13',    
-                }
-        }
-        result = students.insert_one(initData)
 
 def makeTestParents():
     parents = mongo.db.parents
