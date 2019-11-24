@@ -5,6 +5,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+const cardStyle = {
+  backgroundColor: 'rgb(' + 0 + ',' + 105 + ',' + 176 + ')',
+  marginLeft: '43px',
+  marginRight:'43px',
+  marginTop: '40px'
+};
 
 class StudentCard extends React.Component{
 
@@ -13,7 +19,7 @@ class StudentCard extends React.Component{
         const bull = <span >•</span>;
           console.log(this.props, 'props')
         return (
-          <Card >
+          <Card style={cardStyle}>
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
                   {this.props.name}
