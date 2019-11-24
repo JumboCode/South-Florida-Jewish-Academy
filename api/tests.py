@@ -94,15 +94,18 @@ def testUsersDeleteUser():
 	expected = None
 	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
 	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
-	usersDOM.createUser(201, "hello@gmail.com", [a1, a2])
-	usersDOM.deleteUser(201)
-	actual = usersDOM.getEmail(201)
+	usersDOM.createUser(202, "hello@gmail.com", [a1, a2])
+	usersDOM.deleteUser(202)
+	actual = usersDOM.getEmail(202)
 	return actual == expected
 
 def testUsersUpdateEmail():
+	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
+	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
+	usersDOM.createUser(201, "hello@gmail.com", [a1, a2])
 	expected = "test@test.org"
-	usersDOM.updateEmail(200, expected)
-	actual = usersDOM.getEmail(200)
+	usersDOM.updateEmail(201, expected)
+	actual = usersDOM.getEmail(201)
 	return actual == expected
 
 def testUsersGetActions():
@@ -114,8 +117,8 @@ def testUsersGetActions():
 
 def testUsersAddAction():
 	expected = [datetime.datetime(2019, 11, 20, 12, 0, 12), 2]
-	usersDOM.addAction(200, expected[0], expected[1])
-	actual = usersDOM.getActions(200)[-1]
+	usersDOM.addAction(201, expected[0], expected[1])
+	actual = usersDOM.getActions(201)[-1]
 	return expected == actual
 
 def main():
