@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.26",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/react-fontawesome": "^0.1.8",
+    "bootstrap": "^3.3.7",
+    "case-sensitive-paths-webpack-plugin": "^2.2.0",
+    "jQuery": "^1.7.4",
+    "node-jquery": "^0.1.0",
+    "react-form-builder2": "^0.4.3",
+    "react-hook-form": "^4.5.5"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2"
+  }
+}

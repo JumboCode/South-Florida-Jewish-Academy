@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "jquery": "^3.4.1",
     "lint": "^0.7.0",
     "prop-types": "^15.7.2",
+    "node-jquery": "^0.1.0",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
+    "react-form-builder2": "^0.4.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.1.2"
   },
