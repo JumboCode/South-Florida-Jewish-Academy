@@ -4,6 +4,15 @@ import React from 'react';
 // eslint-disable-next-line require-jsdoc
 class Form extends React.Component {
   // eslint-disable-next-line require-jsdoc
+  constructor(props) {
+    super(props)
+    this.state = {
+      
+
+    };
+
+
+  }
   postKey = () => {
     const key = this.props.match.params.key;
     const body = {
@@ -17,6 +26,8 @@ class Form extends React.Component {
     
     return true
   }; 
+  
+
 
 
   render() {
