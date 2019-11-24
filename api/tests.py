@@ -1,6 +1,4 @@
-from database import studentsDOM
-from database import FormsDOM
-from database import usersDOM
+from database import studentsDOM, FormsDOM, usersDOM
 import datetime
 
 # ---------------- STUDENTS -----------------------
