@@ -1,0 +1,15 @@
+
+.navbar {
+    margin-top: 10%;
+    height: 20%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #ff8533;
+    color: #ffffff;
+
+}
+.navbar a:hover {
+    color: rgb(221, 219, 219);
+    cursor: pointer;
+  }
+  

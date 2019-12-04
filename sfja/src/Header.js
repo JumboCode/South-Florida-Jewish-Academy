@@ -1,38 +1,57 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import './header.css';
 
-class Header extends React.Component {
+class header extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {tab: "dashboard"};
+        //this.clickTab = this.clickTab.bind(this);
     }
     componentDidMount(){
 
     }
-    //handle click changes tab 
-    clickButton = () => {
-      this.setState({
-        tab: "students"
-      })
-    }
     render() {
 
-        if (this.state.tab == "dashboard"){
-                  return(
-             <div> Ya dashboard
-             <button onClick={this.clickButton}>click me</button></div>
+      const {tab} = this.state;
+        if (tab == "dashboard"){
+          return(
+            //TODO modularize-- have react write this code for other ones
+            <div>
+              <div class ="navbar">
+              <a onClick={() => this.setState({tab:"dashboard"})}> Dashboard </a>
+              <a onClick={() => this.setState({tab:"students"})}> Students </a>
+              <a onClick={() => this.setState({tab:"upload forms"})}> Upload Forms</a>
+              <a onClick={() => this.setState({tab:"email"})}> Email </a>
+              <a onClick={() => this.setState({tab:"settings"})}> Settings </a>
+              <a onClick={() => this.setState({tab:"logout"})}> Logout </a>
+              </div>
+              This is the dashboard
+            </div>
           )
         }
-        if (this.state.tab == "students"){
+        if (tab == "students"){
           return(
-            <div> Yo students </div>
+             <div>
+              <div class ="navbar">
+              <a onClick={() => this.setState({tab:"dashboard"})}> Dashboard </a>
+              <a onClick={() => this.setState({tab:"students"})}> Students </a>
+              <a onClick={() => this.setState({tab:"upload forms"})}> Upload Forms</a>
+              <a onClick={() => this.setState({tab:"email"})}> Email </a>
+              <a onClick={() => this.setState({tab:"settings"})}> Settings </a>
+              <a onClick={() => this.setState({tab:"logout"})}> Logout </a>
+              </div>
+              This is the students page
+ 
+            </div>
           );
         }
-        if (this.state.tab == "upload forms"){
+        if (tab == "upload forms"){
            return(
             <div>Yo upload yo forms here</div>
           ); 
         }
   };
 };
-export default Header;
+export default header;
