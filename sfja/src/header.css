@@ -1,11 +1,11 @@
 
 .navbar {
     margin-top: 10%;
-    height: 20%;
     display: flex;
     justify-content: space-around;
     background-color: #ff8533;
     color: #ffffff;
+    padding: 1% 1% 1%;
 
 }
 .navbar a:hover {
