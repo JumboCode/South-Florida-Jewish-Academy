@@ -1,12 +1,5 @@
 import React from 'react';
 import AllCards from './components/AllCards';
-import Logo from "./logo.jpg";
-
-const logoStyle = {
-  marginLeft: '30px',
-  marginBottom:'15px',
-  marginTop: '15px'
-};
 
 const nameStyle = {
 	fontFamily: 'Futura',
@@ -18,20 +11,41 @@ const smallTextStyle = {
 	fontFamily: 'Futura'
 };
 
+const studentPageStyle ={
+    display: 'flex',
+    // justifyContent: 'center',
+    width:'100%',
+    border: '1px solid #000000',
+    flexWrap: 'wrap',
+    flexDirection: 'row', 
+    flex: '0 1 auto'
+    // flex: 'auto'
+}
+
 const filterStyle ={
 	backgroundColor:'rgb(' + 0 + ',' + 105 + ',' + 176 + ')',
-	width:'367px',
-	height:'1200px',
-	float:'left',
+	// width:'25%',
+    // height:'1200px',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    // flexWrap: 'wrap',
+    // flex: '200px',
+    // float:'left',
+    // flex: '1',
 	overflow: 'hidden',
 	borderRadius:'10px',
-	marginLeft:'40px'
+	marginLeft:'3%'
 }
 
 const allCardsStyle ={
-	float:'right',
-	width:'1200px',
-	marginRight:'15px',
+    // float:'right',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    // flex: '4',
+    // width:'65%',
+    // flexWrap: 'wrap',
+    // flex: '200px',
+	marginRight:'2%',
 	overflow: 'hidden',
 	borderRadius:'10px',
 	marginBottom:'45px'
@@ -61,24 +75,17 @@ class Admin extends React.Component {
   render() {
     return (
       <div>
-        <img style={logoStyle} src={Logo} alt="website logo"/>
-          <div>
-			<div style={nameStyle}>South Florida Jewish Academy</div><br/>
-			<div>Admissions Page</div>
-          </div>
-            
-        <br/>
-                
-
-        <h1>{this.state.name}</h1>
-		<div>
-			<div style={filterStyle}>
-				
-			</div>
-			<div style={allCardsStyle}>
-			<AllCards info ={this.state.students}></AllCards>
-			</div>
-		</div>
+        <div>Admissions Page</div>
+          <br/>
+          <h1>{this.state.name}</h1>
+        <div style={studentPageStyle}>
+            <div style={filterStyle}>
+                <p> hello </p>
+            </div>
+            <div style={allCardsStyle}>
+                <AllCards info ={this.state.students}></AllCards>
+            </div>
+        </div>
       </div>);
   }
 }
