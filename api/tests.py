@@ -90,6 +90,13 @@ def testUsersCreateUser():
 	actual = usersDOM.getEmail(200)
 	return actual == expected
 
+def testUsersCreateSameUser():
+	expected = -1
+	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
+	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
+	actual = usersDOM.createUser(200, "goodbye@gmail.com", [a1, a2])
+	return expected == actual
+
 def testUsersDeleteUser():
 	expected = None
 	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
@@ -108,18 +115,23 @@ def testUsersUpdateEmail():
 	actual = usersDOM.getEmail(201)
 	return actual == expected
 
+def testUsersGetEmail():
+	expected = "hello@gmail.com"
+	actual = usersDOM.getEmail(200)
+	return actual == expected
+
 def testUsersGetActions():
 	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
 	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
 	expected = [a1, a2]
 	actual = usersDOM.getActions(200)
-	return expected == actual
+	return actual == expected
 
 def testUsersAddAction():
 	expected = [datetime.datetime(2019, 11, 20, 12, 0, 12), 2]
 	usersDOM.addAction(201, expected[0], expected[1])
 	actual = usersDOM.getActions(201)[-1]
-	return expected == actual
+	return actual == expected
 
 def main():
 	print('TEST CASES')
@@ -139,8 +151,10 @@ def main():
 	print('formsDOM updateForm: ' + str(testFormUpdateFormData()))
 	print('-------------------USERS-------------------')
 	print('usersDOM createUser: ' + str(testUsersCreateUser()))
+	print('usersDOM createSameUser: ' + str(testUsersCreateSameUser()))
 	print('usersDOM deleteUser: ' + str(testUsersDeleteUser()))
 	print('usersDOM updateEmail: ' + str(testUsersUpdateEmail()))
+	print('usersDOM getEmail: ' + str(testUsersGetEmail()))
 	print('usersDOM getActions: ' + str(testUsersGetActions()))
 	print('usersDOM addAction: ' + str(testUsersAddAction()))
 	return 1

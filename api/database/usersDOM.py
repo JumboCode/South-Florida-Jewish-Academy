@@ -8,14 +8,17 @@ app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 # Given all info, create a new user.
+# TODO: Find a way to check for duplicate IDs
 def createUser(id, email, actions):
-    initData = {
-                'user_id': id,
-                'email': email,
-                'actions': actions
-                }
-    result = mongo.db.users.insert_one(initData)
-    return result.inserted_id
+    if (mongo.db.users.find({'user_id': id}) == 0):
+        initData = {
+                    'user_id': id,
+                    'email': email,
+                    'actions': actions
+                    }
+        result = mongo.db.users.insert_one(initData)
+        return result.inserted_id
+    return -1
 
 def deleteUser(id):
     results = mongo.db.users.delete_one({'user_id': id})
