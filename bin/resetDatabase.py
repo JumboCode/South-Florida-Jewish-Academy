@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from datetime import datetime
+
 
 def makeStudents(db):
     students = db.students
@@ -77,6 +77,7 @@ def makeParents(db):
         result = parents.insert_one(initData)
         print('Inserted ', result.inserted_id)
 
+<<<<<<< HEAD
 def makeUsers(db):	
     users = db.users	
     print('Made users')	
@@ -99,6 +100,8 @@ def makeUsers(db):
         result = users.insert_one(initData)	
         print('Inserted ', result.inserted_id)	
 
+=======
+>>>>>>> master
 def main():
 
     ## drop and remake database
@@ -123,7 +126,6 @@ def main():
     makeStudents(db)
     makeForms(db)
     makeParents(db)
-    makeUsers(db)
 
 if __name__ == '__main__':
     main()

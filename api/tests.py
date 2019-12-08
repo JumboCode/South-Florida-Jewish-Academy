@@ -57,30 +57,30 @@ def testStudentRemoveForm():
 # ---------------- FORMS -----------------------
 def testFormCreateForm():
 	newData = {'0': 1000}
-	FormsDOM.createForm('1000', '1212-12-12', True, 123, 0.22, newData)
-	actual = FormsDOM.getFormData('1000')
+	formsDOM.createForm('1000', '1212-12-12', True, 123, 0.22, newData)
+	actual = formsDOM.getFormData('1000')
 	return newData == actual
 
 def testFormGetInfo():
 	expected = True
-	actual = FormsDOM.getInfo('000', 'required')
+	actual = formsDOM.getInfo('000', 'required')
 	return expected == actual
 
 def testFormGetFormData():
 	expected = {'0': 0, '1': 1, '2': 0, '3': 1}
-	actual = FormsDOM.getFormData('000')
+	actual = formsDOM.getFormData('000')
 	return expected == actual
 
 def testFormDeleteForm():
 	expected = None
-	FormsDOM.deleteForm('020')
-	actual = FormsDOM.getFormData('020')
+	formsDOM.deleteForm('020')
+	actual = formsDOM.getFormData('020')
 	return expected == actual
 
 def testFormUpdateFormData():
 	expected = {'0': 0, '1': 1, '2': 0, '3': 1, '123': 321}
-	FormsDOM.updateFormData('010', 123, 321)
-	actual = FormsDOM.getFormData('010')
+	formsDOM.updateFormData('010', 123, 321)
+	actual = formsDOM.getFormData('010')
 	return actual == expected
 
 # ---------------- USERS -----------------------
@@ -151,6 +151,7 @@ def main():
 	print('formsDOM getFormData: ' + str(testFormGetFormData()))
 	print('formsDOM deleteForm: ' + str(testFormDeleteForm()))
 	print('formsDOM updateForm: ' + str(testFormUpdateFormData()))
+<<<<<<< HEAD
 	print('-------------------USERS-------------------')
 	print('usersDOM createUser: ' + str(testUsersCreateUser()))
 	print('usersDOM createSameUser: ' + str(testUsersCreateSameUser()))
@@ -159,6 +160,8 @@ def main():
 	print('usersDOM getEmail: ' + str(testUsersGetEmail()))
 	print('usersDOM getActions: ' + str(testUsersGetActions()))
 	print('usersDOM addAction: ' + str(testUsersAddAction()))
+=======
+>>>>>>> master
 	return 1
 
 
