@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_pymongo import PyMongo
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 MONGO_URL = os.environ.get('MONGODB_URI')
@@ -10,7 +11,7 @@ mongo = PyMongo(app)
 # Given all info, create a new user.
 # TODO: Find a way to check for duplicate IDs
 def createUser(id, email, actions):
-    if (mongo.db.users.find({'user_id': id}) == 0):
+    if (mongo.db.users.find({'user_id': id}).count() == 0):
         initData = {
                     'user_id': id,
                     'email': email,
