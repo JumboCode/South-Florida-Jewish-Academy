@@ -21,10 +21,19 @@ def getInfo(id, key):
     for content in contents:
         return content['basic_info'][key]
 
-def getParentForm(id, formNum):
-	contents = list(mongo.db.parents.find({'parent_id': id}))
-	for content in contents:
-		return content['form_ids'][formNum]
+def getParentForm(id, formNum1):
+
+    contents = list(mongo.db.parents.find({'parent_id': id}))
+    
+    if len(contents) != 1:
+        return False
+
+    for content in contents:
+        if str(formNum1) in content['form_ids']:
+            return content['form_ids'][str(formNum1)]
+        else:
+            return None
+
 
 def updateInfo(id, key, update):
     writeR = dict(mongo.db.parents.update({'parent_id': id}, {'$set': {'basic_info' + str(key): update}}))
@@ -33,7 +42,7 @@ def updateInfo(id, key, update):
     return False
 
 def addForm(id, formNum, formId):
-    writeR = dict(mongo.db.parents.update({'parent_id': id}, {'$set': {'form_ids.' + str(formNum): str(formId)}}))
+    writeR = dict(mongo.db.parents.update({'parent_id': id}, {'$set': {'form_ids.' + str(formNum): [str(formId)]}}))
     return writeR['nModified'] > 0
 
 def removeForm(id, formNum):

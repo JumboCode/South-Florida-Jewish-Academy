@@ -42,9 +42,10 @@ def getForm(id, formNum):
             return content['form_ids'][str(formNum)]
         else:
             return None
+
 # Add new form.
 def addForm(id, formNum, formId):
-    writeR = dict(mongo.db.students.update({'student_id': id}, {'$set': {'form_ids.' + str(formNum): str(formId)}}))
+    writeR = dict(mongo.db.students.update({'student_id': id}, {'$set': {'form_ids.' + str(formNum): [str(formId)]}}))
     return writeR['nModified'] > 0
 
 # Removes form from student data.

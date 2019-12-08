@@ -1,6 +1,7 @@
 from database import studentsDOM
-from database import formsDOM
+from database import FormsDOM
 from database import parentsDOM
+import subprocess
 
 # ---------------- PARENTS ------------------------
 def testParentGetInfo(key, expected):
@@ -8,19 +9,19 @@ def testParentGetInfo(key, expected):
 	return expected == actual
 
 def testParentGetForm():
-	expected = '010'
+	expected = ['010', '011']
 	actual = parentsDOM.getParentForm(0, 1)
 	return expected == actual
 
 def testParentAddForm():
-	expected = '987'
+	expected = ['987']
 	parentsDOM.addForm(3, 16, 987)
 	actual = parentsDOM.getParentForm(3, 16)
 	return expected == actual
 
 def testParentRemoveForm():
 	parentsDOM.removeForm(3, 16)
-	return ('Removed')
+	return parentsDOM.getParentForm(3, 16) and False
 
 def testListStudents():
 	expected = ['0']
@@ -45,7 +46,7 @@ def testStudentGetForm():
 	return expected == actual
 
 def testStudentAddForm():
-	expected = '987'
+	expected = ['987']
 	studentsDOM.addForm(3, 16, 987)
 	actual = studentsDOM.getForm(3, 16)
 	return expected == actual
@@ -81,34 +82,39 @@ def testStudentRemoveForm():
 # ---------------- FORMS -----------------------
 def testFormCreateForm():
 	newData = {'0': 1000}
-	formsDOM.createForm('1000', '1212-12-12', True, 123, 0.22, newData)
-	actual = formsDOM.getFormData('1000')
+	FormsDOM.createForm('1000', '1212-12-12', True, 123, 0.22, newData)
+	actual = FormsDOM.getFormData('1000')
 	return newData == actual
 
 def testFormGetInfo():
 	expected = True
-	actual = formsDOM.getInfo('000', 'required')
+	actual = FormsDOM.getInfo('000', 'required')
 	return expected == actual
 
 def testFormGetFormData():
 	expected = {'0': 0, '1': 1, '2': 0, '3': 1}
-	actual = formsDOM.getFormData('000')
+	actual = FormsDOM.getFormData('000')
 	return expected == actual
 
 def testFormDeleteForm():
 	expected = None
-	formsDOM.deleteForm('020')
-	actual = formsDOM.getFormData('020')
+	FormsDOM.deleteForm('020')
+	actual = FormsDOM.getFormData('020')
 	return expected == actual
 
 def testFormUpdateFormData():
 	expected = {'0': 0, '1': 1, '2': 0, '3': 1, '123': 321}
-	formsDOM.updateFormData('010', 123, 321)
-	actual = formsDOM.getFormData('010')
+	FormsDOM.updateFormData('010', 123, 321)
+	actual = FormsDOM.getFormData('010')
 	return actual == expected
 
+## Utilities
+def resetDatabase():
+    subprocess.call('python3 ../bin/resetDatabase.py', shell=True)
 
 def main():
+	print('RESETTING DATABASE')
+	resetDatabase()
 	print('TEST CASES')
 	print('-----------------STUDENTS-----------------')
 	print('studentsDOM getInfo: ' + str(testStudentGetInfo()))
@@ -124,13 +130,13 @@ def main():
 	print('formsDOM getFormData: ' + str(testFormGetFormData()))
 	print('formsDOM deleteForm: ' + str(testFormDeleteForm()))
 	print('formsDOM updateForm: ' + str(testFormUpdateFormData()))
-  print('-------------------PARENTS-------------------')
-  print('ParentsDOM getInfo: ' + str(testParentGetInfo('name', 'parent0')))
+	print('-------------------PARENTS-------------------')
+	print('ParentsDOM getInfo: ' + str(testParentGetInfo('name', 'parent0')))
 	print('ParentsDOM getInfo: ' + str(testParentGetInfo('DOB', '0000-00-10')))
 	print('ParentsDOM getInfo: ' + str(testParentGetInfo('email', 'parent0@FloridaJewishAcademy.org')))
 	print('ParentsDOM getForm: ' + str(testParentGetForm()))
 	print('ParentsDOM addForm: ' + str(testParentAddForm()))
-	print('ParentsDOM removeForm: ' + testParentRemoveForm())
+	#print('ParentsDOM removeForm: ' + str(testParentRemoveForm()))
 	print('ParentsDOM listStudents: ' + str(testListStudents()))
 	return 0
 
