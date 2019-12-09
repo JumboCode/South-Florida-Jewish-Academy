@@ -6,10 +6,19 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 const cardStyle = {
-  backgroundColor: 'rgb(' + 0 + ',' + 105 + ',' + 176 + ')',
+  backgroundColor: '#1f76b3',
   marginLeft: '43px',
   marginRight:'43px',
-  marginTop: '40px'
+  marginTop: '40px',
+  flex: '100%'
+};
+
+const circleStyle = {
+  borderRadius: '50%', 
+  width: '20px',
+  height: '20px', 
+  backgroundColor: 'white',
+  border: '1px solid black'
 };
 
 class StudentCard extends React.Component{
@@ -21,6 +30,7 @@ class StudentCard extends React.Component{
         return (
           <Card style={cardStyle}>
             <CardContent>
+              <div style={circleStyle}> </div>
               <Typography color="textSecondary" gutterBottom>
                   {this.props.name}
               </Typography>

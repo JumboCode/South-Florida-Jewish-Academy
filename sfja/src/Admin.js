@@ -13,44 +13,29 @@ const smallTextStyle = {
 
 const studentPageStyle ={
     display: 'flex',
-    // justifyContent: 'center',
-    width:'100%',
-    border: '1px solid #000000',
-    flexWrap: 'wrap',
-    flexDirection: 'row', 
-    flex: '0 1 auto'
-    // flex: 'auto'
+    maxWidth:'100%',
+    paddingLeft: '15px',
+    paddingRight: '15px'
 }
 
 const filterStyle ={
-	backgroundColor:'rgb(' + 0 + ',' + 105 + ',' + 176 + ')',
-	// width:'25%',
-    // height:'1200px',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    // flexWrap: 'wrap',
-    // flex: '200px',
-    // float:'left',
-    // flex: '1',
-	overflow: 'hidden',
-	borderRadius:'10px',
-	marginLeft:'3%'
+	backgroundColor:'#086fb3',
+    flex: '0 1 300px',
+	borderRadius:'5px',
+    margin: '15px',
+    height: 'fit-content'
 }
 
-const allCardsStyle ={
-    // float:'right',
+const allCardsStyle ={ 
+    backgroundColor: '#cde6ff',
+    paddingTop: '1px',
+    paddingBottom:'40px',
+    flex: '100%',
     display: 'flex',
-    justifyContent: 'flex-end',
-    // flex: '4',
-    // width:'65%',
-    // flexWrap: 'wrap',
-    // flex: '200px',
-	marginRight:'2%',
-	overflow: 'hidden',
-	borderRadius:'10px',
-	marginBottom:'45px'
+    flexWrap: 'wrap',
+    margin: '15px',
+    borderRadius:'5px',
 }
-
 
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {
