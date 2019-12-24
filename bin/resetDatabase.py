@@ -1,9 +1,10 @@
 from pymongo import MongoClient
+from datetime import datetime
 
 
 def makeStudents(db):
     students = db.students
-    print('Made users')
+    print('Made students')
     def genRandomForms(n):
         forms = {}
         for i in range(3):
@@ -77,6 +78,28 @@ def makeParents(db):
         result = parents.insert_one(initData)
         print('Inserted ', result.inserted_id)
 
+def makeUsers(db):	
+    users = db.users	
+    print('Made users')	
+
+    def makeActions(id):	
+        actions = []	
+        for j in range (id, 2 * id):	
+            datetime_NY = datetime.utcnow()	
+            # print("Time:", datetime_NY.strftime("%H:%M:%S"))	
+            actions.append(tuple((datetime_NY.strftime("%H:%M:%S"), j % 7)))	
+
+        return actions	
+
+    for i in range (0, 20):	
+        initData = {	
+            'user_id': i,	
+            'email': 'user' + str(i) + '@FloridaJewishAcademy.org',	
+            'actions': makeActions(i)	
+        }	
+        result = users.insert_one(initData)	
+        print('Inserted ', result.inserted_id)	
+
 def main():
 
     ## drop and remake database
@@ -101,6 +124,7 @@ def main():
     makeStudents(db)
     makeForms(db)
     makeParents(db)
+    makeUsers(db)
 
 if __name__ == '__main__':
     main()

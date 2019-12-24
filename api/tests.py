@@ -1,7 +1,9 @@
 from database import studentsDOM
 from database import FormsDOM
+from database import usersDOM
 from database import parentsDOM
 import subprocess
+import datetime
 
 # ---------------- PARENTS ------------------------
 def testParentGetInfo(key, expected):
@@ -108,9 +110,63 @@ def testFormUpdateFormData():
 	actual = FormsDOM.getFormData('010')
 	return actual == expected
 
+
+# ---------------- USERS -----------------------
+def testUsersCreateUser():
+	expected = "hello@gmail.com"
+	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
+	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
+	usersDOM.createUser(200, "hello@gmail.com", [a1, a2])
+	actual = usersDOM.getEmail(200)
+	return actual == expected
+
+def testUsersCreateSameUser():
+	expected = -1
+	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
+	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
+	actual = usersDOM.createUser(200, "goodbye@gmail.com", [a1, a2])
+	return expected == actual
+
+def testUsersDeleteUser():
+	expected = None
+	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
+	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
+	usersDOM.createUser(202, "hello@gmail.com", [a1, a2])
+	usersDOM.deleteUser(202)
+	actual = usersDOM.getEmail(202)
+	return actual == expected
+
+def testUsersUpdateEmail():
+	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
+	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
+	usersDOM.createUser(201, "hello@gmail.com", [a1, a2])
+	expected = "test@test.org"
+	usersDOM.updateEmail(201, expected)
+	actual = usersDOM.getEmail(201)
+	return actual == expected
+
+def testUsersGetEmail():
+	expected = "hello@gmail.com"
+	actual = usersDOM.getEmail(200)
+	return actual == expected
+
+def testUsersGetActions():
+	a1 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 3]
+	a2 = [datetime.datetime(2019, 11, 17, 12, 0, 12), 0]
+	expected = [a1, a2]
+	actual = usersDOM.getActions(200)
+	return actual == expected
+
+def testUsersAddAction():
+	expected = [datetime.datetime(2019, 11, 20, 12, 0, 12), 2]
+	usersDOM.addAction(201, expected[0], expected[1])
+	actual = usersDOM.getActions(201)[-1]
+	return actual == expected
+
 ## Utilities
 def resetDatabase():
     subprocess.call('python3 ../bin/resetDatabase.py', shell=True)
+
 
 def main():
 	print('RESETTING DATABASE')
@@ -124,12 +180,23 @@ def main():
 	print('studentsDOM createStudent: ' + str(testStudentCreateStudent()))
 	print('studentsDOM deleteStudent: ' + str(testStudentDeleteStudent()))
 	print('studentsDOM removeForm: ' + str(testStudentRemoveForm()))
+  
 	print('-------------------FORMS-------------------')
 	print('formsDOM createForm: ' + str(testFormCreateForm()))
 	print('formsDOM getInfo: ' + str(testFormGetInfo()))
 	print('formsDOM getFormData: ' + str(testFormGetFormData()))
 	print('formsDOM deleteForm: ' + str(testFormDeleteForm()))
 	print('formsDOM updateForm: ' + str(testFormUpdateFormData()))
+
+	print('-------------------USERS-------------------')
+	print('usersDOM createUser: ' + str(testUsersCreateUser()))
+	print('usersDOM createSameUser: ' + str(testUsersCreateSameUser()))
+	print('usersDOM deleteUser: ' + str(testUsersDeleteUser()))
+	print('usersDOM updateEmail: ' + str(testUsersUpdateEmail()))
+	print('usersDOM getEmail: ' + str(testUsersGetEmail()))
+	print('usersDOM getActions: ' + str(testUsersGetActions()))
+	print('usersDOM addAction: ' + str(testUsersAddAction()))
+
 	print('-------------------PARENTS-------------------')
 	print('ParentsDOM getInfo: ' + str(testParentGetInfo('name', 'parent0')))
 	print('ParentsDOM getInfo: ' + str(testParentGetInfo('DOB', '0000-00-10')))
