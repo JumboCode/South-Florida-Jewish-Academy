@@ -4,7 +4,7 @@ from datetime import datetime
 
 def makeStudents(db):
     students = db.students
-    print('Made users')
+    print('Made students')
     def genRandomForms(n):
         forms = {}
         for i in range(3):
@@ -86,7 +86,7 @@ def makeUsers(db):
         actions = []	
         for j in range (id, 2 * id):	
             datetime_NY = datetime.utcnow()	
-            print("Time:", datetime_NY.strftime("%H:%M:%S"))	
+            # print("Time:", datetime_NY.strftime("%H:%M:%S"))	
             actions.append(tuple((datetime_NY.strftime("%H:%M:%S"), j % 7)))	
 
         return actions	
