@@ -58,9 +58,9 @@ def makeParents(db):
     print('Made parents')
 
     def getFormId(n,p):
-        forms = []
-        for k in range(0,3):
-            forms.append(str(n) + str(k) + str(0 if p else 1))
+        forms = {}
+        for i in range(3):
+            forms[str((n + i) % 5)] = [str(n) + str(i) + str(0), str(n) + str(i) + str(1)]
         return forms
     for i in range(0, 20):
         initData = {

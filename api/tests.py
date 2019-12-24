@@ -1,7 +1,34 @@
 from database import studentsDOM
 from database import FormsDOM
 from database import usersDOM
+from database import parentsDOM
+import subprocess
 import datetime
+
+# ---------------- PARENTS ------------------------
+def testParentGetInfo(key, expected):
+	actual = parentsDOM.getInfo(0, key)
+	return expected == actual
+
+def testParentGetForm():
+	expected = ['010', '011']
+	actual = parentsDOM.getParentForm(0, 1)
+	return expected == actual
+
+def testParentAddForm():
+	expected = ['987']
+	parentsDOM.addForm(3, 16, 987)
+	actual = parentsDOM.getParentForm(3, 16)
+	return expected == actual
+
+def testParentRemoveForm():
+	parentsDOM.removeForm(3, 16)
+	return parentsDOM.getParentForm(3, 16) and False
+
+def testListStudents():
+	expected = ['0']
+	actual = parentsDOM.listStudents(0, 0)
+	return expected == actual
 
 # ---------------- STUDENTS -----------------------
 def testStudentGetInfo():
@@ -21,7 +48,7 @@ def testStudentGetForm():
 	return expected == actual
 
 def testStudentAddForm():
-	expected = '987'
+	expected = ['987']
 	studentsDOM.addForm(3, 16, 987)
 	actual = studentsDOM.getForm(3, 16)
 	return expected == actual
@@ -83,6 +110,7 @@ def testFormUpdateFormData():
 	actual = FormsDOM.getFormData('010')
 	return actual == expected
 
+
 # ---------------- USERS -----------------------
 def testUsersCreateUser():
 	expected = "hello@gmail.com"
@@ -135,7 +163,14 @@ def testUsersAddAction():
 	actual = usersDOM.getActions(201)[-1]
 	return actual == expected
 
+## Utilities
+def resetDatabase():
+    subprocess.call('python3 ../bin/resetDatabase.py', shell=True)
+
+
 def main():
+	print('RESETTING DATABASE')
+	resetDatabase()
 	print('TEST CASES')
 	print('-----------------STUDENTS-----------------')
 	print('studentsDOM getInfo: ' + str(testStudentGetInfo()))
@@ -145,12 +180,14 @@ def main():
 	print('studentsDOM createStudent: ' + str(testStudentCreateStudent()))
 	print('studentsDOM deleteStudent: ' + str(testStudentDeleteStudent()))
 	print('studentsDOM removeForm: ' + str(testStudentRemoveForm()))
+  
 	print('-------------------FORMS-------------------')
 	print('formsDOM createForm: ' + str(testFormCreateForm()))
 	print('formsDOM getInfo: ' + str(testFormGetInfo()))
 	print('formsDOM getFormData: ' + str(testFormGetFormData()))
 	print('formsDOM deleteForm: ' + str(testFormDeleteForm()))
 	print('formsDOM updateForm: ' + str(testFormUpdateFormData()))
+
 	print('-------------------USERS-------------------')
 	print('usersDOM createUser: ' + str(testUsersCreateUser()))
 	print('usersDOM createSameUser: ' + str(testUsersCreateSameUser()))
@@ -159,9 +196,16 @@ def main():
 	print('usersDOM getEmail: ' + str(testUsersGetEmail()))
 	print('usersDOM getActions: ' + str(testUsersGetActions()))
 	print('usersDOM addAction: ' + str(testUsersAddAction()))
-	return 1
 
-
+	print('-------------------PARENTS-------------------')
+	print('ParentsDOM getInfo: ' + str(testParentGetInfo('name', 'parent0')))
+	print('ParentsDOM getInfo: ' + str(testParentGetInfo('DOB', '0000-00-10')))
+	print('ParentsDOM getInfo: ' + str(testParentGetInfo('email', 'parent0@FloridaJewishAcademy.org')))
+	print('ParentsDOM getForm: ' + str(testParentGetForm()))
+	print('ParentsDOM addForm: ' + str(testParentAddForm()))
+	#print('ParentsDOM removeForm: ' + str(testParentRemoveForm()))
+	print('ParentsDOM listStudents: ' + str(testListStudents()))
+	return 0
 
 if __name__ == '__main__':
 	main()
