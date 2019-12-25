@@ -12,4 +12,12 @@
     color: rgb(221, 219, 219);
     cursor: pointer;
   }
-  
+
+.bluebar {
+    color: rgb(9, 9, 243);
+    width: 80;
+    height: 90;
+}
+.uselessClass{
+    width: 5;
+}

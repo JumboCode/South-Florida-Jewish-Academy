@@ -8,7 +8,7 @@ class Admin extends React.Component {
 
     this.state = {
       loggedIn: false,
-      tab: ''
+      tab: 'dashboard'
     }
   }
 
@@ -32,8 +32,13 @@ class Admin extends React.Component {
 
     return (
       <div>
-        <Header setTab={this.setTab.bind(this)} />
-        {tab == "settings" ? <div>settings </div> : null}
+        <Header setTab={this.setTab.bind(this)} selectedTab={tab}/>
+        {tab === "dashboard" ? <div>dashboard </div> : null}
+        {tab === "students" ? <div>students </div> : null}
+        {tab === "upload" ? <div>upload forms </div> : null}
+        {tab === "email" ? <div>email </div> : null}
+        {tab === "settings" ? <div>settings </div> : null}
+        {tab === "logout" ? <div>logout </div> : null}
       </div>);
   }
 }

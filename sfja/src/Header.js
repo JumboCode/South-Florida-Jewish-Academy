@@ -1,38 +1,71 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './header.css';
+    
+var chosen = document.createAttribute('checked'); 
+chosen.value = "false";   
 
 class Header extends React.Component {
 
-    constructor(props){
-        super(props);
-        this.state = {tab: "dashboard"};
-    }
-    componentDidMount(){
-
-    }
     render() {
-      const {tab} = this.state;
-      const {setTab} = this.props;
+      const {setTab, selectedTab} = this.props;
       return(
         <div>
+          <img src="CircleLogo.png"></img>
           {/* logo would go here */}
-          <div class ="navbar">
-          <a onClick={() => this.setState({tab:"dashboard"})}> Dashboard </a>
-          <a onClick={() => this.setState({tab:"students"})}> Students </a>
-          <a onClick={() => this.setState({tab:"upload"})}> Upload Forms</a>
-          <a onClick={() => this.setState({tab:"email"})}> Email </a>
-          <a onClick={() => setTab('settings')}> Settings </a>
-          <a onClick={() => this.setState({tab:"logout"})}> Logout </a>
+          <div className="navbar">
+            <div onClick={() => setTab('dashboard')}> Dashboard
+             <div
+                 style={{
+                  backgroundColor: selectedTab == 'dashboard' ? '#0068af' : null,
+                  width: 80,
+                  height: 10
+                }} 
+              > </div>
+            </div>
+            <a onClick={() => setTab('students')}>Students
+            <div
+                 style={{
+                  backgroundColor: selectedTab == 'students' ? '#0068af' : null,
+                  width: 80,
+                  height: 10
+                }}></div>
+            </a>
+            <a onClick={() => setTab('upload')}> Upload Forms
+            <div
+                 style={{
+                  backgroundColor: selectedTab == 'upload' ? '#0068af' : null,
+                  width: 80,
+                  height: 10
+                }}></div>
+            </a>
+            <a onClick={() => setTab('email')}> Email
+            <div
+                 style={{
+                  backgroundColor: selectedTab == 'email' ? '#0068af' : null,
+                  width: 80,
+                  height: 10
+                }}></div>
+            </a>
+            <a onClick={() => setTab('settings')}> Settings
+            <div
+                 style={{
+                  backgroundColor: selectedTab == 'settings' ? '#0068af' : null,
+                  width: 80,
+                  height: 10
+                }}></div>
+            </a>
+            <a onClick={() => setTab('logout')}> Logout
+            <div
+                 style={{
+                  backgroundColor: selectedTab == 'logout' ? '#0068af' : null,
+                  width: 80,
+                  height: 10
+                }}></div>
+            </a>
           </div>
-          {tab == "dashboard" ? <div>dashboard </div> : null}
-          {tab == "students" ? <div>students </div> : null}
-          {tab == "upload" ? <div>upload forms </div> : null}
-          {tab == "email" ? <div> email </div> : null}
-          {tab == "settings" ? <div>settings </div> : null}
-          {tab == "logout" ? <div> logout </div> : null}
         </div>
       )
-  };
+    };
 };
 export default Header;
