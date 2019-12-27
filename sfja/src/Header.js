@@ -16,16 +16,17 @@ class Header extends React.Component {
       const {setTab, selectedTab} = this.props;
       return(
         <div>
-          <div>
-          </div>
+          <div id="toptitle">
           {/* logo would go here */}
+          South Florida Jewish Academy <br></br><div id="topsubtitle">Admissions Page</div>
+          </div>
           <div className="navbar">
             <HomeIcon></HomeIcon>
             <div onClick={() => setTab('dashboard')}> Dashboard
              <div
                  style={{
                   backgroundColor: selectedTab == 'dashboard' ? '#0068af' : null,
-                  width: 80,
+                  width: 150,
                   height: 10
                 }} 
               > </div>
@@ -35,7 +36,7 @@ class Header extends React.Component {
             <div
                  style={{
                   backgroundColor: selectedTab == 'students' ? '#0068af' : null,
-                  width: 80,
+                  width: 150,
                   height: 10
                 }}></div>
             </a>
@@ -44,7 +45,7 @@ class Header extends React.Component {
             <div
                  style={{
                   backgroundColor: selectedTab == 'upload' ? '#0068af' : null,
-                  width: 80,
+                  width: 150,
                   height: 10
                 }}></div>
             </a>
@@ -53,7 +54,7 @@ class Header extends React.Component {
             <div
                  style={{
                   backgroundColor: selectedTab == 'email' ? '#0068af' : null,
-                  width: 80,
+                  width: 150,
                   height: 10
                 }}></div>
             </a>
@@ -62,7 +63,7 @@ class Header extends React.Component {
             <div
                  style={{
                   backgroundColor: selectedTab == 'logout' ? '#0068af' : null,
-                  width: 80,
+                  width: 150,
                   height: 10
                 }}></div>
             </a>
