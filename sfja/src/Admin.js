@@ -37,7 +37,6 @@ class Admin extends React.Component {
         {tab === "students" ? <div>students </div> : null}
         {tab === "upload" ? <div>upload forms </div> : null}
         {tab === "email" ? <div>email </div> : null}
-        {tab === "settings" ? <div>settings </div> : null}
         {tab === "logout" ? <div>logout </div> : null}
       </div>);
   }

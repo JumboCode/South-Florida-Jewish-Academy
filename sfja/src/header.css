@@ -6,7 +6,6 @@
     background-color: #ff8533;
     color: #ffffff;
     padding: 1% 1% 1%;
-
 }
 .navbar a:hover {
     color: rgb(221, 219, 219);
@@ -17,7 +16,4 @@
     color: rgb(9, 9, 243);
     width: 80;
     height: 90;
-}
-.uselessClass{
-    width: 5;
 }
