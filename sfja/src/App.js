@@ -4,13 +4,13 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
-} from "react-router-dom"; 
-//npm install --save react-router-dom
+  Link,
+} from 'react-router-dom';
+// npm install --save react-router-dom
 
 // eslint-disable-next-line require-jsdoc
 function App() {
-  //need some function to request id from backend for each student
+  // need some function to request id from backend for each student
   return (
     <Router>
       <Switch>
@@ -19,8 +19,8 @@ function App() {
         </Route>
         {/* // here we are needing to route each page to an id */}
       </Switch>
-  </Router>
-);
+    </Router>
+  );
 }
 
 
