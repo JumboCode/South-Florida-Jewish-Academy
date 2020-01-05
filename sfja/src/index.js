@@ -1,10 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import Admin from './Admin';
 import Form from './Form';
 import * as serviceWorker from './serviceWorker';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
+import header from './header';
 
 const routing = (
   <Router>
@@ -14,6 +14,7 @@ const routing = (
       </Route>
       <Route exact path="/admin" component={Admin} />
       <Route path="/form/:key" component={Form} />
+      <Route exact path = "/header" component = {header} />
     </div>
   </Router>
 );

@@ -1,0 +1,33 @@
+
+.navbar {
+    margin-top: 4%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #ff8533;
+    color: #ffffff;
+    padding: 1% 1%;
+    font-size: 25px;
+    align-items: center;
+    font-family: Futura;
+}
+.navbar a:hover {
+    color: rgb(221, 219, 219);
+    cursor: pointer;
+}
+#topLogo{
+    position: absolute;
+}
+#toptitle{
+    text-align: right;
+    font-family: Futura;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-right: 10%;
+    color: #0068af;
+    font-size: 50px;
+    margin-top: 3%;
+}
+#topsubtitle{
+    text-shadow: none;
+    font-size: 45px;
+    font-style: italic;
+}
