@@ -31,7 +31,7 @@ class Header extends React.Component {
         </div>
         <div className="navbar">
           <HomeIcon></HomeIcon>
-          <div onClick={() => setTab('dashboard')}>Dashboard
+          <a onClick={() => setTab('dashboard')}>Dashboard
             <div
               style={{
                 backgroundColor: selectedTab == 'dashboard' ? '#0068af' : null,
@@ -41,7 +41,7 @@ class Header extends React.Component {
                 height: 7,
               }}
             > </div>
-          </div>
+          </a>
           <StudentsIcon></StudentsIcon>
           <a onClick={() => setTab('students')}>Students
             <div

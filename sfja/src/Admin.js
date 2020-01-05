@@ -1,8 +1,10 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
-import Header from './header';
+import Header from './Header';
 
+// eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {
+  // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
 
@@ -11,14 +13,14 @@ class Admin extends React.Component {
       tab: 'dashboard',
     };
   }
-  // eslint-disable-next-line require-jsdoc;
-
+  // eslint-disable-next-line require-jsdoc
   setTab(newTab) {
     this.setState({
       tab: newTab,
     });
   }
 
+  // eslint-disable-next-line require-jsdoc
   render() {
     const {loggedIn, tab} = this.state;
 
