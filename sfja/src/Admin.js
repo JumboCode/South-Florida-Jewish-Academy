@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "./Header";
 import AllCards from "./components/AllCards";
 import MagnifyingGlass from "./components/MagnifyingGlass";
 
@@ -81,8 +82,10 @@ class Admin extends React.Component {
     // eslint-disable-next-line require-jsdoc
     constructor(props) {
         super(props);
+
         this.state = {
-            name: "Janny",
+            loggedIn: false,
+            tab: "dashboard",
             students: []
         };
     }
@@ -96,26 +99,51 @@ class Admin extends React.Component {
             .catch(console.log);
     }
 
+    // eslint-disable-next-line require-jsdoc
+    setTab(newTab) {
+        this.setState({
+            tab: newTab
+        });
+    }
+
+    // eslint-disable-next-line require-jsdoc
     render() {
+        const { loggedIn, tab } = this.state;
+
+        if (!loggedIn) {
+            return (
+                <div onClick={() => this.setState({ loggedIn: true })}>
+                    Login
+                </div>
+            );
+        }
         return (
             <div>
-                <div>Admissions Page</div>
-                <br />
-                <h1>{this.state.name}</h1>
-                <div style={studentPageStyle}>
-                    <div style={filterStyle}>
-                        <p> Filters </p>
-                    </div>
-                    <div style={studentInfoStyle}>
-                        <div style={searchBarStyle}>
-                            <input
-                                style={InputStyle}
-                                placeholder="Search for Student"
-                            />
-                            <MagnifyingGlass style={MagnifyingGlassStyle} />
+                <Header setTab={this.setTab.bind(this)} selectedTab={tab} />
+                {tab === "dashboard" ? <div>dashboard </div> : null}
+                {tab === "students" ? <div>students </div> : null}
+                {tab === "upload" ? <div>upload forms </div> : null}
+                {tab === "email" ? <div>email </div> : null}
+                {tab === "logout" ? <div>logout </div> : null}
+                <div>
+                    <div>Admissions Page</div>
+                    <br />
+                    <h1>{this.state.name}</h1>
+                    <div style={studentPageStyle}>
+                        <div style={filterStyle}>
+                            <p> Filters </p>
                         </div>
-                        <div style={allCardsStyle}>
-                            <AllCards info={this.state.students}></AllCards>
+                        <div style={studentInfoStyle}>
+                            <div style={searchBarStyle}>
+                                <input
+                                    style={InputStyle}
+                                    placeholder="Search for Student"
+                                />
+                                <MagnifyingGlass style={MagnifyingGlassStyle} />
+                            </div>
+                            <div style={allCardsStyle}>
+                                <AllCards info={this.state.students}></AllCards>
+                            </div>
                         </div>
                     </div>
                 </div>

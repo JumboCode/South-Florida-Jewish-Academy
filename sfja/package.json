@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "lint": "^0.7.0",
+    "prop-types": "^15.7.2",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-router-dom": "^5.1.2",
@@ -14,7 +15,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint '**/*.{js,jsx}' --quiet"
+    "lint": "eslint 'src/*.{js,jsx}' --quiet"
   },
   "eslintConfig": {
     "extends": "react-app"
