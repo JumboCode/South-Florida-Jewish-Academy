@@ -1,9 +1,10 @@
 import React from "react";
 import StudentCard from "./StudentCard";
 
+// eslint-disable-next-line require-jsdoc
 class AllCards extends React.Component {
-    // eslint-disable-next-line require-jsdoc
-    render() {
+  // eslint-disable-next-line require-jsdoc
+  render() {
         const { info } = this.props;
         return (
             <>
@@ -26,8 +27,6 @@ class AllCards extends React.Component {
                             id={id}
                             forms={form_ids}
                         ></StudentCard>
-
-                        // <TestCard key={data.basic_info.email} name={data.basic_info.first_name + " " + data.basic_info.middle_name.substring(0,1) + ". " + data.basic_info.last_name} email={data.basic_info.email} id={data.id}></TestCard>
                     );
                 })}
             </>
