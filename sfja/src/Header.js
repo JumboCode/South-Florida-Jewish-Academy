@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './header.css';
-import {ReactComponent as UploadIcon} from './VectorsForNavbar/Upload.svg';
-import {ReactComponent as StudentsIcon} from './VectorsForNavbar/Students.svg';
-import {ReactComponent as HomeIcon} from './VectorsForNavbar/Home.svg';
-import {ReactComponent as EmailIcon} from './VectorsForNavbar/Email.svg';
-import {ReactComponent as LogoutIcon} from './VectorsForNavbar/Logout.svg';
-import topLogo from './CircleLogo.png';
+import {ReactComponent as UploadIcon} from './assets/Upload.svg';
+import {ReactComponent as StudentsIcon} from './assets/Students.svg';
+import {ReactComponent as HomeIcon} from './assets/Home.svg';
+import {ReactComponent as EmailIcon} from './assets/Email.svg';
+import {ReactComponent as LogoutIcon} from './assets/Logout.svg';
+import topLogo from './assets/CircleLogo.png';
 
 /**
  * @classdesc The Header class acts as a navigation bar.
