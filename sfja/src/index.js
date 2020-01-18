@@ -11,11 +11,11 @@ const routing = (
   <Router>
     <div>
       <Route exact path="/">
-        <Redirect to="/admin"/>
+        <Redirect to="/admin" />
       </Route>
       <Route exact path="/admin" component={Admin} />
       <Route path="/form/:key" component={Form} />
-      <Route exact path = "/header" component = {Header} />
+      <Route exact path="/header" component={Header} />
     </div>
   </Router>
 );

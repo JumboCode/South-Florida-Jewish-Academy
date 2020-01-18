@@ -1,4 +1,5 @@
 import React from 'react';
+import Students from './components/Students/Students';
 import Header from './components/Header';
 
 // eslint-disable-next-line require-jsdoc
@@ -25,20 +26,23 @@ class Admin extends React.Component {
 
     if (!loggedIn) {
       return (
-        <div
-          onClick={() => this.setState({loggedIn: true})}
-        >Login</div>
+        <div onClick={() => this.setState({loggedIn: true})}>
+                    Login
+        </div>
       );
     }
     return (
       <div>
-        <Header setTab={this.setTab.bind(this)} selectedTab={tab}/>
-        {tab === 'dashboard' ? <div>dashboard </div> : null}
-        {tab === 'students' ? <div>students </div> : null}
-        {tab === 'upload' ? <div>upload forms </div> : null}
-        {tab === 'email' ? <div>email </div> : null}
-        {tab === 'logout' ? <div>logout </div> : null}
-      </div>);
+        <Header setTab={this.setTab.bind(this)} selectedTab={tab} />
+        {tab === 'dashboard' && <div>dashboard </div>}
+        {tab === 'students' && (
+          <Students/>
+        )}
+        {tab === 'upload' && <div>upload forms </div>}
+        {tab === 'email' && <div>email </div>}
+        {tab === 'logout' && <div>logout </div>}
+      </div>
+    );
   }
 }
 
