@@ -14,6 +14,7 @@ class Admin extends React.Component {
       students: [],
     };
   }
+  // eslint-disable-next-line require-jsdoc
   componentDidMount() {
     fetch('http://127.0.0.1:5000/students')
         .then((res) => res.json())
