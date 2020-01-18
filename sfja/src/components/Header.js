@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './header.css';
+import './Header.css';
 import {ReactComponent as UploadIcon} from './assets/Upload.svg';
 import {ReactComponent as StudentsIcon} from './assets/Students.svg';
 import {ReactComponent as HomeIcon} from './assets/Home.svg';
