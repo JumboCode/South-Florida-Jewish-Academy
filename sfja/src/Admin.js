@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from './Header';
 import Students from './components/Students/';
+import Header from './components/Header';
 
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {
