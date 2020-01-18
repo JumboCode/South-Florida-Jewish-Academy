@@ -1,6 +1,10 @@
 import React from 'react';
-import Students from './components/Students/Students';
 import Header from './components/Header';
+import Students from './components/Students/Students';
+import NavBar from "./components/NavBar";
+import {useAuth0} from "./components/react-auth0-spa";
+import routing from './index.js';
+
 
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {
@@ -26,9 +30,7 @@ class Admin extends React.Component {
 
     if (!loggedIn) {
       return (
-        <div onClick={() => this.setState({loggedIn: true})}>
-                    Login
-        </div>
+        <NavBar/>
       );
     }
     return (
