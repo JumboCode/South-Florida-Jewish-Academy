@@ -1,6 +1,7 @@
 import React from 'react';
-import Header from './components/Header';
 import FormManager from './components/FormManager';
+import Students from './components/Students/Students';
+import Header from './components/Header';
 
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {
@@ -26,20 +27,23 @@ class Admin extends React.Component {
 
     if (!loggedIn) {
       return (
-        <div
-          onClick={() => this.setState({loggedIn: true})}
-        >Login</div>
+        <div onClick={() => this.setState({loggedIn: true})}>
+                    Login
+        </div>
       );
     }
     return (
       <div>
-        <Header setTab={this.setTab.bind(this)} selectedTab={tab}/>
-        {tab === 'dashboard' ? <div>dashboard </div> : null}
-        {tab === 'students' ? <div>students </div> : null}
-        {tab === 'upload' ? <div> <FormManager /> </div> : null}
-        {tab === 'email' ? <div>email </div> : null}
-        {tab === 'logout' ? <div>logout </div> : null}
-      </div>);
+        <Header setTab={this.setTab.bind(this)} selectedTab={tab} />
+        {tab === 'dashboard' && <div>dashboard </div>}
+        {tab === 'students' && (
+          <Students/>
+        )}
+        {tab === 'upload' && <div><FormManager /> </div>}
+        {tab === 'email' && <div>email </div>}
+        {tab === 'logout' && <div>logout </div>}
+      </div>
+    );
   }
 }
 
