@@ -8,7 +8,7 @@ class FormManager extends React.Component{
     constructor(){
         super();
         this.state = {
-            comp: 'editor'
+            comp: 'forms'
         }
         this.changeState = this.changeState.bind(this)
     }
