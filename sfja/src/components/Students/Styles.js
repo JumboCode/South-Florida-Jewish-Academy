@@ -1,8 +1,4 @@
-import React from 'react';
-import AllCards from './AllCards';
-import MagnifyingGlass from './MagnifyingGlass';
-
-const studentPageStyle = {
+export const studentPageStyle = {
   display: 'flex',
   maxWidth: '100%',
   paddingLeft: '15px',
@@ -10,7 +6,7 @@ const studentPageStyle = {
   fontFamily: 'Futura',
 };
 
-const filterStyle = {
+export const filterStyle = {
   backgroundColor: '#086fb3',
   flex: '0 1 300px',
   borderRadius: '5px',
@@ -21,7 +17,7 @@ const filterStyle = {
   color: 'white',
 };
 
-const searchBarStyle = {
+export const searchBarStyle = {
   display: 'flex',
   flex: '100%',
   borderRadius: '50px',
@@ -30,7 +26,7 @@ const searchBarStyle = {
   alignItems: 'center',
 };
 
-const InputStyle = {
+export const InputStyle = {
   flex: 1,
   width: '95%',
   height: '40px',
@@ -42,13 +38,13 @@ const InputStyle = {
   outline: 'none',
 };
 
-const MagnifyingGlassStyle = {
+export const MagnifyingGlassStyle = {
   flex: '30px',
   maxWidth: '30px',
   textAlign: 'center',
   paddingRight: '10px',
 };
-const allCardsStyle = {
+export const allCardsStyle = {
   backgroundColor: '#cde6ff',
   padding: '40px',
   paddingTop: '0px',
@@ -59,34 +55,9 @@ const allCardsStyle = {
   marginTop: '25px',
 };
 
-const studentInfoStyle = {
+export const studentInfoStyle = {
   display: 'flex',
   flexWrap: 'wrap',
   flex: 1,
   padding: '15px',
 };
-
-// eslint-disable-next-line react/prop-types
-const Students = ({students}) => (
-  <div>
-    <div style={studentPageStyle}>
-      <div style={filterStyle}>
-        <p> Filters </p>
-      </div>
-      <div style={studentInfoStyle}>
-        <div style={searchBarStyle}>
-          <input
-            style={InputStyle}
-            placeholder="Search for Student"
-          />
-          <MagnifyingGlass style={MagnifyingGlassStyle} />
-        </div>
-        <div style={allCardsStyle}>
-          <AllCards info={students}></AllCards>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-export default Students;

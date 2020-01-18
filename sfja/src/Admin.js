@@ -1,5 +1,5 @@
 import React from 'react';
-import Students from './components/Students/';
+import Students from './components/Students/Students';
 import Header from './components/Header';
 
 // eslint-disable-next-line require-jsdoc
@@ -11,20 +11,8 @@ class Admin extends React.Component {
     this.state = {
       loggedIn: false,
       tab: 'dashboard',
-      students: [],
     };
   }
-  // eslint-disable-next-line require-jsdoc
-  componentDidMount() {
-    fetch('http://127.0.0.1:5000/students')
-        .then((res) => res.json())
-        .then((data) => {
-          this.setState({students: data.students});
-          console.log(data);
-        })
-        .catch(console.log);
-  }
-
   // eslint-disable-next-line require-jsdoc
   setTab(newTab) {
     this.setState({
@@ -48,7 +36,7 @@ class Admin extends React.Component {
         <Header setTab={this.setTab.bind(this)} selectedTab={tab} />
         {tab === 'dashboard' && <div>dashboard </div>}
         {tab === 'students' && (
-          <Students students={this.state.students} />
+          <Students/>
         )}
         {tab === 'upload' && <div>upload forms </div>}
         {tab === 'email' && <div>email </div>}
