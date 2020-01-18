@@ -1,16 +1,16 @@
 import React from 'react';
-import { ReactFormGenerator, ElementStore } from 'react-form-builder2';
+import {ReactFormGenerator, ElementStore} from 'react-form-builder2';
 
 export default class DemoBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      previewVisible: false
+      previewVisible: false,
     };
 
     const update = this._onChange.bind(this);
-    ElementStore.subscribe(state => update(state.data));
+    ElementStore.subscribe((state) => update(state.data));
   }
 
   showPreview() {
@@ -38,10 +38,10 @@ export default class DemoBar extends React.Component {
     }
 
     return (
-      <div className="clearfix" style={{ margin: '10px', width: '70%' }}>
+      <div className="clearfix" style={{margin: '10px', width: '70%'}}>
         <h4 className="pull-left">Preview</h4>
-        <button className="btn btn-primary pull-right" style={{ marginRight: '10px' }} onClick={this.showPreview.bind(this)}>Preview Form</button>
-        <button className="btn btn-default pull-right" style={{ marginRight: '10px' }} onClick={this.props.backFunc}>Back</button>
+        <button className="btn btn-primary pull-right" style={{marginRight: '10px'}} onClick={this.showPreview.bind(this)}>Preview Form</button>
+        <button className="btn btn-default pull-right" style={{marginRight: '10px'}} onClick={this.props.backFunc}>Back</button>
         { this.state.previewVisible &&
           <div className={modalClass}>
             <div className="modal-dialog">
