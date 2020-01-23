@@ -1,9 +1,11 @@
 import React from 'react';
 import Header from './components/Header';
 import Students from './components/Students/Students';
-import NavBar from "./components/NavBar";
+import NavBar from './components/NavBar';
+import LoginPage from "./components/LoginPage";
 import {useAuth0} from "./components/react-auth0-spa";
-import routing from './index.js';
+import Logout from "./components/Logout";
+// import PropTypes from 'prop-types';
 
 
 // eslint-disable-next-line require-jsdoc
@@ -24,15 +26,23 @@ class Admin extends React.Component {
     });
   }
 
+  authenticate = () => {
+    this.setState({
+      loggedIn: true
+    })
+  };
+
   // eslint-disable-next-line require-jsdoc
   render() {
     const {loggedIn, tab} = this.state;
-
+    console.log('in admin', loggedIn)
     if (!loggedIn) {
       return (
-        <NavBar/>
+          <LoginPage authenticate={this.authenticate.bind(this)}/>
       );
     }
+
+
     return (
       <div>
         <Header setTab={this.setTab.bind(this)} selectedTab={tab} />
@@ -42,7 +52,7 @@ class Admin extends React.Component {
         )}
         {tab === 'upload' && <div>upload forms </div>}
         {tab === 'email' && <div>email </div>}
-        {tab === 'logout' && <div>logout </div>}
+        {tab === 'logout' && <Logout/>}
       </div>
     );
   }
