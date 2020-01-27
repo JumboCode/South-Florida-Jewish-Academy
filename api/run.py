@@ -6,9 +6,10 @@ from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from generateKey import generateKey 
 import os
 import json
-from database import testDB, studentsDOM
+from database import testDB, studentsDOM, usersDOM
 from flask import jsonify
 import subprocess
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -20,11 +21,13 @@ app.config['SENDGRID_DEFAULT_FROM'] = 'maxjramer@gmail.com'
 
 @app.route('/resetDatabase', methods=['GET', 'POST'])
 def resetDatabase():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 0)
     subprocess.call('python3 ../bin/resetDatabase.py', shell=True)
     return jsonify({'done': True})
 
 @app.route('/', methods = ['GET', 'POST'])
 def HelloWorld():
+    usersDOM.addAction(2, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 1)
     listOfNums = []
     for i in range(0, 10):
         listOfNums.append(i)
@@ -34,11 +37,13 @@ def HelloWorld():
 
 @app.route('/insert', methods = ['GET', 'POST'])
 def makeUsers():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 2)
     testDB.makeUsers()
     return {'success': True}
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 3)
     #checkKey only works with json requests, so you can't test it without the front end 
     print(request.json['key'])
     result = verifyKey(int(request.json['key']))
@@ -56,6 +61,7 @@ def checkKey():
 
 @app.route('/email', methods = ['GET', 'POST'])
 def get():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 4)
     mail = SendGrid(app)
     #generates a unique key
     generatedKey = generateKey()
@@ -77,8 +83,13 @@ def get():
 
 @app.route('/students', methods = ['GET', 'POST'])
 def getStudents():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 5)
     return {'students': studentsDOM.getStudents()}
 
+@app.route('/users', methods = ['GET', 'POST'])
+def getUsers():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 6)
+    return {'users': usersDOM.getUsers()}
 
 if __name__ == '__main__':
     app.run(debug=True)
