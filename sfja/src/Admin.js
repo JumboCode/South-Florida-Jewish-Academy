@@ -1,5 +1,4 @@
 import React from 'react';
-import FormManager from './components/FormManager';
 import Students from './components/Students/Students';
 import Header from './components/Header';
 
@@ -39,7 +38,7 @@ class Admin extends React.Component {
         {tab === 'students' && (
           <Students/>
         )}
-        {tab === 'upload' && <div><FormManager /> </div>}
+        {tab === 'upload' && <div></div>}
         {tab === 'email' && <div>email </div>}
         {tab === 'logout' && <div>logout </div>}
       </div>
