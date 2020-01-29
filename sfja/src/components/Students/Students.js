@@ -37,6 +37,9 @@ class Students extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {students} = this.state;
+    const {updateCurrView, updateCurrID} = this.props;
+    console.log(updateCurrView)
+    // updateCurrView('student')
     if (!students) {
       return (
         <div>
@@ -47,7 +50,7 @@ class Students extends React.Component {
     return (
       <div style={studentPageStyle}>
         <div style={filterStyle}>
-          <p> Filters </p>
+          <p onClick={() => updateCurrView('student')}> Filters </p>
         </div>
         <div style={studentInfoStyle}>
           <div style={searchBarStyle}>
@@ -58,7 +61,7 @@ class Students extends React.Component {
             <MagnifyingGlass style={MagnifyingGlassStyle} />
           </div>
           <div style={allCardsStyle}>
-            <AllCards info={students}></AllCards>
+            <AllCards info={students} updateCurrID={updateCurrID}></AllCards>
           </div>
         </div>
       </div>
