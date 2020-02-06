@@ -1,30 +1,39 @@
 import React from 'react';
-import NavBar from "./NavBar";
+import {useAuth0} from '../react-auth0-spa';
+import './LoginPage.css';
+import CircleLogo from '../assets/CircleLogo.png';
+/* eslint react/prop-types: 0 */
 
-class LoginPage extends React.Component{
+const LoginPage = ({authenticate}) => {
+  const {isAuthenticated, loginWithRedirect} = useAuth0();
 
-    render() {
-        const {authenticate} = this.props;
-        return(
-            <div className="App">
-                <h1>
-                    South Florida Jewish Academy
-                </h1>
-                <h6>
-                    Kindergarten to Grade 12, give your child
-                    <br/>the best Education
-                </h6>
-                <br/>
-                <div className="center_rect">
-                    <img src="assets/CircleLogo.png"></img>
-                    <p>Administration Login </p>
-                    <hr>
-                    </hr>
-                    <NavBar authenticate={authenticate.bind(this)}/>
-                </div>
-            </div>
-        )
-    }
-}
+  if (isAuthenticated) {
+    authenticate();
+  }
+  return (
+    <div className="App">
+      <h1>
+                South Florida Jewish Academy
+      </h1>
+      <h6>
+                Kindergarten to Grade 12, give your child
+        <br/>the best Education
+      </h6>
+      <br/>
+      <div className="center_rect">
+        <img className="logo" id="CircleLogo" src={CircleLogo}></img>
+        <p>Administration Login </p>
+        <hr>
+        </hr>
+        <div className="button_container">
+          {!isAuthenticated && (
+            <button onClick={() => loginWithRedirect({})}>Log in</button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 export default LoginPage;

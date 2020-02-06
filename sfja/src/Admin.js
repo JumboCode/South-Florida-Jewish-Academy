@@ -1,13 +1,10 @@
 import React from 'react';
 import Header from './components/Header';
 import Students from './components/Students/Students';
-import NavBar from './components/NavBar';
-import LoginPage from "./components/LoginPage";
-import {useAuth0} from "./components/react-auth0-spa";
-import Logout from "./components/Logout";
+import LoginPage from './components/LoginPage';
+import Logout from './components/Logout';
 // import PropTypes from 'prop-types';
-
-
+/* eslint-disable no-invalid-this*/
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {
   // eslint-disable-next-line require-jsdoc
@@ -28,17 +25,19 @@ class Admin extends React.Component {
 
   authenticate = () => {
     this.setState({
-      loggedIn: true
-    })
+      loggedIn: true,
+    });
   };
 
   // eslint-disable-next-line require-jsdoc
   render() {
     const {loggedIn, tab} = this.state;
-    console.log('in admin', loggedIn)
+    console.log('in admin', loggedIn);
+
+
     if (!loggedIn) {
       return (
-          <LoginPage authenticate={this.authenticate.bind(this)}/>
+        <LoginPage authenticate={this.authenticate.bind(this)}/>
       );
     }
 

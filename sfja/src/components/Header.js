@@ -7,7 +7,6 @@ import {ReactComponent as HomeIcon} from '../assets/Home.svg';
 import {ReactComponent as EmailIcon} from '../assets/Email.svg';
 import {ReactComponent as LogoutIcon} from '../assets/Logout.svg';
 import topLogo from '../assets/CircleLogo.png';
-import {useAuth0} from "./react-auth0-spa";
 
 /**
  * @classdesc The Header class acts as a navigation bar.
@@ -22,7 +21,7 @@ class Header extends React.Component {
    * @return {Reference}
    */
   render() {
-      // const {isAuthenticated, loginWithRedirect, logout} = useAuth0();
+    // const {isAuthenticated, loginWithRedirect, logout} = useAuth0();
     const {setTab, selectedTab} = this.props;
     return (
       <div>
