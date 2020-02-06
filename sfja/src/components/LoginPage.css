@@ -1,0 +1,99 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+h1 {
+
+    font-size: 50px;
+    font-family: Lato;
+    color: SteelBlue;
+    text-shadow: 0.5px 0.5px black;
+    text-align: center;
+    margin-top: 150px;
+    margin-bottom: 0px
+
+}
+
+h6 {
+    font-size: 32px;
+    font-family: Lato;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 40px;
+    text-shadow: 0.5px 0.5px black;
+    color: DarkOrange;
+    position: center;
+
+
+}
+
+button {
+
+    white-space: nowrap;
+    text-align: center;
+    background: darkorange;
+    padding: 5px 70px;
+    font-size: 40px;
+    font-weight: 500;
+    color: white;
+    border-color: black;
+    border-radius: 20px;
+    margin-top: 10px;
+    display: inline-block;
+
+}
+
+.logo {
+    width: 170px;
+}
+
+.center_rect {
+
+    width: 450px;
+    height: 400px;
+    background: #E8E8E8;
+    margin: auto;
+    border: solid gray 1px;
+    box-shadow: 0px 0px 7px grey;
+    margin-bottom: 100px;
+
+}
+
+.button_container {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 0px;
+    font-size: 32px;
+    color: #1F3F7F;
+    font-weight: 500;
+}
+
+hr {
+    width: 370px;
+    border-top: 1px solid darkorange;
+}
+
+img {
+    margin: 150px;
+    margin-top: 60px;
+    margin-bottom: 0px;
+    border: solid #1F3F7F 3px;
+    background: white;
+    width: 150px;
+    height: 150px;
+
+}
