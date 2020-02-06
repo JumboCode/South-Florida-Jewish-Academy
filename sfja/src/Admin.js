@@ -1,6 +1,7 @@
 import React from 'react';
 import Students from './components/Students/Students';
 import Header from './components/Header';
+import FormManager from './components/FormManager/FormManager'
 
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {
@@ -38,7 +39,9 @@ class Admin extends React.Component {
         {tab === 'students' && (
           <Students/>
         )}
-        {tab === 'upload' && <div></div>}
+        {tab === 'upload' && (
+          <FormManager/>
+        )}
         {tab === 'email' && <div>email </div>}
         {tab === 'logout' && <div>logout </div>}
       </div>

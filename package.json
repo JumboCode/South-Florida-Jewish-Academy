@@ -3,11 +3,15 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/react-fontawesome": "^0.1.8",
-    "bootstrap": "^3.3.7",
+    "beedle": "^0.8.1",
+    "bootstrap": "^4.4.1",
+    "bootstrap-slider": "^10.6.2",
+    "bootstrap-styl": "^5.0.9",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
+    "classnames": "^2.2.6",
     "jquery": "^3.4.1",
     "node-jquery": "^0.1.0",
-    "react-form-builder2": "^0.4.3",
+    "node-sass": "^4.13.1",
     "react-hook-form": "^4.5.5"
   },
   "devDependencies": {
