@@ -40,7 +40,7 @@ class Admin extends React.Component {
           <Students/>
         )}
         {tab === 'upload' && (
-          <FormManager/>
+          <div><FormManager/></div>
         )}
         {tab === 'email' && <div>email </div>}
         {tab === 'logout' && <div>logout </div>}

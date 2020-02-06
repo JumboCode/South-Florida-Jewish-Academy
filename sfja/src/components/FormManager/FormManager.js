@@ -9,10 +9,13 @@ require('./scss/application.scss');
 class FormManager extends React.Component {
     render(){
         return (
-            <React.Fragment>
-                <DemoBar />
-                <FormBuilder.ReactFormBuilder />
-            </React.Fragment>
+            <div className="fm-container">
+                <React.Fragment>
+                    <DemoBar />
+                    <FormBuilder.ReactFormBuilder />
+                </React.Fragment>
+            </div>
+            
           );
 
     }
