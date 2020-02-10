@@ -28,7 +28,7 @@ export default class Demobar extends React.Component {
     const update = this._onChange.bind(this);
     this._onSubmit = this._onSubmit.bind(this);
 
-    store.subscribe(state => update(state.data));
+    store.subscribe(state => (update(state.data)));
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -55,6 +55,7 @@ export default class Demobar extends React.Component {
   }
 
   // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line require-jsdoc
   _onSubmit(data) {
     // console.log('onSubmit', data);
     // Place code to post json data to server here
@@ -70,7 +71,8 @@ export default class Demobar extends React.Component {
     return (
       <div className="clearfix" style={{margin: '10px', width: '70%'}}>
         <h4 className="pull-left">Preview</h4>
-        <button className="btn btn-primary pull-right" style={{marginRight: '10px'}} onClick={this.showPreview.bind(this)}>Preview Form</button>
+        <button className="btn btn-primary pull-right" style={{marginRight: 
+          '10px'}} onClick={this.showPreview.bind(this)}>Preview Form</button>
 
         { this.state.previewVisible &&
           <div className={modalClass}>
@@ -86,11 +88,13 @@ export default class Demobar extends React.Component {
                   form_method="POST"
                   // skip_validations={true}
                   // onSubmit={this._onSubmit}
-                  variables={this.props.variables}
+                  // variables={this.props.variables}
                   data={this.state.data} />
 
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-default" data-dismiss="modal" onClick={this.closePreview.bind(this)}>Close</button>
+                  <button type="button" className="btn btn-default" 
+                  data-dismiss="modal" onClick={this.closePreview.bind(this)}>
+                    Close</button>
                 </div>
               </div>
             </div>

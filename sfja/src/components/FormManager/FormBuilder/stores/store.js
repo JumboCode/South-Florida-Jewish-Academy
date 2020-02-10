@@ -1,5 +1,5 @@
 import Store from 'beedle';
-import { get, post } from './requests';
+import {get, post} from './requests';
 
 let _saveUrl;
 let _onPost;
@@ -15,11 +15,12 @@ const store = new Store({
     load(context, {loadUrl, saveUrl, data}) {
       _saveUrl = saveUrl;
       if (_onLoad) {
-        _onLoad().then(x => this.setData(context, x));
+        _onLoad().then(x => (this.setData(context, x)));
       } else if (loadUrl) {
+        // eslint-disable-next-line arrow-parens
         get(loadUrl).then(x => {
           if (data && data.length > 0 && x.length === 0) {
-            data.forEach(y => x.push(y));
+            data.forEach(y => (x.push(y)));
           }
           this.setData(context, x);
         });
@@ -46,9 +47,9 @@ const store = new Store({
 
     save(data) {
       if (_onPost) {
-        _onPost({ task_data: data });
+        _onPost({task_data: data});
       } else if (_saveUrl) {
-        post(_saveUrl, { task_data: data });
+        post(_saveUrl, {task_data: data});
       }
     },
   },
