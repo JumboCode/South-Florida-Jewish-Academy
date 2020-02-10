@@ -94,8 +94,8 @@ export default class Demobar extends React.Component {
 
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default"
-                  data-dismiss="modal" onClick={this.closePreview.bind(this)}>
-                  Close</button>
+                    data-dismiss="modal" onClick={this.closePreview.bind(this)}>
+                    Close</button>
                 </div>
               </div>
             </div>
