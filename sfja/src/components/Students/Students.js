@@ -61,7 +61,7 @@ class Students extends React.Component {
             <MagnifyingGlass style={MagnifyingGlassStyle} />
           </div>
           <div style={allCardsStyle}>
-            <AllCards info={students} updateCurrID={updateCurrID}></AllCards>
+            <AllCards info={students} updateCurrID={updateCurrID} updateCurrView={updateCurrView}></AllCards>
           </div>
         </div>
       </div>

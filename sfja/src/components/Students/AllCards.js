@@ -10,7 +10,7 @@ class AllCards extends React.Component {
   };
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {info, updateCurrID} = this.props;
+    const {info, updateCurrID, updateCurrView} = this.props;
     return (
       <>
         {info.map(({basic_info, id, form_ids}) => {
@@ -26,7 +26,9 @@ class AllCards extends React.Component {
           )}. ${last_name}`;
           return (
             <StudentCard
-              onClick={() => updateCurrID(id)}
+              // onClick={() => {updateCurrID(id);updateCurrView('student')}}
+              updateCurrID={updateCurrID} 
+              updateCurrView={updateCurrView}
               key={email}
               name={name}
               email={email}

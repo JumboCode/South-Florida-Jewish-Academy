@@ -90,12 +90,13 @@ class StudentCard extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     // const classes = useStyles();
+    const {info, updateCurrID, updateCurrView} = this.props;
     console.log(this.props, 'props');
     const forms = this.props.forms;
     return (
-      <Card style={cardStyle}>
+      <Card onClick={console.log("Clicked1?")} style={cardStyle}>
         <CardContent style={cardContentStyle}>
-          <div style={studentProfileStyle}>
+          <div style={studentProfileStyle} >
             <img
               style={imageStyle}
               src="https://i1.wp.com/acaweb.org/wp-content/uploads/2018/12/profile-placeholder.png"
@@ -118,7 +119,7 @@ class StudentCard extends React.Component {
             </div>
           </div>
           <div style={trashBinStyle}>
-            <TrashBin style={trashBinIconStyle}></TrashBin>
+            <TrashBin onClick={console.log("CLIKCKEDDDD")} style={trashBinIconStyle}></TrashBin>
           </div>
         </CardContent>
       </Card>
