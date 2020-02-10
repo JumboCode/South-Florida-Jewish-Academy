@@ -23,5 +23,6 @@ export function get(url) {
   return fetch(url, {
     method: 'GET',
     headers,
+    // eslint-disable-next-line arrow-parens
   }).then(response => response.json());
 }
