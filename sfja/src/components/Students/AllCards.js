@@ -13,7 +13,7 @@ class AllCards extends React.Component {
     const {info, updateCurrID, updateCurrView} = this.props;
     return (
       <>
-        {info.map(({basic_info, id, form_ids}) => {
+        {info.map(({basic_info, student_id, form_ids}) => {
           const {
             first_name,
             middle_name,
@@ -32,7 +32,7 @@ class AllCards extends React.Component {
               key={email}
               name={name}
               email={email}
-              id={id}
+              id={student_id}
               forms={form_ids}
             ></StudentCard>
           );

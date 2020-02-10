@@ -11,6 +11,7 @@ import {
   MagnifyingGlassStyle,
   allCardsStyle,
 } from './Styles';
+import Header from '../Header';
 
 // eslint-disable-next-line require-jsdoc
 class Students extends React.Component {
@@ -43,28 +44,33 @@ class Students extends React.Component {
     if (!students) {
       return (
         <div>
+          <Header/>
           Loading...
         </div>
       );
     }
     return (
-      <div style={studentPageStyle}>
-        <div style={filterStyle}>
-          <p onClick={() => updateCurrView('student')}> Filters </p>
-        </div>
-        <div style={studentInfoStyle}>
-          <div style={searchBarStyle}>
-            <input
-              style={InputStyle}
-              placeholder="Search for Student"
-            />
-            <MagnifyingGlass style={MagnifyingGlassStyle} />
+      <div>
+        <Header currTab='students' />
+        <div style={studentPageStyle}>
+          <div style={filterStyle}>
+            <p onClick={() => updateCurrView('student')}> Filters </p>
           </div>
-          <div style={allCardsStyle}>
-            <AllCards info={students} updateCurrID={updateCurrID} updateCurrView={updateCurrView}></AllCards>
+          <div style={studentInfoStyle}>
+            <div style={searchBarStyle}>
+              <input
+                style={InputStyle}
+                placeholder="Search for Student"
+              />
+              <MagnifyingGlass style={MagnifyingGlassStyle} />
+            </div>
+            <div style={allCardsStyle}>
+              <AllCards info={students} updateCurrID={updateCurrID} updateCurrView={updateCurrView}></AllCards>
+            </div>
           </div>
         </div>
       </div>
+
     );
   }
 }
