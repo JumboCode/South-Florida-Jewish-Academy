@@ -15,7 +15,9 @@ const answers = {};
 //   'rating_3B3491B3-71AC-4A68-AB8C-A2B5009346CB': 4,
 // };
 
+// eslint-disable-next-line require-jsdoc
 export default class Demobar extends React.Component {
+  // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
     this.state = {
@@ -29,12 +31,14 @@ export default class Demobar extends React.Component {
     store.subscribe(state => update(state.data));
   }
 
+  // eslint-disable-next-line require-jsdoc
   showPreview() {
     this.setState({
       previewVisible: true,
     });
   }
 
+  // eslint-disable-next-line require-jsdoc
   closePreview() {
     this.setState({
       previewVisible: false,
@@ -43,6 +47,7 @@ export default class Demobar extends React.Component {
     });
   }
 
+  // eslint-disable-next-line require-jsdoc
   _onChange(data) {
     this.setState({
       data,
@@ -55,6 +60,7 @@ export default class Demobar extends React.Component {
     // Place code to post json data to server here
   }
 
+  // eslint-disable-next-line require-jsdoc
   render() {
     let modalClass = 'modal';
     if (this.state.previewVisible) {
@@ -62,9 +68,9 @@ export default class Demobar extends React.Component {
     }
 
     return (
-      <div className="clearfix" style={{ margin: '10px', width: '70%' }}>
+      <div className="clearfix" style={{margin: '10px', width: '70%'}}>
         <h4 className="pull-left">Preview</h4>
-        <button className="btn btn-primary pull-right" style={{ marginRight: '10px' }} onClick={this.showPreview.bind(this)}>Preview Form</button>
+        <button className="btn btn-primary pull-right" style={{marginRight: '10px'}} onClick={this.showPreview.bind(this)}>Preview Form</button>
 
         { this.state.previewVisible &&
           <div className={modalClass}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Students from './components/Students/Students';
 import Header from './components/Header';
-import FormManager from './components/FormManager/FormManager'
+import FormManager from './components/FormManager/FormManager';
 
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {

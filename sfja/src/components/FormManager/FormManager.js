@@ -6,19 +6,21 @@ import './css/bootstrap.min.css';
 import './css/font-awesome.min.css';
 require('./scss/application.scss');
 
+// eslint-disable-next-line require-jsdoc
 class FormManager extends React.Component {
-    render(){
-        return (
-            <div className="fm-container">
-                <React.Fragment>
-                    <DemoBar />
-                    <FormBuilder.ReactFormBuilder />
-                </React.Fragment>
-            </div>
-            
-          );
+  // eslint-disable-next-line require-jsdoc
+  render(){
+    return (
+      <div className="fm-container">
+        <React.Fragment>
+          <DemoBar />
+          <FormBuilder.ReactFormBuilder />
+        </React.Fragment>
+      </div>
+        
+      );
 
-    }
+  }
 }
   
 export default FormManager;

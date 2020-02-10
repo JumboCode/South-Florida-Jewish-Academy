@@ -12,7 +12,7 @@ const store = new Store({
       if (saveData) this.save(data);
     },
 
-    load(context, { loadUrl, saveUrl, data }) {
+    load(context, {loadUrl, saveUrl, data}) {
       _saveUrl = saveUrl;
       if (_onLoad) {
         _onLoad().then(x => this.setData(context, x));
@@ -29,13 +29,13 @@ const store = new Store({
     },
 
     create(context, element) {
-      const { data } = context.state;
+      const {data} = context.state;
       data.push(element);
       this.setData(context, data, true);
     },
 
     delete(context, element) {
-      const { data } = context.state;
+      const {data} = context.state;
       data.splice(data.indexOf(element), 1);
       this.setData(context, data, true);
     },
