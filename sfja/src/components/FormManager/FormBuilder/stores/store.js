@@ -15,11 +15,13 @@ const store = new Store({
     load(context, {loadUrl, saveUrl, data}) {
       _saveUrl = saveUrl;
       if (_onLoad) {
+        // eslint-disable-next-line arrow-parens
         _onLoad().then(x => (this.setData(context, x)));
       } else if (loadUrl) {
         // eslint-disable-next-line arrow-parens
         get(loadUrl).then(x => {
           if (data && data.length > 0 && x.length === 0) {
+            // eslint-disable-next-line arrow-parens
             data.forEach(y => (x.push(y)));
           }
           this.setData(context, x);

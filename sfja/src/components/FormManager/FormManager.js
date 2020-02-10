@@ -9,7 +9,7 @@ require('./scss/application.scss');
 // eslint-disable-next-line require-jsdoc
 class FormManager extends React.Component {
   // eslint-disable-next-line require-jsdoc
-  render(){
+  render() {
     return (
       <div className="fm-container">
         <React.Fragment>
@@ -17,11 +17,8 @@ class FormManager extends React.Component {
           <FormBuilder.ReactFormBuilder />
         </React.Fragment>
       </div>
-        
-      );
-
+    );
   }
 }
-  
+
 export default FormManager;
-  

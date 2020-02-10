@@ -28,6 +28,7 @@ export default class Demobar extends React.Component {
     const update = this._onChange.bind(this);
     this._onSubmit = this._onSubmit.bind(this);
 
+    // eslint-disable-next-line arrow-parens
     store.subscribe(state => (update(state.data)));
   }
 
@@ -71,7 +72,7 @@ export default class Demobar extends React.Component {
     return (
       <div className="clearfix" style={{margin: '10px', width: '70%'}}>
         <h4 className="pull-left">Preview</h4>
-        <button className="btn btn-primary pull-right" style={{marginRight: 
+        <button className="btn btn-primary pull-right" style={{marginRight:
           '10px'}} onClick={this.showPreview.bind(this)}>Preview Form</button>
 
         { this.state.previewVisible &&
@@ -92,9 +93,9 @@ export default class Demobar extends React.Component {
                   data={this.state.data} />
 
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-default" 
+                  <button type="button" className="btn btn-default"
                   data-dismiss="modal" onClick={this.closePreview.bind(this)}>
-                    Close</button>
+                  Close</button>
                 </div>
               </div>
             </div>
