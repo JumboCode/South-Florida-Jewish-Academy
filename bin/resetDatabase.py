@@ -87,7 +87,7 @@ def makeUsers(db):
         for j in range (id, 2 * id):	
             datetime_NY = datetime.utcnow()	
             # print("Time:", datetime_NY.strftime("%H:%M:%S"))	
-            actions.append(tuple((datetime_NY.strftime("%H:%M:%S"), j % 7)))	
+            actions.append(tuple((datetime_NY.strftime("%Y-%m-%d %H:%M:%S"), j % 7)))	
 
         return actions	
 
