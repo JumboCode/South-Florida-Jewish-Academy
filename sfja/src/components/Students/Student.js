@@ -11,9 +11,6 @@ class Student extends React.Component{
         return(
             <div>
                 <Header currTab='students'/>
-                <div
-                    onClick={() => updateCurrView('students')}
-                >Back</div>
                 id={id}
             </div>
         )
