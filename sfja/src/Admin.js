@@ -41,6 +41,7 @@ class Admin extends React.Component {
         {tab === 'upload' && <div>upload forms </div>}
         {tab === 'email' && <div>email </div>}
         {tab === 'logout' && <div>logout </div>}
+        {tab === 'audit' && <div>audit </div>}
       </div>
     );
   }

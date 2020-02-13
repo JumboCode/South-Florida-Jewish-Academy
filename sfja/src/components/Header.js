@@ -6,6 +6,7 @@ import {ReactComponent as StudentsIcon} from '../assets/Students.svg';
 import {ReactComponent as HomeIcon} from '../assets/Home.svg';
 import {ReactComponent as EmailIcon} from '../assets/Email.svg';
 import {ReactComponent as LogoutIcon} from '../assets/Logout.svg';
+import {ReactComponent as AuditIcon} from '../assets/Audit.svg';
 import topLogo from '../assets/CircleLogo.png';
 
 /**
@@ -72,6 +73,17 @@ class Header extends React.Component {
                 position: 'absolute',
                 marginTop: 19,
                 width: 90,
+                height: 7,
+              }}></div>
+          </a>
+          <AuditIcon></AuditIcon>
+          <a onClick={() => setTab('audit')}>Audit
+            <div
+              style={{
+                backgroundColor: selectedTab == 'audit' ? '#0068af' : null,
+                position: 'absolute',
+                marginTop: 19,
+                width: 100,
                 height: 7,
               }}></div>
           </a>
