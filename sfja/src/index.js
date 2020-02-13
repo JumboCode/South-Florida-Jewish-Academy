@@ -9,6 +9,11 @@ import Admin from './Admin';
 import Form from './Form';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 import Header from './components/Header';
+import Student from './components/Students/Student';
+import Dashboard from './components/Dashboard';
+import Students from './components/Students/Students';
+import Upload from './components/Upload';
+import Email from './components/Email';
 
 
 // A function that routes the user to the right place
@@ -41,7 +46,12 @@ const routing = (
       </Route>
       <Route exact path="/admin" component={Admin} />
       <Route path="/form/:key" component={Form} />
+      <Route path="/profile/:id" component={Student} />
       <Route exact path="/header" component={Header} />
+      <Route exact path="/dashboard" component={Dashboard} />
+      <Route exact path="/students" component={Students} />
+      <Route exact path="/upload" component={Upload} />
+      <Route exact path="/email" component={Email} />
     </div>
   </Router>
 );

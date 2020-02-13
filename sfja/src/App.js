@@ -17,7 +17,6 @@ function App() {
         <Admin />
       </header>
     </div>
-
   );
 }
 

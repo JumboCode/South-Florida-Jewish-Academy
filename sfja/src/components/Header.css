@@ -1,12 +1,12 @@
 
 .navbar {
-    margin-top: 4%;
     display: flex;
     justify-content: space-around;
     background-color: #ff8533;
     color: #ffffff;
-    padding: 1% 1%;
-    font-size: 25px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-size: 20px;
     align-items: center;
     font-family: Futura;
 }
@@ -16,18 +16,23 @@
 }
 #topLogo{
     position: absolute;
+    margin-left: 7%;
 }
 #toptitle{
     text-align: right;
     font-family: Futura;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     margin-right: 10%;
     color: #0068af;
-    font-size: 50px;
-    margin-top: 3%;
+    font-size: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 #topsubtitle{
     text-shadow: none;
-    font-size: 45px;
+    font-size: 35px;
     font-style: italic;
 }
+a:visited{
+    color:white;
+}
+
