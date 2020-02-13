@@ -34,6 +34,12 @@ def getInfo(id, key):
     for content in contents:
         return content['basic_info'][key]
 
+# Gets forms of a student.
+def getForms(id):
+    contents = list(mongo.db.students.find({'student_id': id}))
+    for content in contents:
+        return content['form_ids']
+
 # Get form id of a student form.
 def getForm(id, formNum):
     contents = list(mongo.db.students.find({'student_id': id}))
