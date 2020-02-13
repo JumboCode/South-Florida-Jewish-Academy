@@ -36,7 +36,7 @@ class Admin extends React.Component {
         <Header setTab={this.setTab.bind(this)} selectedTab={tab} />
         {tab === 'dashboard' && <div>dashboard </div>}
         {tab === 'students' && (
-          <StudentTab/>
+          <div>students</div>
         )}
         {tab === 'upload' && <div>upload forms </div>}
         {tab === 'email' && <div>email </div>}
