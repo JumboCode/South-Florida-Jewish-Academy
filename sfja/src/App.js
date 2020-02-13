@@ -5,6 +5,7 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
+import Student from './components/Students/Student';
 // npm install --save react-router-dom
 
 // eslint-disable-next-line require-jsdoc
@@ -15,6 +16,9 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Home/>
+        </Route>
+        <Route exact path="/profile">
+          <Student/>
         </Route>
         {/* // here we are needing to route each page to an id */}
       </Switch>
