@@ -2,20 +2,17 @@ import React from 'react';
 import Header from './Header';
 
 
-class Dashboard extends React.Component{
-
-
-    render(){
-
-
-        return(
-
-            <div>
-                <Header currTab='dashboard'/>
+// eslint-disable-next-line require-jsdoc
+class Dashboard extends React.Component {
+  // eslint-disable-next-line require-jsdoc
+  render() {
+    return (
+      <div>
+        <Header currTab='dashboard'/>
                 dashboard
-            </div>
-        )
-    }
+      </div>
+    );
+  }
 }
 
 export default Dashboard;

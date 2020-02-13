@@ -1,5 +1,5 @@
 import React from 'react';
-import StudentTab from './components/StudentTab'
+import StudentTab from './components/StudentTab';
 import Header from './components/Header';
 
 // eslint-disable-next-line require-jsdoc

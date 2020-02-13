@@ -8,7 +8,6 @@ import ReactDOM from 'react-dom';
 import Header from './components/Header';
 import Student from './components/Students/Student';
 import Dashboard from './components/Dashboard';
-import StudentTab from './components/StudentTab';
 import Students from './components/Students/Students';
 import Upload from './components/Upload';
 import Email from './components/Email';

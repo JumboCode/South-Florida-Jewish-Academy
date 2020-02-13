@@ -10,6 +10,7 @@ class AllCards extends React.Component {
   };
   // eslint-disable-next-line require-jsdoc
   render() {
+    // eslint-disable-next-line react/prop-types
     const {info, updateCurrID, updateCurrView} = this.props;
     return (
       <>
@@ -27,7 +28,7 @@ class AllCards extends React.Component {
           return (
             <StudentCard
               // onClick={() => {updateCurrID(id);updateCurrView('student')}}
-              updateCurrID={updateCurrID} 
+              updateCurrID={updateCurrID}
               updateCurrView={updateCurrView}
               key={email}
               name={name}

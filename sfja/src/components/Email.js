@@ -2,20 +2,17 @@ import React from 'react';
 import Header from './Header';
 
 
-class Email extends React.Component{
-
-
-    render(){
-
-
-        return(
-
-            <div>
-                <Header currTab='email'/>
+// eslint-disable-next-line require-jsdoc
+class Email extends React.Component {
+  // eslint-disable-next-line require-jsdoc
+  render() {
+    return (
+      <div>
+        <Header currTab='email'/>
                 email
-            </div>
-        )
-    }
+      </div>
+    );
+  }
 }
 
 export default Email;

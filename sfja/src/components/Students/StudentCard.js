@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import TrashBin from './TrashBin';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 const cardStyle = {
   backgroundColor: '#1f76b3',
@@ -91,19 +91,20 @@ class StudentCard extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     // const classes = useStyles();
-    const {info, updateCurrID, updateCurrView, id} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {id} = this.props;
     console.log(this.props, 'props');
     const forms = this.props.forms;
     return (
       <Card style={cardStyle}>
         <CardContent style={cardContentStyle}>
           <div style={studentProfileStyle} >
-            <Link to={"/profile/" + id} style={{textDecoration:'none'}}>
-            <img
-              style={imageStyle}
-              src="https://i1.wp.com/acaweb.org/wp-content/uploads/2018/12/profile-placeholder.png"
-            ></img>
-            <div style={nameStyle}> {this.props.name} </div>
+            <Link to={'/profile/' + id} style={{textDecoration: 'none'}}>
+              <img
+                style={imageStyle}
+                src="https://i1.wp.com/acaweb.org/wp-content/uploads/2018/12/profile-placeholder.png"
+              ></img>
+              <div style={nameStyle}> {this.props.name} </div>
             </Link>
           </div>
           <div style={formInfoStyle}>
@@ -122,7 +123,8 @@ class StudentCard extends React.Component {
             </div>
           </div>
           <div style={trashBinStyle}>
-            <TrashBin onClick={console.log("CLIKCKEDDDD")} style={trashBinIconStyle}></TrashBin>
+            {/* eslint-disable-next-line max-len */}
+            <TrashBin onClick={console.log('CLIKCKEDDDD')} style={trashBinIconStyle}></TrashBin>
           </div>
         </CardContent>
       </Card>

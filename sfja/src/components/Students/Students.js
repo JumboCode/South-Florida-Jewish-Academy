@@ -38,8 +38,9 @@ class Students extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {students} = this.state;
+    // eslint-disable-next-line react/prop-types
     const {updateCurrView, updateCurrID} = this.props;
-    console.log(updateCurrView)
+    console.log(updateCurrView);
     // updateCurrView('student')
     if (!students) {
       return (
@@ -65,6 +66,7 @@ class Students extends React.Component {
               <MagnifyingGlass style={MagnifyingGlassStyle} />
             </div>
             <div style={allCardsStyle}>
+              {/* eslint-disable-next-line max-len */}
               <AllCards info={students} updateCurrID={updateCurrID} updateCurrView={updateCurrView}></AllCards>
             </div>
           </div>
