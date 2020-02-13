@@ -21,7 +21,6 @@ class Header extends React.Component {
    * @return {Reference}
    */
   render() {
-    // const {isAuthenticated, loginWithRedirect, logout} = useAuth0();
     const {setTab, selectedTab} = this.props;
     return (
       <div>
