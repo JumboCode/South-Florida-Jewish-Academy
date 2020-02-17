@@ -98,6 +98,9 @@ def getUsers():
 def getStudentProfile():
     studentID = request.json['id']
     form_ids = studentsDOM.getForms(studentID)['1']
+
+    for form_type in form_ids.keySet():
+        curr = form_ids[form_type]
     forms = []
     for form_id in form_ids:
         allFormData = getForm(form_id)
