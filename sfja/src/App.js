@@ -13,9 +13,10 @@ function App() {
 
   return (
     <div className="App">
-      <header>
-        <Admin />
-      </header>
+      hello
+      {/*<header>*/}
+      {/*  <Admin />*/}
+      {/*</header>*/}
     </div>
   );
 }

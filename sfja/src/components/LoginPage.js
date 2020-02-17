@@ -2,13 +2,16 @@ import React from 'react';
 import {useAuth0} from '../react-auth0-spa';
 import './LoginPage.css';
 import CircleLogo from '../assets/CircleLogo.png';
+import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 /* eslint react/prop-types: 0 */
 
 const LoginPage = ({authenticate}) => {
-  const {isAuthenticated, loginWithRedirect} = useAuth0();
+  const {isAuthenticated, loginWithPopup, logout} = useAuth0();
 
   if (isAuthenticated) {
-    authenticate();
+    return (
+      <Redirect to="/dashboard"/>
+    )
   }
   return (
     <div className="App">
@@ -27,7 +30,10 @@ const LoginPage = ({authenticate}) => {
         </hr>
         <div className="button_container">
           {!isAuthenticated && (
-            <button onClick={() => loginWithRedirect({})}>Log in</button>
+            <button onClick={() => loginWithPopup({})}>Log in</button>
+          )}
+          {isAuthenticated && (
+            <button onClick={() => logout({})}>Log out</button>
           )}
         </div>
       </div>

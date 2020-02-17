@@ -3,9 +3,10 @@ import React from 'react';
 
 const Logout = () => {
   const {logout} = useAuth0();
+  logout();
   return (
     <div >
-      {<button onClick={() => logout()}>LOGOUT</button>}
+      Logging out...
     </div>
   );
 };

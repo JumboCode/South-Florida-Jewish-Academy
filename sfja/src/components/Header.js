@@ -10,6 +10,7 @@ import {ReactComponent as HomeIconGray} from '../assets/Home_gray.svg';
 import {ReactComponent as EmailIcon} from '../assets/Email.svg';
 import {ReactComponent as EmailIconGray} from '../assets/Email_gray.svg';
 import topLogo from '../assets/CircleLogo.png';
+import Logout from "./Logout";
 import {Link} from 'react-router-dom';
 
 /**
@@ -150,6 +151,33 @@ class Header extends React.Component {
               backgroundColor: '#0068af',
               height: 5,
               width: currTab === 'email' ? 86 : 0,
+              marginTop: 10,
+            }}/>
+          </Link>
+          <Link to='/logout'
+                onMouseEnter={() => this.setState({hover: 'logout'})}
+                onMouseLeave={() => this.setState({hover: ''})}
+                style={{textDecoration: 'none'}}
+          >
+            <div
+              style={{display: 'flex'}}
+            >
+              {/* eslint-disable-next-line max-len */}
+              <span style={{height: 30, marginTop: 3}}>{hover === 'logout' ? <EmailIconGray/> : <EmailIcon/>}</span>
+
+              <span
+                style={{
+                  marginTop: 4,
+                  marginLeft: 7,
+                  color: hover === 'logout' ? '#878686' : 'white',
+                }}>logout
+              </span>
+            </div>
+
+            <div style={{
+              backgroundColor: '#0068af',
+              height: 5,
+              width: currTab === 'logout' ? 86 : 0,
               marginTop: 10,
             }}/>
           </Link>

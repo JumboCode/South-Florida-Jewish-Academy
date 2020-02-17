@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Students from './components/Students/Students';
 import LoginPage from './components/LoginPage';
 import Logout from './components/Logout';
+import StudentTab from "./components/StudentTab";
 /* eslint-disable no-invalid-this*/
 // eslint-disable-next-line require-jsdoc
 class Admin extends React.Component {

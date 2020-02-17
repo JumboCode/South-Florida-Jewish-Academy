@@ -14,6 +14,8 @@ import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
 import Upload from './components/Upload';
 import Email from './components/Email';
+import LoginPage from "./components/LoginPage";
+import Logout from "./components/Logout";
 
 
 // A function that routes the user to the right place
@@ -25,18 +27,6 @@ const onRedirectCallback = (appState) => {
             window.location.pathname
   );
 };
-
-ReactDOM.render(
-    <Auth0Provider
-      domain={config.domain}
-      client_id={config.clientId}
-      redirect_uri={window.location.origin}
-      onRedirectCallback={onRedirectCallback}
-    >
-      <App/>
-    </Auth0Provider>,
-    document.getElementById('root')
-);
 
 const routing = (
   <Router>
@@ -52,9 +42,25 @@ const routing = (
       <Route exact path="/students" component={Students} />
       <Route exact path="/upload" component={Upload} />
       <Route exact path="/email" component={Email} />
+      <Route exact path="/login" component={LoginPage}/>
+      <Route exact path="/logout" component={Logout}/>
     </div>
   </Router>
 );
+
+ReactDOM.render(
+    <Auth0Provider
+      domain={config.domain}
+      client_id={config.clientId}
+      redirect_uri={window.location.origin}
+      onRedirectCallback={onRedirectCallback}
+    >
+      {routing}
+    </Auth0Provider>,
+    document.getElementById('root')
+);
+
+
 
 
 serviceWorker.unregister();
