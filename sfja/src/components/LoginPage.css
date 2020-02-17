@@ -51,13 +51,13 @@ button {
 
 }
 
-.logo {
-    width: 170px;
-}
+/*.logo {*/
+/*    width: 170px;*/
+/*}*/
 
 .center_rect {
 
-    width: 450px;
+    width: 410px;
     height: 400px;
     background: #E8E8E8;
     margin: auto;
@@ -67,6 +67,13 @@ button {
 
 .button_container {
     text-align: center;
+}
+
+.button {
+    cursor: pointer;
+    font-family: Futura;
+    border-color: darkorange;
+    font-size: 30px;
 }
 
 p {
@@ -84,13 +91,18 @@ hr {
     border-top: 1px solid darkorange;
 }
 
-img {
-    margin: 150px;
+.logo {
+    margin-left: 120px;
     margin-top: 60px;
     margin-bottom: 0px;
     border: solid #1F3F7F 3px;
     background: white;
-    width: 150px;
     height: 150px;
+    width: 170px;
 
+}
+
+.bottom_message {
+    text-align: center;
+    font-family: Futura;
 }

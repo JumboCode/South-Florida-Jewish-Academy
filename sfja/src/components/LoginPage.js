@@ -26,17 +26,16 @@ const LoginPage = () => {
       <div className="center_rect">
         <img className="logo" id="CircleLogo" src={CircleLogo}></img>
         <p>Administration Login </p>
-        <hr>
-        </hr>
+        <hr/>
         <div className="button_container">
-          {!isAuthenticated && (
-            <button onClick={() => loginWithPopup({})}>Log in</button>
-          )}
-          {isAuthenticated && (
-            <button onClick={() => logout({})}>Log out</button>
-          )}
+          <button className="button" onClick={() => loginWithPopup({})}>log in</button>
         </div>
       </div>
+      <div className="bottom_message">
+        Looking for your student's form? <br/>
+        Check your email or contact administration for more information.
+      </div>
+
     </div>
   );
 };
