@@ -5,7 +5,7 @@ import CircleLogo from '../assets/CircleLogo.png';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 /* eslint react/prop-types: 0 */
 
-const LoginPage = ({authenticate}) => {
+const LoginPage = () => {
   const {isAuthenticated, loginWithPopup, logout} = useAuth0();
 
   if (isAuthenticated) {

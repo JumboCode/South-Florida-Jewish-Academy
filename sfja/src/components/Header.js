@@ -12,6 +12,7 @@ import {ReactComponent as EmailIconGray} from '../assets/Email_gray.svg';
 import topLogo from '../assets/CircleLogo.png';
 import Logout from "./Logout";
 import {Link} from 'react-router-dom';
+import LoginChecker from "./LoginChecker";
 
 /**
  * @classdesc The Header class acts as a navigation bar.
@@ -38,8 +39,11 @@ class Header extends React.Component {
   render() {
     const {currTab} = this.props;
     const {hover} = this.state;
+
+    console.log(currTab)
     return (
       <div>
+        <LoginChecker/>
         <img
           style={{width: 120}}
           id="topLogo" src={topLogo}></img>

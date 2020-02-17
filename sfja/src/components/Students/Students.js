@@ -45,7 +45,7 @@ class Students extends React.Component {
     if (!students) {
       return (
         <div>
-          <Header/>
+          <Header currTab='students'/>
           Loading...
         </div>
       );
