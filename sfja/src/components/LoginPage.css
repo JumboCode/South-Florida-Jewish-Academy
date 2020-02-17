@@ -15,22 +15,20 @@ code {
 h1 {
 
     font-size: 50px;
-    font-family: Lato;
+    font-family: Futura;
     color: SteelBlue;
-    text-shadow: 0.5px 0.5px black;
     text-align: center;
-    margin-top: 150px;
+    margin-top: 100px;
     margin-bottom: 0px
 
 }
 
 h6 {
     font-size: 32px;
-    font-family: Lato;
+    font-family: Futura;
     text-align: center;
     margin-top: 0px;
     margin-bottom: 40px;
-    text-shadow: 0.5px 0.5px black;
     color: DarkOrange;
     position: center;
 
@@ -63,8 +61,6 @@ button {
     height: 400px;
     background: #E8E8E8;
     margin: auto;
-    border: solid gray 1px;
-    box-shadow: 0px 0px 7px grey;
     margin-bottom: 100px;
 
 }
@@ -80,6 +76,7 @@ p {
     font-size: 32px;
     color: #1F3F7F;
     font-weight: 500;
+    font-family: Futura;
 }
 
 hr {
