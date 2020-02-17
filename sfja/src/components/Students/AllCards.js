@@ -23,7 +23,7 @@ class AllCards extends React.Component {
           } = basic_info;
           const name = `${first_name} ${middle_name.substring(
               0,
-              1
+              1,
           )}. ${last_name}`;
           return (
             <StudentCard
