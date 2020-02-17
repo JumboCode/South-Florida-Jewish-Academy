@@ -81,12 +81,12 @@ export const Auth0Provider = ({
         getTokenSilently: (...p) => auth0Client.getTokenSilently(...p),
         getTokenWithPopup: (...p) => auth0Client.getTokenWithPopup(...p),
         logout: (...p) => {
-          if (auth0Client !== undefined){
-            return(
+          if (auth0Client !== undefined) {
+            return (
               auth0Client.logout(...p)
-            )
+            );
           }
-          },
+        },
       }}
     >
       {children}

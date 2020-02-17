@@ -2,16 +2,16 @@ import React from 'react';
 import {useAuth0} from '../react-auth0-spa';
 import './LoginPage.css';
 import CircleLogo from '../assets/CircleLogo.png';
-import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 /* eslint react/prop-types: 0 */
 
 const LoginPage = () => {
-  const {isAuthenticated, loginWithPopup, logout} = useAuth0();
+  const {isAuthenticated, loginWithPopup} = useAuth0();
 
   if (isAuthenticated) {
     return (
       <Redirect to="/dashboard"/>
-    )
+    );
   }
   return (
     <div className="App">
@@ -28,11 +28,13 @@ const LoginPage = () => {
         <p>Administration Login </p>
         <hr/>
         <div className="button_container">
-          <button className="button" onClick={() => loginWithPopup({})}>log in</button>
+          <button className="button" onClick={() => loginWithPopup({})}>
+            log in
+          </button>
         </div>
       </div>
       <div className="bottom_message">
-        Looking for your student's form? <br/>
+        Looking for your student&apos;s form? <br/>
         Check your email or contact administration for more information.
       </div>
 

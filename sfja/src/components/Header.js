@@ -10,9 +10,8 @@ import {ReactComponent as HomeIconGray} from '../assets/Home_gray.svg';
 import {ReactComponent as EmailIcon} from '../assets/Email.svg';
 import {ReactComponent as EmailIconGray} from '../assets/Email_gray.svg';
 import topLogo from '../assets/CircleLogo.png';
-import Logout from "./Logout";
 import {Link} from 'react-router-dom';
-import LoginChecker from "./LoginChecker";
+import LoginChecker from './LoginChecker';
 
 /**
  * @classdesc The Header class acts as a navigation bar.
@@ -40,7 +39,7 @@ class Header extends React.Component {
     const {currTab} = this.props;
     const {hover} = this.state;
 
-    console.log(currTab)
+    console.log(currTab);
     return (
       <div>
         <LoginChecker/>
@@ -159,9 +158,9 @@ class Header extends React.Component {
             }}/>
           </Link>
           <Link to='/logout'
-                onMouseEnter={() => this.setState({hover: 'logout'})}
-                onMouseLeave={() => this.setState({hover: ''})}
-                style={{textDecoration: 'none'}}
+            onMouseEnter={() => this.setState({hover: 'logout'})}
+            onMouseLeave={() => this.setState({hover: ''})}
+            style={{textDecoration: 'none'}}
           >
             <div
               style={{display: 'flex'}}

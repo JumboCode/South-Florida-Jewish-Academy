@@ -13,8 +13,8 @@ import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
 import Upload from './components/Upload';
 import Email from './components/Email';
-import LoginPage from "./components/LoginPage";
-import Logout from "./components/Logout";
+import LoginPage from './components/LoginPage';
+import Logout from './components/Logout';
 
 
 // A function that routes the user to the right place
@@ -33,7 +33,7 @@ const routing = (
       <Route exact path="/">
         <Redirect to="/dashboard" />
       </Route>
-      {/*<Route exact path="/admin" component={Admin} />*/}
+      {/* <Route exact path="/admin" component={Admin} />*/}
       <Route path="/form/:key" component={Form} />
       <Route path="/profile/:id" component={Student} />
       <Route exact path="/header" component={Header} />
@@ -58,8 +58,6 @@ ReactDOM.render(
     </Auth0Provider>,
     document.getElementById('root')
 );
-
-
 
 
 serviceWorker.unregister();

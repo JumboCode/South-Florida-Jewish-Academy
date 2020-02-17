@@ -10,11 +10,11 @@ const LoginChecker = () => {
   if (isAuthenticated) {
     return (
       <div/>
-    )
+    );
   } else {
     return (
       <Redirect to={'/login'}/>
-    )
+    );
   }
 };
 
