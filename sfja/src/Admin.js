@@ -1,5 +1,4 @@
 import React from 'react';
-import Students from './components/Students/Students';
 import Header from './components/Header';
 
 // eslint-disable-next-line require-jsdoc
@@ -36,7 +35,7 @@ class Admin extends React.Component {
         <Header setTab={this.setTab.bind(this)} selectedTab={tab} />
         {tab === 'dashboard' && <div>dashboard </div>}
         {tab === 'students' && (
-          <Students/>
+          <div>students</div>
         )}
         {tab === 'upload' && <div>upload forms </div>}
         {tab === 'email' && <div>email </div>}
