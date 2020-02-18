@@ -4,19 +4,16 @@ import * as serviceWorker from './serviceWorker';
 import {Auth0Provider} from './react-auth0-spa';
 import config from './auth_config.json';
 import history from './utils/history';
-// import Admin from './Admin';
 import Form from './Form';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 import Header from './components/Header';
 import Student from './components/Students/Student';
 import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
-// import Upload from './components/Upload';
 import Email from './components/Email';
 import LoginPage from './components/LoginPage';
 import Logout from './components/Logout';
-import FormManager from './components/FormManager/FormManager';
-import Upload from "./components/Upload";
+import Upload from './components/Upload';
 
 
 // A function that routes the user to the right place
@@ -25,7 +22,7 @@ const onRedirectCallback = (appState) => {
   history.push(
         appState && appState.targetUrl ?
             appState.targetUrl :
-            window.location.pathname
+            window.location.pathname,
   );
 };
 
@@ -58,7 +55,7 @@ ReactDOM.render(
     >
       {routing}
     </Auth0Provider>,
-    document.getElementById('root')
+    document.getElementById('root'),
 );
 
 
