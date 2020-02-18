@@ -8,12 +8,7 @@ import {ReactComponent as StudentsIconGray} from '../assets/Students_gray.svg';
 import {ReactComponent as HomeIcon} from '../assets/Home.svg';
 import {ReactComponent as HomeIconGray} from '../assets/Home_gray.svg';
 import {ReactComponent as EmailIcon} from '../assets/Email.svg';
-<<<<<<< HEAD
-import {ReactComponent as LogoutIcon} from '../assets/Logout.svg';
-import {ReactComponent as AuditIcon} from '../assets/Audit.svg';
-=======
 import {ReactComponent as EmailIconGray} from '../assets/Email_gray.svg';
->>>>>>> 6316add8251702eccf3113197fdd4b47ae26fe7f
 import topLogo from '../assets/CircleLogo.png';
 import {Link} from 'react-router-dom';
 import LoginChecker from './LoginChecker';
@@ -141,29 +136,6 @@ class Header extends React.Component {
             style={{textDecoration: 'none'}}
           >
             <div
-<<<<<<< HEAD
-              style={{
-                backgroundColor: selectedTab == 'email' ? '#0068af' : null,
-                position: 'absolute',
-                marginTop: 19,
-                width: 90,
-                height: 7,
-              }}></div>
-          </a>
-          <AuditIcon></AuditIcon>
-          <a onClick={() => setTab('audit')}>Audit
-            <div
-              style={{
-                backgroundColor: selectedTab == 'audit' ? '#0068af' : null,
-                position: 'absolute',
-                marginTop: 19,
-                width: 100,
-                height: 7,
-              }}></div>
-          </a>
-          <LogoutIcon></LogoutIcon>
-          <a onClick={() => setTab('logout')}>Logout
-=======
               style={{display: 'flex'}}
             >
               {/* eslint-disable-next-line max-len */}
@@ -185,12 +157,12 @@ class Header extends React.Component {
               marginTop: 10,
             }}/>
           </Link>
+          
           <Link to='/logout'
             onMouseEnter={() => this.setState({hover: 'logout'})}
             onMouseLeave={() => this.setState({hover: ''})}
             style={{textDecoration: 'none'}}
           >
->>>>>>> 6316add8251702eccf3113197fdd4b47ae26fe7f
             <div
               style={{display: 'flex'}}
             >
