@@ -11,10 +11,12 @@ import Header from './components/Header';
 import Student from './components/Students/Student';
 import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
-import Upload from './components/Upload';
+// import Upload from './components/Upload';
 import Email from './components/Email';
 import LoginPage from './components/LoginPage';
 import Logout from './components/Logout';
+import FormManager from './components/FormManager/FormManager';
+import Upload from "./components/Upload";
 
 
 // A function that routes the user to the right place
