@@ -10,10 +10,11 @@ class AllCards extends React.Component {
   };
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {info} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {info, updateCurrID, updateCurrView} = this.props;
     return (
       <>
-        {info.map(({basic_info, id, form_ids}) => {
+        {info.map(({basic_info, student_id, form_ids}) => {
           const {
             first_name,
             middle_name,
@@ -26,10 +27,13 @@ class AllCards extends React.Component {
           )}. ${last_name}`;
           return (
             <StudentCard
+              // onClick={() => {updateCurrID(id);updateCurrView('student')}}
+              updateCurrID={updateCurrID}
+              updateCurrView={updateCurrView}
               key={email}
               name={name}
               email={email}
-              id={id}
+              id={student_id}
               forms={form_ids}
             ></StudentCard>
           );

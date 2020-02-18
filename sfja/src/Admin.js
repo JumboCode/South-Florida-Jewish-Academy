@@ -1,5 +1,4 @@
 import React from 'react';
-import Students from './components/Students/Students';
 import Header from './components/Header';
 import FormManager from './components/FormManager/FormManager';
 
@@ -37,7 +36,7 @@ class Admin extends React.Component {
         <Header setTab={this.setTab.bind(this)} selectedTab={tab} />
         {tab === 'dashboard' && <div>dashboard </div>}
         {tab === 'students' && (
-          <Students/>
+          <div>students</div>
         )}
         {tab === 'upload' && (
           <div><FormManager/></div>
