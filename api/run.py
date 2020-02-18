@@ -96,17 +96,16 @@ def getUsers():
 
 @app.route('/studentProfile', methods = ['GET'])
 def getStudentProfile():
-    studentID = request.json['id']
-    form_ids = studentsDOM.getForms(studentID)['1']
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_student_forms"])
+    studentID = int(request.args.get('id'))
+    students_forms = studentsDOM.getForms(studentID)
 
-    for form_type in form_ids.keySet():
-        curr = form_ids[form_type]
     forms = []
-    for form_id in form_ids:
-        allFormData = getForm(form_id)
-        del allFormData['_id']
-        forms.append(allFormData)
-
+    for form_num in students_forms.keys():
+        for form_id in students_forms[form_num]:
+            curr_form = getForm(form_id)
+            del curr_form['_id']
+            forms.append(curr_form)
 
     return {'data': forms}
 
