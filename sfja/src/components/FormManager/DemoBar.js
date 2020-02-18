@@ -8,7 +8,6 @@ export default class Demobar extends React.Component {
     super(props);
     this.state = {
       data: [],
-      previewVisible: false,
     };
 
     const update = this._onChange.bind(this);
@@ -16,22 +15,6 @@ export default class Demobar extends React.Component {
 
     // eslint-disable-next-line arrow-parens
     store.subscribe(state => (update(state.data)));
-  }
-
-  // eslint-disable-next-line require-jsdoc
-  showPreview() {
-    this.setState({
-      previewVisible: true,
-    });
-  }
-
-  // eslint-disable-next-line require-jsdoc
-  closePreview() {
-    this.setState({
-      previewVisible: false,
-      shortPreviewVisible: false,
-      roPreviewVisible: false,
-    });
   }
 
   // eslint-disable-next-line require-jsdoc
