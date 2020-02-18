@@ -79,6 +79,10 @@ def get():
 def getStudents():
     return {'students': studentsDOM.getStudents()}
 
+@app.route('/newform', methods = ['POST'])
+def addForm():
+    print(request)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

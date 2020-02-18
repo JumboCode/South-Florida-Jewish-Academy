@@ -14,7 +14,8 @@ class FormManager extends React.Component {
       <div className="fm-container">
         <React.Fragment>
           <DemoBar />
-          <FormBuilder.ReactFormBuilder />
+          <FormBuilder.ReactFormBuilder 
+            saveUrl="/newform"/>
         </React.Fragment>
       </div>
     );

@@ -58,6 +58,7 @@ export default class Demobar extends React.Component {
   // eslint-disable-next-line no-unused-vars
   // eslint-disable-next-line require-jsdoc
   _onSubmit(data) {
+    console.log(data)
     // console.log('onSubmit', data);
     // Place code to post json data to server here
   }
@@ -88,7 +89,7 @@ export default class Demobar extends React.Component {
                   form_action="/api/form"
                   form_method="POST"
                   // skip_validations={true}
-                  // onSubmit={this._onSubmit}
+                  onSubmit={this._onSubmit}
                   // variables={this.props.variables}
                   data={this.state.data} />
 
