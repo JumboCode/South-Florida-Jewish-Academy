@@ -157,6 +157,34 @@ class Header extends React.Component {
               marginTop: 10,
             }}/>
           </Link>
+
+          <Link to='/audit'
+            onMouseEnter={() => this.setState({hover: 'audit'})}
+            onMouseLeave={() => this.setState({hover: ''})}
+            style={{textDecoration: 'none'}}
+          >
+            <div
+              style={{display: 'flex'}}
+            >
+              {/* eslint-disable-next-line max-len */}
+              <span style={{height: 30, marginTop: 3}}>{hover === 'audit' ? <EmailIconGray/> : <EmailIcon/>}</span>
+
+              <span
+                style={{
+                  marginTop: 4,
+                  marginLeft: 7,
+                  color: hover === 'audit' ? '#878686' : 'white',
+                }}>audit
+              </span>
+            </div>
+
+            <div style={{
+              backgroundColor: '#0068af',
+              height: 5,
+              width: currTab === 'audit' ? 86 : 0,
+              marginTop: 10,
+            }}/>
+          </Link>
           
           <Link to='/logout'
             onMouseEnter={() => this.setState({hover: 'logout'})}

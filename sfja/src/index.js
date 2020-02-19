@@ -34,7 +34,7 @@ const routing = (
       <Route exact path="/">
         <Redirect to="/dashboard" />
       </Route>
-      <Route exact path="/admin" component={Audit} />
+      <Route exact path="/audit" component={Audit} />
       {/* <Route exact path="/admin" component={Admin} />*/}
       <Route path="/form/:key" component={Form} />
       <Route path="/profile/:id" component={Student} />

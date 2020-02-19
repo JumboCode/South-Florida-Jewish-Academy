@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Header from './Header';
 
 //hello
 class Audit extends React.Component{
@@ -29,10 +30,20 @@ class Audit extends React.Component{
         if (!users) {
             return(
                 <div>
-                   U r in audit
+                   <Header currTab='admin'/>
                 </div>
             );
         }
+        
+        return(
+            <div>
+                <Header currTab='admin'/>
+                U r in audit
+
+            </div>
+
+        );
+        
     }
 }
 
