@@ -1,5 +1,6 @@
 import React from 'react';
 import store from './FormBuilder/stores/store';
+import {post} from './FormBuilder/stores/requests';
 
 // eslint-disable-next-line require-jsdoc
 export default class Demobar extends React.Component {
@@ -27,8 +28,7 @@ export default class Demobar extends React.Component {
   // eslint-disable-next-line no-unused-vars
   // eslint-disable-next-line require-jsdoc
   _onSubmit(data) {
-    
-    console.log('onSubmit', data);
+    post('http://127.0.0.1:5000/newform', data);
     // Place code to post json data to server here
   }
 
