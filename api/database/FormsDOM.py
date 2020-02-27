@@ -7,6 +7,10 @@ MONGO_URL = os.environ.get('MONGODB_URI')
 app.config["MONGO_URI"] = "mongodb://localhost:27017/sfja"
 mongo = PyMongo(app)
 
+# get all the keys 
+def getStuff():
+    return list(mongo.db.forms.find({}))
+
 # Creates new form.
 def createForm(id, date, required, num, comp, data):
     initData = {

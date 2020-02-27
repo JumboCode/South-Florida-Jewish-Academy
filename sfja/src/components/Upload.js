@@ -1,6 +1,8 @@
 import React from 'react';
 import Header from './Header';
 import FormManager from './FormManager/FormManager';
+import { get } from './FormManager/FormBuilder/stores/requests';
+import fetch from 'isomorphic-fetch';
 
 
 // eslint-disable-next-line require-jsdoc
@@ -10,10 +12,25 @@ class Upload extends React.Component {
     this.state = {
       createForm: false,
       currentForm: false,
-      formsList: [],
+      formsList:
+        fetch('http://localhost:5000/forms', {
+          method: 'GET',
+          mode: 'no-cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
+            OPTIONS: '',
+          }
+        })//.then(response => response.json())
     };
   }
-//TODO function to load in all forms to formsList
+  /*loadForms(){
+    console.log("Loading forms");
+    this.state({formsList: get('/forms')});
+  } */
+  oneForm = {
+
+  };
 
   // eslint-disable-next-line require-jsdoc
   render() {
