@@ -95,8 +95,7 @@ def getUsers():
 @app.route('/forms', methods = ['GET', 'POST'])
 def getForms():
     # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
-    stuff = FormsDOM.getStuff()
-    return {'forms': stuff}
+    return {'forms': FormsDOM.getForms()}
 
 if __name__ == '__main__':
     app.run(debug=True)

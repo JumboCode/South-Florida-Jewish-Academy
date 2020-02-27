@@ -7,10 +7,6 @@ MONGO_URL = os.environ.get('MONGODB_URI')
 app.config["MONGO_URI"] = "mongodb://localhost:27017/sfja"
 mongo = PyMongo(app)
 
-# get all the keys 
-def getStuff():
-    return list(mongo.db.forms.find({}))
-
 # Creates new form.
 def createForm(id, date, required, num, comp, data):
     initData = {
@@ -46,3 +42,15 @@ def getFormData(id):
 def updateFormData(id, ques, ans):
     writeR = dict(mongo.db.forms.update({'form_id': str(id)}, {'$set': {'form_data.' + str(ques): ans}}))
     return writeR['nModified'] > 0
+
+def getForms():
+    contents = list(mongo.db.forms.find())
+    forms = []
+    for content in contents:
+        info = {
+            'form_id': content['form_id'],
+            'form_data': content['form_data']
+        }
+        forms.append(info)
+
+    return forms

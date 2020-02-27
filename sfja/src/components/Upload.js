@@ -24,27 +24,24 @@ class Upload extends React.Component {
         })//.then(response => response.json())
     };
   }
-  /*loadForms(){
-    console.log("Loading forms");
-    this.state({formsList: get('/forms')});
-  } */
-  oneForm = {
-
-  };
+  componentDidMount(){
+    ;
+  }
 
   // eslint-disable-next-line require-jsdoc
   render() {
     const {createForm} = this.state;
     const {currentForm} = this.state;
+    const formsList = this.state.formsList;
     return (
       <div>
         <Header currTab='upload'/>
         {createForm ? <FormManager/>: 
           <div>
             <button onClick= {() => this.setState({createForm: true})}> Add Form </button>
-            <ul>
-              <div> I'm a form </div>
-            </ul>
+            <div> 
+              {formsList.map(form => <ul>{form}</ul>)}
+            </div>
           </div>
         }
 
