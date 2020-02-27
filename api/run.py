@@ -105,9 +105,13 @@ def getStudentProfile():
         for form_id in students_forms[form_num]:
             curr_form = getForm(form_id)
             del curr_form['_id']
+            del curr_form['form_data']
             forms.append(curr_form)
 
-    return {'data': forms}
+    return {
+        'forms': forms,
+        'basic_info': studentsDOM.getBasicInfo(studentID)
+    }
 
 if __name__ == '__main__':
     app.run(debug=True)
