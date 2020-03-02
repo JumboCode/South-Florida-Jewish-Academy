@@ -52,5 +52,4 @@ def getForms():
             'form_data': content['form_data']
         }
         forms.append(info)
-
     return forms

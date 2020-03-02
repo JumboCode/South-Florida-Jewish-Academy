@@ -12,27 +12,38 @@ class Upload extends React.Component {
     this.state = {
       createForm: false,
       currentForm: false,
-      formsList:
-        fetch('http://localhost:5000/forms', {
-          method: 'GET',
-          mode: 'no-cors',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json; charset=utf-8',
-            OPTIONS: '',
-          }
-        })//.then(response => response.json())
+      formsList: null
     };
   }
   componentDidMount(){
-    ;
+    fetch('http://localhost:5000/forms')
+    .then(response => response.json())
+    .then((response) => {
+      this.setState({ formsList: response});
+    })
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {createForm} = this.state;
-    const {currentForm} = this.state;
-    const formsList = this.state.formsList;
+    const {createForm, currentForm, formsList} = this.state;
+
+    if (formsList === null){
+      return(
+        <div>
+          <Header currTab='upload'/>
+          loading...
+        </div>
+      )
+    }
+/*     var res = Object.keys(formsList[0]).map(function(name){
+      var obj = {};
+      obj[name] = formsList[name];
+      return obj;
+    });  */
+    //console.log(res[0]);
+/*     var res = (Object.values(formsList));
+    res = res[0];
+    console.log(res); */
     return (
       <div>
         <Header currTab='upload'/>
@@ -40,7 +51,7 @@ class Upload extends React.Component {
           <div>
             <button onClick= {() => this.setState({createForm: true})}> Add Form </button>
             <div> 
-              {formsList.map(form => <ul>{form}</ul>)}
+              {res.map(form => <ul>{form}</ul>)}
             </div>
           </div>
         }
