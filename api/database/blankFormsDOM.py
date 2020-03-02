@@ -11,7 +11,6 @@ mongo = PyMongo(app)
 def createForm(data):
     initData = {
                 'form_name': 'New Form',
-                'created': 
                 'form_data': data
                 }
     result = mongo.db.blankForms.insert_one(initData)
