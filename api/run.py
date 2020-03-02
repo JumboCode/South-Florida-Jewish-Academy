@@ -94,8 +94,7 @@ def addForm():
     byte_data = request.data.decode('utf8').replace("'", '"')
     data = json.loads(byte_data)
     data_json = json.dumps(data, indent=4, sort_keys=True)
-    print('request:', data_json)
-    blankFormsDOM.createForm(1, data_json)
+    blankFormsDOM.createForm(data_json)
     return '0'
 
 @app.route('/users', methods = ['GET', 'POST'])
