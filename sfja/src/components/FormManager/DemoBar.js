@@ -34,11 +34,11 @@ export default class Demobar extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    
     return (
       <div className="clearfix" style={{margin: '10px', width: '70%'}}>
         <h4 className="pull-left">Preview</h4>
         <button className="btn btn-primary pull-right" style={{marginRight:
+          // eslint-disable-next-line max-len
           '10px'}} onClick={() => this._onSubmit(this.state.data)}>Submit Form</button>
       </div>
     );
