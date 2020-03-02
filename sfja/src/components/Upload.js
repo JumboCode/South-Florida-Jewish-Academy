@@ -3,10 +3,14 @@ import Header from './Header';
 import FormManager from './FormManager/FormManager';
 import { get } from './FormManager/FormBuilder/stores/requests';
 import fetch from 'isomorphic-fetch';
+import PropTypes from 'prop-types';
 
 
 // eslint-disable-next-line require-jsdoc
 class Upload extends React.Component {
+  static propTypes = {
+    formsList: PropTypes.any,
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -18,8 +22,9 @@ class Upload extends React.Component {
   componentDidMount(){
     fetch('http://localhost:5000/forms')
     .then(response => response.json())
-    .then((response) => {
-      this.setState({ formsList: response});
+    .then((data) => {
+      this.setState({ formsList: data.forms});
+      console.log(data);
     })
   }
 
@@ -35,15 +40,11 @@ class Upload extends React.Component {
         </div>
       )
     }
-/*     var res = Object.keys(formsList[0]).map(function(name){
-      var obj = {};
-      obj[name] = formsList[name];
-      return obj;
-    });  */
-    //console.log(res[0]);
-/*     var res = (Object.values(formsList));
-    res = res[0];
-    console.log(res); */
+    console.log(formsList);
+    let result = Object.values(formsList);
+    console.log(result); 
+    console.log(typeof result);
+    
     return (
       <div>
         <Header currTab='upload'/>
@@ -51,7 +52,8 @@ class Upload extends React.Component {
           <div>
             <button onClick= {() => this.setState({createForm: true})}> Add Form </button>
             <div> 
-              {res.map(form => <ul>{form}</ul>)}
+              {/* {result.map(form => <ul>{form}</ul>)} */}
+              {result}
             </div>
           </div>
         }
