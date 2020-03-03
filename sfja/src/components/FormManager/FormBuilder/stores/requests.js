@@ -12,8 +12,9 @@ const headers = {
 export function post(url, data) {
   return fetch(url, {
     method: 'POST',
-    headers,
-    body: JSON.stringify(data),
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({data: data}),
     // eslint-disable-next-line arrow-parens
   }).then(response => response);
 }
