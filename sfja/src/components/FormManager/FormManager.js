@@ -13,8 +13,8 @@ class FormManager extends React.Component {
     return (
       <div className="fm-container">
         <React.Fragment>
-          <DemoBar />
-          <FormBuilder.ReactFormBuilder />
+          <DemoBar/>
+          <FormBuilder.ReactFormBuilder/>
         </React.Fragment>
       </div>
     );
