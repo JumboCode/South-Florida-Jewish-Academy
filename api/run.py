@@ -102,5 +102,10 @@ def getUsers():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
     return {'users': usersDOM.getUsers()}
 
+
+@app.route('/getAllForms', methods=['GET'])
+def getAllForms():
+    return { 'forms': blankFormsDOM.getAll()}
+
 if __name__ == '__main__':
     app.run(debug=True)

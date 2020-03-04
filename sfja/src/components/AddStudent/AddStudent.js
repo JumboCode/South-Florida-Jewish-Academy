@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../Header';
 import Input from './Input';
+import FormSelector from "./FormSelector";
 
 
 // eslint-disable-next-line require-jsdoc
@@ -11,7 +12,7 @@ class AddStudent extends React.Component {
       <div>
         <Header currTab='addStudent'/>
         <Input/>
-
+        <FormSelector/>
       </div>
     );
   }
