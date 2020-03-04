@@ -12,6 +12,11 @@ class Input extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      firstNameStudent: '',
+      middleNameStudent: '',
+      lastNameStudent: '',
+      ageStudent: '',
+      gradeStudent: '',
       viewParents: [0],
       parents: [{
         num: 0,
@@ -77,25 +82,30 @@ class Input extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const {updateInputData} = this.props;
+    updateInputData(this.state);
+    console.log('here');
+  }
+
   render() {
-    const {parents, viewParents} = this.state;
-    console.log(parents);
+    const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, ageStudent, gradeStudent} = this.state;
     return (
       <div>
         <div style={{paddingLeft: 10}}>
           Student Info:
         </div>
         <div>
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}/>
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Middle Name" required={true}/>
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}/>
+          <TextField onChange={(ev) => this.setState({firstNameStudent: ev.target.value})} value={firstNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}/>
+          <TextField onChange={(ev) => this.setState({middleNameStudent: ev.target.value})} value={middleNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Middle Name" required={true}/>
+          <TextField onChange={(ev) => this.setState({lastNameStudent: ev.target.value})} value={lastNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}/>
         </div>
         <div>
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Age" required={true}/>
+          <TextField onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
+          <TextField onChange={(ev) => this.setState({ageStudent: ev.target.value})} value={ageStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Age" required={true}/>
         </div>
         {parents.filter((x) => viewParents.includes(x.num)).map((x) =>
-          <div key={x}>
+          <div key={x.num}>
             <ParentInfo
               num={x.num}
               firstName={x.firstName}

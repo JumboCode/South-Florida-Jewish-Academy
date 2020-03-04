@@ -1,5 +1,5 @@
 import React from 'react';
-import {List, ListItem, ListItemIcon, Checkbox, ListItemSecondaryAction, ListItemText} from '@material-ui/core';
+import {List, ListItem, ListItemIcon, Checkbox, ListItemSecondaryAction, ListItemText, Button} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
 
@@ -49,6 +49,11 @@ class FormSelector extends React.Component {
       forms: newForms,
     });
 
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const {updateFormData} = this.props;
+    updateFormData(this.state);
   }
 
   render() {

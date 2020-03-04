@@ -8,6 +8,7 @@ const textWidth = {
 };
 
 class ParentInfo extends React.Component {
+
   render() {
     const {addParentData, firstName, email, lastName, num} = this.props;
     return (

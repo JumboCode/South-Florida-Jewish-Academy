@@ -107,5 +107,25 @@ def getUsers():
 def getAllForms():
     return { 'forms': blankFormsDOM.getAll()}
 
+@app.route('/addStudent', methods = ['POST'])
+def addStudent():
+    print(request.is_json)
+    print(request.json['studentData'])
+    student = request.json['studentData']
+    basicInfo = {
+        'first_name': student['firstName'],
+        'middle_name': student['middleName'],
+        'last_name': student['lastName']
+    }
+
+    forms = []
+    for form in request.json['forms']:
+        forms.append(form['id'])
+
+    studentsDOM.createStudent(0, basicInfo, forms)
+
+    
+    return '0'
+
 if __name__ == '__main__':
     app.run(debug=True)
