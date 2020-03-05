@@ -1,10 +1,19 @@
 import React from 'react';
 import Header from '../Header';
 import ProfileEdit from './ProfileEdit'
-
+// import FormCard from './FormCard';
 import TextField from '@material-ui/core/TextField';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+
 
 
 const imageStyle = {
@@ -47,6 +56,7 @@ class Student extends React.Component {
       })
       .catch(console.log);
     }
+
   render() {
     const {forms, basicInfo, currTab} = this.state;
     // eslint-disable-next-line react/prop-types
@@ -59,7 +69,7 @@ class Student extends React.Component {
       );
     }
     const id = this.props.match.params.id;
-  
+    
     return (
       <div>
         <Header currTab='students'/>
@@ -85,11 +95,37 @@ class Student extends React.Component {
           
           </BottomNavigation>
 
-        {currTab === 0 && <div style = {parentForm}><div style={formStyle}>forms</div></div>}
+        {currTab === 0 && <div style = {parentForm}><div style={formStyle}>
+          <TableContainer component={Paper}>
+        <Table  aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Dessert (100g serving)</TableCell>
+              <TableCell align="right">Form</TableCell>
+              <TableCell align="right">Fat&nbsp;(g)</TableCell>
+              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {forms.map(form => (
+              <TableRow key={form.form_id}>
+                <TableCell component="th" scope="row">
+                  {form.form_num}
+                </TableCell>
+                <TableCell align="right">{form.last_updated}</TableCell>
+                <TableCell align="right">{form.last_viewed}</TableCell>
+                <TableCell align="right">{form.percent_completed}</TableCell>
+                <TableCell align="right">{form.required === true ? 'Y' : 'N'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+          </div></div>}
         {currTab === 1 && <div>documents</div>}
         {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
-        
-        
+      
         
       </div>
     );
