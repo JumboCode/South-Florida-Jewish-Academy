@@ -48,3 +48,7 @@ def getForm(id):
 def updateFormData(id, ques, ans):
     writeR = dict(mongo.db.forms.update({'form_id': str(id)}, {'$set': {'form_data.' + str(ques): ans}}))
     return writeR['nModified'] > 0
+
+def testCreateForm(data):
+    result = mongo.db.forms.insert_one(data)
+    return result.inserted_id

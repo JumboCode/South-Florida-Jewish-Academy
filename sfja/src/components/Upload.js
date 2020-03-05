@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './Header';
-
+import FormManager from './FormManager/FormManager';
 
 // eslint-disable-next-line require-jsdoc
 class Upload extends React.Component {
@@ -9,7 +9,7 @@ class Upload extends React.Component {
     return (
       <div>
         <Header currTab='upload'/>
-                Upload Page
+        <FormManager/>
       </div>
     );
   }
