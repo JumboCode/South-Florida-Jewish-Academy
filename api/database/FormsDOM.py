@@ -49,7 +49,8 @@ def getForms():
     for content in contents:
         info = {
             'form_id': content['form_id'],
-            # 'form_data': content['form_data']
+            'form_num': content['form_num'],
+            'form_data': content['form_data']
         }
         forms.append(info)
     return forms
