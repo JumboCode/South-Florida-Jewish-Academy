@@ -11,6 +11,8 @@ from flask import jsonify
 import subprocess
 from datetime import datetime
 from database.assets.audit_mapper import audit_mapper as audit
+# import http.client
+from jwt_authorization import requires_auth
 
 app = Flask(__name__)
 CORS(app)
@@ -83,6 +85,7 @@ def get():
         return 'failure', 400
 
 @app.route('/students', methods = ['GET', 'POST'])
+@requires_auth
 def getStudents():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
     return {'students': studentsDOM.getStudents()}

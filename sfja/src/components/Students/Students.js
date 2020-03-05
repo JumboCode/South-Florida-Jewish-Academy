@@ -12,6 +12,8 @@ import {
   allCardsStyle,
 } from './Styles';
 import Header from '../Header';
+import GetToken from '../GetToken'
+
 
 // eslint-disable-next-line require-jsdoc
 class Students extends React.Component {
@@ -22,34 +24,58 @@ class Students extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      students: null,
+        students: null,
+        token: null,
     };
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    fetch('http://127.0.0.1:5000/students')
-        .then((res) => res.json())
+
+    const {token} = this.state;
+    fetch('http://127.0.0.1:5000/students', {
+    method: 'GET',
+      mode: 'no-cors',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }}).then((res) => res.json())
         .then((data) => {
           this.setState({students: data.students});
           console.log(data);
         })
         .catch(console.log);
   }
+
+  updateToken(newToken){
+    console.log('newToken:', newToken);
+    this.setState({token: newToken})
+  }
+
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {students} = this.state;
+    const {students, token} = this.state;
     // eslint-disable-next-line react/prop-types
     const {updateCurrView, updateCurrID} = this.props;
     console.log(updateCurrView);
     // updateCurrView('student')
-    if (!students) {
-      return (
-        <div>
-          <Header currTab='students'/>
-          Loading...
-        </div>
-      );
+    if (!token){
+        return(
+          <div>
+            <Header currTab='students'/>
+            <GetToken updateToken={this.updateToken.bind(this)}/>
+          </div>
+
+        );
     }
+    if (!students) {
+        return (
+            <div>
+                {token}
+                <Header currTab='students'/>
+                Loading...
+            </div>
+        );
+      }
+
     return (
       <div>
         <Header currTab='students' />
@@ -57,6 +83,7 @@ class Students extends React.Component {
           <div style={filterStyle}>
             <p onClick={() => updateCurrView('student')}> Filters </p>
           </div>
+            <div>{token}</div>
           <div style={studentInfoStyle}>
             <div style={searchBarStyle}>
               <input
