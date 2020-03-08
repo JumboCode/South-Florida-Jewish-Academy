@@ -6,7 +6,11 @@ from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from generateKey import generateKey 
 import os
 import json
+<<<<<<< HEAD
 from database import testDB, studentsDOM, usersDOM, FormsDOM, assets
+=======
+from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM
+>>>>>>> master
 from flask import jsonify
 import subprocess
 from datetime import datetime
@@ -86,6 +90,16 @@ def get():
 def getStudents():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
     return {'students': studentsDOM.getStudents()}
+
+
+@app.route('/newform', methods = ['POST'])
+def addForm():
+    
+    byte_data = request.data.decode('utf8').replace("'", '"')
+    data = json.loads(byte_data)
+    data_json = json.dumps(data, indent=4, sort_keys=True)
+    blankFormsDOM.createForm(data_json)
+    return '0'
 
 @app.route('/users', methods = ['GET', 'POST'])
 def getUsers():
