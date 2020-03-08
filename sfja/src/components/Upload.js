@@ -15,6 +15,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 
+
 // eslint-disable-next-line require-jsdoc
 
 class Upload extends React.Component {
@@ -69,6 +70,14 @@ class Upload extends React.Component {
     for (var i = 0; i < result.length; i++){
       formIdArr.push(result[i].last_updated);
     }
+    /* delete duplicates */
+    for (var i = 0; i < formNumArr.length; i++){
+      for (var j = 1; j < formNumArr.length; j++){
+        if (formNumArr[i] == formNumArr[j]){
+
+        }
+      }
+    }
     /* Push details to main array*/
     var allInfoArr = [];
     for (var i = 0; i < result.length; i++){
@@ -77,9 +86,6 @@ class Upload extends React.Component {
       oneArr.push(formUpdateArr[i]);
       allInfoArr.push(oneArr);
     }
-
-    /* delete duplicates */
-    for (var i = 0; i )
     return (
       <div>
         <Header currTab='upload'/>

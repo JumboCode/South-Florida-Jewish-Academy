@@ -6,11 +6,7 @@ from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from generateKey import generateKey 
 import os
 import json
-<<<<<<< HEAD
-from database import testDB, studentsDOM, usersDOM, FormsDOM, assets
-=======
 from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM
->>>>>>> master
 from flask import jsonify
 import subprocess
 from datetime import datetime
