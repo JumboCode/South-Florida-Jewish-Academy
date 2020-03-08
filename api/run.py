@@ -115,7 +115,8 @@ def addStudent():
     basicInfo = {
         'first_name': student['firstName'],
         'middle_name': student['middleName'],
-        'last_name': student['lastName']
+        'last_name': student['lastName'],
+        'DOB': student['dob']
     }
 
     forms = []

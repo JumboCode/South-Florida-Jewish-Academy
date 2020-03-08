@@ -2,6 +2,11 @@ import React from 'react';
 import {TextField} from '@material-ui/core';
 import ParentInfo from './ParentInfo';
 import {Button} from '@material-ui/core';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const textSize = {style: {fontSize: 15}};
 const textWidth = {
@@ -15,7 +20,7 @@ class Input extends React.Component {
       firstNameStudent: '',
       middleNameStudent: '',
       lastNameStudent: '',
-      ageStudent: '',
+      dob: new Date(),
       gradeStudent: '',
       viewParents: [0],
       parents: [{
@@ -89,7 +94,7 @@ class Input extends React.Component {
   }
 
   render() {
-    const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, ageStudent, gradeStudent} = this.state;
+    const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, dob, gradeStudent} = this.state;
     return (
       <div>
         <div style={{paddingLeft: 10}}>
@@ -102,7 +107,25 @@ class Input extends React.Component {
         </div>
         <div>
           <TextField onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
-          <TextField onChange={(ev) => this.setState({ageStudent: ev.target.value})} value={ageStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Age" required={true}/>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} >
+            <KeyboardDatePicker
+              inputProps={textSize}
+              style={{marginLeft: 10, width: 175}}
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Date picker inline"
+              value={dob}
+              onChange={(ev) => {
+                  this.setState({dob: ev});
+              }}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+          </MuiPickersUtilsProvider>
         </div>
         {parents.filter((x) => viewParents.includes(x.num)).map((x) =>
           <div key={x.num}>

@@ -37,7 +37,7 @@ class AddStudent extends React.PureComponent {
       middleName: inputData.middleNameStudent,
       lastName: inputData.lastNameStudent,
       grade: inputData.gradeStudent,
-      age: inputData.ageStudent,
+      dob: inputData.dob,
     };
 
     const parentData = inputData.parents.filter((currParent) => (currParent.firstName));
