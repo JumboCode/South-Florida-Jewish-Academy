@@ -50,6 +50,7 @@ def getForms():
         info = {
             'form_id': content['form_id'],
             'form_num': content['form_num'],
+            'last_updated': content['last_updated'],
             'form_data': content['form_data']
         }
         forms.append(info)

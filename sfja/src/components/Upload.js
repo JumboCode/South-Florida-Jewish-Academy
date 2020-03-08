@@ -59,15 +59,28 @@ class Upload extends React.Component {
       )
     }
     let result = Object.values(formsList);
+  
+    /* Type of form */
     var formNumArr = [];
     for (var i = 0; i < result.length; i++){
       formNumArr.push(result[i].form_num);
     }
-    var formIdArr = [];
+    /* Last updated */
+    var formUpdateArr = [];
     for (var i = 0; i < result.length; i++){
-      formNumArr.push(result[i].form_id);
+      formIdArr.push(result[i].last_updated);
     }
-    
+    /* Push details to main array*/
+    var allInfoArr = [];
+    for (var i = 0; i < result.length; i++){
+      var oneArr = []
+      oneArr.push(formNumArr[i]);
+      oneArr.push(formUpdateArr[i]);
+      allInfoArr.push(oneArr);
+    }
+
+    /* delete duplicates */
+    for (var i = 0; i )
     return (
       <div>
         <Header currTab='upload'/>
@@ -75,22 +88,20 @@ class Upload extends React.Component {
           <div>
             <button onClick= {() => this.setState({createForm: true})}> Add Form </button>
             <div> 
-              {/* {result.map(form => <ul>{form}</ul>)} */}
-              {formNumArr}
               <TableContainer component={Paper}>
                   <Table aria-label="simple table">
                     <TableHead>
                       <TableRow>
                         <TableCell>Name</TableCell>
-                        <TableCell align="right">Id</TableCell>
-                        <TableCell align="right">Form id</TableCell>
+                        <TableCell align="right">Last updated</TableCell>
+                        <TableCell align="right">Delete</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                          {formNumArr.map(row => (
+                          {allInfoArr.map(row => (
                               <TableRow key={row}>
-                                <TableCell component="th" scope="row">{row} </TableCell>
-                                <TableCell align="right">{row}</TableCell>
+                                <TableCell component="th" scope="row">{row[0]} </TableCell>
+                                <TableCell align="right">{row[1]}</TableCell>
                               </TableRow>
                             ))}
                     </TableBody>
