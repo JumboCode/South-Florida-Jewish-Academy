@@ -1,4 +1,5 @@
-from pymongo import MongoClient
+# run with python3 resetDatabase.py
+
 import subprocess
 
 def main():
