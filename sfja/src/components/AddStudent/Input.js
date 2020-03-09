@@ -15,6 +15,7 @@ const textWidth = {
 
 // eslint-disable-next-line require-jsdoc
 class Input extends React.Component {
+  // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
     this.state = {
@@ -51,6 +52,7 @@ class Input extends React.Component {
     };
   }
 
+  // eslint-disable-next-line require-jsdoc
   addParentData(num, first, email, last) {
     console.log(num, first, email, last);
     const {parents} = this.state;
@@ -66,6 +68,7 @@ class Input extends React.Component {
     });
   }
 
+  // eslint-disable-next-line require-jsdoc
   addViewParents() {
     const {viewParents} = this.state;
     if (viewParents.length >= 4) {
@@ -77,6 +80,7 @@ class Input extends React.Component {
     });
   }
 
+  // eslint-disable-next-line require-jsdoc
   removeViewParents() {
     const {viewParents} = this.state;
     if (viewParents.length == 1) {
@@ -88,13 +92,17 @@ class Input extends React.Component {
     });
   }
 
+  // eslint-disable-next-line require-jsdoc
   componentDidUpdate(prevProps, prevState, snapshot) {
+    // eslint-disable-next-line react/prop-types
     const {updateInputData} = this.props;
     updateInputData(this.state);
     console.log('here');
   }
 
+  // eslint-disable-next-line require-jsdoc
   render() {
+    // eslint-disable-next-line max-len
     const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, dob, gradeStudent} = this.state;
     return (
       <div>
@@ -102,11 +110,15 @@ class Input extends React.Component {
           Student Info:
         </div>
         <div>
+          {/* eslint-disable-next-line max-len */}
           <TextField onChange={(ev) => this.setState({firstNameStudent: ev.target.value})} value={firstNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}/>
+          {/* eslint-disable-next-line max-len */}
           <TextField onChange={(ev) => this.setState({middleNameStudent: ev.target.value})} value={middleNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Middle Name" required={true}/>
+          {/* eslint-disable-next-line max-len */}
           <TextField onChange={(ev) => this.setState({lastNameStudent: ev.target.value})} value={lastNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}/>
         </div>
         <div>
+          {/* eslint-disable-next-line max-len */}
           <TextField onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
           <MuiPickersUtilsProvider utils={DateFnsUtils} >
             <KeyboardDatePicker
@@ -120,7 +132,7 @@ class Input extends React.Component {
               label="Date picker inline"
               value={dob}
               onChange={(ev) => {
-                  this.setState({dob: ev});
+                this.setState({dob: ev});
               }}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
@@ -138,7 +150,9 @@ class Input extends React.Component {
               addParentData={this.addParentData.bind(this)}/>
           </div>)}
         <div style={{paddingLeft: 10}}>
+          {/* eslint-disable-next-line max-len */}
           <Button onClick={()=> this.addViewParents()} disabled={viewParents.length === 4}>add Parent</Button>
+          {/* eslint-disable-next-line max-len */}
           <Button onClick={()=> this.removeViewParents()} disabled={viewParents.length === 1} >remove Parent</Button>
         </div>
       </div>

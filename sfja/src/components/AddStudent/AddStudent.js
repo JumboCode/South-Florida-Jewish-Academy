@@ -7,6 +7,7 @@ import {Button} from '@material-ui/core';
 
 // eslint-disable-next-line require-jsdoc
 class AddStudent extends React.PureComponent {
+  // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
     this.state =
@@ -16,6 +17,7 @@ class AddStudent extends React.PureComponent {
         };
   }
 
+  // eslint-disable-next-line require-jsdoc
   updateInputData(newInputData) {
     this.setState({
       inputData: newInputData,
@@ -23,6 +25,7 @@ class AddStudent extends React.PureComponent {
     console.log(this.state);
   }
 
+  // eslint-disable-next-line require-jsdoc
   updateFormData(newFormData) {
     this.setState({
       formData: newFormData,
@@ -30,6 +33,7 @@ class AddStudent extends React.PureComponent {
     console.log(this.state);
   }
 
+  // eslint-disable-next-line require-jsdoc
   submit() {
     const {inputData, formData} = this.state;
     const studentData = {
@@ -56,7 +60,6 @@ class AddStudent extends React.PureComponent {
       // eslint-disable-next-line arrow-parens
     }).then(response => response);
   };
-
 
 
   // eslint-disable-next-line require-jsdoc

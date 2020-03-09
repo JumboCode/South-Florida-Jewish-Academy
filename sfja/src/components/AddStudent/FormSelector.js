@@ -1,11 +1,9 @@
 import React from 'react';
-import {List, ListItem, ListItemIcon, Checkbox, ListItemSecondaryAction, ListItemText, Button} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
+import {List, ListItem, ListItemIcon, Checkbox} from '@material-ui/core';
 
-const textSize = {style: {fontSize: 15}};
-
+// eslint-disable-next-line require-jsdoc
 class FormSelector extends React.Component {
+  // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
     this.state = {
@@ -13,11 +11,11 @@ class FormSelector extends React.Component {
     };
   }
 
-
+  // eslint-disable-next-line require-jsdoc
   componentDidMount() {
     fetch('http://127.0.0.1:5000/getAllForms').then((res) => res.json()).then((result) => {
       const newForms = [];
-      console.log(result)
+      console.log(result);
       result.forms.map((currForm) => {
         newForms.push(
             {
@@ -33,29 +31,34 @@ class FormSelector extends React.Component {
     });
   }
 
-  formFlipper(formID){
+  // eslint-disable-next-line require-jsdoc
+  formFlipper(formID) {
     const oldForms = this.state.forms;
+    // eslint-disable-next-line max-len
     const newForms = oldForms.map((currForm) => (currForm.id === formID ? {id: currForm.id, name: currForm.name, checked: !currForm.checked} : currForm));
     this.setState({
       forms: newForms,
     });
   }
 
+  // eslint-disable-next-line require-jsdoc
   selectAll(theBool) {
-
     const oldForms = this.state.forms;
+    // eslint-disable-next-line max-len
     const newForms = oldForms.map((currForm) => ({id: currForm.id, name: currForm.name, checked: theBool}));
     this.setState({
       forms: newForms,
     });
-
   }
 
+  // eslint-disable-next-line require-jsdoc
   componentDidUpdate(prevProps, prevState, snapshot) {
+    // eslint-disable-next-line react/prop-types
     const {updateFormData} = this.props;
     updateFormData(this.state);
   }
 
+  // eslint-disable-next-line require-jsdoc
   render() {
     const {forms} = this.state;
     return (
@@ -64,7 +67,10 @@ class FormSelector extends React.Component {
           Select Forms:
           <div style={{width: 500}}>
             <List>
-              <ListItem key={'select_all'} role={undefined} dense button onClick={() => {this.selectAll(!forms.every((currForm) => currForm.checked))}}>
+              {/* eslint-disable-next-line max-len */}
+              <ListItem key={'select_all'} role={undefined} dense button onClick={() => {
+                this.selectAll(!forms.every((currForm) => currForm.checked));
+              }}>
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
@@ -79,7 +85,10 @@ class FormSelector extends React.Component {
               {forms.map((value) => {
                 const labelId = `checkbox-list-label-${value}`;
                 return (
-                  <ListItem key={value.id} role={undefined} dense button onClick={() => {this.formFlipper(value.id)}}>
+                  // eslint-disable-next-line max-len
+                  <ListItem key={value.id} role={undefined} dense button onClick={() => {
+                    this.formFlipper(value.id);
+                  }}>
                     <ListItemIcon>
                       <Checkbox
                         edge="start"

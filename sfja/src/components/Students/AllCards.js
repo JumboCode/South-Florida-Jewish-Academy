@@ -14,6 +14,7 @@ class AllCards extends React.Component {
     const {info, updateCurrID, updateCurrView} = this.props;
     return (
       <>
+        {/* eslint-disable-next-line max-len */}
         {info.map(({first_name, middle_name, last_name, student_id, form_ids}) => {
           const name = `${first_name} ${middle_name.substring(
               0,
