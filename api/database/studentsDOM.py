@@ -68,16 +68,10 @@ def getStudents():
     students = []
     for content in contents:
         info = {
-            'student_id': content['student_id'],
-            'basic_info': {
-                'first_name': content['basic_info']['first_name'],
-                'middle_name': content['basic_info']['middle_name'],
-                'last_name': content['basic_info']['last_name'],
-                'DOB': content['basic_info']['DOB'],
-                'parent_ids': content['basic_info']['parent_ids'],
-                'email': content['basic_info']['email']
-            },
-            'form_ids': content['form_ids']
+            'student_id': str(content['_id']),
+            'first_name': content['first_name'],
+            'middle_name': content['middle_name'],
+            'last_name': content['last_name'],
         }
         students.append(info)
 

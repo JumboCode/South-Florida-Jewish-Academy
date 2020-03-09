@@ -111,14 +111,14 @@ class StudentCard extends React.Component {
             <div style={{width: '95%'}}>
               <div style={incompleteStyle}>Incomplete Forms:</div>
               <div style={formsStyle}>
-                {Object.keys(forms).map((key) => (
-                  <div style={formStyle} key={key}>
-                    <div style={percentStyle}> 50% </div>
-                    <div style={formNameStyle}>
-                      {key} Form
-                    </div>
-                  </div>
-                ))}
+                {/*{Object.keys(forms).map((key) => (*/}
+                {/*  <div style={formStyle} key={key}>*/}
+                {/*    <div style={percentStyle}> 50% </div>*/}
+                {/*    <div style={formNameStyle}>*/}
+                {/*      {key} Form*/}
+                {/*    </div>*/}
+                {/*  </div>*/}
+                {/*))}*/}
               </div>
             </div>
           </div>
