@@ -9,10 +9,14 @@ mongo = PyMongo(app)
 
 # Creates a new student in the database. Takes pre-made
 # basicInfo and formIds dictionaries.
-def createStudent(id, basicInfo, formIds):
+def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentIds):
     initData = {
-                'student_id': id,
-                'basic_info': basicInfo,
+                'first_name': firstName,
+                'middle_name': middleName,
+                'last_name': lastName,
+                'DOB': DOB,
+                'grade': grade,
+                'parent_ids': parentIds,
                 'form_ids': formIds,
                 }
     result = mongo.db.students.insert_one(initData)

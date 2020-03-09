@@ -40,6 +40,7 @@ class AddStudent extends React.PureComponent {
       dob: inputData.dob,
     };
 
+    // eslint-disable-next-line max-len
     const parentData = inputData.parents.filter((currParent) => (currParent.firstName));
     const forms = formData.forms.filter((currForm) => (currForm.checked));
     const body = {

@@ -13,6 +13,7 @@ const textWidth = {
   padding: 10,
 };
 
+// eslint-disable-next-line require-jsdoc
 class Input extends React.Component {
   constructor(props) {
     super(props);

@@ -5,22 +5,22 @@ from datetime import datetime
 def makeStudents(db):
     students = db.students
     print('Made students')
+
     def genRandomForms(n):
         forms = {}
         for i in range(3):
             forms[str((n + i) % 5)] = [str(n) + str(i) + str(0), str(n) + str(i) + str(1)]
         return forms
+
     for i in range(0, 10):
         initData = {
-        	'student_id': i,
-        	'basic_info': {
-        		'first_name': 'first' + str(i),
-        		'middle_name': 'middle' + str(i),
-        		'last_name': 'last' + str(i),
-        		'DOB': str(i)*4 + "-" + str(i)*2 + "-" + str(i)*2,
-        		'parent_ids': [str(i), str(i + 10)],
-        		'email': 'student' + str(i) + '@FloridaJewishAcademy.org'
-        	},
+            'student_id': i,
+            'first_name': 'first' + str(i),
+            'middle_name': 'middle' + str(i),
+            'last_name': 'last' + str(i),
+            'DOB': str(i) * 4 + "-" + str(i) * 2 + "-" + str(i) * 2,
+            'parent_ids': [str(i), str(i + 10)],
+            'email': 'student' + str(i) + '@FloridaJewishAcademy.org',
             'form_ids': genRandomForms(i)
         }
         result = students.insert_one(initData)
@@ -39,7 +39,7 @@ def makeForms(db):
 
     for i in range(0, 10):
         for j in range(0, 3):
-            for k in range(0,2):
+            for k in range(0, 2):
                 initData = {
                     ## ensures that each form for generated student exists in form collection
                     'form_id': str(i) + str(j) + str(k),
@@ -53,55 +53,53 @@ def makeForms(db):
                 result = forms.insert_one(initData)
     print('Inserted ', result.inserted_id)
 
+
 def makeParents(db):
     parents = db.parents
     print('Made parents')
 
-    def getFormId(n,p):
+    def getFormId(n, p):
         forms = {}
         for i in range(3):
             forms[str((n + i) % 5)] = [str(n) + str(i) + str(0), str(n) + str(i) + str(1)]
         return forms
+
     for i in range(0, 20):
         initData = {
-
-            'parent_id': i,
-            'basic_info': 
-                {
-                    'name': 'parent' + str(i),
-                    'DOB': (str(i) * 4) + '-' + ('0' + str(i)) + '-' + ('1' + str(i)),
-                    'email': 'parent' + str(i) + '@FloridaJewishAcademy.org',
-                    'student_ids': [str(i % 10)]
-                },
-            'form_ids': getFormId(i % 10, i < 10)
+            'first_name': 'parentF' + str(i),
+            'last_name': 'parentL' + str(i),
+            # 'DOB': (str(i) * 4) + '-' + ('0' + str(i)) + '-' + ('1' + str(i)),
+            'email': 'parent' + str(i) + '@FloridaJewishAcademy.org',
+            'student_ids': [str(i % 10)]
         }
         result = parents.insert_one(initData)
         print('Inserted ', result.inserted_id)
 
-def makeUsers(db):	
-    users = db.users	
-    print('Made users')	
 
-    def makeActions(id):	
-        actions = []	
-        for j in range (id, 2 * id):	
-            datetime_NY = datetime.utcnow()	
+def makeUsers(db):
+    users = db.users
+    print('Made users')
+
+    def makeActions(id):
+        actions = []
+        for j in range(id, 2 * id):
+            datetime_NY = datetime.utcnow()
             # print("Time:", datetime_NY.strftime("%H:%M:%S"))	
-            actions.append(tuple((datetime_NY.strftime("%Y-%m-%d %H:%M:%S"), j % 7)))	
+            actions.append(tuple((datetime_NY.strftime("%Y-%m-%d %H:%M:%S"), j % 7)))
 
-        return actions	
+        return actions
 
-    for i in range (0, 20):	
-        initData = {	
-            'user_id': i,	
-            'email': 'user' + str(i) + '@FloridaJewishAcademy.org',	
-            'actions': makeActions(i)	
-        }	
-        result = users.insert_one(initData)	
-        print('Inserted ', result.inserted_id)	
+    for i in range(0, 20):
+        initData = {
+            'user_id': i,
+            'email': 'user' + str(i) + '@FloridaJewishAcademy.org',
+            'actions': makeActions(i)
+        }
+        result = users.insert_one(initData)
+        print('Inserted ', result.inserted_id)
+
 
 def main():
-
     ## drop and remake database
     try:
         client = MongoClient('localhost', 27017, serverSelectionTimeoutMS=10)
@@ -126,6 +124,6 @@ def main():
     makeParents(db)
     makeUsers(db)
 
+
 if __name__ == '__main__':
     main()
-

@@ -3,10 +3,10 @@ from flask_restful import Resource, Api
 from flask_sendgrid import SendGrid
 from flask_cors import CORS
 from database.emailKeysDOM import makeUser, verifyKey, verifyUser
-from generateKey import generateKey 
+from generateKey import generateKey
 import os
 import json
-from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM
+from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM, parentsDOM
 from flask import jsonify
 import subprocess
 from datetime import datetime
@@ -119,13 +119,24 @@ def addStudent():
         'DOB': student['dob']
     }
 
-    forms = []
+    parentIds = []
+    parents = request.json['parentData']
+    for parent in parents:
+        currID = parentsDOM.createParent(parent['firstName'], parent['lastName'], parent['email'])
+        parentIds.append(currID)
+
+    formIds = []
     for form in request.json['forms']:
-        forms.append(form['id'])
+        for parentId in parentIds:
+            id = form['id']
+            currID = FormsDOM.createForm(id, 'date', True, 0, 'data', parentId)
+            formIds.append(currID)
 
-    studentsDOM.createStudent(0, basicInfo, forms)
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], student['dob'], student['grade'], formIds, parentIds)
 
-    
+    for parentId in parentIds:
+        parentsDOM.addStudentId(parentId, studentId)
+
     return '0'
 
 if __name__ == '__main__':
