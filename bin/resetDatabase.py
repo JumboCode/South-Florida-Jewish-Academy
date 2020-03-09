@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # run with python3 resetDatabase.py
 from pymongo import MongoClient
 import subprocess
