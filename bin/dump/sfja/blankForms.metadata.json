@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"sfja.blankForms"}],"uuid":"5c4eb12ee0a74ed8a13ac87172fb6191"}
