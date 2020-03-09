@@ -13,6 +13,11 @@ function createData(id, time, action, email) {
     return { id, time, action, email };
 };
 
+function sortByAction(array) {
+    array.sort((a, b) => (a.action > b.action) ? 1 : -1);
+    return array;
+};
+
 //hello
 class Audit extends React.Component{
     static propTypes = {
@@ -30,7 +35,7 @@ class Audit extends React.Component{
 
 
     componentDidMount() {
-        fetch('http://127.0.0.1:5000/users')
+        fetch('http://127.0.0.1:8000/users')
             .then((res) => res.json())
             .then((data) => {
                 this.setState({users: data.users});
@@ -39,15 +44,14 @@ class Audit extends React.Component{
                         function (acc, x) { 
                             x.actions.forEach(
                                 (action) => acc.push(createData(x.user_id, action[0], action[1], x.email))); 
+                                //action[1] may be the action number
                                 return acc;
                             }, [])});
-
                         // (acc, x) => x.actions.forEach(
                         //     action => acc.push(createData(x.user_id, action, x.email))), new Array(0))});
-                console.log(data);
+                console.log(sortByAction(this.props.data));
             })
             .catch(console.log);
-
     }  
 
     render(){
@@ -57,14 +61,17 @@ class Audit extends React.Component{
             return(
                 <div>
                    <Header currTab='admin'/>
-                   oops
+                   Loading
                 </div>
             );
         }
+
+        {sortByAction(data)}
         
         return(
             <div>
                 <Header currTab='admin'/>
+                { console.log(sortByAction) }
             
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
@@ -91,7 +98,6 @@ class Audit extends React.Component{
                 </Table>
             </TableContainer>
                 U r in audit
-
             </div>
 
         );
