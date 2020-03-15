@@ -11,6 +11,7 @@ import DateFnsUtils from '@date-io/date-fns';
 const textSize = {style: {fontSize: 15}};
 const textWidth = {
   padding: 10,
+  marginTop: 10,
 };
 
 // eslint-disable-next-line require-jsdoc

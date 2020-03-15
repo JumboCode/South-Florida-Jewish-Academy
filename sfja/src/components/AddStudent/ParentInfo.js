@@ -4,7 +4,7 @@ import {TextField} from '@material-ui/core';
 const textSize = {style: {fontSize: 15}};
 const textWidth = {
   padding: 10,
-  paddingBottom: 20,
+  marginTop: 10,
 };
 
 // eslint-disable-next-line require-jsdoc
