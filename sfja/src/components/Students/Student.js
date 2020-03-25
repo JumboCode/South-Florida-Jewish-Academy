@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../Header';
 import ProfileEdit from './ProfileEdit'
-// import FormCard from './FormCard';
+
 import TextField from '@material-ui/core/TextField';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -13,7 +13,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-
 
 
 const imageStyle = {
@@ -30,6 +29,16 @@ const formStyle ={
 const parentForm = {
   textAlign: 'center',
 }
+const textSize = {
+  fontSize: '13px'
+};
+
+const navStyle = {
+  label: {
+    fontSize:'30px'
+  }
+}
+
 // eslint-disable-next-line require-jsdoc
 class Student extends React.Component {
   constructor(props) {
@@ -45,7 +54,7 @@ class Student extends React.Component {
   componentDidMount() {
     const id = this.props.match.params.id;
 
-    fetch('http://127.0.0.1:5000/studentProfile?id=' + id)
+    fetch('http://127.0.0.19:5000/studentProfile?id=' + id)
       .then((res) => res.json())
       .then((data) => {
         this.setState({
@@ -59,6 +68,7 @@ class Student extends React.Component {
 
   render() {
     const {forms, basicInfo, currTab} = this.state;
+    const { classes, children, className, ...other } = this.props;
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
       return (
@@ -70,6 +80,7 @@ class Student extends React.Component {
     }
     const id = this.props.match.params.id;
     
+    // const classes = useStyles();
     return (
       <div>
         <Header currTab='students'/>
@@ -81,7 +92,7 @@ class Student extends React.Component {
         <div>{basicInfo.first_name} {basicInfo.last_name}</div>
     
           <TextField style={{width: 500}} id="outlined-basic" label="Search for Forms" variant="outlined" />
-        <BottomNavigation
+        <BottomNavigation 
           value={this.state.value}
           onChange={(event, newValue) => {
             this.setState({currTab: newValue,value:newValue})
@@ -89,7 +100,7 @@ class Student extends React.Component {
           showLabels
          
         >
-          <BottomNavigationAction label="Forms"/>
+          <BottomNavigationAction label={<span className="bottomNav">Forms</span>} classes={{label: classes.label}}/>
           <BottomNavigationAction label="Documents" />
           <BottomNavigationAction label="Edit Student Info" />
           
@@ -99,24 +110,24 @@ class Student extends React.Component {
           <TableContainer component={Paper}>
         <Table  aria-label="simple table">
           <TableHead>
-            <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Form</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableRow >
+              <TableCell style={textSize} >Dessert (100g serving)</TableCell>
+              <TableCell  style={textSize} >Form</TableCell>
+              <TableCell style={textSize} >Fat&nbsp;(g)</TableCell>
+              <TableCell style={textSize} >Carbs&nbsp;(g)</TableCell>
+              <TableCell style={textSize} >Protein&nbsp;(g)</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {forms.map(form => (
-              <TableRow key={form.form_id}>
-                <TableCell component="th" scope="row">
+              <TableRow  key={form.form_id}>
+                <TableCell style={textSize} component="th" scope="row">
                   {form.form_num}
                 </TableCell>
-                <TableCell align="right">{form.last_updated}</TableCell>
-                <TableCell align="right">{form.last_viewed}</TableCell>
-                <TableCell align="right">{form.percent_completed}</TableCell>
-                <TableCell align="right">{form.required === true ? 'Y' : 'N'}</TableCell>
+                <TableCell style={textSize}  >{form.last_updated}</TableCell>
+                <TableCell style={textSize}  >{form.last_viewed}</TableCell>
+                <TableCell style={textSize}  >{form.percent_completed}</TableCell>
+                <TableCell style={textSize}  >{form.required === true ? 'Y' : 'N'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
