@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 cd api
 python3 -m venv backendEnv
 source backendEnv/bin/activate
