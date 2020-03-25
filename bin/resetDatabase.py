@@ -100,6 +100,9 @@ def makeUsers(db):
         result = users.insert_one(initData)	
         print('Inserted ', result.inserted_id)	
 
+def formsTestData(db):
+    
+
 def main():
 
     ## drop and remake database
@@ -125,6 +128,7 @@ def main():
     makeForms(db)
     makeParents(db)
     makeUsers(db)
+    formsTestData(db)
 
 if __name__ == '__main__':
     main()

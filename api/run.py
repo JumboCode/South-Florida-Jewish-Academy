@@ -6,7 +6,7 @@ from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from generateKey import generateKey 
 import os
 import json
-from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM
+from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM, parentsDOM
 from flask import jsonify
 import subprocess
 from datetime import datetime
@@ -16,7 +16,7 @@ app = Flask(__name__)
 CORS(app)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
-app.config['SENDGRID_DEFAULT_FROM'] = 'maxjramer@gmail.com'
+app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 
 # look I'm a comment
 
@@ -67,16 +67,16 @@ def get():
     #generates a unique key
     generatedKey = generateKey()
     # succeeded to insert into database
-    succeeded =  makeUser('trishacox@gmail.com', generatedKey)
+    succeeded =  makeUser('anthonytranduc@gmail.com', generatedKey)
 
     #currently only sends the email if a new user could be made
     if succeeded:
-        email1 = 'trishacox@gmail.com' #to be a given parent email
+        email1 = 'anthonytranduc@gmail.com' #to be a given parent email
         mail.send_email(
-            from_email='maxjramer@gmail.com',
+            from_email='anthonytranduc@gmail.com',
             to_email=[{'email': email1}],
             subject='Subject',
-            html='<a href="http://localhost:3000/form/' + str(generatedKey) + '">Forms</a>'
+            html='<a href="http://localhost:5000/form/' + str(generatedKey) + '">Forms</a>'
         )
         return 'success', 200
     else:
@@ -101,6 +101,12 @@ def addForm():
 def getUsers():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
     return {'users': usersDOM.getUsers()}
+
+@app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
+def getStudentsOfParent():
+    parent_id = request.json['parent_id']
+    return {'students_ids': parentsDOM.listStudents(parent_id)}
+        
 
 if __name__ == '__main__':
     app.run(debug=True)

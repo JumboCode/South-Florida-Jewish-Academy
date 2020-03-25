@@ -4,7 +4,7 @@ import * as serviceWorker from './serviceWorker';
 import {Auth0Provider} from './react-auth0-spa';
 import config from './auth_config.json';
 import history from './utils/history';
-import Form from './Form';
+import ParentDash from './components/ParentDash/ParentDash';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 import Header from './components/Header';
 import Student from './components/Students/Student';
@@ -14,6 +14,7 @@ import Email from './components/Email';
 import LoginPage from './components/LoginPage';
 import Logout from './components/Logout';
 import Upload from './components/Upload';
+
 
 
 // A function that routes the user to the right place
@@ -33,7 +34,7 @@ const routing = (
         <Redirect to="/dashboard" />
       </Route>
       {/* <Route exact path="/admin" component={Admin} />*/}
-      <Route path="/form/:key" component={Form} />
+      <Route path="/parentdash" component={ParentDash} />
       <Route path="/profile/:id" component={Student} />
       <Route exact path="/header" component={Header} />
       <Route exact path="/dashboard" component={Dashboard} />

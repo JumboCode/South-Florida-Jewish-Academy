@@ -12,7 +12,7 @@ mongo = PyMongo(app)
 # list student(s) associated with parent
 # if student_id is changed, change here also
 
-def listStudents(id, key):
+def listStudents(id):
 	contents = getInfo(id, 'student_ids')
 	return contents
 
