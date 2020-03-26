@@ -114,17 +114,20 @@ class Input extends React.Component {
     // eslint-disable-next-line react/prop-types
     const {updateInputData} = this.props;
     updateInputData(this.state);
+  }
 
-    if (prevProps.submitTime !== this.props.submitTime) {
-      this.setState(blankStateExceptSubmitTime(this.props.submitTime));
-      return true;
-    } else {
-      return false;
+  // eslint-disable-next-line require-jsdoc
+  rerender(newSubmitTime) {
+    const {submitTime} = this.state;
+    if (newSubmitTime !== submitTime) {
+      this.setState(blankStateExceptSubmitTime(newSubmitTime));
     }
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
+    const {submitTime} = this.props;
+    this.rerender(submitTime);
     // eslint-disable-next-line max-len
     const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, dob, gradeStudent} = this.state;
     return (

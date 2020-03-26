@@ -56,19 +56,25 @@ class FormSelector extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     // eslint-disable-next-line react/prop-types
     const {updateFormData} = this.props;
-    const {forms} = this.state;
     updateFormData(this.state);
-    if (prevProps.submitTime !== this.props.submitTime) {
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  rerender(newSubmitTime) {
+    const {submitTime, forms} = this.state;
+    if (newSubmitTime !== submitTime) {
       this.setState({
-        submitTime: this.props.submitTime,
+        submitTime: newSubmitTime,
         // eslint-disable-next-line max-len
         forms: forms.map((currForm) => ({id: currForm.id, name: currForm.name, checked: false})),
       });
     }
   }
-
   // eslint-disable-next-line require-jsdoc
   render() {
+    const {submitTime} = this.props;
+    this.rerender(submitTime);
+
     const {forms} = this.state;
     return (
       <div style={{paddingTop: 30}}>
