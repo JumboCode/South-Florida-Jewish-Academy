@@ -13,7 +13,7 @@ def createForm(date, required, comp, data, formIds, parentID):
                 'last_updated': date,
                 'last_viewed': '0000-00-00',
                 'required': required,
-                'percent_completed': comp,
+                'completed': comp,
                 'form_data': formIds,
                 'parent_id': parentID
                 }

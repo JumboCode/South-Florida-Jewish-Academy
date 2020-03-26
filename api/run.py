@@ -129,7 +129,7 @@ def addStudent():
     for form in request.json['forms']:
         for parentId in parentIds:
             id = form['id']
-            currID = FormsDOM.createForm(id, 'date', True, 0, 'data', parentId)
+            currID = FormsDOM.createForm(id, 'date', False, 0, 'data', parentId)
             formIds.append(currID)
 
     studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], student['dob'], student['grade'], formIds, parentIds)
