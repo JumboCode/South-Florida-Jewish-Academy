@@ -159,7 +159,7 @@ class Input extends React.Component {
               label="Date picker inline"
               value={dob}
               onChange={(ev) => {
-                this.setState({dob: ev});
+                this.setState({dob: ev.toLocaleDateString()});
               }}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
