@@ -17,12 +17,13 @@ const textWidth = {
 
 // eslint-disable-next-line require-jsdoc
 function blankStateExceptSubmitTime(submitTime) {
+  const today = new Date();
   return {
     submitTime: submitTime,
     firstNameStudent: '',
     middleNameStudent: '',
     lastNameStudent: '',
-    dob: new Date(),
+    dob: today.toLocaleDateString(),
     gradeStudent: '',
     viewParents: [0],
     parents: [{
