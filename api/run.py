@@ -127,7 +127,9 @@ def addStudent():
             currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, None, parentId)
             formIds.append(currID)
 
-    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], student['dob'], student['grade'], formIds, parentIds)
+
+    dateOfBirth = datetime.strptime(student['dob'], '%m/%d/%Y')
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, student['grade'], formIds, parentIds)
 
     for parentId in parentIds:
         parentsDOM.addStudentId(parentId, studentId)

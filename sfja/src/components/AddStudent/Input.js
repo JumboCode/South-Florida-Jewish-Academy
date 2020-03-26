@@ -22,7 +22,7 @@ function blankStateExceptSubmitTime(submitTime) {
     firstNameStudent: '',
     middleNameStudent: '',
     lastNameStudent: '',
-    dob: new Date(),
+    dob: new Date().toLocaleDateString(),
     gradeStudent: '',
     viewParents: [0],
     parents: [{
@@ -155,10 +155,10 @@ class Input extends React.Component {
               format="MM/dd/yyyy"
               margin="normal"
               id="date-picker-inline"
-              label="Date picker inline"
+              label="Birthday"
               value={dob}
               onChange={(ev) => {
-                this.setState({dob: ev});
+                this.setState({dob: ev ? ev.toLocaleDateString() : null});
               }}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
