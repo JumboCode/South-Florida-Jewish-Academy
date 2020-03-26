@@ -104,8 +104,8 @@ def getUsers():
 
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
-    parent_id = request.json['parent_id']
-    return {'students_ids': parentsDOM.listStudents(parent_id)}
+    _id = request.json['_id']
+    return {'students_ids': parentsDOM.listStudents(_id)}
         
 
 if __name__ == '__main__':

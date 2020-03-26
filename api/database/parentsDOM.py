@@ -17,13 +17,13 @@ def listStudents(id):
 	return contents
 
 def getInfo(id, key):
-    contents = list(mongo.db.parents.find({'parent_id': id}))
+    contents = list(mongo.db.parents.find({'_id': id}))
     for content in contents:
         return content['basic_info'][key]
 
 def getParentForm(id, formNum1):
 
-    contents = list(mongo.db.parents.find({'parent_id': id}))
+    contents = list(mongo.db.parents.find({'_id': id}))
     
     if len(contents) != 1:
         return False
@@ -36,15 +36,15 @@ def getParentForm(id, formNum1):
 
 
 def updateInfo(id, key, update):
-    writeR = dict(mongo.db.parents.update({'parent_id': id}, {'$set': {'basic_info' + str(key): update}}))
+    writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'basic_info' + str(key): update}}))
     if writeR['nModified'] > 0:
         return True
     return False
 
 def addForm(id, formNum, formId):
-    writeR = dict(mongo.db.parents.update({'parent_id': id}, {'$set': {'form_ids.' + str(formNum): [str(formId)]}}))
+    writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'form_ids.' + str(formNum): [str(formId)]}}))
     return writeR['nModified'] > 0
 
 def removeForm(id, formNum):
-    writeR = dict(mongo.db.parents.update({'parent_id': id}, {'$unset': {'form_ids.' + str(formNum): ''}}))
+    writeR = dict(mongo.db.parents.update({'_id': id}, {'$unset': {'form_ids.' + str(formNum): ''}}))
     return writeR['nModified'] > 0

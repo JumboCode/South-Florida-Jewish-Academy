@@ -4,8 +4,6 @@
 from pymongo import MongoClient
 import subprocess
 
-def formsTestData(db):
-    
 
 def main():
 
