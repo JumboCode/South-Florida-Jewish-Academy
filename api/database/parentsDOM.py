@@ -48,3 +48,32 @@ def addForm(id, formNum, formId):
 def removeForm(id, formNum):
     writeR = dict(mongo.db.parents.update({'_id': id}, {'$unset': {'form_ids.' + str(formNum): ''}}))
     return writeR['nModified'] > 0
+
+
+# makes parent and returns parentID
+def createParent(firstName, lastName, email):
+    initData = {
+                'first_name': firstName,
+                'last_name': lastName,
+                'email': email,
+                'student_ids': []
+                }
+    result = mongo.db.parents.insert_one(initData)
+    return result.inserted_id
+
+
+def addStudentId(id, studentId):
+    print('ADD STUDENT')
+    contents = list(mongo.db.parents.find({'_id': id}))
+    print(contents)
+    if len(contents) != 1:
+        return False
+
+    oldStudents = []
+    for content in contents:
+        oldStudents = content['student_ids']
+
+    oldStudents.append(studentId)
+    print('oldStudents', oldStudents)
+    writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'student_ids': oldStudents}}))
+    return writeR['nModified'] > 0

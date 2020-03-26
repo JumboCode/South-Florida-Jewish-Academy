@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 from flask_sendgrid import SendGrid
 from flask_cors import CORS
 from database.emailKeysDOM import makeUser, verifyKey, verifyUser
-from generateKey import generateKey 
+from generateKey import generateKey
 import os
 import json
 from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM, parentsDOM
@@ -107,6 +107,42 @@ def getStudentsOfParent():
     _id = request.json['_id']
     return {'students_ids': parentsDOM.listStudents(_id)}
         
+
+@app.route('/getAllForms', methods=['GET'])
+def getAllForms():
+    return { 'forms': blankFormsDOM.getAll()}
+
+@app.route('/addStudent', methods = ['POST'])
+def addStudent():
+    print(request.is_json)
+    print(request.json['studentData'])
+    student = request.json['studentData']
+    basicInfo = {
+        'first_name': student['firstName'],
+        'middle_name': student['middleName'],
+        'last_name': student['lastName'],
+        'DOB': student['dob']
+    }
+
+    parentIds = []
+    parents = request.json['parentData']
+    for parent in parents:
+        currID = parentsDOM.createParent(parent['firstName'], parent['lastName'], parent['email'])
+        parentIds.append(currID)
+
+    formIds = []
+    for form in request.json['forms']:
+        for parentId in parentIds:
+            id = form['id']
+            currID = FormsDOM.createForm(id, 'date', True, 0, 'data', parentId)
+            formIds.append(currID)
+
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], student['dob'], student['grade'], formIds, parentIds)
+
+    for parentId in parentIds:
+        parentsDOM.addStudentId(parentId, studentId)
+
+    return '0'
 
 if __name__ == '__main__':
     app.run(debug=True)

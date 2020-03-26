@@ -14,13 +14,8 @@ class AllCards extends React.Component {
     const {info, updateCurrID, updateCurrView} = this.props;
     return (
       <>
-        {info.map(({basic_info, student_id, form_ids}) => {
-          const {
-            first_name,
-            middle_name,
-            last_name,
-            email,
-          } = basic_info;
+        {/* eslint-disable-next-line max-len */}
+        {info.map(({first_name, middle_name, last_name, student_id, form_ids}) => {
           const name = `${first_name} ${middle_name.substring(
               0,
               1,
@@ -30,11 +25,11 @@ class AllCards extends React.Component {
               // onClick={() => {updateCurrID(id);updateCurrView('student')}}
               updateCurrID={updateCurrID}
               updateCurrView={updateCurrView}
-              key={email}
+              key={student_id}
               name={name}
-              email={email}
+              // email={email}
               id={student_id}
-              forms={form_ids}
+              // forms={form_ids}
             ></StudentCard>
           );
         })}
