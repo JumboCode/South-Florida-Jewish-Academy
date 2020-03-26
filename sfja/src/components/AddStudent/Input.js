@@ -7,6 +7,7 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import PropTypes from 'prop-types';
 
 const textSize = {style: {fontSize: 15}};
 const textWidth = {
@@ -15,47 +16,52 @@ const textWidth = {
 };
 
 // eslint-disable-next-line require-jsdoc
+function blankStateExceptSubmitTime(submitTime) {
+  return {
+    submitTime: submitTime,
+    firstNameStudent: '',
+    middleNameStudent: '',
+    lastNameStudent: '',
+    dob: new Date(),
+    gradeStudent: '',
+    viewParents: [0],
+    parents: [{
+      num: 0,
+      firstName: null,
+      email: null,
+      lastName: null,
+    },
+    {
+      num: 1,
+      firstName: null,
+      email: null,
+      lastName: null,
+    },
+    {
+      num: 2,
+      firstName: null,
+      email: null,
+      lastName: null,
+    },
+    {
+      num: 3,
+      firstName: null,
+      email: null,
+      lastName: null,
+    }],
+  };
+}
+
+// eslint-disable-next-line require-jsdoc
 class Input extends React.Component {
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
-    this.state = {
-      firstNameStudent: '',
-      middleNameStudent: '',
-      lastNameStudent: '',
-      dob: new Date(),
-      gradeStudent: '',
-      viewParents: [0],
-      parents: [{
-        num: 0,
-        firstName: null,
-        email: null,
-        lastName: null,
-      },
-      {
-        num: 1,
-        firstName: null,
-        email: null,
-        lastName: null,
-      },
-      {
-        num: 2,
-        firstName: null,
-        email: null,
-        lastName: null,
-      },
-      {
-        num: 3,
-        firstName: null,
-        email: null,
-        lastName: null,
-      }],
-    };
+    this.state = blankStateExceptSubmitTime(this.props.submitTime);
   }
 
   // eslint-disable-next-line require-jsdoc
   addParentData(num, first, email, last) {
-    console.log(num, first, email, last);
     const {parents} = this.state;
     parents[num] = {
       num: num,
@@ -81,15 +87,25 @@ class Input extends React.Component {
     });
   }
 
+  // pops last element from 'view' list
+  // clears all data in said element
   // eslint-disable-next-line require-jsdoc
   removeViewParents() {
     const {viewParents} = this.state;
-    if (viewParents.length == 1) {
+    if (viewParents.length === 1) {
       return;
     }
     viewParents.pop();
+
+    // clear data
+    const oldParents = this.state.parents;
+    oldParents[viewParents.length].firstName = '';
+    oldParents[viewParents.length].lastName = '';
+    oldParents[viewParents.length].email = '';
+
     this.setState({
       viewParents: viewParents,
+      parents: oldParents,
     });
   }
 
@@ -98,11 +114,20 @@ class Input extends React.Component {
     // eslint-disable-next-line react/prop-types
     const {updateInputData} = this.props;
     updateInputData(this.state);
-    console.log('here');
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  rerender(newSubmitTime) {
+    const {submitTime} = this.state;
+    if (newSubmitTime !== submitTime) {
+      this.setState(blankStateExceptSubmitTime(newSubmitTime));
+    }
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
+    const {submitTime} = this.props;
+    this.rerender(submitTime);
     // eslint-disable-next-line max-len
     const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, dob, gradeStudent} = this.state;
     return (
@@ -160,5 +185,9 @@ class Input extends React.Component {
     );
   }
 }
+
+Input.propTypes = {
+  submitTime: PropTypes.any,
+};
 
 export default Input;
