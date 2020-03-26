@@ -40,7 +40,6 @@ class Students extends React.Component {
     const {students} = this.state;
     // eslint-disable-next-line react/prop-types
     const {updateCurrView, updateCurrID} = this.props;
-    console.log(updateCurrView);
     // updateCurrView('student')
     if (!students) {
       return (

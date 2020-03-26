@@ -39,7 +39,6 @@ class Header extends React.Component {
     const {currTab} = this.props;
     const {hover} = this.state;
 
-    console.log(currTab);
     return (
       <div>
         <LoginChecker/>

@@ -96,7 +96,6 @@ class StudentCard extends React.Component {
     // const classes = useStyles();
     // eslint-disable-next-line react/prop-types
     const {id} = this.props;
-    console.log(this.props, 'props');
     // eslint-disable-next-line no-unused-vars
     const forms = this.props.forms;
     return (

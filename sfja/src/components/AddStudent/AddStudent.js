@@ -14,6 +14,7 @@ class AddStudent extends React.PureComponent {
         {
           inputData: null,
           formData: null,
+          submitTime: Date.now(),
         };
   }
 
@@ -22,7 +23,6 @@ class AddStudent extends React.PureComponent {
     this.setState({
       inputData: newInputData,
     });
-    console.log(this.state);
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -30,7 +30,6 @@ class AddStudent extends React.PureComponent {
     this.setState({
       formData: newFormData,
     });
-    console.log(this.state);
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -58,17 +57,21 @@ class AddStudent extends React.PureComponent {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
-    }).then(response => response);
+    }).then(response => {
+      this.setState({submitTime: Date.now()});
+    });
   };
 
 
   // eslint-disable-next-line require-jsdoc
   render() {
+    const {submitTime} = this.state;
     return (
       <div>
         <Header currTab='addStudent'/>
-        <Input updateInputData={this.updateInputData.bind(this)}/>
-        <FormSelector updateFormData={this.updateFormData.bind(this)}/>
+        {/* eslint-disable max-len */}
+        <Input updateInputData={this.updateInputData.bind(this)} submitTime={submitTime}/>
+        <FormSelector updateFormData={this.updateFormData.bind(this)} submitTime={submitTime}/>
         <Button onClick={()=> this.submit()}>Submit</Button>
       </div>
     );
