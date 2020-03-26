@@ -86,6 +86,7 @@ def get():
 @app.route('/students', methods = ['GET', 'POST'])
 def getStudents():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
+    students = studentsDOM.getStudents()     
     return {'students': studentsDOM.getStudents()}
 
 
