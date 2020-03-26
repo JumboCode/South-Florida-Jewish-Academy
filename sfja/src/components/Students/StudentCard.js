@@ -53,6 +53,7 @@ const formsStyle = {
   backgroundColor: '#80b1d4',
 };
 
+// eslint-disable-next-line no-unused-vars
 const formStyle = {
   display: 'flex',
   flex: '50%',
@@ -60,11 +61,13 @@ const formStyle = {
   padding: '5px',
 };
 
+// eslint-disable-next-line no-unused-vars
 const percentStyle = {
   marginLeft: '10px',
   color: '#01497a',
 };
 
+// eslint-disable-next-line no-unused-vars
 const formNameStyle = {
   flex: '100%',
   textAlign: 'center',
@@ -94,6 +97,7 @@ class StudentCard extends React.Component {
     // eslint-disable-next-line react/prop-types
     const {id} = this.props;
     console.log(this.props, 'props');
+    // eslint-disable-next-line no-unused-vars
     const forms = this.props.forms;
     return (
       <Card style={cardStyle}>
@@ -111,14 +115,14 @@ class StudentCard extends React.Component {
             <div style={{width: '95%'}}>
               <div style={incompleteStyle}>Incomplete Forms:</div>
               <div style={formsStyle}>
-                {Object.keys(forms).map((key) => (
-                  <div style={formStyle} key={key}>
-                    <div style={percentStyle}> 50% </div>
-                    <div style={formNameStyle}>
-                      {key} Form
-                    </div>
-                  </div>
-                ))}
+                {/* {Object.keys(forms).map((key) => (*/}
+                {/*  <div style={formStyle} key={key}>*/}
+                {/*    <div style={percentStyle}> 50% </div>*/}
+                {/*    <div style={formNameStyle}>*/}
+                {/*      {key} Form*/}
+                {/*    </div>*/}
+                {/*  </div>*/}
+                {/* ))}*/}
               </div>
             </div>
           </div>

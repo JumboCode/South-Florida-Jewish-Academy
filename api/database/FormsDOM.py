@@ -8,15 +8,14 @@ app.config["MONGO_URI"] = "mongodb://localhost:27017/sfja"
 mongo = PyMongo(app)
 
 # Creates new form.
-def createForm(id, date, required, num, comp, data):
+def createForm(date, required, comp, data, formIds, parentID):
     initData = {
-                'form_id': id,
                 'last_updated': date,
                 'last_viewed': '0000-00-00',
                 'required': required,
-                'form_num': num,
                 'percent_completed': comp,
-                'form_data': data
+                'form_data': formIds,
+                'parent_id': parentID
                 }
     result = mongo.db.forms.insert_one(initData)
     return result.inserted_id
