@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from '../Header';
 import Input from './Input';
 import FormSelector from './FormSelector';
 import {Button} from '@material-ui/core';
@@ -68,7 +67,6 @@ class AddStudent extends React.PureComponent {
     const {submitTime} = this.state;
     return (
       <div>
-        <Header currTab='addStudent'/>
         {/* eslint-disable max-len */}
         <Input updateInputData={this.updateInputData.bind(this)} submitTime={submitTime}/>
         <FormSelector updateFormData={this.updateFormData.bind(this)} submitTime={submitTime}/>
