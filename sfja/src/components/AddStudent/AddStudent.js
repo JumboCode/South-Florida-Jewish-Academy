@@ -1,8 +1,8 @@
 import React from 'react';
 import Input from './Input';
 import FormSelector from './FormSelector';
-import {Button} from '@material-ui/core';
-
+import {Button, Paper} from '@material-ui/core';
+// eslint-disable max-len
 
 // eslint-disable-next-line require-jsdoc
 class AddStudent extends React.PureComponent {
@@ -68,9 +68,22 @@ class AddStudent extends React.PureComponent {
     return (
       <div>
         {/* eslint-disable max-len */}
-        <Input updateInputData={this.updateInputData.bind(this)} submitTime={submitTime}/>
-        <FormSelector updateFormData={this.updateFormData.bind(this)} submitTime={submitTime}/>
-        <Button onClick={()=> this.submit()}>Submit</Button>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <Paper elevation={2} style={{padding: 10}}>
+            <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: 10}}>
+              <Paper elevation={3} style={{display: 'flex', margin: 10}}>
+                <Input updateInputData={this.updateInputData.bind(this)} submitTime={submitTime} style={{textAlign: 'left'}}/>
+              </Paper>
+              <br/>
+              <Paper elevation={3} style={{display: 'flex', margin: 10}}>
+                <FormSelector updateFormData={this.updateFormData.bind(this)} submitTime={submitTime}/>
+              </Paper>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
+              <Button variant='contained' size='large' onClick={()=> this.submit()}>Submit</Button>
+            </div>
+          </Paper>
+        </div>
       </div>
     );
   }
