@@ -52,7 +52,7 @@ class Header extends React.Component {
               this.setState({value: newValue});
             }}
             variant="fullWidth"
-            indicatorColor="primary"
+            TabIndicatorProps={{style: {background: '#0068af'}}}
             textColor="primary"
             aria-label="icon tabs example"
           >
