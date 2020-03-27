@@ -39,7 +39,6 @@ class Header extends React.Component {
     const {currTab} = this.props;
     const {hover} = this.state;
 
-    console.log(currTab);
     return (
       <div>
         <LoginChecker/>
@@ -130,7 +129,7 @@ class Header extends React.Component {
             }}/>
           </Link>
 
-          <Link to='/email'
+          <Link to='/addStudent'
             onMouseEnter={() => this.setState({hover: 'email'})}
             onMouseLeave={() => this.setState({hover: ''})}
             style={{textDecoration: 'none'}}
@@ -139,14 +138,14 @@ class Header extends React.Component {
               style={{display: 'flex'}}
             >
               {/* eslint-disable-next-line max-len */}
-              <span style={{height: 30, marginTop: 3}}>{hover === 'email' ? <EmailIconGray/> : <EmailIcon/>}</span>
+              <span style={{height: 30, marginTop: 3}}>{hover === 'addStudent' ? <EmailIconGray/> : <EmailIcon/>}</span>
 
               <span
                 style={{
                   marginTop: 4,
                   marginLeft: 7,
-                  color: hover === 'email' ? '#878686' : 'white',
-                }}>email
+                  color: hover === 'addStudent' ? '#878686' : 'white',
+                }}>add student
               </span>
             </div>
 
