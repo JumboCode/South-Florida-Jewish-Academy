@@ -9,10 +9,14 @@ mongo = PyMongo(app)
 
 # Creates a new student in the database. Takes pre-made
 # basicInfo and formIds dictionaries.
-def createStudent(id, basicInfo, formIds):
+def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentIds):
     initData = {
-                'student_id': id,
-                'basic_info': basicInfo,
+                'first_name': firstName,
+                'middle_name': middleName,
+                'last_name': lastName,
+                'DOB': DOB,
+                'grade': grade,
+                'parent_ids': parentIds,
                 'form_ids': formIds,
                 }
     result = mongo.db.students.insert_one(initData)
@@ -76,16 +80,10 @@ def getStudents():
     students = []
     for content in contents:
         info = {
-            'student_id': content['student_id'],
-            'basic_info': {
-                'first_name': content['first_name'],
-                'middle_name': content['middle_name'],
-                'last_name': content['last_name'],
-                'DOB': content['DOB'],
-                'parent_ids': content['parent_ids'],
-                'email': content['email']
-            },
-            'form_ids': content['form_ids']
+            'student_id': str(content['_id']),
+            'first_name': content['first_name'],
+            'middle_name': content['middle_name'],
+            'last_name': content['last_name'],
         }
         students.append(info)
 

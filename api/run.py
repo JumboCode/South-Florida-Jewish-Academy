@@ -7,11 +7,13 @@ from database.FormsDOM import getForm
 from generateKey import generateKey 
 import os
 import json
-from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM
+from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM, parentsDOM
 from flask import jsonify
 import subprocess
 from datetime import datetime
 from database.assets.audit_mapper import audit_mapper as audit
+from bson.objectid import ObjectId
+
 
 app = Flask(__name__)
 CORS(app)
@@ -123,6 +125,36 @@ def getStudentProfile():
         'forms': forms,
         'basic_info': studentsDOM.getBasicInfo(studentID)
     }
+@app.route('/getAllForms', methods=['GET'])
+def getAllForms():
+    return { 'forms': blankFormsDOM.getAll()}
+
+@app.route('/addStudent', methods = ['POST'])
+def addStudent():
+    student = request.json['studentData']
+
+    parentIds = []
+    parents = request.json['parentData']
+    for parent in parents:
+        currID = parentsDOM.createParent(parent['firstName'], parent['lastName'], parent['email'])
+        parentIds.append(currID)
+
+    formIds = []
+    for form in request.json['forms']:
+        for parentId in parentIds:
+            id = form['id']
+            # createForm(id, date, required, comp, data, parentID):
+            currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, None, parentId)
+            formIds.append(currID)
+
+
+    dateOfBirth = datetime.strptime(student['dob'], '%m/%d/%Y')
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, student['grade'], formIds, parentIds)
+
+    for parentId in parentIds:
+        parentsDOM.addStudentId(parentId, studentId)
+
+    return '0'
 
 if __name__ == '__main__':
     app.run(debug=True)
