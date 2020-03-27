@@ -29,13 +29,14 @@ const onRedirectCallback = (appState) => {
 const routing = (
   <Router>
     <div>
+      {/* eslint-disable-next-line max-len */}
+      <Route path={['/dashboard', '/students', '/upload', '/addStudent']} component={Header}/>
       <Route exact path="/">
         <Redirect to="/dashboard" />
       </Route>
       {/* <Route exact path="/admin" component={Admin} />*/}
       <Route path="/form/:key" component={Form} />
       <Route path="/profile/:id" component={Student} />
-      <Route exact path="/header" component={Header} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/students" component={Students} />
       <Route exact path="/upload" component={Upload} />
