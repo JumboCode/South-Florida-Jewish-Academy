@@ -32,7 +32,7 @@ class Upload extends React.Component {
     };
   }
   componentDidMount(){
-    fetch('http://localhost:5000/forms')
+    fetch('http://localhost:5000/getBlankFormDetails')
     .then((res) => res.json())
     .then((data) => {
       this.setState({ formsList: data.forms});
@@ -40,6 +40,10 @@ class Upload extends React.Component {
     })
   }
 
+  trashForm(currentForm){
+    //the request goes here
+    console.log("Attempted to trash form");
+  }
   // eslint-disable-next-line require-jsdoc
   render() {
     const {createForm, currentForm, formsList} = this.state;
@@ -60,29 +64,30 @@ class Upload extends React.Component {
     }
     let result = Object.values(formsList);
   
-    /* Type of form */
-    var formNumArr = [];
+    /* form id array */ 
+    var formIdArr = [];   
     for (var i = 0; i < result.length; i++){
-      formNumArr.push(result[i].form_num);
+      formIdArr.push(result[i].form_id);
+    }
+
+    /* Type of form */
+    var formNameArr = [];
+    for (var i = 0; i < result.length; i++){
+      formNameArr.push(result[i].form_name);
     }
     /* Last updated */
-    var formUpdateArr = [];
-    for (var i = 0; i < result.length; i++){
+    var formUpdateArr = [0, 0 , 0];
+    /*for (var i = 0; i < result.length; i++){
       formIdArr.push(result[i].last_updated);
-    }
-    /* delete duplicates */
-    for (var i = 0; i < formNumArr.length; i++){
-      for (var j = 1; j < formNumArr.length; j++){
-        if (formNumArr[i] == formNumArr[j]){
+    } */
 
-        }
-      }
-    }
+
     /* Push details to main array*/
     var allInfoArr = [];
     for (var i = 0; i < result.length; i++){
       var oneArr = []
-      oneArr.push(formNumArr[i]);
+      oneArr.push(formIdArr[i]);
+      oneArr.push(formNameArr[i]);
       oneArr.push(formUpdateArr[i]);
       allInfoArr.push(oneArr);
     }
@@ -105,8 +110,9 @@ class Upload extends React.Component {
                     <TableBody>
                           {allInfoArr.map(row => (
                               <TableRow key={row}>
-                                <TableCell component="th" scope="row">{row[0]} </TableCell>
-                                <TableCell align="right">{row[1]}</TableCell>
+                                <TableCell component="th" scope="row">{row[1]} </TableCell>
+                                <TableCell align="right">{row[2]}</TableCell>
+                                <TableCell align="right" onClick={this.trashForm(row[2])}> Delete</TableCell>
                               </TableRow>
                             ))}
                     </TableBody>

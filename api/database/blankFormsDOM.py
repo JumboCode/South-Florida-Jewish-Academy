@@ -28,3 +28,20 @@ def getAll():
     return res
 
         # print(document)
+
+def getBlankFormDetails():
+    contents = list(mongo.db.blankForms.find())
+    forms = []
+    for content in contents:
+        info = {
+            'form_id': str(content['_id']),
+            'form_name': content['form_name'],
+            #'last_updated': content['last_updated'],
+            'form_data': content['form_data']
+        }
+        forms.append(info)
+    return forms
+
+def deleteForm(id):
+    mongo.db.blankForms.delete_many({'_id': id })
+    return forms
