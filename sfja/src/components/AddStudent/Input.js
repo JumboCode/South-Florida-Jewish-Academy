@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 const textSize = {style: {fontSize: 15}};
 const textWidth = {
   padding: 10,
-  marginTop: 10,
+  marginBottom: 10,
 };
 
 // eslint-disable-next-line require-jsdoc
@@ -129,8 +129,8 @@ class Input extends React.Component {
     const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, dob, gradeStudent} = this.state;
     return (
       <div>
-        <div style={{paddingLeft: 10}}>
-          Student Info:
+        <div style={{padding: 10}}>
+          Enter the student&#39;s information:
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
@@ -172,11 +172,11 @@ class Input extends React.Component {
               lastName={x.lastName}
               addParentData={this.addParentData.bind(this)}/>
           </div>)}
-        <div style={{paddingLeft: 10}}>
+        <div style={{margin: 10}}>
           {/* eslint-disable-next-line max-len */}
-          <Button onClick={()=> this.addViewParents()} disabled={viewParents.length === 4}>add Parent</Button>
+          <Button style={{marginRight: 10}} variant='outlined' onClick={()=> this.addViewParents()} disabled={viewParents.length === 4}>add Parent</Button>
           {/* eslint-disable-next-line max-len */}
-          <Button onClick={()=> this.removeViewParents()} disabled={viewParents.length === 1} >remove Parent</Button>
+          <Button variant='outlined' onClick={()=> this.removeViewParents()} disabled={viewParents.length === 1} >remove Parent</Button>
         </div>
       </div>
     );
