@@ -28,7 +28,7 @@ const onRedirectCallback = (appState) => {
 
 const routing = (
   <Router>
-    <div>
+    <div style={{width: '100vw'}}>
       {/* eslint-disable-next-line max-len */}
       <Route path={['/dashboard', '/students', '/upload', '/addStudent']} component={Header}/>
       <Route exact path="/">

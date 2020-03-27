@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Header.css';
-import topLogo from '../assets/CircleLogo.png';
 import {Link} from 'react-router-dom';
 import LoginChecker from './LoginChecker';
 import Tabs from '@material-ui/core/Tabs';
@@ -15,7 +14,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 /* eslint-disable max-len */
 
 
-const tabStyle = {color: 'grey', fontSize: 12, outline: 'none', textDecoration: 'none'};
+const tabStyle = {color: 'grey', fontSize: 10, outline: 'none', textDecoration: 'none', minWidth: 20};
 
 
 /**
@@ -50,21 +49,24 @@ class Header extends React.Component {
           <Tabs
             value={value}
             onChange={(e, newValue) => {
-              if (newValue !== 0) {
-                this.setState({value: newValue});
-              }
+              this.setState({value: newValue});
             }}
             variant="fullWidth"
             indicatorColor="primary"
             textColor="primary"
             aria-label="icon tabs example"
           >
-            <Tab disabled={true} icon={<img width={60} id="topLogo" src={topLogo}/>} style={{textAlign: 'left'}}/>
-            <Tab icon={<HomeIcon fontSize='large'/>} label='dashboard' to={'/dashboard'} component={Link} style={tabStyle}/>
-            <Tab icon={<PeopleAltIcon fontSize='large'/>} label='students' to='/students' component={Link} style={tabStyle}/>
-            <Tab icon={<ListAltIcon fontSize='large'/>} label='form management' to='/upload' component={Link} style={tabStyle}/>
-            <Tab icon={<PersonAddIcon fontSize='large'/>} label='add student' to='/addStudent' component={Link} style={tabStyle}/>
-            <Tab icon={<ExitToAppIcon fontSize='large'/>} label='logout' to='/logout' component={Link} style={tabStyle}/>
+            <div>
+              <div id='toptitle'>
+                  South Florida Jewish Academy
+              </div>
+              <div id="topsubtitle">Admissions Page</div>
+            </div>
+            <Tab icon={<HomeIcon fontSize='medium'/>} label='dashboard' to={'/dashboard'} component={Link} style={tabStyle}/>
+            <Tab icon={<PeopleAltIcon fontSize='medium'/>} label='students' to='/students' component={Link} style={tabStyle}/>
+            <Tab icon={<ListAltIcon fontSize='medium'/>} label='forms' to='/upload' component={Link} style={tabStyle}/>
+            <Tab icon={<PersonAddIcon fontSize='medium'/>} label='add student' to='/addStudent' component={Link} style={tabStyle}/>
+            <Tab icon={<ExitToAppIcon fontSize='medium'/>} label='logout' to='/logout' component={Link} style={tabStyle}/>
           </Tabs>
         </Paper>
       </div>
