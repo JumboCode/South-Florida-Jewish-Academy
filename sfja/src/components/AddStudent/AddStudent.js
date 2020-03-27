@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from '../Header';
 import Input from './Input';
 import FormSelector from './FormSelector';
 import {Button, Paper} from '@material-ui/core';
@@ -68,9 +67,8 @@ class AddStudent extends React.PureComponent {
     const {submitTime} = this.state;
     return (
       <div>
-        <Header currTab='addStudent'/>
         {/* eslint-disable max-len */}
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40}}>
           <Paper elevation={2} style={{padding: 10}}>
             <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: 10}}>
               <Paper elevation={3} style={{display: 'flex', margin: 10}}>

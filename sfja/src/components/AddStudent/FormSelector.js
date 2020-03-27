@@ -74,7 +74,7 @@ class FormSelector extends React.Component {
       <div style={{paddingTop: 10}}>
         <div style={{paddingLeft: 10}}>
           Select Forms:
-          <div style={{width: 500}}>
+          <div style={{width: 300}}>
             <List>
               {/* eslint-disable-next-line max-len */}
               <ListItem key={'select_all'} role={undefined} dense button onClick={() => {
