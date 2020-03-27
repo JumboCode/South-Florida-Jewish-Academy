@@ -71,7 +71,7 @@ class FormSelector extends React.Component {
   render() {
     const {forms} = this.state;
     return (
-      <div style={{paddingTop: 30}}>
+      <div style={{paddingTop: 10}}>
         <div style={{paddingLeft: 10}}>
           Select Forms:
           <div style={{width: 500}}>
