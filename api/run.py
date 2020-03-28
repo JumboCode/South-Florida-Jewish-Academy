@@ -117,10 +117,9 @@ def getAllForms():
 def getBlankFormDetails():
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
-@app.route('/deleteBlankForm/<id>', methods=['DELETE'])
+@app.route('/deleteBlankForm/<id>', methods=['POST'])
 def deleteBlankForm(id):
-    formid = id 
-    return { 'forms': blankFormsDOM.deleteForm(ObjectId(formid))}
+    return { 'forms': blankFormsDOM.deleteForm(ObjectId(id))}
 
 @app.route('/addStudent', methods = ['POST'])
 def addStudent():

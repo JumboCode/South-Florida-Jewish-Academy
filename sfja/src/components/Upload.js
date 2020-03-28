@@ -41,7 +41,8 @@ class Upload extends React.Component {
 
   trashForm(currentForm){
     fetch('http://localhost:5000/deleteBlankForm/' + currentForm , {
-      //method: 'DELETE'
+      method: 'POST',
+      mode: "no-cors"
     })
     .then((res) => res.text())
     .then (res => console.log(res));
