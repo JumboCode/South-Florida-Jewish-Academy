@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from './Header';
 import FormManager from './FormManager/FormManager';
 import { get } from './FormManager/FormBuilder/stores/requests';
 import fetch from 'isomorphic-fetch';
