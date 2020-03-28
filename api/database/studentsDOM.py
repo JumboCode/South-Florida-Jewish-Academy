@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask
 from flask_pymongo import PyMongo
 import os
@@ -72,6 +73,7 @@ def getStudents():
             'first_name': content['first_name'],
             'middle_name': content['middle_name'],
             'last_name': content['last_name'],
+            'DOB': content['DOB'].strftime("%m/%d/%Y")
         }
         students.append(info)
 

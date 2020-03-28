@@ -87,7 +87,14 @@ def get():
 @app.route('/students', methods = ['GET', 'POST'])
 def getStudents():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
-    return {'students': studentsDOM.getStudents()}
+    students = studentsDOM.getStudents()
+    forms_completed = 0
+#     for student in students:
+#         for form in student['form_ids']:
+#             if FormsDOM.isComplete(form):
+#                 forms_completed += 1
+#         student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids'])
+    return {'students':students}
 
 
 @app.route('/newform', methods = ['POST'])

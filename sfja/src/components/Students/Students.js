@@ -12,6 +12,16 @@ import {
   allCardsStyle,
 } from './Styles';
 import Header from '../Header';
+import StudentCard from "./StudentCard";
+
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 // eslint-disable-next-line require-jsdoc
 class Students extends React.Component {
@@ -64,10 +74,33 @@ class Students extends React.Component {
               />
               <MagnifyingGlass style={MagnifyingGlassStyle} />
             </div>
-            <div style={allCardsStyle}>
+            {/*<div style={allCardsStyle}>*/}
               {/* eslint-disable-next-line max-len */}
-              <AllCards info={students} updateCurrID={updateCurrID} updateCurrView={updateCurrView}></AllCards>
-            </div>
+            {/*  <AllCards info={students} updateCurrID={updateCurrID} updateCurrView={updateCurrView}></AllCards>*/}
+            {/*</div>*/}
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>First Name</TableCell>
+                    <TableCell align="right">Last Name</TableCell>
+                    <TableCell align="right">DOB</TableCell>
+                    <TableCell align="right">Completed Forms</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {students.map(student => (
+                      <TableRow key={student.student_id}>
+                        <TableCell component="th" scope="row">
+                          {student.first_name}
+                        </TableCell>
+                        <TableCell align="right">{student.last_name}</TableCell>
+                        <TableCell align="right">{student.DOB}</TableCell>
+                      </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </div>
         </div>
       </div>
