@@ -59,7 +59,6 @@ class Upload extends React.Component {
     if (formsList === null){
       return(
         <div>
-          <Header currTab='upload'/>
           loading...
         </div>
       )
@@ -95,7 +94,6 @@ class Upload extends React.Component {
     }
     return (
       <div>
-        <Header currTab='upload'/>
         {createForm ? <FormManager/>: 
           <div>
             <button onClick= {() => this.setState({createForm: true})}> Add Form </button>
