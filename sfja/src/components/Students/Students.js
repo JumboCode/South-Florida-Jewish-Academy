@@ -11,7 +11,6 @@ import {
   MagnifyingGlassStyle,
   allCardsStyle,
 } from './Styles';
-import Header from '../Header';
 
 // eslint-disable-next-line require-jsdoc
 class Students extends React.Component {
@@ -40,19 +39,16 @@ class Students extends React.Component {
     const {students} = this.state;
     // eslint-disable-next-line react/prop-types
     const {updateCurrView, updateCurrID} = this.props;
-    console.log(updateCurrView);
     // updateCurrView('student')
     if (!students) {
       return (
         <div>
-          <Header currTab='students'/>
           Loading...
         </div>
       );
     }
     return (
       <div>
-        <Header currTab='students' />
         <div style={studentPageStyle}>
           <div style={filterStyle}>
             <p onClick={() => updateCurrView('student')}> Filters </p>

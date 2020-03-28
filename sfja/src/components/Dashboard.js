@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from './Header';
 
 
 // eslint-disable-next-line require-jsdoc
@@ -8,8 +7,7 @@ class Dashboard extends React.Component {
   render() {
     return (
       <div>
-        <Header currTab='dashboard'/>
-                dashboard
+        dashboard
       </div>
     );
   }

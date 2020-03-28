@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"sfja.students"}],"uuid":"610781c45a334dd5b5568d2c924bf948"}
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"sfja.students"}],"uuid":"aabdcc950e1f4b7285f3b7822fba0652"}

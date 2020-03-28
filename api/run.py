@@ -11,6 +11,8 @@ from flask import jsonify
 import subprocess
 from datetime import datetime
 from database.assets.audit_mapper import audit_mapper as audit
+from bson.objectid import ObjectId
+
 
 app = Flask(__name__)
 CORS(app)
@@ -114,15 +116,7 @@ def getAllForms():
 
 @app.route('/addStudent', methods = ['POST'])
 def addStudent():
-    print(request.is_json)
-    print(request.json['studentData'])
     student = request.json['studentData']
-    basicInfo = {
-        'first_name': student['firstName'],
-        'middle_name': student['middleName'],
-        'last_name': student['lastName'],
-        'DOB': student['dob']
-    }
 
     parentIds = []
     parents = request.json['parentData']
@@ -134,10 +128,13 @@ def addStudent():
     for form in request.json['forms']:
         for parentId in parentIds:
             id = form['id']
-            currID = FormsDOM.createForm(id, 'date', True, 0, 'data', parentId)
+            # createForm(id, date, required, comp, data, parentID):
+            currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, None, parentId)
             formIds.append(currID)
 
-    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], student['dob'], student['grade'], formIds, parentIds)
+
+    dateOfBirth = datetime.strptime(student['dob'], '%m/%d/%Y')
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, student['grade'], formIds, parentIds)
 
     for parentId in parentIds:
         parentsDOM.addStudentId(parentId, studentId)

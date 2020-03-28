@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from '../Header';
 
 // eslint-disable-next-line require-jsdoc
 class Student extends React.Component {
@@ -9,8 +8,7 @@ class Student extends React.Component {
     const id = this.props.match.params.id;
     return (
       <div>
-        <Header currTab='students'/>
-                id={id}
+        id={id}
       </div>
     );
   }

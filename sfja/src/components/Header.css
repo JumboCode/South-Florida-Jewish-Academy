@@ -1,36 +1,25 @@
 
-.navbar {
-    display: flex;
-    justify-content: space-around;
-    background-color: #ff8533;
-    color: #ffffff;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    font-size: 20px;
-    align-items: center;
-    font-family: Futura;
-}
-.navbar a:hover {
-    color: rgb(221, 219, 219);
-    cursor: pointer;
-}
 #topLogo{
     position: absolute;
-    margin-left: 7%;
+    margin-left: -190px;
 }
 #toptitle{
-    text-align: right;
+    text-align: left;
     font-family: Futura;
-    margin-right: 10%;
+    /*margin-right: 10%;*/
     color: #0068af;
-    font-size: 40px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    margin-top: 10px;
+    width: 300px;
+    margin-left: 10px;
+    /*height: 5px;*/
 }
 #topsubtitle{
     text-shadow: none;
-    font-size: 35px;
-    font-style: italic;
+    font-size: 15px;
+    margin-left: 10px;
+    /*font-style: italic;*/
+    color: #0068af;
 }
 a:visited{
     color:white;

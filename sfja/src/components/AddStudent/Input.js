@@ -7,55 +7,61 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import PropTypes from 'prop-types';
 
 const textSize = {style: {fontSize: 15}};
 const textWidth = {
   padding: 10,
-  marginTop: 10,
+  marginBottom: 10,
 };
+
+// eslint-disable-next-line require-jsdoc
+function blankStateExceptSubmitTime(submitTime) {
+  return {
+    submitTime: submitTime,
+    firstNameStudent: '',
+    middleNameStudent: '',
+    lastNameStudent: '',
+    dob: new Date().toLocaleDateString(),
+    gradeStudent: '',
+    viewParents: [0],
+    parents: [{
+      num: 0,
+      firstName: null,
+      email: null,
+      lastName: null,
+    },
+    {
+      num: 1,
+      firstName: null,
+      email: null,
+      lastName: null,
+    },
+    {
+      num: 2,
+      firstName: null,
+      email: null,
+      lastName: null,
+    },
+    {
+      num: 3,
+      firstName: null,
+      email: null,
+      lastName: null,
+    }],
+  };
+}
 
 // eslint-disable-next-line require-jsdoc
 class Input extends React.Component {
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
-    this.state = {
-      firstNameStudent: '',
-      middleNameStudent: '',
-      lastNameStudent: '',
-      dob: new Date(),
-      gradeStudent: '',
-      viewParents: [0],
-      parents: [{
-        num: 0,
-        firstName: null,
-        email: null,
-        lastName: null,
-      },
-      {
-        num: 1,
-        firstName: null,
-        email: null,
-        lastName: null,
-      },
-      {
-        num: 2,
-        firstName: null,
-        email: null,
-        lastName: null,
-      },
-      {
-        num: 3,
-        firstName: null,
-        email: null,
-        lastName: null,
-      }],
-    };
+    this.state = blankStateExceptSubmitTime(this.props.submitTime);
   }
 
   // eslint-disable-next-line require-jsdoc
   addParentData(num, first, email, last) {
-    console.log(num, first, email, last);
     const {parents} = this.state;
     parents[num] = {
       num: num,
@@ -81,15 +87,25 @@ class Input extends React.Component {
     });
   }
 
+  // pops last element from 'view' list
+  // clears all data in said element
   // eslint-disable-next-line require-jsdoc
   removeViewParents() {
     const {viewParents} = this.state;
-    if (viewParents.length == 1) {
+    if (viewParents.length === 1) {
       return;
     }
     viewParents.pop();
+
+    // clear data
+    const oldParents = this.state.parents;
+    oldParents[viewParents.length].firstName = '';
+    oldParents[viewParents.length].lastName = '';
+    oldParents[viewParents.length].email = '';
+
     this.setState({
       viewParents: viewParents,
+      parents: oldParents,
     });
   }
 
@@ -98,7 +114,13 @@ class Input extends React.Component {
     // eslint-disable-next-line react/prop-types
     const {updateInputData} = this.props;
     updateInputData(this.state);
-    console.log('here');
+
+    if (prevProps.submitTime !== this.props.submitTime) {
+      this.setState(blankStateExceptSubmitTime(this.props.submitTime));
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -107,8 +129,8 @@ class Input extends React.Component {
     const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, dob, gradeStudent} = this.state;
     return (
       <div>
-        <div style={{paddingLeft: 10}}>
-          Student Info:
+        <div style={{padding: 10}}>
+          Enter the student&#39;s information:
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
@@ -130,10 +152,10 @@ class Input extends React.Component {
               format="MM/dd/yyyy"
               margin="normal"
               id="date-picker-inline"
-              label="Date picker inline"
+              label="Birthday"
               value={dob}
               onChange={(ev) => {
-                this.setState({dob: ev});
+                this.setState({dob: ev ? ev.toLocaleDateString() : null});
               }}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
@@ -150,15 +172,19 @@ class Input extends React.Component {
               lastName={x.lastName}
               addParentData={this.addParentData.bind(this)}/>
           </div>)}
-        <div style={{paddingLeft: 10}}>
+        <div style={{margin: 10}}>
           {/* eslint-disable-next-line max-len */}
-          <Button onClick={()=> this.addViewParents()} disabled={viewParents.length === 4}>add Parent</Button>
+          <Button style={{marginRight: 10}} variant='outlined' onClick={()=> this.addViewParents()} disabled={viewParents.length === 4}>add Parent</Button>
           {/* eslint-disable-next-line max-len */}
-          <Button onClick={()=> this.removeViewParents()} disabled={viewParents.length === 1} >remove Parent</Button>
+          <Button variant='outlined' onClick={()=> this.removeViewParents()} disabled={viewParents.length === 1} >remove Parent</Button>
         </div>
       </div>
     );
   }
 }
+
+Input.propTypes = {
+  submitTime: PropTypes.any,
+};
 
 export default Input;

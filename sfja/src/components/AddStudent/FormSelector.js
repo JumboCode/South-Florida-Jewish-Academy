@@ -1,5 +1,6 @@
 import React from 'react';
 import {List, ListItem, ListItemIcon, Checkbox} from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 // eslint-disable-next-line require-jsdoc
 class FormSelector extends React.Component {
@@ -7,6 +8,7 @@ class FormSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      submitTime: this.props.submitTime,
       forms: [],
     };
   }
@@ -15,7 +17,6 @@ class FormSelector extends React.Component {
   componentDidMount() {
     fetch('http://127.0.0.1:5000/getAllForms').then((res) => res.json()).then((result) => {
       const newForms = [];
-      console.log(result);
       result.forms.map((currForm) => {
         newForms.push(
             {
@@ -55,17 +56,25 @@ class FormSelector extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     // eslint-disable-next-line react/prop-types
     const {updateFormData} = this.props;
+    const {forms} = this.state;
     updateFormData(this.state);
+    if (prevProps.submitTime !== this.props.submitTime) {
+      this.setState({
+        submitTime: this.props.submitTime,
+        // eslint-disable-next-line max-len
+        forms: forms.map((currForm) => ({id: currForm.id, name: currForm.name, checked: false})),
+      });
+    }
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
     const {forms} = this.state;
     return (
-      <div style={{paddingTop: 30}}>
+      <div style={{paddingTop: 10}}>
         <div style={{paddingLeft: 10}}>
           Select Forms:
-          <div style={{width: 500}}>
+          <div style={{width: 300}}>
             <List>
               {/* eslint-disable-next-line max-len */}
               <ListItem key={'select_all'} role={undefined} dense button onClick={() => {
@@ -109,5 +118,9 @@ class FormSelector extends React.Component {
     );
   }
 }
+
+FormSelector.propTypes = {
+  submitTime: PropTypes.any,
+};
 
 export default FormSelector;

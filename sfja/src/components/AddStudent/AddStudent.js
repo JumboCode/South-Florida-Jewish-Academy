@@ -1,9 +1,8 @@
 import React from 'react';
-import Header from '../Header';
 import Input from './Input';
 import FormSelector from './FormSelector';
-import {Button} from '@material-ui/core';
-
+import {Button, Paper} from '@material-ui/core';
+// eslint-disable max-len
 
 // eslint-disable-next-line require-jsdoc
 class AddStudent extends React.PureComponent {
@@ -14,6 +13,7 @@ class AddStudent extends React.PureComponent {
         {
           inputData: null,
           formData: null,
+          submitTime: Date.now(),
         };
   }
 
@@ -22,7 +22,6 @@ class AddStudent extends React.PureComponent {
     this.setState({
       inputData: newInputData,
     });
-    console.log(this.state);
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -30,7 +29,6 @@ class AddStudent extends React.PureComponent {
     this.setState({
       formData: newFormData,
     });
-    console.log(this.state);
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -58,18 +56,34 @@ class AddStudent extends React.PureComponent {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
-    }).then(response => response);
+    }).then(response => {
+      this.setState({submitTime: Date.now()});
+    });
   };
 
 
   // eslint-disable-next-line require-jsdoc
   render() {
+    const {submitTime} = this.state;
     return (
       <div>
-        <Header currTab='addStudent'/>
-        <Input updateInputData={this.updateInputData.bind(this)}/>
-        <FormSelector updateFormData={this.updateFormData.bind(this)}/>
-        <Button onClick={()=> this.submit()}>Submit</Button>
+        {/* eslint-disable max-len */}
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40}}>
+          <Paper elevation={2} style={{padding: 10}}>
+            <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: 10}}>
+              <Paper elevation={3} style={{display: 'flex', margin: 10}}>
+                <Input updateInputData={this.updateInputData.bind(this)} submitTime={submitTime} style={{textAlign: 'left'}}/>
+              </Paper>
+              <br/>
+              <Paper elevation={3} style={{display: 'flex', margin: 10}}>
+                <FormSelector updateFormData={this.updateFormData.bind(this)} submitTime={submitTime}/>
+              </Paper>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
+              <Button variant='contained' size='large' onClick={()=> this.submit()}>Submit</Button>
+            </div>
+          </Paper>
+        </div>
       </div>
     );
   }
