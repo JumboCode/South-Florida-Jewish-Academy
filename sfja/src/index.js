@@ -5,6 +5,7 @@ import {Auth0Provider} from './react-auth0-spa';
 import config from './auth_config.json';
 import history from './utils/history';
 import ParentDash from './components/ParentDash/ParentDash';
+import StudentDash from './components/ParentDash/StudentDash';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 import Header from './components/Header';
 import Student from './components/Students/Student';
@@ -34,7 +35,8 @@ const routing = (
         <Redirect to="/dashboard" />
       </Route>
       {/* <Route exact path="/admin" component={Admin} />*/}
-      <Route path="/parentdash" component={ParentDash} />
+      <Route path="/parentdash/:parent_key" component={ParentDash} />
+      <Route path="/parentdash/:parent_key/:student_id" component={StudentDash} />
       <Route path="/profile/:id" component={Student} />
       <Route exact path="/header" component={Header} />
       <Route exact path="/dashboard" component={Dashboard} />

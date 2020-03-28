@@ -11,18 +11,6 @@ class ParentDash extends React.Component {
         };
     }
 
-    componentDidMount() {
-        fetch('http://127.0.0.1:5000/getStudentsOfParent', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({curr_link: "p1link"}),
-        }).then((res) => res.json())
-          .then((data) => {
-            this.setState({student_ids: data.student_ids});
-            console.log(data);
-          })
-          .catch(console.log);
-    }
     // eslint-disable-next-line require-jsdoc
     postKey = (key) => {
       const body = {
@@ -41,8 +29,19 @@ class ParentDash extends React.Component {
 
     // eslint-disable-next-line require-jsdoc
     render() {
-      const key = this.props.match.params.key;
+      const parent_key = this.props.match.params.parent_key;
       const {student_ids} = this.state;
+
+      fetch('http://127.0.0.1:5000/getStudentsOfParent', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({curr_link: parent_key}),
+        }).then((res) => res.json())
+          .then((data) => {
+            this.setState({student_ids: data.student_ids});
+            console.log(data);
+          })
+          .catch(console.log);
 
       return (
         <React.Fragment>
@@ -51,7 +50,7 @@ class ParentDash extends React.Component {
             {student_ids.map((value) => {
               return (
                 <ListItem key={value}>
-                  <Button variant="contained" color="primary">{value}</Button> 
+                  <Button variant="contained" color="primary" href={"/parentdash/" + parent_key + "/"+ value}>{value}</Button> 
                 </ListItem>
               );
             })}
