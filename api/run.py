@@ -107,8 +107,11 @@ def getUsers():
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    return {'student_ids': parentsDOM.listStudents(curr_link)}
-        
+    student_ids = parentsDOM.listStudents(curr_link)
+    student_names = []
+    for id in student_ids:
+        student_names.append(studentsDOM.getName(ObjectId(id)))
+    return {'student_ids': student_ids, 'student_names': student_names}
 
 @app.route('/getAllForms', methods=['GET'])
 def getAllForms():
