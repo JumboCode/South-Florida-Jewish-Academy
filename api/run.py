@@ -109,21 +109,25 @@ def getUsers():
 
 @app.route('/studentProfile', methods = ['GET'])
 def getStudentProfile():
+    print("in studentProfile")
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_student_forms"])
-    studentID = int(request.args.get('id'))
+    studentID = ObjectId(request.args.get('id'))
     students_forms = studentsDOM.getForms(studentID)
-
+    print("this is student forms")
+    print(students_forms)
     forms = []
-    for form_num in students_forms.keys():
-        for form_id in students_forms[form_num]:
-            curr_form = getForm(form_id)
-            del curr_form['_id']
-            del curr_form['form_data']
-            forms.append(curr_form)
-
+    for formId in students_forms:
+        curr_form_data = FormsDOM.getForm(formId)
+        formName = blankFormsDOM.getBlankFormName(curr_form_data['blank_forms_id'])
+        curr_form_data['form_name'] = str(formName)
+        del curr_form_data['blank_forms_id']
+        forms.append(curr_form_data)
+        
+    print(forms)
+    
     return {
         'forms': forms,
-        'basic_info': studentsDOM.getBasicInfo(studentID)
+        'basic_info': "studentsDOM.getBasicInfo(studentID)"
     }
 @app.route('/getAllForms', methods=['GET'])
 def getAllForms():

@@ -40,8 +40,12 @@ def getFormData(id):
 
 # Gets allform data.
 def getForm(id):
-    contents = list(mongo.db.forms.find({'form_id': str(id)}))
+    print("in getForm")
+    contents = list(mongo.db.forms.find({'_id': id}))
+    # print(contents)
     for content in contents:
+        content['_id'] = str(content['_id'])
+        content['parent_id'] = str(content['parent_id'])
         return content
 
 # Updates form data.

@@ -54,7 +54,7 @@ class Student extends React.Component {
   componentDidMount() {
     const id = this.props.match.params.id;
 
-    fetch('http://127.0.0.19:5000/studentProfile?id=' + id)
+    fetch('http://127.0.0.1:5000/studentProfile?id=' + id)
       .then((res) => res.json())
       .then((data) => {
         this.setState({
@@ -89,10 +89,10 @@ class Student extends React.Component {
         style={imageStyle}
         src="https://i1.wp.com/acaweb.org/wp-content/uploads/2018/12/profile-placeholder.png"
         ></img>
-        <div>{basicInfo.first_name} {basicInfo.last_name}</div>
+        <div>{basicInfo['first_name']} {basicInfo['last_name']}</div>
     
           <TextField style={{width: 500}} id="outlined-basic" label="Search for Forms" variant="outlined" />
-        <BottomNavigation 
+        {/* <BottomNavigation 
           value={this.state.value}
           onChange={(event, newValue) => {
             this.setState({currTab: newValue,value:newValue})
@@ -104,7 +104,7 @@ class Student extends React.Component {
           <BottomNavigationAction label="Documents" />
           <BottomNavigationAction label="Edit Student Info" />
           
-          </BottomNavigation>
+          </BottomNavigation> */}
 
         {currTab === 0 && <div style = {parentForm}><div style={formStyle}>
           <TableContainer component={Paper}>
@@ -120,14 +120,14 @@ class Student extends React.Component {
           </TableHead>
           <TableBody>
             {forms.map(form => (
-              <TableRow  key={form.form_id}>
+              <TableRow  key={form['form_id']}>
                 <TableCell style={textSize} component="th" scope="row">
-                  {form.form_num}
+                  {form['form_num']}
                 </TableCell>
-                <TableCell style={textSize}  >{form.last_updated}</TableCell>
-                <TableCell style={textSize}  >{form.last_viewed}</TableCell>
-                <TableCell style={textSize}  >{form.percent_completed}</TableCell>
-                <TableCell style={textSize}  >{form.required === true ? 'Y' : 'N'}</TableCell>
+                <TableCell style={textSize}  >{form['last_updated']}</TableCell>
+                <TableCell style={textSize}  >{form['last_viewed']}</TableCell>
+                <TableCell style={textSize}  >{form['percent_completed']}</TableCell>
+                <TableCell style={textSize}  >{form['required'] === true ? 'Y' : 'N'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
