@@ -104,8 +104,8 @@ def getUsers():
 
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
-    _id = request.json['_id']
-    return {'students_ids': parentsDOM.listStudents(_id)}
+    curr_link = request.json['curr_link']
+    return {'student_ids': parentsDOM.listStudents(curr_link)}
         
 
 @app.route('/getAllForms', methods=['GET'])
