@@ -117,10 +117,10 @@ def getAllForms():
 def getBlankFormDetails():
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
-@app.route('/deleteBlankForm', methods=['DELETE'])
-def deleteBlankForm():
-    request.json['formId']
-    return { 'forms': blankFormsDOM.deleteForm(ObjectId(formId))}
+@app.route('/deleteBlankForm/<id>', methods=['DELETE'])
+def deleteBlankForm(id):
+    formid = id 
+    return { 'forms': blankFormsDOM.deleteForm(ObjectId(formid))}
 
 @app.route('/addStudent', methods = ['POST'])
 def addStudent():

@@ -36,13 +36,15 @@ class Upload extends React.Component {
     .then((res) => res.json())
     .then((data) => {
       this.setState({ formsList: data.forms});
-      console.log(data);
     })
   }
 
   trashForm(currentForm){
-    //the request goes here
-    console.log("Attempted to trash form");
+    fetch('http://localhost:5000/deleteBlankForm/' + currentForm , {
+      //method: 'DELETE'
+    })
+    .then((res) => res.text())
+    .then (res => console.log(res));
   }
   // eslint-disable-next-line require-jsdoc
   render() {
@@ -112,7 +114,7 @@ class Upload extends React.Component {
                               <TableRow key={row}>
                                 <TableCell component="th" scope="row">{row[1]} </TableCell>
                                 <TableCell align="right">{row[2]}</TableCell>
-                                <TableCell align="right" onClick={this.trashForm(row[2])}> Delete</TableCell>
+                                <TableCell align="right"> <button onClick={() => this.trashForm(row[0])}>Delete</button></TableCell>
                               </TableRow>
                             ))}
                     </TableBody>
