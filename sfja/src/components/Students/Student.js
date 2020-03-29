@@ -124,10 +124,10 @@ class Student extends React.Component {
                 <TableCell style={textSize} component="th" scope="row">
                   {form['form_num']}
                 </TableCell>
-                <TableCell style={textSize}  >{form['last_updated']}</TableCell>
-                <TableCell style={textSize}  >{form['last_viewed']}</TableCell>
-                <TableCell style={textSize}  >{form['percent_completed']}</TableCell>
-                <TableCell style={textSize}  >{form['required'] === true ? 'Y' : 'N'}</TableCell>
+                <TableCell style={textSize}>{form['last_updated']}</TableCell>
+                <TableCell style={textSize}>{form['last_viewed']}</TableCell>
+                <TableCell style={textSize}>{form['percent_completed']}</TableCell>
+                <TableCell style={textSize}>{form['required'] === true ? 'Y' : 'N'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
