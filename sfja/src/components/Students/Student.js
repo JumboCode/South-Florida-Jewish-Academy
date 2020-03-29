@@ -120,7 +120,7 @@ class Student extends React.Component {
           </TableHead>
           <TableBody>
             {forms.map(form => (
-              <TableRow  key={form['form_id']}>
+              <TableRow  key={form['_id']}>
                 <TableCell style={textSize} component="th" scope="row">
                   {form['form_num']}
                 </TableCell>
