@@ -1,5 +1,4 @@
 import React from 'react';
-import AllCards from './AllCards';
 import MagnifyingGlass from './MagnifyingGlass';
 import PropTypes from 'prop-types';
 import {
@@ -9,12 +8,9 @@ import {
   searchBarStyle,
   InputStyle,
   MagnifyingGlassStyle,
-  allCardsStyle,
 } from './Styles';
 import Header from '../Header';
-import StudentCard from "./StudentCard";
 
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -49,8 +45,7 @@ class Students extends React.Component {
   render() {
     const {students} = this.state;
     // eslint-disable-next-line react/prop-types
-    const {updateCurrView, updateCurrID} = this.props;
-    // updateCurrView('student')
+    const {updateCurrView} = this.props;
     if (!students) {
       return (
         <div>
@@ -74,10 +69,6 @@ class Students extends React.Component {
               />
               <MagnifyingGlass style={MagnifyingGlassStyle} />
             </div>
-            {/*<div style={allCardsStyle}>*/}
-              {/* eslint-disable-next-line max-len */}
-            {/*  <AllCards info={students} updateCurrID={updateCurrID} updateCurrView={updateCurrView}></AllCards>*/}
-            {/*</div>*/}
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
@@ -89,14 +80,16 @@ class Students extends React.Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {students.map(student => (
-                      <TableRow key={student.student_id}>
-                        <TableCell component="th" scope="row">
-                          {student.first_name}
-                        </TableCell>
-                        <TableCell align="right">{student.last_name}</TableCell>
-                        <TableCell align="right">{student.DOB}</TableCell>
-                      </TableRow>
+                  {students.map((student) => (
+                    <TableRow key={student.student_id}>
+                      <TableCell component="th" scope="row">
+                        {student.first_name}
+                      </TableCell>
+                      <TableCell align="right">{student.last_name}</TableCell>
+                      <TableCell align="right">{student.DOB}</TableCell>
+                      <TableCell align="right">{student.forms_completed}
+                      </TableCell>
+                    </TableRow>
                   ))}
                 </TableBody>
               </Table>

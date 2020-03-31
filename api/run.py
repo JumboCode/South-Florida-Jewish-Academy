@@ -13,7 +13,6 @@ from datetime import datetime
 from database.assets.audit_mapper import audit_mapper as audit
 from bson.objectid import ObjectId
 
-
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
@@ -94,6 +93,7 @@ def getStudents():
             if FormsDOM.isComplete(form):
                 forms_completed += 1
         student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+        del student['form_ids']
     return {'students':students}
 
 
