@@ -9,7 +9,6 @@ import {
   InputStyle,
   MagnifyingGlassStyle,
 } from './Styles';
-import Header from '../Header';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -49,14 +48,12 @@ class Students extends React.Component {
     if (!students) {
       return (
         <div>
-          <Header currTab='students'/>
           Loading...
         </div>
       );
     }
     return (
       <div>
-        <Header currTab='students' />
         <div style={studentPageStyle}>
           <div style={filterStyle}>
             <p onClick={() => updateCurrView('student')}> Filters </p>

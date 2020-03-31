@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Header.css';
-import {ReactComponent as UploadIcon} from '../assets/Upload.svg';
-import {ReactComponent as UploadIconGray} from '../assets/Upload_gray.svg';
-import {ReactComponent as StudentsIcon} from '../assets/Students.svg';
-import {ReactComponent as StudentsIconGray} from '../assets/Students_gray.svg';
-import {ReactComponent as HomeIcon} from '../assets/Home.svg';
-import {ReactComponent as HomeIconGray} from '../assets/Home_gray.svg';
-import {ReactComponent as EmailIcon} from '../assets/Email.svg';
-import {ReactComponent as EmailIconGray} from '../assets/Email_gray.svg';
-import topLogo from '../assets/CircleLogo.png';
 import {Link} from 'react-router-dom';
 import LoginChecker from './LoginChecker';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Paper from '@material-ui/core/Paper';
+import HomeIcon from '@material-ui/icons/Home';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+/* eslint-disable max-len */
+
+
+const tabStyle = {color: 'grey', fontSize: 10, outline: 'none', textDecoration: 'none', minWidth: 20};
+
 
 /**
  * @classdesc The Header class acts as a navigation bar.
@@ -28,6 +32,7 @@ class Header extends React.Component {
     super(props);
     this.state={
       hover: '',
+      value: 1,
     };
   }
 
@@ -36,154 +41,34 @@ class Header extends React.Component {
    * @return {Reference}
    */
   render() {
-    const {currTab} = this.props;
-    const {hover} = this.state;
-
+    const {value} = this.state;
     return (
       <div>
         <LoginChecker/>
-        <img
-          style={{width: 120}}
-          id="topLogo" src={topLogo}></img>
-        <div id="toptitle">
-          South Florida Jewish Academy <br></br>
-          <div id="topsubtitle">Admissions Page</div>
-        </div>
-        <div className="navbar"
-        >
-          <Link to='/dashboard'
-            onMouseEnter={() => this.setState({hover: 'dashboard'})}
-            onMouseLeave={() => this.setState({hover: ''})}
-            style={{textDecoration: 'none'}}
+        <Paper square >
+          <Tabs
+            value={value}
+            onChange={(e, newValue) => {
+              this.setState({value: newValue});
+            }}
+            variant="fullWidth"
+            TabIndicatorProps={{style: {background: '#0068af'}}}
+            textColor="primary"
+            aria-label="icon tabs example"
           >
-            <div
-              style={{display: 'flex'}}
-            >
-              {hover === 'dashboard' ? <HomeIconGray/> : <HomeIcon/>}
-              <span
-                style={{
-                  marginTop: 5,
-                  marginLeft: 7,
-                  color: hover === 'dashboard' ? '#878686' : 'white',
-                }}>dashboard
-              </span>
+            <div>
+              <div id='toptitle'>
+                  South Florida Jewish Academy
+              </div>
+              <div id="topsubtitle">Admissions Page</div>
             </div>
-
-            <div style={{
-              backgroundColor: '#0068af',
-              height: 5,
-              width: currTab === 'dashboard' ? 135 : 0,
-              marginTop: 10,
-            }}/>
-          </Link>
-
-          <Link to='/students'
-            onMouseEnter={() => this.setState({hover: 'students'})}
-            onMouseLeave={() => this.setState({hover: ''})}
-            style={{textDecoration: 'none'}}
-          >
-            <div
-              style={{display: 'flex'}}
-            >
-              {hover === 'students' ? <StudentsIconGray/> : <StudentsIcon/>}
-              <span
-                style={{
-                  marginTop: 5,
-                  marginLeft: 7,
-                  color: hover === 'students' ? '#878686' : 'white',
-                }}>students
-              </span>
-            </div>
-
-            <div style={{
-              backgroundColor: '#0068af',
-              height: 5,
-              width: currTab === 'students' ? 109 : 0,
-              marginTop: 10,
-            }}/>
-          </Link>
-
-          <Link to='/upload'
-            onMouseEnter={() => this.setState({hover: 'upload'})}
-            onMouseLeave={() => this.setState({hover: ''})}
-            style={{textDecoration: 'none'}}
-          >
-            <div
-              style={{display: 'flex'}}
-            >
-              {hover === 'upload' ? <UploadIconGray/> : <UploadIcon/>}
-              <span
-                style={{
-                  marginTop: 5,
-                  marginLeft: 7,
-                  color: hover === 'upload' ? '#878686' : 'white',
-                }}>upload
-              </span>
-            </div>
-
-            <div style={{
-              backgroundColor: '#0068af',
-              height: 5,
-              width: currTab === 'upload' ? 101 : 0,
-              marginTop: 10,
-            }}/>
-          </Link>
-
-          <Link to='/addStudent'
-            onMouseEnter={() => this.setState({hover: 'email'})}
-            onMouseLeave={() => this.setState({hover: ''})}
-            style={{textDecoration: 'none'}}
-          >
-            <div
-              style={{display: 'flex'}}
-            >
-              {/* eslint-disable-next-line max-len */}
-              <span style={{height: 30, marginTop: 3}}>{hover === 'addStudent' ? <EmailIconGray/> : <EmailIcon/>}</span>
-
-              <span
-                style={{
-                  marginTop: 4,
-                  marginLeft: 7,
-                  color: hover === 'addStudent' ? '#878686' : 'white',
-                }}>add student
-              </span>
-            </div>
-
-            <div style={{
-              backgroundColor: '#0068af',
-              height: 5,
-              width: currTab === 'email' ? 86 : 0,
-              marginTop: 10,
-            }}/>
-          </Link>
-          <Link to='/logout'
-            onMouseEnter={() => this.setState({hover: 'logout'})}
-            onMouseLeave={() => this.setState({hover: ''})}
-            style={{textDecoration: 'none'}}
-          >
-            <div
-              style={{display: 'flex'}}
-            >
-              {/* eslint-disable-next-line max-len */}
-              <span style={{height: 30, marginTop: 3}}>{hover === 'logout' ? <EmailIconGray/> : <EmailIcon/>}</span>
-
-              <span
-                style={{
-                  marginTop: 4,
-                  marginLeft: 7,
-                  color: hover === 'logout' ? '#878686' : 'white',
-                }}>logout
-              </span>
-            </div>
-
-            <div style={{
-              backgroundColor: '#0068af',
-              height: 5,
-              width: currTab === 'logout' ? 86 : 0,
-              marginTop: 10,
-            }}/>
-          </Link>
-        </div>
+            <Tab icon={<HomeIcon fontSize='medium'/>} label='dashboard' to={'/dashboard'} component={Link} style={tabStyle}/>
+            <Tab icon={<PeopleAltIcon fontSize='medium'/>} label='students' to='/students' component={Link} style={tabStyle}/>
+            <Tab icon={<ListAltIcon fontSize='medium'/>} label='forms' to='/upload' component={Link} style={tabStyle}/>
+            <Tab icon={<PersonAddIcon fontSize='medium'/>} label='add student' to='/addStudent' component={Link} style={tabStyle}/>
+            <Tab icon={<ExitToAppIcon fontSize='medium'/>} label='logout' to='/logout' component={Link} style={tabStyle}/>
+          </Tabs>
+        </Paper>
       </div>
     );
   };
