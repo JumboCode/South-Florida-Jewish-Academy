@@ -1,5 +1,6 @@
 import React from 'react';
 import MagnifyingGlass from './MagnifyingGlass';
+import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import {
   studentPageStyle,
@@ -81,7 +82,9 @@ class Students extends React.Component {
                   {students.map((student) => (
                     <TableRow key={student.student_id}>
                       <TableCell component="th" scope="row">
-                        {student.first_name}
+                        <NavLink to={'/profile/' + student.student_id} style={{color: 'black'}}>
+                          {student.first_name}
+                        </NavLink>
                       </TableCell>
                       <TableCell align="right">{student.last_name}</TableCell>
                       <TableCell align="right">{student.DOB}</TableCell>
