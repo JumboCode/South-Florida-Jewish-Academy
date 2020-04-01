@@ -30,7 +30,7 @@ const routing = (
   <Router>
     <div style={{width: '100vw'}}>
       {/* eslint-disable-next-line max-len */}
-      <Route path={['/dashboard', '/students', '/upload', '/addStudent']} component={Header}/>
+      <Route path={['/dashboard', '/students', '/upload', '/addStudent', '/profile']} component={Header}/>
       <Route exact path="/">
         <Redirect to="/dashboard" />
       </Route>
