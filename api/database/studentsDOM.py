@@ -45,7 +45,6 @@ def getBasicInfo(id):
         del content['parent_ids']
         content['_id'] = str(content['_id'])
         del content['form_ids']
-        print(content)
         return content
 
 # Gets forms of a student.

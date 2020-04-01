@@ -123,7 +123,7 @@ def getStudentProfile():
         del curr_form_data['blank_forms_id']
         forms.append(curr_form_data)
         
-    print(forms)
+    print("this is forms", forms)
     
     return {
         'forms': forms,

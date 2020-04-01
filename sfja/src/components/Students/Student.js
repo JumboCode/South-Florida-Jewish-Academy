@@ -111,23 +111,23 @@ class Student extends React.Component {
         <Table  aria-label="simple table">
           <TableHead>
             <TableRow >
-              <TableCell style={textSize} >Dessert (100g serving)</TableCell>
-              <TableCell  style={textSize} >Form</TableCell>
-              <TableCell style={textSize} >Fat&nbsp;(g)</TableCell>
-              <TableCell style={textSize} >Carbs&nbsp;(g)</TableCell>
-              <TableCell style={textSize} >Protein&nbsp;(g)</TableCell>
+              <TableCell style={textSize} >Form Name</TableCell>
+              <TableCell  style={textSize} >Status</TableCell>
+              <TableCell style={textSize} >Last Updated(g)</TableCell>
+              {/* <TableCell style={textSize} >Carbs&nbsp;(g)</TableCell>
+              <TableCell style={textSize} >Protein&nbsp;(g)</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
             {forms.map(form => (
               <TableRow  key={form['_id']}>
-                <TableCell style={textSize} component="th" scope="row">
+                {/* <TableCell style={textSize} component="th" scope="row">
                   {form['form_num']}
-                </TableCell>
-                <TableCell style={textSize}>{form['last_updated']}</TableCell>
-                <TableCell style={textSize}>{form['last_viewed']}</TableCell>
-                <TableCell style={textSize}>{form['percent_completed']}</TableCell>
-                <TableCell style={textSize}>{form['required'] === true ? 'Y' : 'N'}</TableCell>
+                </TableCell> */}
+                <TableCell style={textSize}>{form['form_name']}</TableCell>
+                <TableCell style={textSize}>{form['completed']=== true ? 'Y' : 'N'}</TableCell>
+                <TableCell style={textSize}>{form['last_updated']=== null ? 'N/A': form['last_updated']}</TableCell>
+                {/* <TableCell style={textSize}>{form['required'] === true ? 'Y' : 'N'}</TableCell> */}
               </TableRow>
             ))}
           </TableBody>
