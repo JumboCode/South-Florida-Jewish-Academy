@@ -13,6 +13,8 @@ class ParentInfo extends React.Component {
   render() {
     // eslint-disable-next-line react/prop-types
     const {addParentData, firstName, email, lastName, num} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {firstNameError, emailError, lastNameError} = this.props;
     return (
       <div>
         <div style={{paddingLeft: 10}}>
@@ -20,21 +22,21 @@ class ParentInfo extends React.Component {
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}
+          <TextField error={firstNameError} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}
             onChange={(e) => {
               addParentData(num, e.target.value, email, lastName);
             }}
             value={firstName ? firstName : ''}
           />
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}
+          <TextField error={lastNameError} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}
             onChange={(e) => {
               addParentData(num, firstName, email, e.target.value);
             }}
             value={lastName ? lastName : ''}
           />
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Email" required={true}
+          <TextField error={emailError} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Email" required={true}
             onChange={(e) => {
               addParentData(num, firstName, e.target.value, lastName);
             }}
