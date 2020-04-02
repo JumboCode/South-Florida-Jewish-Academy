@@ -20,51 +20,34 @@ function blankStateExceptSubmitTime(submitTime) {
   return {
     submitTime: submitTime,
     firstNameStudent: '',
-    firstNameStudentError: true,
     middleNameStudent: '',
-    middleNameStudentError: true,
     lastNameStudent: '',
-    lastNameStudentError: true,
     dob: new Date().toLocaleDateString(),
-    dobError: true,
     gradeStudent: '',
-    gradeStudentError: true,
     viewParents: [0],
     parents: [{
       num: 0,
-      firstName: null,
-      firstNameError: true,
-      email: null,
-      emailError: true,
-      lastName: null,
-      lastNameError: true,
+      firstName: '',
+      email: '',
+      lastName: '',
     },
     {
       num: 1,
-      firstName: null,
-      firstNameError: true,
-      email: null,
-      emailError: true,
-      lastName: null,
-      lastNameError: true,
+      firstName: '',
+      email: '',
+      lastName: '',
     },
     {
       num: 2,
-      firstName: null,
-      firstNameError: true,
-      email: null,
-      emailError: true,
-      lastName: null,
-      lastNameError: true,
+      firstName: '',
+      email: '',
+      lastName: '',
     },
     {
       num: 3,
-      firstName: null,
-      firstNameError: true,
-      email: null,
-      emailError: true,
-      lastName: null,
-      lastNameError: true,
+      firstName: '',
+      email: '',
+      lastName: '',
     }],
   };
 }
@@ -147,7 +130,6 @@ class Input extends React.Component {
   render() {
     // eslint-disable-next-line max-len
     const {parents, viewParents, firstNameStudent, middleNameStudent, lastNameStudent, dob, gradeStudent} = this.state;
-    const {firstNameStudentError, middleNameStudentError, lastNameStudentError, dobError, gradeStudentError} = this.state;
     return (
       <div>
         <div style={{padding: 10}}>
@@ -155,18 +137,18 @@ class Input extends React.Component {
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
-          <TextField error={firstNameStudentError} onChange={(ev) => this.setState({firstNameStudent: ev.target.value})} value={firstNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}/>
+          <TextField error={firstNameStudent === ''} onChange={(ev) => this.setState({firstNameStudent: ev.target.value})} value={firstNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}/>
           {/* eslint-disable-next-line max-len */}
-          <TextField error={middleNameStudentError} onChange={(ev) => this.setState({middleNameStudent: ev.target.value})} value={middleNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Middle Name" required={true}/>
+          <TextField error={false} onChange={(ev) => this.setState({middleNameStudent: ev.target.value})} value={middleNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Middle Name" required={true}/>
           {/* eslint-disable-next-line max-len */}
-          <TextField error={lastNameStudentError} onChange={(ev) => this.setState({lastNameStudent: ev.target.value})} value={lastNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}/>
+          <TextField error={lastNameStudent === ''} onChange={(ev) => this.setState({lastNameStudent: ev.target.value})} value={lastNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}/>
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
-          <TextField error={gradeStudentError} onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
+          <TextField error={gradeStudent === ''} onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
           <MuiPickersUtilsProvider utils={DateFnsUtils} >
             <KeyboardDatePicker
-              error={dobError}
+              error={dob === null}
               inputProps={textSize}
               style={{marginLeft: 10, width: 175}}
               disableToolbar
@@ -190,11 +172,8 @@ class Input extends React.Component {
             <ParentInfo
               num={x.num}
               firstName={x.firstName}
-              firstNameError={x.firstNameError}
               email={x.email}
-              emailError={x.emailError}
               lastName={x.lastName}
-              lastNameError={x.lastNameError}
               addParentData={this.addParentData.bind(this)}/>
           </div>)}
         <div style={{margin: 10}}>

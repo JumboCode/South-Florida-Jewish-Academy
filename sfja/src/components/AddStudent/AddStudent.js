@@ -4,6 +4,8 @@ import FormSelector from './FormSelector';
 import {Button, Paper} from '@material-ui/core';
 // eslint-disable max-len
 
+
+
 // eslint-disable-next-line require-jsdoc
 class AddStudent extends React.PureComponent {
   // eslint-disable-next-line require-jsdoc
@@ -61,7 +63,41 @@ class AddStudent extends React.PureComponent {
     });
   };
 
+  // eslint-disable-next-line require-jsdoc
+  submitButtonDisabled(){
+    const {inputData, formData} = this.state;
+    if (inputData === null) {
+      return true;
+    }
+    if (inputData.firstNameStudent === '' ||
+        inputData.lastNameStudent === '' ||
+        inputData.gradeStudent === '' ||
+        inputData.dob === null
+    ) {
+      return true;
+    }
+    inputData.parents.forEach((parent) => {
+      if (parent.firstName === '' || parent.lastName === '') {
+        return true;
+      }
+    });
+    if (inputData.parents[0].email === '') {
+      return true;
+    }
 
+    if (formData.forms.every((form) => !form.checked)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  submitButton(disabled) {
+    return (
+      <Button disabled={disabled} variant='contained' size='large' onClick={()=> this.submit()}>Submit</Button>
+    );
+  }
   // eslint-disable-next-line require-jsdoc
   render() {
     const {submitTime} = this.state;
@@ -80,7 +116,7 @@ class AddStudent extends React.PureComponent {
               </Paper>
             </div>
             <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
-              <Button variant='contained' size='large' onClick={()=> this.submit()}>Submit</Button>
+              {this.submitButton(this.submitButtonDisabled())}
             </div>
           </Paper>
         </div>
@@ -88,5 +124,6 @@ class AddStudent extends React.PureComponent {
     );
   }
 }
+
 
 export default AddStudent;
