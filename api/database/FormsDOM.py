@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_pymongo import PyMongo
+from database import blankFormsDOM
+from bson.objectid import ObjectId
 import os
 
 app = Flask(__name__)
@@ -46,3 +48,13 @@ def updateFormData(id, ques, ans):
 def testCreateForm(data):
     result = mongo.db.forms.insert_one(data)
     return result.inserted_id
+
+def getFormName(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    
+    if len(contents) != 1:
+        return False
+    
+    for content in contents:
+        return blankFormsDOM.getFormName(ObjectId(content['blank_forms_id']))
+    

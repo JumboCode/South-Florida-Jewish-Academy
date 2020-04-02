@@ -28,3 +28,11 @@ def getAll():
     return res
 
         # print(document)
+
+def getFormName(id):
+    contents = list(mongo.db.blankForms.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    return contents[0]['form_name']

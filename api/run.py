@@ -104,6 +104,7 @@ def getUsers():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
     return {'users': usersDOM.getUsers()}
 
+'''==================== PARENT/STUDENT DASHBOARDS ===================='''
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
@@ -112,6 +113,17 @@ def getStudentsOfParent():
     for id in student_ids:
         student_names.append(studentsDOM.getName(ObjectId(id)))
     return {'student_ids': student_ids, 'student_names': student_names}
+
+@app.route('/getStudentForms', methods = ['GET', 'POST'])
+def getStudentForms():
+    student_id = request.json['student_id']
+    form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
+    form_names = []
+    for id in form_ids:
+        form_names.append(FormsDOM.getFormName(ObjectId(id)))
+    return {'form_ids': form_ids,
+            'form_names': form_names}
+
 
 @app.route('/getAllForms', methods=['GET'])
 def getAllForms():
