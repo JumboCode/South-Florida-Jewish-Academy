@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from '../Header';
 import ProfileEdit from './ProfileEdit'
 
 import TextField from '@material-ui/core/TextField';
@@ -31,6 +30,7 @@ const parentForm = {
 }
 const textSize = {
   fontSize: '13px'
+  
 };
 
 const navStyle = {
@@ -73,7 +73,6 @@ class Student extends React.Component {
     if (!forms || !basicInfo) {
       return (
         <div>
-          <Header/>
           Loading...
         </div>
       );
@@ -83,8 +82,7 @@ class Student extends React.Component {
     // const classes = useStyles();
     return (
       <div>
-        <Header currTab='students'/>
-                id={id}
+                {/* id={id} */}
         <img
         style={imageStyle}
         src="https://i1.wp.com/acaweb.org/wp-content/uploads/2018/12/profile-placeholder.png"
@@ -92,7 +90,7 @@ class Student extends React.Component {
         <div>{basicInfo['first_name']} {basicInfo['last_name']}</div>
     
           <TextField style={{width: 500}} id="outlined-basic" label="Search for Forms" variant="outlined" />
-        {/* <BottomNavigation 
+        <BottomNavigation 
           value={this.state.value}
           onChange={(event, newValue) => {
             this.setState({currTab: newValue,value:newValue})
@@ -100,22 +98,20 @@ class Student extends React.Component {
           showLabels
          
         >
-          <BottomNavigationAction label={<span className="bottomNav">Forms</span>} classes={{label: classes.label}}/>
+          <BottomNavigationAction label="Forms"/>
           <BottomNavigationAction label="Documents" />
           <BottomNavigationAction label="Edit Student Info" />
           
-          </BottomNavigation> */}
+          </BottomNavigation>
 
         {currTab === 0 && <div style = {parentForm}><div style={formStyle}>
           <TableContainer component={Paper}>
-        <Table  aria-label="simple table">
+        <Table size = 'large'>
           <TableHead>
             <TableRow >
               <TableCell style={textSize} >Form Name</TableCell>
               <TableCell  style={textSize} >Status</TableCell>
               <TableCell style={textSize} >Last Updated(g)</TableCell>
-              {/* <TableCell style={textSize} >Carbs&nbsp;(g)</TableCell>
-              <TableCell style={textSize} >Protein&nbsp;(g)</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
