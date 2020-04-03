@@ -19,6 +19,23 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+import { withStyles } from '@material-ui/core/styles'
+import clsx from 'clsx';
+
+
+const useStyles =  {  
+
+  text: {
+    fontSize: "1em",
+    color: "black",
+    "&:visited": {
+      color: "purple",
+      fontSize: "1em"
+    }
+  },
+
+
+};
 
 // eslint-disable-next-line require-jsdoc
 class Students extends React.Component {
@@ -45,8 +62,11 @@ class Students extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {students} = this.state;
+
     // eslint-disable-next-line react/prop-types
-    const {updateCurrView} = this.props;
+    const {updateCurrView, classes, className} = this.props;
+    // console.log(classes);
+    const tableStyle = clsx(classes.text, className);
     if (!students) {
       return (
         <div>
@@ -72,23 +92,23 @@ class Students extends React.Component {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>First Name</TableCell>
-                    <TableCell align="right">Last Name</TableCell>
-                    <TableCell align="right">DOB</TableCell>
-                    <TableCell align="right">Completed Forms</TableCell>
+                    <TableCell className= {tableStyle}>First Name</TableCell>
+                    <TableCell align="left" className= {tableStyle}>Last Name</TableCell>
+                    <TableCell align="left" className= {tableStyle}>DOB</TableCell>
+                    <TableCell align="left" className= {tableStyle}>Completed Forms</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {students.map((student) => (
                     <TableRow key={student.student_id}>
                       <TableCell component="th" scope="row">
-                        <NavLink to={'/profile/' + student.student_id} style={{color: 'black'}}>
+                        <NavLink to={'/profile/' + student.student_id} className={tableStyle}>
                           {student.first_name}
                         </NavLink>
                       </TableCell>
-                      <TableCell align="right">{student.last_name}</TableCell>
-                      <TableCell align="right">{student.DOB}</TableCell>
-                      <TableCell align="right">{student.forms_completed}
+                      <TableCell align="left" className= {tableStyle}>{student.last_name}</TableCell>
+                      <TableCell align="left" className= {tableStyle}>{student.DOB}</TableCell>
+                      <TableCell align="left" className= {tableStyle}>{student.forms_completed}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -103,4 +123,5 @@ class Students extends React.Component {
   }
 }
 
-export default Students;
+export default withStyles(useStyles)(Students);
+// export default Students;
