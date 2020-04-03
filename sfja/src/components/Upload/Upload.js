@@ -1,6 +1,7 @@
 import React from 'react';
-import FormManager from './FormManager/FormManager';
-import { get } from './FormManager/FormBuilder/stores/requests';
+import FormManager from '../FormManager/FormManager';
+import PreviewBlankForm from './PreviewBlankForm'
+import { get } from '../FormManager/FormBuilder/stores/requests';
 import fetch from 'isomorphic-fetch';
 import PropTypes from 'prop-types';
 
@@ -12,6 +13,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+
+import TextField from '@material-ui/core/TextField';
 
 
 
@@ -77,7 +80,8 @@ class Upload extends React.Component {
       let form = this.state.currentForm;
       return(
         <div>
-            <h1>{form.name}</h1>
+            <TextField defaultValue={form.name}></TextField>
+            <br />
             <button>Change Name</button>
             <div> [Form data goes here]</div>
         </div>
@@ -97,6 +101,7 @@ class Upload extends React.Component {
     return (
       <div>
         {createForm ? <FormManager/>: 
+         viewForm ? <PreviewBlankForm parentData = {this.state}/>: 
           <div>
             <button onClick= {() => this.setState({createForm: true})}> Add Form </button>
             <div> 
