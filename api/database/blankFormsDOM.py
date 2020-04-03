@@ -39,7 +39,7 @@ def getBlankFormDetails():
         info = {
             'form_id': str(content['_id']),
             'form_name': content['form_name'],
-            #'last_updated': content['last_updated'],
+            'date_created': content['date_created'],
             'form_data': content['form_data']
         }
         forms.append(info)
@@ -47,4 +47,4 @@ def getBlankFormDetails():
 
 def deleteForm(id):
     mongo.db.blankForms.delete_many({'_id': id })
-    return forms
+    return

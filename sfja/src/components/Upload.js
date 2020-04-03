@@ -20,17 +20,21 @@ import Paper from '@material-ui/core/Paper';
 class Upload extends React.Component {
   
   static propTypes = {
-    formsList: PropTypes.any,
+    formsList: PropTypes.any, 
   };
   constructor(props) {
     super(props);
     this.state = {
       createForm: false,
       currentForm: false,
-      formsList: null
+      formsList: null,
+      somethingDeleted: false
     };
   }
   componentDidMount(){
+    this.fetchData();
+  }
+  fetchData(){
     fetch('http://localhost:5000/getBlankFormDetails')
     .then((res) => res.json())
     .then((data) => {
@@ -45,6 +49,10 @@ class Upload extends React.Component {
     })
     .then((res) => res.text())
     .then (res => console.log(res));
+    setTimeout ( () => {
+      this.setState(() => ({somethingDeleted: true}));
+    }, 300);
+    this.fetchData();
   }
   // eslint-disable-next-line require-jsdoc
   render() {
@@ -65,6 +73,9 @@ class Upload extends React.Component {
     }
     let result = Object.values(formsList);
   
+    /* Data is structured as an array of form arrays, each containing
+     [id, name, date created] */
+
     /* form id array */ 
     var formIdArr = [];   
     for (var i = 0; i < result.length; i++){
@@ -76,20 +87,21 @@ class Upload extends React.Component {
     for (var i = 0; i < result.length; i++){
       formNameArr.push(result[i].form_name);
     }
+
     /* Last updated */
-    var formUpdateArr = [0, 0 , 0];
-    /*for (var i = 0; i < result.length; i++){
-      formIdArr.push(result[i].last_updated);
-    } */
+    var formDateArr = [];
+    for (var i = 0; i < result.length; i++){
+      formDateArr.push(result[i].date_created);
+    }
 
 
     /* Push details to main array*/
     var allInfoArr = [];
     for (var i = 0; i < result.length; i++){
-      var oneArr = []
+      let oneArr = []
       oneArr.push(formIdArr[i]);
       oneArr.push(formNameArr[i]);
-      oneArr.push(formUpdateArr[i]);
+      oneArr.push(formDateArr[i]);
       allInfoArr.push(oneArr);
     }
     return (
@@ -103,7 +115,7 @@ class Upload extends React.Component {
                     <TableHead>
                       <TableRow>
                         <TableCell>Name</TableCell>
-                        <TableCell align="right">Last updated</TableCell>
+                        <TableCell align="right">Date Created</TableCell>
                         <TableCell align="right">Delete</TableCell>
                       </TableRow>
                     </TableHead>
