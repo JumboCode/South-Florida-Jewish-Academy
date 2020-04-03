@@ -26,9 +26,10 @@ class Upload extends React.Component {
     super(props);
     this.state = {
       createForm: false,
-      currentForm: false,
+      currentForm: null,
       formsList: null,
-      somethingDeleted: false
+      somethingDeleted: false,
+      viewForm: false
     };
   }
   componentDidMount(){
@@ -42,8 +43,8 @@ class Upload extends React.Component {
     })
   }
 
-  trashForm(currentForm){
-    fetch('http://localhost:5000/deleteBlankForm/' + currentForm , {
+  trashForm(formid){
+    fetch('http://localhost:5000/deleteBlankForm/' + formid, {
       method: 'POST',
       mode: "no-cors"
     })
@@ -54,9 +55,10 @@ class Upload extends React.Component {
     }, 300);
     this.fetchData();
   }
+
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {createForm, currentForm, formsList} = this.state;
+    const {createForm, currentForm, viewForm, formsList} = this.state;
     /*const useStyles = makeStyles({
       table: {
         minWidth: 650,
@@ -71,38 +73,26 @@ class Upload extends React.Component {
         </div>
       )
     }
+    if (viewForm === true){
+      let form = this.state.currentForm;
+      return(
+        <div>
+            <h1>{form.name}</h1>
+            <button>Change Name</button>
+            <div> [Form data goes here]</div>
+        </div>
+      )
+    }
+    
     let result = Object.values(formsList);
-  
-    /* Data is structured as an array of form arrays, each containing
-     [id, name, date created] */
-
-    /* form id array */ 
-    var formIdArr = [];   
-    for (var i = 0; i < result.length; i++){
-      formIdArr.push(result[i].form_id);
-    }
-
-    /* Type of form */
-    var formNameArr = [];
-    for (var i = 0; i < result.length; i++){
-      formNameArr.push(result[i].form_name);
-    }
-
-    /* Last updated */
-    var formDateArr = [];
-    for (var i = 0; i < result.length; i++){
-      formDateArr.push(result[i].date_created);
-    }
-
-
-    /* Push details to main array*/
     var allInfoArr = [];
     for (var i = 0; i < result.length; i++){
-      let oneArr = []
-      oneArr.push(formIdArr[i]);
-      oneArr.push(formNameArr[i]);
-      oneArr.push(formDateArr[i]);
-      allInfoArr.push(oneArr);
+      let form = {
+        id: result[i].form_id,
+        name: result[i].form_name,
+        date: result[i].date_created
+      };
+      allInfoArr.push(form);
     }
     return (
       <div>
@@ -122,9 +112,9 @@ class Upload extends React.Component {
                     <TableBody>
                           {allInfoArr.map(row => (
                               <TableRow key={row}>
-                                <TableCell component="th" scope="row">{row[1]} </TableCell>
-                                <TableCell align="right">{row[2]}</TableCell>
-                                <TableCell align="right"> <button onClick={() => this.trashForm(row[0])}>Delete</button></TableCell>
+                                <TableCell component="th" scope="row" onClick={()=>this.setState({currentForm: row, viewForm: true})}>{row.name} </TableCell>
+                                <TableCell align="right">{row.date}</TableCell>
+                                <TableCell align="right"> <button onClick={() => this.trashForm(row.id)}>Delete</button></TableCell>
                               </TableRow>
                             ))}
                     </TableBody>
