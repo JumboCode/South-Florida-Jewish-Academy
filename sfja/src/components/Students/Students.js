@@ -1,6 +1,6 @@
 import React from 'react';
 import MagnifyingGlass from './MagnifyingGlass';
-import { NavLink } from 'react-router-dom'
+import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   studentPageStyle,
@@ -19,29 +19,27 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-import { withStyles } from '@material-ui/core/styles'
+import {withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
-import Typography from "@material-ui/core/Typography";
+import Typography from '@material-ui/core/Typography';
 
 
-const useStyles =  {  
-
+const useStyles = {
   text: {
-    fontSize: "1em",
-    color: "black",
-    "&:visited": {
-      fontSize: "1em",
-      color: "purple"
-    }
+    'fontSize': '1em',
+    'color': 'black',
+    '&:visited': {
+      fontSize: '1em',
+      color: 'purple',
+    },
   },
-
-
 };
 
 // eslint-disable-next-line require-jsdoc
 class Students extends React.Component {
   static propTypes = {
     students: PropTypes.any,
+    classes: PropTypes.any,
   };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
@@ -94,22 +92,31 @@ class Students extends React.Component {
                 <TableHead>
                   <TableRow>
                     <TableCell className= {tableStyle}>First Name</TableCell>
-                    <TableCell align="left" className= {tableStyle}>Last Name</TableCell>
-                    <TableCell align="left" className= {tableStyle}>DOB</TableCell>
-                    <TableCell align="left" className= {tableStyle}>Completed Forms</TableCell>
+                    <TableCell align="left" className= {tableStyle}>Last Name
+                    </TableCell>
+                    <TableCell align="left" className= {tableStyle}>DOB
+                    </TableCell>
+                    <TableCell align="left" className= {tableStyle}>
+                      Completed Forms
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {students.map((student) => (
                     <TableRow key={student.student_id}>
-                      <TableCell component="th" scope="row" className={tableStyle}>
+                      <TableCell component="th" scope="row"
+                        className={tableStyle}>
                         <NavLink to={'/profile/' + student.student_id}>
-                          <Typography align="left" className={tableStyle}>{student.first_name}</Typography>
+                          <Typography align="left" className={tableStyle}>
+                            {student.first_name}</Typography>
                         </NavLink>
                       </TableCell>
-                      <TableCell align="left" className= {tableStyle}>{student.last_name}</TableCell>
-                      <TableCell align="left" className= {tableStyle}>{student.DOB}</TableCell>
-                      <TableCell align="left" className= {tableStyle}>{student.forms_completed}
+                      <TableCell align="left" className= {tableStyle}>
+                        {student.last_name}</TableCell>
+                      <TableCell align="left" className= {tableStyle}>
+                        {student.DOB}</TableCell>
+                      <TableCell align="left" className= {tableStyle}>
+                        {student.forms_completed}
                       </TableCell>
                     </TableRow>
                   ))}
