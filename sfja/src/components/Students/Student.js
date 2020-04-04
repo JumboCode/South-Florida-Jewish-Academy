@@ -12,32 +12,79 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import ReceiptIcon from '@material-ui/icons/Receipt';
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import EditIcon from '@material-ui/icons/Edit';
 
+import { withStyles } from '@material-ui/core/styles'
+import clsx from 'clsx';
+
+const useStyles =  {
+  text: {
+    fontSize: "50",
+  },
+};
 
 const imageStyle = {
   width: '100px',
   height: 'auto',
 };
+
 const formStyle ={
   display: 'inline-block',
-  // position: 'absolute',
-  width: '1400px',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '1200px',
   height: '800px',
-  backgroundColor: '#A1C2DC',
-}
-const parentForm = {
-  textAlign: 'center',
-}
-const textSize = {
-  fontSize: '13px'
-  
 };
 
-const navStyle = {
-  label: {
-    fontSize:'30px'
-  }
+const parentForm = {
+  textAlign: 'center',
+};
+
+const textSize = {
+  fontSize: '13px'
+};
+
+const parent = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingTop: '40px',
+};
+
+const child = {
+  order: '1'
+};
+
+const parent2={
+  flexDirection: 'row',
+  paddingLeft: '15px',
+  paddingTop: '10px',
+};
+
+const line={
+  height:'1.5px',
+  backgroundColor:'#FE8000'
+};
+
+const child2= {
+  order: '1',
+  paddingLeft:'430px',
+  fontSize:'3em'
+};
+
+const bottomNav={
+  fontSize: '5em'
 }
+
+// const navStyle = {
+//   label: {
+//     fontSize:'30px'
+//   }
+// };
 
 // eslint-disable-next-line require-jsdoc
 class Student extends React.Component {
@@ -69,6 +116,7 @@ class Student extends React.Component {
   render() {
     const {forms, basicInfo, currTab} = this.state;
     const { classes, children, className, ...other } = this.props;
+    const NavStyle = clsx(classes.text, className);
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
       return (
@@ -83,46 +131,52 @@ class Student extends React.Component {
     return (
       <div>
                 {/* id={id} */}
+        <div style= {parent}>
         <img
         style={imageStyle}
         src="https://i1.wp.com/acaweb.org/wp-content/uploads/2018/12/profile-placeholder.png"
         ></img>
-        <div>{basicInfo['first_name']} {basicInfo['last_name']}</div>
-    
-          <TextField style={{width: 500}} id="outlined-basic" label="Search for Forms" variant="outlined" />
+        {/* <div style={parent2}> */}
+        <div style={parent2}>
+        <div style={child}>{basicInfo['first_name']} {basicInfo['last_name']}</div>
+        <div style={child}> ID: {basicInfo['_id']}</div>
+        <div style={child}> <div style={line}> </div></div>
+        </div>
+          <div style={child2}>
+          <TextField style={{width: 450}} id="outlined-basic" label="Search for Forms" variant="outlined" />
+          </div>
+          </div>
+          {/* </div> */}
+          <div style={bottomNav}>
         <BottomNavigation 
-          value={this.state.value}
+                   value={this.state.value}
           onChange={(event, newValue) => {
             this.setState({currTab: newValue,value:newValue})
           }}
           showLabels
          
         >
-          <BottomNavigationAction label="Forms"/>
-          <BottomNavigationAction label="Documents" />
-          <BottomNavigationAction label="Edit Student Info" />
-          
+          <BottomNavigationAction label="Forms" icon={<ReceiptIcon />}/>
+          <BottomNavigationAction label="Documents" icon={<InsertDriveFileIcon />} />
+          <BottomNavigationAction label="Edit Student Info" icon={<EditIcon />}/>
           </BottomNavigation>
-
+          </div>
         {currTab === 0 && <div style = {parentForm}><div style={formStyle}>
           <TableContainer component={Paper}>
         <Table size = 'large'>
           <TableHead>
             <TableRow >
-              <TableCell style={textSize} >Form Name</TableCell>
-              <TableCell  style={textSize} >Status</TableCell>
-              <TableCell style={textSize} >Last Updated(g)</TableCell>
+              <TableCell style={textSize} align = "left" >Form Name</TableCell>
+              <TableCell  style={textSize} align = "center" >Status</TableCell>
+              <TableCell style={textSize} align = "right" >Last Updated(g)</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {forms.map(form => (
               <TableRow  key={form['_id']}>
-                {/* <TableCell style={textSize} component="th" scope="row">
-                  {form['form_num']}
-                </TableCell> */}
-                <TableCell style={textSize}>{form['form_name']}</TableCell>
-                <TableCell style={textSize}>{form['completed']=== true ? 'Y' : 'N'}</TableCell>
-                <TableCell style={textSize}>{form['last_updated']=== null ? 'N/A': form['last_updated']}</TableCell>
+                <TableCell style={textSize} align = "left" >{form['form_name']}</TableCell>
+                <TableCell style={textSize} align = "center">{form['completed']=== true ? <CheckCircleIcon/> : <HighlightOffIcon/>}</TableCell>
+                <TableCell style={textSize} align = "right">{form['last_updated']=== null ? 'N/A': form['last_updated']}</TableCell>
                 {/* <TableCell style={textSize}>{form['required'] === true ? 'Y' : 'N'}</TableCell> */}
               </TableRow>
             ))}
@@ -139,4 +193,5 @@ class Student extends React.Component {
   }
 }
 
-export default Student;
+export default withStyles(useStyles)(Student);
+// export default Student;
