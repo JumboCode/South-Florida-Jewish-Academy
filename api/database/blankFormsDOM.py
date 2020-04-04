@@ -48,3 +48,8 @@ def getBlankFormDetails():
 def deleteForm(id):
     mongo.db.blankForms.delete_many({'_id': id })
     return
+
+def changeFormName(id, name):
+    form = mongo.db.find(id)
+    form.update({'form_name': name})
+    return
