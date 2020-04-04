@@ -21,6 +21,7 @@ import Paper from '@material-ui/core/Paper';
 
 import { withStyles } from '@material-ui/core/styles'
 import clsx from 'clsx';
+import Typography from "@material-ui/core/Typography";
 
 
 const useStyles =  {  
@@ -29,8 +30,8 @@ const useStyles =  {  
     fontSize: "1em",
     color: "black",
     "&:visited": {
-      color: "purple",
-      fontSize: "1em"
+      fontSize: "1em",
+      color: "purple"
     }
   },
 
@@ -101,9 +102,9 @@ class Students extends React.Component {
                 <TableBody>
                   {students.map((student) => (
                     <TableRow key={student.student_id}>
-                      <TableCell component="th" scope="row">
-                        <NavLink to={'/profile/' + student.student_id} className={tableStyle}>
-                          {student.first_name}
+                      <TableCell component="th" scope="row" className={tableStyle}>
+                        <NavLink to={'/profile/' + student.student_id}>
+                          <Typography align="left" className={tableStyle}>{student.first_name}</Typography>
                         </NavLink>
                       </TableCell>
                       <TableCell align="left" className= {tableStyle}>{student.last_name}</TableCell>
