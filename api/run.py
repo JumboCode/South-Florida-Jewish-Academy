@@ -124,6 +124,16 @@ def getStudentForms():
     return {'form_ids': form_ids,
             'form_names': form_names}
 
+@app.route('/getForm', methods=['GET', 'POST'])
+def getForm():
+    print("HELLO HERERE")
+    form_id = request.json['form_id']
+    blank_form_data = FormsDOM.getBlankForm(form_id)
+    form_data = FormsDOM.getFormData(form_id)
+
+    print(blank_form_data)
+    return {'blank_form_data' : blank_form_data,
+            'form_data' : form_data}
 
 @app.route('/getAllForms', methods=['GET'])
 def getAllForms():

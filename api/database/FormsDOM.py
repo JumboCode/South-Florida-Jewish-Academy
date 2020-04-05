@@ -36,7 +36,11 @@ def getInfo(id, key):
 
 # Gets form data.
 def getFormData(id):
-    contents = list(mongo.db.forms.find({'form_id': str(id)}))
+    contents = list(mongo.db.forms.find({'_id': str(id)}))
+
+    if len(contents) != 1:
+        return False
+    
     for content in contents:
         return content['form_data']
 
@@ -57,4 +61,12 @@ def getFormName(id):
     
     for content in contents:
         return blankFormsDOM.getFormName(ObjectId(content['blank_forms_id']))
+
+def getBlankForm(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
     
+    if len(contents) != 1:
+        return False
+    
+    for content in contents:
+        return blankFormsDOM.getFormData(ObjectId(content['blank_forms_id']))

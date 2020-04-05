@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FormDisplay from './FormDisplay';
 import { Select, InputLabel, MenuItem} from '@material-ui/core';
-import FormBuilder from '../FormManager/FormBuilder/index';
 
 // eslint-disable-next-line require-jsdoc
 class StudentDash extends React.Component {
@@ -11,6 +11,7 @@ class StudentDash extends React.Component {
             student_id: this.props.match.params.student_id,
             form_ids: [],
             form_names: [],
+            curr_form: null,
             curr_name: null
         }
     }
@@ -19,6 +20,7 @@ class StudentDash extends React.Component {
       this.setState({curr_name: event.target.value});
     }; 
 
+
     componentDidMount() {
       fetch('http://127.0.0.1:5000/getStudentForms', {
             method: 'POST',
@@ -26,8 +28,8 @@ class StudentDash extends React.Component {
             body: JSON.stringify({student_id: this.state.student_id}),
         }).then((res) => res.json())
           .then((data) => {
-            this.setState({form_ids: data.form_ids})
-            this.setState({form_names: data.form_names})
+            this.setState({form_ids: data.form_ids,
+                          form_names: data.form_names});
             console.log(data);
           })
           .catch(console.log);
@@ -39,8 +41,9 @@ class StudentDash extends React.Component {
       const {student_id} = this.state;
       const {form_ids} = this.state;
       const {form_names} = this.state;
+      const {curr_form} = this.state;
       const {curr_name} = this.state;
-      
+
       return (
         <div>
         <h1>HELLO STUDENT {student_id}</h1>
@@ -52,7 +55,11 @@ class StudentDash extends React.Component {
           onChange={this.handleChange}>
           {form_ids.map((value) => {
             return (
-              <MenuItem value={form_ids.indexOf(value)}>{form_names[form_ids.indexOf(value)]}</MenuItem>
+              <MenuItem 
+                key={form_ids.indexOf(value)} 
+                value={value}>
+                {form_names[form_ids.indexOf(value)]}
+              </MenuItem>
             );
           })}
         </Select>

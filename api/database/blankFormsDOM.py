@@ -36,3 +36,11 @@ def getFormName(id):
         return False
 
     return contents[0]['form_name']
+
+def getFormData(id):
+    contents = list(mongo.db.blankForms.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    return contents[0]['form_data']
