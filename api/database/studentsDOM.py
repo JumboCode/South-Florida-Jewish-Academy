@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask
 from flask_pymongo import PyMongo
 import os
@@ -38,6 +39,21 @@ def getInfo(id, key):
     for content in contents:
         return content['basic_info'][key]
 
+# Gets basic student info
+def getBasicInfo(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    for content in contents:
+        del content['parent_ids']
+        content['_id'] = str(content['_id'])
+        del content['form_ids']
+        return content
+
+# Gets forms of a student.
+def getForms(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    for content in contents:
+        return content['form_ids']
+
 # Get form id of a student form.
 def getForm(id, formNum):
     contents = list(mongo.db.students.find({'student_id': id}))
@@ -72,6 +88,8 @@ def getStudents():
             'first_name': content['first_name'],
             'middle_name': content['middle_name'],
             'last_name': content['last_name'],
+            'DOB': content['DOB'].strftime("%m/%d/%Y"),
+            'form_ids': content['form_ids']
         }
         students.append(info)
 

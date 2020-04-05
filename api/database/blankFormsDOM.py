@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_pymongo import PyMongo
+from datetime import datetime
+from pytz import timezone
 import os
 
 app = Flask(__name__)
@@ -11,7 +13,8 @@ mongo = PyMongo(app)
 def createForm(data):
     initData = {
                 'form_name': 'New Form',
-                'form_data': data
+                'form_data': data,
+                'date_created': datetime.now(timezone('US/Eastern'))
                 }
     result = mongo.db.blankForms.insert_one(initData)
     return result.inserted_id
@@ -44,3 +47,8 @@ def getFormData(id):
         return False
 
     return contents[0]['form_data']
+    
+def getBlankFormName(id):
+    contents = list(mongo.db.blankForms.find({'_id': id }))
+    for content in contents:
+        return content['form_name']

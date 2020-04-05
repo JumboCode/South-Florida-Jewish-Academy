@@ -3,7 +3,8 @@ from flask_restful import Resource, Api
 from flask_sendgrid import SendGrid
 from flask_cors import CORS
 from database.emailKeysDOM import makeUser, verifyKey, verifyUser
-from generateKey import generateKey
+from database.FormsDOM import getForm
+from generateKey import generateKey 
 import os
 import json
 from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM, parentsDOM
@@ -12,7 +13,6 @@ import subprocess
 from datetime import datetime
 from database.assets.audit_mapper import audit_mapper as audit
 from bson.objectid import ObjectId
-
 
 app = Flask(__name__)
 CORS(app)
@@ -87,7 +87,15 @@ def get():
 @app.route('/students', methods = ['GET', 'POST'])
 def getStudents():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
-    return {'students': studentsDOM.getStudents()}
+    students = studentsDOM.getStudents()
+    forms_completed = 0
+    for student in students:
+        for form in student['form_ids']:
+            if FormsDOM.isComplete(form):
+                forms_completed += 1
+        student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+        del student['form_ids']
+    return {'students':students}
 
 
 @app.route('/newform', methods = ['POST'])
@@ -135,6 +143,28 @@ def getForm():
     return {'blank_form_data' : blank_form_data,
             'form_data' : form_data}
 
+@app.route('/studentProfile', methods = ['GET'])
+def getStudentProfile():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_student_forms"])
+    studentID = ObjectId(request.args.get('id'))
+    students_forms = studentsDOM.getForms(studentID)
+    forms = []
+    for formId in students_forms:
+        curr_form_data = FormsDOM.getForm(formId)
+        formName = blankFormsDOM.getBlankFormName(curr_form_data['blank_forms_id'])
+        curr_form_data['form_name'] = str(formName)
+        del curr_form_data['blank_forms_id']
+        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data['parent_id']))
+        del curr_form_data['parent_id']
+        curr_form_data['p_first_name'] = parent_data['first_name']
+        curr_form_data['p_last_name'] = parent_data['last_name']
+        curr_form_data['p_email'] = parent_data['email']
+        forms.append(curr_form_data)
+            
+    return {
+        'forms': forms,
+        'basic_info': studentsDOM.getBasicInfo(studentID)
+    }
 @app.route('/getAllForms', methods=['GET'])
 def getAllForms():
     return { 'forms': blankFormsDOM.getAll()}

@@ -3,6 +3,7 @@ from flask_pymongo import PyMongo
 from database import blankFormsDOM
 from bson.objectid import ObjectId
 import os
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 MONGO_URL = os.environ.get('MONGODB_URI')
@@ -28,7 +29,7 @@ def deleteForm(id):
         results = mongo.db.forms.delete_one({'form_id': str(id)})
         return results
 
-# Gets form info.
+# Gets form info, specifically.
 def getInfo(id, key):
     contents = list(mongo.db.forms.find({'form_id': str(id)}))
     for content in contents:
@@ -44,6 +45,14 @@ def getFormData(id):
     for content in contents:
         return content['form_data']
 
+# Gets allform data.
+def getForm(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    for content in contents:
+        content['_id'] = str(content['_id'])
+        content['parent_id'] = str(content['parent_id'])
+        return content
+
 # Updates form data.
 def updateFormData(id, ques, ans):
     writeR = dict(mongo.db.forms.update({'form_id': str(id)}, {'$set': {'form_data.' + str(ques): ans}}))
@@ -53,6 +62,7 @@ def testCreateForm(data):
     result = mongo.db.forms.insert_one(data)
     return result.inserted_id
 
+<<<<<<< HEAD
 def getFormName(id):
     contents = list(mongo.db.forms.find({'_id': id}))
     
@@ -70,3 +80,10 @@ def getBlankForm(id):
     
     for content in contents:
         return blankFormsDOM.getFormData(ObjectId(content['blank_forms_id']))
+=======
+def isComplete(id):
+    contents = list(mongo.db.forms.find({'_id':ObjectId(id)}))
+    if (len(contents) != 1):
+        raise RuntimeError
+    return contents[0]['completed']
+>>>>>>> master
