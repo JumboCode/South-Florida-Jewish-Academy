@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom';
 import FormManager from '../FormManager/FormManager';
 import PreviewBlankForm from './PreviewBlankForm'
 import { get } from '../FormManager/FormBuilder/stores/requests';
@@ -123,4 +124,4 @@ class Upload extends React.Component {
   }
 }
 
-export default Upload;
+export default withRouter(Upload);
