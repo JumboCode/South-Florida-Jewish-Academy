@@ -7,7 +7,7 @@ import history from './utils/history';
 import Form from './Form';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 import Header from './components/Header';
-import Student from './components/Students/Student';
+import StudentProfile from './components/StudentProfile/StudentProfile';
 import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
 import AddStudent from './components/AddStudent/AddStudent';
@@ -36,7 +36,7 @@ const routing = (
       </Route>
       {/* <Route exact path="/admin" component={Admin} />*/}
       <Route path="/form/:key" component={Form} />
-      <Route path="/profile/:id" component={Student} />
+      <Route path="/profile/:id" component={StudentProfile} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/students" component={Students} />
       <Route exact path="/upload" component={Upload} />

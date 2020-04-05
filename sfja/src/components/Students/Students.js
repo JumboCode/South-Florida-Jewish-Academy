@@ -83,7 +83,7 @@ class Students extends React.Component {
             <div style={searchBarStyle}>
               <input
                 style={InputStyle}
-                placeholder="Search for Student"
+                placeholder="Search for StudentProfile"
               />
               <MagnifyingGlass style={MagnifyingGlassStyle} />
             </div>

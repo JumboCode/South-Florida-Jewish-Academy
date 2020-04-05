@@ -31,3 +31,8 @@ def getAll():
     return res
 
         # print(document)
+
+def getBlankFormName(id):
+    contents = list(mongo.db.blankForms.find({'_id': id }))
+    for content in contents:
+        return content['form_name']

@@ -27,7 +27,7 @@ def deleteForm(id):
         results = mongo.db.forms.delete_one({'form_id': str(id)})
         return results
 
-# Gets form info.
+# Gets form info, specifically.
 def getInfo(id, key):
     contents = list(mongo.db.forms.find({'form_id': str(id)}))
     for content in contents:
@@ -38,6 +38,14 @@ def getFormData(id):
     contents = list(mongo.db.forms.find({'form_id': str(id)}))
     for content in contents:
         return content['form_data']
+
+# Gets allform data.
+def getForm(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    for content in contents:
+        content['_id'] = str(content['_id'])
+        content['parent_id'] = str(content['parent_id'])
+        return content
 
 # Updates form data.
 def updateFormData(id, ques, ans):
