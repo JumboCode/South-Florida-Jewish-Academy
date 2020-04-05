@@ -14,7 +14,6 @@ from datetime import datetime
 from database.assets.audit_mapper import audit_mapper as audit
 from bson.objectid import ObjectId
 
-
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
@@ -88,8 +87,15 @@ def get():
 @app.route('/students', methods = ['GET', 'POST'])
 def getStudents():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
-    students = studentsDOM.getStudents()     
-    return {'students': studentsDOM.getStudents()}
+    students = studentsDOM.getStudents()
+    forms_completed = 0
+    for student in students:
+        for form in student['form_ids']:
+            if FormsDOM.isComplete(form):
+                forms_completed += 1
+        student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+        del student['form_ids']
+    return {'students':students}
 
 
 @app.route('/newform', methods = ['POST'])
