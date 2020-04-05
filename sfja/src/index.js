@@ -17,7 +17,6 @@ import Logout from './components/Logout';
 import Upload from './components/Upload';
 
 
-
 // A function that routes the user to the right place
 // after login
 const onRedirectCallback = (appState) => {
@@ -37,8 +36,8 @@ const routing = (
         <Redirect to="/dashboard" />
       </Route>
       {/* <Route exact path="/admin" component={Admin} />*/}
-      <Route path="/parentdash/:parent_key" component={ParentDash} />
-      <Route path="/parentdash/:parent_key/:student_id" component={StudentDash} />
+      <Route path="/parentdash/:parentKey" component={ParentDash} />
+      <Route path="/parentdash/:parentKey/:studentId" component={StudentDash} />
       <Route path="/profile/:id" component={Student} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/students" component={Students} />
