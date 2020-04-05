@@ -72,7 +72,6 @@ const line={
 const child2= {
   order: '1',
   paddingLeft: '430px',
-  fontSize: '3em',
 };
 
 const bottomNav={
@@ -141,8 +140,10 @@ class Student extends React.Component {
             <div style={child}> <div style={line}> </div></div>
           </div>
           <div style={child2}>
-            <TextField style={{width: 450}} id="outlined-basic"
-              label="Search for Forms" variant="outlined" />
+            <TextField id="outlined-basic"
+              label="Search for Forms" 
+              style ={{width:250}}
+              variant="outlined" />
           </div>
         </div>
         {/* </div> */}
