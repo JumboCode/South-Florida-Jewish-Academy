@@ -76,17 +76,6 @@ class Upload extends React.Component {
         </div>
       )
     }
-    if (viewForm === true){
-      let form = this.state.currentForm;
-      return(
-        <div>
-            <TextField defaultValue={form.name}></TextField>
-            <br />
-            <button>Change Name</button>
-            <div> [Form data goes here]</div>
-        </div>
-      )
-    }
     
     let result = Object.values(formsList);
     var allInfoArr = [];
@@ -101,7 +90,7 @@ class Upload extends React.Component {
     return (
       <div>
         {createForm ? <FormManager/>: 
-         viewForm ? <PreviewBlankForm parentData = {this.state}/>: 
+         viewForm ? <PreviewBlankForm parentData = {this.state.currentForm}/>: 
           <div>
             <button onClick= {() => this.setState({createForm: true})}> Add Form </button>
             <div> 
@@ -116,7 +105,7 @@ class Upload extends React.Component {
                     </TableHead>
                     <TableBody>
                           {allInfoArr.map(row => (
-                              <TableRow key={row}>
+                              <TableRow key={row.id}>
                                 <TableCell component="th" scope="row" onClick={()=>this.setState({currentForm: row, viewForm: true})}>{row.name} </TableCell>
                                 <TableCell align="right">{row.date}</TableCell>
                                 <TableCell align="right"> <button onClick={() => this.trashForm(row.id)}>Delete</button></TableCell>

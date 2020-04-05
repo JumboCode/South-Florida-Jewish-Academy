@@ -12,8 +12,10 @@ class PreviewBlankForm extends React.Component {
         super(props);
     }
     updateName(){
-        let id = this.props.parentData.id
-        let name = "data goes here"
+        console.log("about to fetch");
+        let id = this.props.parentData.id;
+        let name = "data";
+        
         fetch('http://localhost:5000/updateFormName/' + id +'/' + name, {
             method: 'POST',
             mode: "no-cors"
@@ -27,7 +29,7 @@ class PreviewBlankForm extends React.Component {
             <button> Back</button>
             <TextField defaultValue={this.props.parentData.name}></TextField>
             <br />
-            <button onClick={this.updateName()}>Change Name </button>
+            <button onClick={() => this.updateName()}>Change Name </button>
             <div> [Form data goes here]</div>
             </div>
         );
