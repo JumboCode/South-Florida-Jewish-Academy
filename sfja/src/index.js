@@ -38,7 +38,7 @@ const routing = (
       {/* <Route exact path="/admin" component={Admin} />*/}
       <Route path="/parentdash/:parentKey" component={ParentDash} />
       <Route path="/parentdash/:parentKey/:studentId" component={StudentDash} />
-      <Route path="/profile/:id" component={Student} />
+      <Route path="/profile/:id" component={StudentProfile} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/students" component={Students} />
       <Route exact path="/upload" component={Upload} />

@@ -17,7 +17,8 @@ class StudentDash extends React.Component {
   }
 
     handleChange = (event) => {
-      setState({currName: event.target.value});
+      // eslint-disable-next-line no-invalid-this
+      this.setState({currName: event.target.value});
     };
 
     // eslint-disable-next-line require-jsdoc

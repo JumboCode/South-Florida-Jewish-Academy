@@ -62,7 +62,6 @@ def testCreateForm(data):
     result = mongo.db.forms.insert_one(data)
     return result.inserted_id
 
-<<<<<<< HEAD
 def getFormName(id):
     contents = list(mongo.db.forms.find({'_id': id}))
     
@@ -80,10 +79,9 @@ def getBlankForm(id):
     
     for content in contents:
         return blankFormsDOM.getFormData(ObjectId(content['blank_forms_id']))
-=======
+        
 def isComplete(id):
     contents = list(mongo.db.forms.find({'_id':ObjectId(id)}))
     if (len(contents) != 1):
         raise RuntimeError
     return contents[0]['completed']
->>>>>>> master

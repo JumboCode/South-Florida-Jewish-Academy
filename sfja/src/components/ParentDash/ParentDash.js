@@ -20,7 +20,7 @@ class ParentDash extends React.Component {
       studentNames: [],
       hover: '',
       value: null,
-      parentKey: this.props.match.params.parent_key,
+      parentKey: this.props.match.params.parentKey,
     };
   }
 
