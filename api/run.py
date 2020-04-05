@@ -109,22 +109,22 @@ def getUsers():
 
 @app.route('/studentProfile', methods = ['GET'])
 def getStudentProfile():
-    print("in studentProfile")
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_student_forms"])
     studentID = ObjectId(request.args.get('id'))
     students_forms = studentsDOM.getForms(studentID)
-    print("this is student forms")
-    print(students_forms)
     forms = []
     for formId in students_forms:
         curr_form_data = FormsDOM.getForm(formId)
         formName = blankFormsDOM.getBlankFormName(curr_form_data['blank_forms_id'])
         curr_form_data['form_name'] = str(formName)
         del curr_form_data['blank_forms_id']
+        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data['parent_id']))
+        del curr_form_data['parent_id']
+        curr_form_data['p_first_name'] = parent_data['first_name']
+        curr_form_data['p_last_name'] = parent_data['last_name']
+        curr_form_data['p_email'] = parent_data['email']
         forms.append(curr_form_data)
-        
-    print("this is forms", forms)
-    
+            
     return {
         'forms': forms,
         'basic_info': studentsDOM.getBasicInfo(studentID)

@@ -1,30 +1,35 @@
 import React from 'react';
 
+// eslint-disable-next-line require-jsdoc
+class ProfileEdit extends React.Component {
+  // eslint-disable-next-line require-jsdoc
+  constructor(props) {
+    super(props);
+    // eslint-disable-next-line react/prop-types
+    const {basicInfo} = this.props;
+    console.log(basicInfo);
+    this.state = {
+      // eslint-disable-next-line react/prop-types
+      oldFirstName: basicInfo.first_name,
+      // eslint-disable-next-line react/prop-types
+      newFirstName: basicInfo.first_name,
+    };
+  }
 
-class ProfileEdit extends React.Component{
-    constructor(props){
-        super(props)
-        const {basicInfo} = this.props;
-        console.log(basicInfo);
-        this.state = {
-            old_first_name: basicInfo.first_name,
-            new_first_name: basicInfo.first_name
-        }
-    }
-    
-    render(){
-        const {new_first_name, old_first_name} = this.state;
-        return(
-            <div>
+  // eslint-disable-next-line require-jsdoc
+  render() {
+    const {newFirstName, oldFirstName} = this.state;
+    return (
+      <div>
                 Edit info:
-                <div>
-                    <input type="text" name="name" value={new_first_name} onChange={theChange => this.setState({new_first_name: theChange.target.value})}/>
-                    {new_first_name !== old_first_name ? <div>changed</div> : <div/>}
-                </div>
-            </div>
-        )
-    
-    }
+        <div>
+          {/* eslint-disable-next-line max-len */}
+          <input type="text" name="name" value={newFirstName} onChange={(theChange) => this.setState({newFirstName: theChange.target.value})}/>
+          {newFirstName !== oldFirstName ? <div>changed</div> : <div/>}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default ProfileEdit;
