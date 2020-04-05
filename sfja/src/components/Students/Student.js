@@ -134,15 +134,15 @@ class Student extends React.Component {
           />
           {/* <div style={parent2}> */}
           <div style={parent2}>
-            <div style={child}>{basicInfo['first_name']}
-              {basicInfo['last_name']}</div>
+            {/* eslint-disable-next-line max-len */}
+            <div style={child}>{basicInfo['first_name']} {basicInfo['last_name']}</div>
             <div style={child}> ID: {basicInfo['_id']}</div>
             <div style={child}> <div style={line}> </div></div>
           </div>
           <div style={child2}>
             <TextField id="outlined-basic"
-              label="Search for Forms" 
-              style ={{width:250}}
+              label="Search for Forms"
+              style ={{width: 250}}
               variant="outlined" />
           </div>
         </div>
