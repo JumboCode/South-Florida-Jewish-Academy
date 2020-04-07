@@ -4,7 +4,6 @@
 from pymongo import MongoClient
 import subprocess
 
-
 def main():
 
     ## drop and remake database
