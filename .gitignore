@@ -1,8 +1,4 @@
 /api/backendEnv/*
 .idea
 /database/
-*/__pycache__/*
-/api/database/__pycache__/
 /node_modules/
-api/__pycache__/
-api/database/assets/__pycache__/*
