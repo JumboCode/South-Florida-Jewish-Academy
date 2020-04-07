@@ -112,6 +112,10 @@ def getUsers():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
     return {'users': usersDOM.getUsers()}
 
+@app.route('/forms', methods = ['GET', 'POST'])
+def getForms():
+    # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
+    return {'forms': FormsDOM.getForms()}
 
 @app.route('/studentProfile', methods = ['GET'])
 def getStudentProfile():
@@ -138,6 +142,20 @@ def getStudentProfile():
 @app.route('/getAllForms', methods=['GET'])
 def getAllForms():
     return { 'forms': blankFormsDOM.getAll()}
+
+@app.route('/getBlankFormDetails', methods=['GET'])
+def getBlankFormDetails():
+    return { 'forms': blankFormsDOM.getBlankFormDetails()}
+
+@app.route('/deleteBlankForm/<id>', methods=['POST'])
+def deleteBlankForm(id):
+    blankFormsDOM.deleteForm(ObjectId(id))
+    return '0'
+
+@app.route('/updateFormName/<id>/<name>', methods=['POST'])
+def updateFormName(id, name):
+    blankFormsDOM.updateFormName(ObjectId(id), name)
+    return '0'
 
 @app.route('/addStudent', methods = ['POST'])
 def addStudent():
