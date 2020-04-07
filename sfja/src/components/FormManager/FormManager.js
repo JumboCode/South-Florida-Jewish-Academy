@@ -1,6 +1,8 @@
 import React from 'react';
 import DemoBar from './DemoBar';
 import FormBuilder from './FormBuilder/index';
+import {Button} from '@material-ui/core';
+import PropTyes from 'prop-types';
 
 import './css/bootstrap.min.css';
 import './css/font-awesome.min.css';
@@ -10,9 +12,16 @@ require('./scss/application.scss');
 class FormManager extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
+    const {setCreateForm} = this.props;
     return (
       <div className="fm-container">
         <React.Fragment>
+          <Button
+            variant='contained'
+            onClick={() => setCreateForm(false)}
+          >
+            back
+          </Button>
           <DemoBar/>
           <FormBuilder.ReactFormBuilder/>
         </React.Fragment>
@@ -20,5 +29,9 @@ class FormManager extends React.Component {
     );
   }
 }
+
+FormManager.propTypes = {
+  setCreateForm: PropTyes.func,
+};
 
 export default FormManager;

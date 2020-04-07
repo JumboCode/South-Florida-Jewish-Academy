@@ -14,7 +14,7 @@ import Students from './components/Students/Students';
 import AddStudent from './components/AddStudent/AddStudent';
 import LoginPage from './components/LoginPage';
 import Logout from './components/Logout';
-import Upload from './components/Upload';
+import Upload from './components/Upload/Upload';
 
 
 // A function that routes the user to the right place

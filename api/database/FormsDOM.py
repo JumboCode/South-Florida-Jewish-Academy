@@ -58,6 +58,21 @@ def updateFormData(id, ques, ans):
     writeR = dict(mongo.db.forms.update({'form_id': str(id)}, {'$set': {'form_data.' + str(ques): ans}}))
     return writeR['nModified'] > 0
 
+
+def getForms():
+    contents = list(mongo.db.forms.find())
+    forms = []
+    for content in contents:
+        info = {
+            'form_id': content['form_id'],
+            'form_num': content['form_num'],
+            'last_updated': content['last_updated'],
+            'form_data': content['form_data']
+        }
+        forms.append(info)
+    return forms
+
+
 def testCreateForm(data):
     result = mongo.db.forms.insert_one(data)
     return result.inserted_id
@@ -85,3 +100,4 @@ def isComplete(id):
     if (len(contents) != 1):
         raise RuntimeError
     return contents[0]['completed']
+
