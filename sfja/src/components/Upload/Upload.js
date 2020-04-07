@@ -1,7 +1,7 @@
+/* eslint-disable max-len */
 import React from 'react';
 import FormManager from '../FormManager/FormManager';
 import PreviewBlankForm from './PreviewBlankForm';
-import fetch from 'isomorphic-fetch';
 import PropTypes from 'prop-types';
 
 import Table from '@material-ui/core/Table';
@@ -11,7 +11,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import {Button} from '@material-ui/core';
 
+const textSize = {
+  fontSize: '13px',
+};
 
 // eslint-disable-next-line require-jsdoc
 class Upload extends React.Component {
@@ -57,6 +61,16 @@ class Upload extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
+  setCreateFrom(newCreateFrom) {
+    this.setState({createForm: newCreateFrom});
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  setViewForm(newViewForm) {
+    this.setState({viewForm: newViewForm});
+  }
+
+  // eslint-disable-next-line require-jsdoc
   render() {
     const {createForm, viewForm, formsList} = this.state;
 
@@ -79,40 +93,44 @@ class Upload extends React.Component {
       allInfoArr.push(form);
     }
     return (
-      <div>
-        {createForm ? <FormManager/>:
-         viewForm ? <PreviewBlankForm parentData = {this.state.currentForm}/>:
-          <div>
-            <button onClick= {() => this.setState({createForm: true})}>
-              Add Form
-            </button>
-            <div>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell align="right">Date Created</TableCell>
-                      <TableCell align="right">Delete</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {allInfoArr.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell component="th" scope="row"
-                          onClick={() =>
-                            this.setState({currentForm: row, viewForm: true})}>
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="right">{row.date}</TableCell>
-                        <TableCell align="right"> <button onClick={() =>
-                          this.trashForm(row.id)}>Delete</button>
-                        </TableCell>
+      <div style={{padding: 20}}>
+        {createForm ? <FormManager setCreateForm={this.setCreateFrom.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
+         viewForm ? <PreviewBlankForm parentData={this.state.currentForm} setViewForm={this.setViewForm.bind(this)}/>:
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <div style={{width: '100%', maxWidth: 700}}>
+              <Button
+                onClick= {() => this.setState({createForm: true})}
+                variant="contained"
+              >
+                Add Form
+              </Button>
+              <div style={{paddingTop: 5}}>
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell style={textSize} align="right">Date Created</TableCell>
+                        <TableCell style={textSize} align="right">Delete</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                      {allInfoArr.map((row) => (
+                        <TableRow key={row.id}>
+                          <TableCell style={textSize} component="th" scope="row"
+                            onClick={() => this.setState({currentForm: row, viewForm: true})}>
+                            {row.name}
+                          </TableCell>
+                          <TableCell style={textSize} align="right">{row.date}</TableCell>
+                          <TableCell style={textSize} align="right"> <Button onClick={() =>
+                            this.trashForm(row.id)}>Delete</Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
             </div>
           </div>
         }
