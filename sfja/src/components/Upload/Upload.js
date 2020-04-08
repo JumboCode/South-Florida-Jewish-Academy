@@ -48,9 +48,14 @@ class Upload extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   trashForm(formid) {
-    fetch('http://localhost:5000/deleteBlankForm/' + formid, {
+    const body = {
+      form_id: formid,
+    };
+    fetch('deleteBlankForm/' + formid, {
       method: 'POST',
-      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+      // eslint-disable-next-line arrow-parens
     })
         .then((res) => res.text())
         .then((res) => console.log(res));

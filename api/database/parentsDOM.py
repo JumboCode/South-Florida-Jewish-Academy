@@ -37,15 +37,39 @@ def updateInfo(id, key, update):
         return True
     return False
 
+
 def addForm(id, formNum, formId):
     writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'form_ids.' + str(formNum): [str(formId)]}}))
     return writeR['nModified'] > 0
+
 
 def removeForm(id, formNum):
     writeR = dict(mongo.db.parents.update({'_id': id}, {'$unset': {'form_ids.' + str(formNum): ''}}))
     return writeR['nModified'] > 0
 
 
+def updateKey(id, newLink):
+    writR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'curr_link' : newLink}}))
+    assert writR['nModified'] == 1
+
+
+def get(email=None, firstName=None, lastName=None):
+    contents = None
+    if email is not None:
+        contents = list(mongo.db.parents.find({'email': email}))
+    elif firstName is not None:
+        contents = list(mongo.db.parents.find({'first_name': firstName}))
+    elif lastName is not None:
+        contents = list(mongo.db.parents.find({'last_name': lastName}))
+
+    assert len(contents) == 1
+    return contents[0]['_id']
+
+
+def exists(email):
+    contents = list(mongo.db.parents.find({'email': email}))
+    print(contents)
+    return len(contents) == 1
 # makes parent and returns parentID
 def createParent(firstName, lastName, email):
     initData = {

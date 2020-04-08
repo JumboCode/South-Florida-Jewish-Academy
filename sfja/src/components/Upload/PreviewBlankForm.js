@@ -23,9 +23,15 @@ class PreviewBlankForm extends React.Component {
       const id = this.props.parentData.id;
       const name = this.state.value;
 
-      fetch('http://localhost:5000/updateFormName/' + id +'/' + name, {
+      const body = {
+        form_id: id,
+        form_name: name,
+      };
+      fetch('/updateFormName', {
         method: 'POST',
-        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+        // eslint-disable-next-line arrow-parens
       })
           .then((res) => res.text())
           .then((res) => console.log(res));

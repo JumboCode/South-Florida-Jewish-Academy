@@ -71,6 +71,5 @@ def deleteForm(id):
     mongo.db.blankForms.delete_many({'_id': id })
 
 def updateFormName(id, name):
-    form = mongo.db.blankForms.find({'_id': id})
     mongo.db.blankForms.update({'_id': id}, {'$set': {'form_name': name}})
 
