@@ -6,13 +6,14 @@ import {Select, InputLabel, MenuItem} from '@material-ui/core';
 class StudentDash extends React.Component {
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
+    console.log('constructor');
     super(props);
     this.state = {
       studentId: this.props.match.params.studentId,
       formIds: [],
       formNames: [],
       currForm: null,
-      currName: null,
+      currName: '',
     };
   }
 
@@ -23,26 +24,34 @@ class StudentDash extends React.Component {
 
     // eslint-disable-next-line require-jsdoc
     componentDidMount() {
+      this.refreshStudentForms();
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    refreshStudentForms() {
       fetch('http://127.0.0.1:5000/getStudentForms', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({student_id: this.state.studentId}),
       }).then((res) => res.json())
           .then((data) => {
-            this.setState({formIds: data.form_ids,
-              formNames: data.form_names});
+            this.setState({
+              formIds: data.form_ids,
+              formNames: data.form_names,
+              studentId: this.props.match.params.studentId,
+            });
             console.log(data);
-          })
-          .catch(console.log);
+          }).catch(console.log);
     }
 
 
     // eslint-disable-next-line require-jsdoc
     render() {
-      const {studentId} = this.state;
-      const {formIds} = this.state;
-      const {formNames} = this.state;
-      const {currName} = this.state;
+      const {studentId, formIds, formNames, currName} = this.state;
+
+      if (studentId !== this.props.match.params.studentId) {
+        this.refreshStudentForms();
+      }
 
       return (
         <div>

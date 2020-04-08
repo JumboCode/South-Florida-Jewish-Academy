@@ -51,7 +51,7 @@ class Upload extends React.Component {
     const body = {
       form_id: formid,
     };
-    fetch('deleteBlankForm/' + formid, {
+    fetch('http://127.0.0.1:5000/deleteBlankForm/' + formid, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(body),
