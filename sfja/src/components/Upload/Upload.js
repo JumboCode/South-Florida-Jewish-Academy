@@ -29,7 +29,6 @@ class Upload extends React.Component {
       createForm: false,
       currentForm: null,
       formsList: null,
-      somethingDeleted: false,
       viewForm: false,
     };
   }
@@ -51,27 +50,26 @@ class Upload extends React.Component {
     const body = {
       form_id: formid,
     };
-    fetch('http://127.0.0.1:5000/deleteBlankForm/' + formid, {
+    fetch('http://127.0.0.1:5000/deleteBlankForm', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Method': 'no-cors'},
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
     })
         .then((res) => res.text())
-        .then((res) => console.log(res));
-    setTimeout( () => {
-      this.setState(() => ({somethingDeleted: true}));
-    }, 300);
-    this.fetchData();
+        .then((res) => console.log(res))
+        .then(() => {this.fetchData()});
   }
 
-  // eslint-disable-next-line require-jsdoc
-  setCreateFrom(newCreateFrom) {
-    this.setState({createForm: newCreateFrom});
+  // eslintorisable-next-line require-jsdoc
+  setCreateForm(newCreateForm) {
+    this.fetchData();
+    this.setState({createForm: newCreateForm});
   }
 
   // eslint-disable-next-line require-jsdoc
   setViewForm(newViewForm) {
+    this.fetchData();
     this.setState({viewForm: newViewForm});
   }
 
@@ -99,7 +97,7 @@ class Upload extends React.Component {
     }
     return (
       <div style={{padding: 20}}>
-        {createForm ? <FormManager setCreateForm={this.setCreateFrom.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
+        {createForm ? <FormManager setCreateForm={this.setCreateForm.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
          viewForm ? <PreviewBlankForm parentData={this.state.currentForm} setViewForm={this.setViewForm.bind(this)}/>:
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <div style={{width: '100%', maxWidth: 700}}>

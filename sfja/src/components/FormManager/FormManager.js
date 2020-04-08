@@ -11,6 +11,9 @@ require('./scss/application.scss');
 // eslint-disable-next-line require-jsdoc
 class FormManager extends React.Component {
   // eslint-disable-next-line require-jsdoc
+  static propTypes = {
+    setCreateForm: PropTyes.func,
+  };
   render() {
     const {setCreateForm} = this.props;
     return (
@@ -30,8 +33,6 @@ class FormManager extends React.Component {
   }
 }
 
-FormManager.propTypes = {
-  setCreateForm: PropTyes.func,
-};
+
 
 export default FormManager;
