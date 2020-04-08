@@ -6,6 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import PersonIcon from '@material-ui/icons/Person';
+import HomeIcon from '@material-ui/icons/Home';
 
 const tabStyle = {color: 'grey', fontSize: 10, outline: 'none',
   textDecoration: 'none', minWidth: 20};
@@ -72,7 +73,7 @@ class ParentHeader extends React.Component {
             </div>
             <Tab
               key={value}
-              icon={<PersonIcon fontSize='medium'/>}
+              icon={<HomeIcon fontSize='medium'/>}
               label={'dashboard'}
               to={'/parentdash/' + parentKey}
               component={Link}
