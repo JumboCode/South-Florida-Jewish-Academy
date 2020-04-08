@@ -18,7 +18,7 @@ app = Flask(__name__)
 CORS(app)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
-app.config['SENDGRID_DEFAULT_FROM'] = 'maxjramer@gmail.com'
+app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 
 # look I'm a comment
 
@@ -62,27 +62,27 @@ def checkKey():
     else -> 403 errorr
  """
 
-@app.route('/email', methods = ['GET', 'POST'])
-def get():
+# accepts ObjectId parentId
+def emailParent(parentId):
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["email"])
-    mail = SendGrid(app)
+    # mail = SendGrid(app)
     #generates a unique key
     generatedKey = generateKey()
     # succeeded to insert into database
-    succeeded =  makeUser('trishacox@gmail.com', generatedKey)
+    parentsDOM.updateKey(parentId, generateKey())
 
-    #currently only sends the email if a new user could be made
-    if succeeded:
-        email1 = 'trishacox@gmail.com' #to be a given parent email
-        mail.send_email(
-            from_email='maxjramer@gmail.com',
-            to_email=[{'email': email1}],
-            subject='Subject',
-            html='<a href="http://localhost:3000/form/' + str(generatedKey) + '">Forms</a>'
-        )
-        return 'success', 200
-    else:
-        return 'failure', 400
+    # #currently only sends the email if a new user could be made
+    # if succeeded:
+    #     email1 = 'anthonytranduc@gmail.com' #to be a given parent email
+    #     mail.send_email(
+    #         from_email='anthonytranduc@gmail.com',
+    #         to_email=[{'email': email1}],
+    #         subject='Subject',
+    #         html='<a href="http://localhost:5000/form/' + str(generatedKey) + '">Forms</a>'
+    #     )
+    #     return 'success', 200
+    # else:
+    #     return 'failure', 400
 
 @app.route('/students', methods = ['GET', 'POST'])
 def getStudents():
@@ -112,6 +112,38 @@ def getUsers():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
     return {'users': usersDOM.getUsers()}
 
+
+'''==================== PARENT/STUDENT DASHBOARDS ===================='''
+@app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
+def getStudentsOfParent():
+    curr_link = request.json['curr_link']
+    student_ids = parentsDOM.listStudents(curr_link)
+    student_names = []
+    for id in student_ids:
+        student_names.append(studentsDOM.getName(ObjectId(id)))
+    return {'student_ids': student_ids, 'student_names': student_names}
+
+@app.route('/getStudentForms', methods = ['GET', 'POST'])
+def getStudentForms():
+    student_id = request.json['student_id']
+    form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
+    form_names = []
+    for id in form_ids:
+        form_names.append(FormsDOM.getFormName(ObjectId(id)))
+    return {'form_ids': form_ids,
+            'form_names': form_names}
+
+@app.route('/getForm', methods=['GET', 'POST'])
+def getForm():
+    print("HELLO HERERE")
+    form_id = request.json['form_id']
+    blank_form_data = FormsDOM.getBlankForm(form_id)
+    form_data = FormsDOM.getFormData(form_id)
+
+    print(blank_form_data)
+    return {'blank_form_data' : blank_form_data,
+            'form_data' : form_data}
+  
 @app.route('/forms', methods = ['GET', 'POST'])
 def getForms():
     # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
@@ -147,14 +179,17 @@ def getAllForms():
 def getBlankFormDetails():
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
-@app.route('/deleteBlankForm/<id>', methods=['POST'])
-def deleteBlankForm(id):
+@app.route('/deleteBlankForm', methods=['POST'])
+def deleteBlankForm():
+    id = request.json['form_id']
     blankFormsDOM.deleteForm(ObjectId(id))
     return '0'
 
-@app.route('/updateFormName/<id>/<name>', methods=['POST'])
-def updateFormName(id, name):
-    blankFormsDOM.updateFormName(ObjectId(id), name)
+@app.route('/updateFormName', methods=['POST'])
+def updateFormName():
+    id = request.json['form_id']
+    form_name = request.json['form_name']
+    blankFormsDOM.updateFormName(ObjectId(id), form_name)
     return '0'
 
 @app.route('/addStudent', methods = ['POST'])
@@ -164,7 +199,11 @@ def addStudent():
     parentIds = []
     parents = request.json['parentData']
     for parent in parents:
-        currID = parentsDOM.createParent(parent['firstName'], parent['lastName'], parent['email'])
+        currID = None
+        if parentsDOM.exists(parent['email']):
+            currID = parentsDOM.get(email=parent['email'])
+        else:
+            currID = parentsDOM.createParent(parent['firstName'], parent['lastName'], parent['email'])
         parentIds.append(currID)
 
     formIds = []
@@ -181,6 +220,10 @@ def addStudent():
 
     for parentId in parentIds:
         parentsDOM.addStudentId(parentId, studentId)
+
+    # send emails
+    for parentId in parentIds:
+        emailParent(parentId)
 
     return '0'
 

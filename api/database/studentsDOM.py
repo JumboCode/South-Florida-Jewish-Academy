@@ -95,3 +95,15 @@ def getStudents():
 
     return students
 
+def getName(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    return list(map(str, contents[0]['first_name']))
+
+def getAllFormIds(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    for content in contents:
+        return list(map(str, content['form_ids']))

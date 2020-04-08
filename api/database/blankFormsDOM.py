@@ -33,6 +33,22 @@ def getAll():
         # print(document)
 
 
+def getFormName(id):
+    contents = list(mongo.db.blankForms.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    return contents[0]['form_name']
+
+def getFormData(id):
+    contents = list(mongo.db.blankForms.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    return contents[0]['form_data']
+    
 def getBlankFormName(id):
     contents = list(mongo.db.blankForms.find({'_id': id }))
     for content in contents:
@@ -55,6 +71,5 @@ def deleteForm(id):
     mongo.db.blankForms.delete_many({'_id': id })
 
 def updateFormName(id, name):
-    form = mongo.db.blankForms.find({'_id': id})
     mongo.db.blankForms.update({'_id': id}, {'$set': {'form_name': name}})
 

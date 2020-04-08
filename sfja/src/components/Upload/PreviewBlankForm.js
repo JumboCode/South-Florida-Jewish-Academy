@@ -23,12 +23,15 @@ class PreviewBlankForm extends React.Component {
       const id = this.props.parentData.id;
       const name = this.state.value;
 
-      fetch('http://localhost:5000/updateFormName/' + id +'/' + name, {
+      const body = {
+        form_id: id,
+        form_name: name,
+      };
+      fetch('http://127.0.0.1:5000/updateFormName', {
         method: 'POST',
-        mode: 'no-cors',
-      })
-          .then((res) => res.text())
-          .then((res) => console.log(res));
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+      });
     }
 
     // eslint-disable-next-line require-jsdoc
@@ -44,7 +47,7 @@ class PreviewBlankForm extends React.Component {
           </Button>
           <br/>
           <TextField onChange={(e) => {
-            this.setState({value: e.target.newName});
+            this.setState({value: e.target.value});
           }} id="name-field" defaultValue={this.props.parentData.name}>
           </TextField>
           <br />
