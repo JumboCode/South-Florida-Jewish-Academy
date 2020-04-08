@@ -58,10 +58,12 @@ class Upload extends React.Component {
     })
         .then((res) => res.text())
         .then((res) => console.log(res))
-        .then(() => {this.fetchData()});
+        .then(() => {
+          this.fetchData();
+        });
   }
 
-  // eslintorisable-next-line require-jsdoc
+  // eslint-disable-next-line require-jsdoc
   setCreateForm(newCreateForm) {
     this.fetchData();
     this.setState({createForm: newCreateForm});

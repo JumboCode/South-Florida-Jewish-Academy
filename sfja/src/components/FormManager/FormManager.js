@@ -14,6 +14,7 @@ class FormManager extends React.Component {
   static propTypes = {
     setCreateForm: PropTyes.func,
   };
+  // eslint-disable-next-line require-jsdoc
   render() {
     const {setCreateForm} = this.props;
     return (
@@ -32,7 +33,6 @@ class FormManager extends React.Component {
     );
   }
 }
-
 
 
 export default FormManager;
