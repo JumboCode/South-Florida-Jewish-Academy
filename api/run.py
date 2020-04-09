@@ -127,11 +127,14 @@ def getStudentsOfParent():
 def getStudentForms():
     student_id = request.json['student_id']
     form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
-    form_names = []
+    form_data = []
     for id in form_ids:
-        form_names.append(FormsDOM.getFormName(ObjectId(id)))
-    return {'form_ids': form_ids,
-            'form_names': form_names}
+        curr_form = {'form_id' : id,
+                     'form_name' : FormsDOM.getFormName(ObjectId(id)),
+                     'last_updated' : FormsDOM.getLastUpdated(ObjectId(id)),
+                     'last_viewed' : FormsDOM.getLastViewed(ObjectId(id))}
+        form_data.append(curr_form)
+    return {'form_data': form_data}
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():

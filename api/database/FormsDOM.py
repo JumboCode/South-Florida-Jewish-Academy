@@ -86,6 +86,24 @@ def getFormName(id):
     for content in contents:
         return blankFormsDOM.getFormName(ObjectId(content['blank_forms_id']))
 
+def getLastUpdated(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    
+    if len(contents) != 1:
+        return False
+    
+    for content in contents:
+        return content['last_updated']
+
+def getLastViewed(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    
+    if len(contents) != 1:
+        return False
+    
+    for content in contents:
+        return content['last_viewed']
+
 def getBlankForm(id):
     contents = list(mongo.db.forms.find({'_id': id}))
     
