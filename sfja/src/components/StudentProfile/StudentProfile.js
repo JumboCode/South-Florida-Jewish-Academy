@@ -1,11 +1,12 @@
 /* eslint-disable max-len */
 import React from 'react';
-import ProfileEdit from '../Students/ProfileEdit';
+import ProfileEdit from '../StudentProfile/ProfileEdit';
 import TextField from '@material-ui/core/TextField';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import EditIcon from '@material-ui/icons/Edit';
 import Forms from './Forms';
+import DocumentEdit from './DocumentEdit.js'
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
@@ -116,7 +117,7 @@ class StudentProfile extends React.Component {
               </Tabs>
               <div>
                 {currTab === 0 && <Forms forms={forms}/>}
-                {currTab === 1 && <div>documents</div>}
+                {currTab === 1 && <DocumentEdit/>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
               </div>
             </Paper>
