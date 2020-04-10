@@ -94,6 +94,8 @@ class Students extends React.Component {
                     <TableCell className= {tableStyle}>First Name</TableCell>
                     <TableCell align="left" className= {tableStyle}>Last Name
                     </TableCell>
+                    <TableCell align="left" className= {tableStyle}>Grade
+                    </TableCell>
                     <TableCell align="left" className= {tableStyle}>DOB
                     </TableCell>
                     <TableCell align="left" className= {tableStyle}>
@@ -113,6 +115,8 @@ class Students extends React.Component {
                       </TableCell>
                       <TableCell align="left" className= {tableStyle}>
                         {student.last_name}</TableCell>
+                      <TableCell align="left" className= {tableStyle}>
+                        {student.grade}</TableCell>
                       <TableCell align="left" className= {tableStyle}>
                         {student.DOB}</TableCell>
                       <TableCell align="left" className= {tableStyle}>
