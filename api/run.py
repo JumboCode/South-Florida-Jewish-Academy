@@ -100,9 +100,10 @@ def getStudents():
 
 @app.route('/newform', methods = ['POST'])
 def addForm():
-    
+    token = request.json['token']
     byte_data = request.data.decode('utf8').replace("'", '"')
     data = json.loads(byte_data)
+    del data['token'] # workaround for now
     data_json = json.dumps(data, indent=4, sort_keys=True)
     blankFormsDOM.createForm(data_json)
     return '0'
