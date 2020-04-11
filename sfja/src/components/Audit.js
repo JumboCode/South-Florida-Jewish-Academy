@@ -8,14 +8,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 function createData(id, time, action, email) {
-    return { id, time, action, email };
-};
-
-function sortByAction(array) {
-    array.sort((a, b) => (a.action > b.action) ? 1 : -1);
-    return array;
+    return {id, time, action, email};
 };
 
 //hello
@@ -30,7 +26,7 @@ class Audit extends React.Component{
         this.state = {
             users:null,
             data:null,
-            order:'desc',
+            order:'asc',
             sortBy:'id',
         };
     };
@@ -63,13 +59,12 @@ class Audit extends React.Component{
 
     sortBy(feature) {
         const {users, data, order} = this.state;
-        const newData = this.stableSort(data, this.getComparator(order, feature));
+        const newData = this.stableSort(data, this.getComparator(order === "desc" ? "asc" : "desc", feature));
         console.log("new data: ", newData);
         this.setState({
             sortBy: feature,
             data: newData,
             order: order === "desc" ? "asc" : "desc",
-
         });
     };
 
@@ -90,7 +85,7 @@ class Audit extends React.Component{
     }  
 
     render(){
-        const {users, data} = this.state;
+        const {users, data, order, sortBy} = this.state;
         console.log(data);
         if (!users || !data) {
             return(
@@ -109,10 +104,22 @@ class Audit extends React.Component{
                 <Table aria-label="simple table">
                     <TableHead>
                     <TableRow>
-                        <TableCell onClick={e => this.sortBy('id')}>ID</TableCell>
-                        <TableCell align="right" onClick={e => this.sortBy('email')}>Email</TableCell>
-                        <TableCell align="right" onClick={e => this.sortBy('time')}>Time</TableCell>
-                        <TableCell align="right" onClick={e => this.sortBy('action')}>Action</TableCell>
+                        <TableCell>
+                            <TableSortLabel onClick={e => this.sortBy('id')}
+                                active={sortBy === 'id'}
+                                direction={order}/>ID</TableCell>
+                        <TableCell align="right" onClick={e => this.sortBy('email')}>
+                            <TableSortLabel onClick={e => this.sortBy('email')}
+                                active={sortBy === 'email'}
+                                direction={order}/>Email</TableCell>
+                        <TableCell align="right">
+                            <TableSortLabel onClick={e => this.sortBy('time')}
+                                active={sortBy === 'time'}
+                                direction={order}/>Time</TableCell>
+                        <TableCell align="right">
+                            <TableSortLabel onClick={e => this.sortBy('action')}
+                                active={sortBy === 'action'}
+                                direction={order}/>Action</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
