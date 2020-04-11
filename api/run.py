@@ -173,8 +173,9 @@ def getStudentProfile():
         'forms': forms,
         'basic_info': studentsDOM.getBasicInfo(studentID)
     }
-@app.route('/getAllForms', methods=['GET'])
+@app.route('/getAllForms', methods=['POST'])
 def getAllForms():
+    token = request.json['token']
     return { 'forms': blankFormsDOM.getAll()}
 
 @app.route('/getBlankFormDetails', methods=['GET'])
