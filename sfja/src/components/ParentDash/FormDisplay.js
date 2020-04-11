@@ -8,17 +8,22 @@ class FormDisplay extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currForm: this.props.formId,
       blankFormData: '{}',
       formData: '{}',
     };
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
+    this.refreshFormData();
+  }
+
+  refreshFormData(){
     fetch('http://127.0.0.1:5000/getForm', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
-      body: JSON.stringify({form_id: this.props.formId}),
+      body: JSON.stringify({form_id: this.state.currForm}),
     }).then((res) => res.json())
         .then((data) => {
           this.setState({blankFormData: data.blank_form_data,
@@ -31,17 +36,19 @@ class FormDisplay extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {formData} = this.state;
-    const {blankFormData} = this.state;
+    const {currForm, formData, blankFormData} = this.state;
+    this.refreshFormData();
 
     return (
-      <ReactFormGenerator
-        form_action=""
-        form_method="POST"
-        task_id={12}
-        answer_data={formData}
-        data={blankFormData} // Question data
-      />
+      <div>
+        <ReactFormGenerator
+          form_action=""
+          form_method="POST"
+          task_id={12}
+          answer_data={JSON.parse(formData)}
+          data={JSON.parse(blankFormData)} // Question data
+        />
+      </div>
     );
   }
 }

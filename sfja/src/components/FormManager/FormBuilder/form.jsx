@@ -253,13 +253,13 @@ export default class ReactForm extends React.Component {
       data_items = this.props.data.filter((i) => i.alternateForm === true);
     }
 
-    data_items.forEach((item) => {
+    Object.keys(data_items).forEach((item) => {
       if (item.readOnly && item.variableKey && this.props.variables[item.variableKey]) {
         this.answerData[item.field_name] = this.props.variables[item.variableKey];
       }
     });
 
-    const items = data_items.map(item => {
+    const items = Object.keys(data_items).map(item => {
       switch (item.element) {
         case 'TextInput':
         case 'NumberInput':

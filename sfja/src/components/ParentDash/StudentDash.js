@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactFormGenerator from '../FormManager/FormBuilder/form';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -19,11 +20,13 @@ const useStyles = makeStyles({
 class StudentDash extends React.Component {
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
-    console.log('constructor');
     super(props);
     this.state = {
       studentId: this.props.match.params.studentId,
-      form_data: []
+      formData: [],
+      selected: null,
+      blankFormData: null,
+      formFilledData: null,
     };
   }
 
@@ -45,20 +48,40 @@ class StudentDash extends React.Component {
       body: JSON.stringify({student_id: this.state.studentId}),
     }).then((res) => res.json())
         .then((data) => {
-          this.setState({form_data : data.form_data});
+          this.setState({formData : data.form_data});
           console.log(data);
         }).catch(console.log);
   }
 
+  refreshFormData(formId){
+    fetch('http://127.0.0.1:5000/getForm', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      // eslint-disable-next-line react/prop-types
+      body: JSON.stringify({form_id: formId}),
+    }).then((res) => res.json())
+        .then((data) => {
+          this.setState({blankFormData: data.blank_form_data,
+                        formFilledData: data.form_data});
+          console.log(data);
+        }).catch(console.log);
+  }
+
+  isSelected = (formId) => this.state.selected == formId
+
+  handleOnClick = (event, formId) => {
+    this.setState({selected: formId});
+    this.refreshFormData(formId)
+  }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {studentId, form_data} = this.state;
+    const {studentId, formData, selected, formFilledData, blankFormData, showForm} = this.state;
 
     if (studentId !== this.props.match.params.studentId) {
       this.refreshStudentForms();
     }
-
+    console.log(blankFormData)
     return (
       <div>
         <h1>HELLO STUDENT {studentId}</h1>
@@ -66,14 +89,18 @@ class StudentDash extends React.Component {
           <Table className={useStyles.table} aria-label="form table">
           <TableHead>
             <TableRow>
-              <TableCell>Form Name(100g serving)</TableCell>
+              <TableCell>Form Name</TableCell>
               <TableCell align="right">Last Updated</TableCell>
               <TableCell align="right">Last Viewed</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-          {form_data.map((form) => (
-            <TableRow key={form.form_id}>
+          {formData.map((form) => (
+            <TableRow 
+              key={form.form_id}
+              onClick={(event) => this.handleOnClick(event, form.form_id)}
+              selected={this.isSelected(form.form_id)}
+            >
               <TableCell component="th" scope="row">
                 {form.form_name}
               </TableCell>
@@ -84,6 +111,19 @@ class StudentDash extends React.Component {
           </TableBody>
           </Table>
         </TableContainer>
+        {console.log("FORM GENERATOR")} 
+        {console.log(typeof JSON.parse(blankFormData))}
+        {console.log(blankFormData)}
+        {blankFormData !== null      
+          ? <ReactFormGenerator
+              form_action=""
+              form_method="POST"
+              task_id={12}
+              answer_data={JSON.parse(formFilledData)}
+              data={JSON.parse(blankFormData)} // Question data
+            />
+          : <h1>Please select a form.</h1>
+        }
       </div>
     );
   }

@@ -37,7 +37,7 @@ def getInfo(id, key):
 
 # Gets form data.
 def getFormData(id):
-    contents = list(mongo.db.forms.find({'_id': str(id)}))
+    contents = list(mongo.db.forms.find({'_id': id}))
 
     if len(contents) != 1:
         return False
@@ -106,7 +106,7 @@ def getLastViewed(id):
 
 def getBlankForm(id):
     contents = list(mongo.db.forms.find({'_id': id}))
-    
+
     if len(contents) != 1:
         return False
     
