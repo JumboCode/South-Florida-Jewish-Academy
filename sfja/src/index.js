@@ -36,18 +36,10 @@ const routing = (
       <Route exact path="/">
         <Redirect to="/dashboard" />
       </Route>
-<<<<<<< HEAD
-      <Route exact path="/audit" component={Audit} />
-      {/* <Route exact path="/admin" component={Admin} />*/}
-      <Route path="/form/:key" component={Form} />
-      <Route path="/profile/:id" component={Student} />
-      <Route exact path="/header" component={Header} />
-=======
       <Route path={['/parentdash/:parentKey/:studentId', '/parentdash/:parentKey/']} component={ParentHeader} />
       <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
       <Route exact path="/parentdash/:parentKey/:studentId" component={StudentDash}/>
       <Route path="/profile/:id" component={StudentProfile} />
->>>>>>> master
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/students" component={Students} />
       <Route exact path="/upload" component={Upload} />
