@@ -30,9 +30,48 @@ class Audit extends React.Component{
         this.state = {
             users:null,
             data:null,
+            order:'desc',
+            sortBy:'id',
         };
-    }
+    };
+    
+    descendingComparator(a, b, orderBy) {
+        if (b[orderBy] < a[orderBy]) {
+          return -1;
+        }
+        if (b[orderBy] > a[orderBy]) {
+          return 1;
+        }
+        return 0;
+      };
+      
+    getComparator(order, orderBy) {
+        return order === 'desc'
+          ? (a, b) => this.descendingComparator(a, b, orderBy)
+          : (a, b) => -this.descendingComparator(a, b, orderBy);
+      };
+      
+    stableSort(array, comparator) {
+        const stabilizedThis = array.map((el, index) => [el, index]);
+        stabilizedThis.sort((a, b) => {
+          const order = comparator(a[0], b[0]);
+          if (order !== 0) return order;
+          return a[1] - b[1];
+        });
+        return stabilizedThis.map((el) => el[0]);
+    };
 
+    sortBy(feature) {
+        const {users, data, order} = this.state;
+        const newData = this.stableSort(data, this.getComparator(order, feature));
+        console.log("new data: ", newData);
+        this.setState({
+            sortBy: feature,
+            data: newData,
+            order: order === "desc" ? "asc" : "desc",
+
+        });
+    };
 
     componentDidMount() {
         fetch('http://127.0.0.1:8000/users')
@@ -44,12 +83,8 @@ class Audit extends React.Component{
                         function (acc, x) { 
                             x.actions.forEach(
                                 (action) => acc.push(createData(x.user_id, action[0], action[1], x.email))); 
-                                //action[1] may be the action number
                                 return acc;
                             }, [])});
-                        // (acc, x) => x.actions.forEach(
-                        //     action => acc.push(createData(x.user_id, action, x.email))), new Array(0))});
-                console.log(sortByAction(this.props.data));
             })
             .catch(console.log);
     }  
@@ -65,27 +100,24 @@ class Audit extends React.Component{
                 </div>
             );
         }
-
-        {sortByAction(data)}
         
         return(
             <div>
                 <Header currTab='admin'/>
-                { console.log(sortByAction) }
             
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead>
                     <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell align="right">Email</TableCell>
-                        <TableCell align="right">Time</TableCell>
-                        <TableCell align="right">Action</TableCell>
+                        <TableCell onClick={e => this.sortBy('id')}>ID</TableCell>
+                        <TableCell align="right" onClick={e => this.sortBy('email')}>Email</TableCell>
+                        <TableCell align="right" onClick={e => this.sortBy('time')}>Time</TableCell>
+                        <TableCell align="right" onClick={e => this.sortBy('action')}>Action</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
                     {data.map(d => (
-                        <TableRow key={d.id}>
+                        <TableRow key={d['_id']}>
                         <TableCell component="th" scope="row">
                             {d.id}
                         </TableCell>
