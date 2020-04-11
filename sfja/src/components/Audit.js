@@ -8,11 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-
-function createData(id, time, action, email) {
-    return {id, time, action, email};
-};
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 //hello
 class Audit extends React.Component{
@@ -29,6 +25,10 @@ class Audit extends React.Component{
             order:'asc',
             sortBy:'id',
         };
+    };
+
+    createData(id, time, action, email) {
+        return {id, time, action, email};
     };
     
     descendingComparator(a, b, orderBy) {
@@ -77,7 +77,7 @@ class Audit extends React.Component{
                     data.users.reduce(
                         function (acc, x) { 
                             x.actions.forEach(
-                                (action) => acc.push(createData(x.user_id, action[0], action[1], x.email))); 
+                                (action) => acc.push(this.createData(x.user_id, action[0], action[1], x.email))); 
                                 return acc;
                             }, [])});
             })
