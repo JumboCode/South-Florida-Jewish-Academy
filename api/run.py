@@ -84,8 +84,9 @@ def emailParent(parentId):
     # else:
     #     return 'failure', 400
 
-@app.route('/students', methods = ['GET', 'POST'])
+@app.route('/students', methods = ['POST'])
 def getStudents():
+    token = request.json['token']
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
     students = studentsDOM.getStudents()
     forms_completed = 0
