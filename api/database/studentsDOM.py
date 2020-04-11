@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask
 from flask_pymongo import PyMongo
 import os
@@ -9,10 +10,14 @@ mongo = PyMongo(app)
 
 # Creates a new student in the database. Takes pre-made
 # basicInfo and formIds dictionaries.
-def createStudent(id, basicInfo, formIds):
+def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentIds):
     initData = {
-                'student_id': id,
-                'basic_info': basicInfo,
+                'first_name': firstName,
+                'middle_name': middleName,
+                'last_name': lastName,
+                'DOB': DOB,
+                'grade': grade,
+                'parent_ids': parentIds,
                 'form_ids': formIds,
                 }
     result = mongo.db.students.insert_one(initData)
@@ -33,6 +38,21 @@ def getInfo(id, key):
     contents = list(mongo.db.students.find({'student_id': id}))
     for content in contents:
         return content['basic_info'][key]
+
+# Gets basic student info
+def getBasicInfo(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    for content in contents:
+        del content['parent_ids']
+        content['_id'] = str(content['_id'])
+        del content['form_ids']
+        return content
+
+# Gets forms of a student.
+def getForms(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    for content in contents:
+        return content['form_ids']
 
 # Get form id of a student form.
 def getForm(id, formNum):
@@ -64,18 +84,27 @@ def getStudents():
     students = []
     for content in contents:
         info = {
-            'student_id': content['student_id'],
-            'basic_info': {
-                'first_name': content['basic_info']['first_name'],
-                'middle_name': content['basic_info']['middle_name'],
-                'last_name': content['basic_info']['last_name'],
-                'DOB': content['basic_info']['DOB'],
-                'parent_ids': content['basic_info']['parent_ids'],
-                'email': content['basic_info']['email']
-            },
-            'form_ids': content['form_ids']
+            'student_id': str(content['_id']),
+            'first_name': content['first_name'],
+            'middle_name': content['middle_name'],
+            'last_name': content['last_name'],
+            'DOB': content['DOB'].strftime("%m/%d/%Y"),
+            'form_ids': content['form_ids'],
+            'grade': content['grade']
         }
         students.append(info)
 
     return students
 
+def getName(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    return list(map(str, contents[0]['first_name']))
+
+def getAllFormIds(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    for content in contents:
+        return list(map(str, content['form_ids']))

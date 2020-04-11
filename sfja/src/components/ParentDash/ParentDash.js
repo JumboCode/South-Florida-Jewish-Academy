@@ -1,18 +1,15 @@
 import React from 'react';
-import Header from './Header';
-
 
 // eslint-disable-next-line require-jsdoc
-class Email extends React.Component {
+class ParentDash extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     return (
       <div>
-        <Header currTab='email'/>
-                email
+        welcome
       </div>
     );
   }
 }
 
-export default Email;
+export default ParentDash;
