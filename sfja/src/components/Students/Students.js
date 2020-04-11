@@ -109,7 +109,7 @@ class Students extends React.Component {
     const {students, sortBy, order} = this.state;
 
     // eslint-disable-next-line react/prop-types
-    const {updateCurrView, classes, className} = this.props;
+    const {classes, className} = this.props;
     // console.log(classes);
     const tableStyle = clsx(classes.text, className);
     if (!students) {
@@ -123,7 +123,7 @@ class Students extends React.Component {
       <div>
         <div style={studentPageStyle}>
           <div style={filterStyle}>
-            <p onClick={() => updateCurrView('student')}> Filters </p>
+            <p> Filters </p>
           </div>
           <div style={studentInfoStyle}>
             <div style={searchBarStyle}>
