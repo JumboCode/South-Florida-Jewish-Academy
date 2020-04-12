@@ -1,4 +1,5 @@
 {
   "domain": "sfja.auth0.com",
-  "clientId": "ny7Wo2BryPdvBLNIxYmxRYCmHCvfhu4f"
+  "clientId": "9HXnU45l0cn7eY1z02NGoGy5cWbiBxRQ",
+  "audience": "https://api.sfjaadmin.org"
 }
