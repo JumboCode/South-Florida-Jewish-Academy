@@ -192,6 +192,7 @@ def deleteBlankForm():
 
 @app.route('/updateFormName', methods=['POST'])
 def updateFormName():
+    token = request.json['token']
     id = request.json['form_id']
     form_name = request.json['form_name']
     blankFormsDOM.updateFormName(ObjectId(id), form_name)

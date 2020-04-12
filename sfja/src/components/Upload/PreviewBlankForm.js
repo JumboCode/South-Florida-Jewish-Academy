@@ -1,8 +1,9 @@
 import React from 'react';
 import fetch from 'isomorphic-fetch';
 import TextField from '@material-ui/core/TextField';
-import PropTypes from 'prop-types';
+import PropTypes, {instanceOf} from 'prop-types';
 import {Button} from '@material-ui/core';
+import {Cookies, withCookies} from 'react-cookie';
 
 // eslint-disable-next-line require-jsdoc
 class PreviewBlankForm extends React.Component {
@@ -10,6 +11,7 @@ class PreviewBlankForm extends React.Component {
       formsList: PropTypes.any,
       parentData: PropTypes.any,
       setViewForm: PropTypes.func,
+      cookies: instanceOf(Cookies).isRequired,
     };
     // eslint-disable-next-line require-jsdoc
     constructor(props) {
@@ -22,10 +24,12 @@ class PreviewBlankForm extends React.Component {
     updateName() {
       const id = this.props.parentData.id;
       const name = this.state.value;
+      const {cookies} = this.props;
 
       const body = {
         form_id: id,
         form_name: name,
+        token: cookies.get('token'),
       };
       fetch('http://127.0.0.1:5000/updateFormName', {
         method: 'POST',
@@ -57,4 +61,4 @@ class PreviewBlankForm extends React.Component {
       );
     }
 }
-export default PreviewBlankForm;
+export default withCookies(PreviewBlankForm);
