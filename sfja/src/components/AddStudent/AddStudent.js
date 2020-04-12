@@ -3,7 +3,7 @@ import Input from './Input';
 import FormSelector from './FormSelector';
 import {Button, Paper} from '@material-ui/core';
 import {withCookies, Cookies} from 'react-cookie';
-import {instanceOf} from "prop-types";
+import {instanceOf} from 'prop-types';
 // eslint-disable max-len
 
 // eslint-disable-next-line require-jsdoc

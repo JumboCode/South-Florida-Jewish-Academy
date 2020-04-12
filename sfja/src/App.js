@@ -1,6 +1,4 @@
-
-// A function that routes the user to the right place
-// after login
+/* eslint-disable max-len */
 import history from './utils/history';
 import config from './auth_config';
 import {BrowserRouter as Router, Redirect, Route} from 'react-router-dom';
@@ -19,6 +17,8 @@ import {Auth0Provider} from './react-auth0-spa';
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 
+// A function that routes the user to the right place
+// after login
 const onRedirectCallback = (appState) => {
   history.push(
     appState && appState.targetUrl ?
