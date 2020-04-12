@@ -28,6 +28,8 @@ AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
 ALGORITHMS = ["RS256"]
 
+
+# big thanks to https://auth0.com/docs/quickstart/backend/python/01-authorization?download=true
 # Format error response and append status code.
 class AuthError(Exception):
     def __init__(self, error, status_code):
@@ -147,99 +149,13 @@ def requires_auth(f):
     return decorated
 
 
-
-@app.route('/resetDatabase', methods=['GET', 'POST'])
-def resetDatabase():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["reset"])
-    subprocess.call('python3 ../bin/resetDatabase.py', shell=True)
-    return jsonify({'done': True})
-
-@app.route('/', methods = ['GET', 'POST'])
-def HelloWorld():
-    usersDOM.addAction(2, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["home"])
-    listOfNums = []
-    for i in range(0, 10):
-        listOfNums.append(i)
-
-    testDB.getTest()
-    return {'users': testDB.getTest()}
-
-@app.route('/insert', methods = ['GET', 'POST'])
-def makeUsers():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["insert"])
-    testDB.makeUsers()
-    return {'success': True}
-
-@app.route('/checkKey', methods = ['GET', 'POST'])
-def checkKey():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["check_key"])
-    #checkKey only works with json requests, so you can't test it without the front end 
-    print(request.json['key'])
-    result = verifyKey(int(request.json['key']))
-    print(result)
-    if result:
-        return 'success', 200
-    else:
-        return 'denied', 403
-
-    """ retrieve generated key from request parameters
-    check generated key
-    return email iff key exists in database
-    else -> 403 errorr
- """
-
-# accepts ObjectId parentId
-def emailParent(parentId):
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["email"])
-    # mail = SendGrid(app)
-    #generates a unique key
-    generatedKey = generateKey()
-    # succeeded to insert into database
-    parentsDOM.updateKey(parentId, generateKey())
-
-    # #currently only sends the email if a new user could be made
-    # if succeeded:
-    #     email1 = 'anthonytranduc@gmail.com' #to be a given parent email
-    #     mail.send_email(
-    #         from_email='anthonytranduc@gmail.com',
-    #         to_email=[{'email': email1}],
-    #         subject='Subject',
-    #         html='<a href="http://localhost:5000/form/' + str(generatedKey) + '">Forms</a>'
-    #     )
-    #     return 'success', 200
-    # else:
-    #     return 'failure', 400
-
-@app.route('/students', methods = ['GET', 'POST'])
-@requires_auth
-def getStudents():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
-    students = studentsDOM.getStudents()
-    forms_completed = 0
-    for student in students:
-        for form in student['form_ids']:
-            if FormsDOM.isComplete(form):
-                forms_completed += 1
-        student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
-        del student['form_ids']
-    return {'students':students}
+'''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 
 
-@app.route('/newform', methods = ['POST'])
-@requires_auth
-def addForm():
 
-    byte_data = request.data.decode('utf8').replace("'", '"')
-    data = json.loads(byte_data)
-    data_json = json.dumps(data, indent=4, sort_keys=True)
-    blankFormsDOM.createForm(data_json)
-    return '0'
 
-@app.route('/users', methods = ['GET', 'POST'])
-def getUsers():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
-    return {'users': usersDOM.getUsers()}
 
+'''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 
 '''==================== PARENT/STUDENT DASHBOARDS ===================='''
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
@@ -271,11 +187,75 @@ def getForm():
     print(blank_form_data)
     return {'blank_form_data' : blank_form_data,
             'form_data' : form_data}
-  
-@app.route('/forms', methods = ['GET', 'POST'])
-def getForms():
-    # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
-    return {'forms': FormsDOM.getForms()}
+
+@app.route('/checkKey', methods = ['GET', 'POST'])
+def checkKey():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["check_key"])
+    #checkKey only works with json requests, so you can't test it without the front end
+    print(request.json['key'])
+    result = verifyKey(int(request.json['key']))
+    print(result)
+    if result:
+        return 'success', 200
+    else:
+        return 'denied', 403
+
+    """ retrieve generated key from request parameters
+    check generated key
+    return email iff key exists in database
+    else -> 403 errorr
+ """
+
+
+'''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
+
+
+@app.route('/students', methods = ['GET', 'POST'])
+@requires_auth
+def getStudents():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
+    students = studentsDOM.getStudents()
+    forms_completed = 0
+    for student in students:
+        for form in student['form_ids']:
+            if FormsDOM.isComplete(form):
+                forms_completed += 1
+        student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+        del student['form_ids']
+    return {'students':students}
+
+# accepts ObjectId parentId
+def emailParent(parentId):
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["email"])
+    # mail = SendGrid(app)
+    #generates a unique key
+    generatedKey = generateKey()
+    # succeeded to insert into database
+    parentsDOM.updateKey(parentId, generateKey())
+
+    # #currently only sends the email if a new user could be made
+    # if succeeded:
+    #     email1 = 'anthonytranduc@gmail.com' #to be a given parent email
+    #     mail.send_email(
+    #         from_email='anthonytranduc@gmail.com',
+    #         to_email=[{'email': email1}],
+    #         subject='Subject',
+    #         html='<a href="http://localhost:5000/form/' + str(generatedKey) + '">Forms</a>'
+    #     )
+    #     return 'success', 200
+    # else:
+    #     return 'failure', 400
+
+
+'''====================  AUDITING ===================='''
+
+@app.route('/users', methods = ['GET', 'POST'])
+@requires_auth
+def getUsers():
+    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
+    return {'users': usersDOM.getUsers()}
+
+'''====================  STUDENT INFO ===================='''
 
 @app.route('/studentProfile', methods = ['POST'])
 @requires_auth
@@ -301,10 +281,8 @@ def getStudentProfile():
         'basic_info': studentsDOM.getBasicInfo(studentID)
     }
 
-@app.route('/getAllForms', methods=['GET'])
-@requires_auth
-def getAllForms():
-    return { 'forms': blankFormsDOM.getAll()}
+
+'''====================  FORM MANAGEMENT ===================='''
 
 @app.route('/getBlankFormDetails', methods=['GET'])
 @requires_auth
@@ -325,6 +303,23 @@ def updateFormName():
     form_name = request.json['form_name']
     blankFormsDOM.updateFormName(ObjectId(id), form_name)
     return '0'
+
+@app.route('/newform', methods = ['POST'])
+@requires_auth
+def addForm():
+
+    byte_data = request.data.decode('utf8').replace("'", '"')
+    data = json.loads(byte_data)
+    data_json = json.dumps(data, indent=4, sort_keys=True)
+    blankFormsDOM.createForm(data_json)
+    return '0'
+
+'''======================  ADD STUDENT ======================'''
+
+@app.route('/getAllForms', methods=['GET'])
+@requires_auth
+def getAllForms():
+    return { 'forms': blankFormsDOM.getAll()}
 
 @app.route('/addStudent', methods = ['POST'])
 @requires_auth
