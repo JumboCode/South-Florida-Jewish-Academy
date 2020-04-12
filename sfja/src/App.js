@@ -36,6 +36,7 @@ export default function App() {
         client_id={config.clientId}
         redirect_uri={window.location.origin}
         onRedirectCallback={onRedirectCallback}
+        audience={config.audience}
       >
         <Router>
           <div style={{width: '100vw'}}>

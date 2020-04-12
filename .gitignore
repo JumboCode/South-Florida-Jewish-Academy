@@ -6,3 +6,4 @@
 /node_modules/
 api/__pycache__/
 api/database/assets/__pycache__/*
+.env
