@@ -54,15 +54,16 @@ class StudentProfile extends React.Component {
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
     const {cookies} = this.props;
-    console.log(cookies.get('token'));
     const body = {
       id: this.props.match.params.id,
-      token: cookies.get('token'),
     };
 
     fetch('http://127.0.0.1:5000/studentProfile', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
       body: JSON.stringify(body),
     })
         .then((res) => res.json())

@@ -22,14 +22,11 @@ class FormSelector extends React.Component {
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
     const {cookies} = this.props;
-    const body = {
-      token: cookies.get('token'),
-    };
-
     fetch('http://127.0.0.1:5000/getAllForms', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
     }).then((res) => res.json()).then((result) => {
       const newForms = [];
       result.forms.map((currForm) => {

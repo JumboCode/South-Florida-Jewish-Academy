@@ -41,13 +41,11 @@ class Upload extends React.Component {
   // eslint-disable-next-line require-jsdoc
   fetchData() {
     const {cookies} = this.props;
-    const body = {
-      token: cookies.get('token'),
-    };
     fetch('http://localhost:5000/getBlankFormDetails', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
     })
         .then((res) => res.json())
         .then((data) => {
@@ -60,11 +58,13 @@ class Upload extends React.Component {
     const {cookies} = this.props;
     const body = {
       form_id: formid,
-      token: cookies.get('token'),
     };
     fetch('http://127.0.0.1:5000/deleteBlankForm', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Method': 'no-cors'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
     })

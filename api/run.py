@@ -210,9 +210,9 @@ def emailParent(parentId):
     # else:
     #     return 'failure', 400
 
-@app.route('/students', methods = ['POST'])
+@app.route('/students', methods = ['GET', 'POST'])
+@requires_auth
 def getStudents():
-    token = request.json['token']
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
     students = studentsDOM.getStudents()
     forms_completed = 0
@@ -226,11 +226,11 @@ def getStudents():
 
 
 @app.route('/newform', methods = ['POST'])
+@requires_auth
 def addForm():
-    token = request.json['token']
+
     byte_data = request.data.decode('utf8').replace("'", '"')
     data = json.loads(byte_data)
-    del data['token'] # workaround for now
     data_json = json.dumps(data, indent=4, sort_keys=True)
     blankFormsDOM.createForm(data_json)
     return '0'
@@ -277,7 +277,6 @@ def getForms():
     # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
     return {'forms': FormsDOM.getForms()}
 
-
 @app.route('/studentProfile', methods = ['POST'])
 @requires_auth
 def getStudentProfile():
@@ -301,34 +300,35 @@ def getStudentProfile():
         'forms': forms,
         'basic_info': studentsDOM.getBasicInfo(studentID)
     }
-@app.route('/getAllForms', methods=['POST'])
+
+@app.route('/getAllForms', methods=['GET'])
+@requires_auth
 def getAllForms():
-    token = request.json['token']
     return { 'forms': blankFormsDOM.getAll()}
 
-@app.route('/getBlankFormDetails', methods=['POST'])
+@app.route('/getBlankFormDetails', methods=['GET'])
+@requires_auth
 def getBlankFormDetails():
-    token = request.json['token']
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
 @app.route('/deleteBlankForm', methods=['POST'])
+@requires_auth
 def deleteBlankForm():
-    token = request.json['token']
     id = request.json['form_id']
     blankFormsDOM.deleteForm(ObjectId(id))
     return '0'
 
 @app.route('/updateFormName', methods=['POST'])
+@requires_auth
 def updateFormName():
-    token = request.json['token']
     id = request.json['form_id']
     form_name = request.json['form_name']
     blankFormsDOM.updateFormName(ObjectId(id), form_name)
     return '0'
 
 @app.route('/addStudent', methods = ['POST'])
+@requires_auth
 def addStudent():
-    token = request.json['token']
     student = request.json['studentData']
 
     parentIds = []

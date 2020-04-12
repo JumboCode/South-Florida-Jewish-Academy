@@ -12,10 +12,12 @@ const headers = {
 export function post(url, data, token) {
   return fetch(url, {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
     body: JSON.stringify({
       data: data,
-      token: token,
     }),
     // eslint-disable-next-line arrow-parens
   }).then(response => response);

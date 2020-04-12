@@ -29,11 +29,13 @@ class PreviewBlankForm extends React.Component {
       const body = {
         form_id: id,
         form_name: name,
-        token: cookies.get('token'),
       };
       fetch('http://127.0.0.1:5000/updateFormName', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.get('token')}`,
+        },
         body: JSON.stringify(body),
       });
     }

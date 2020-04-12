@@ -56,12 +56,14 @@ class AddStudent extends React.PureComponent {
       studentData: studentData,
       parentData: parentData,
       forms: forms,
-      token: cookies.get('token'),
     };
 
     return fetch('http://127.0.0.1:5000/addStudent', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
     }).then(response => {
