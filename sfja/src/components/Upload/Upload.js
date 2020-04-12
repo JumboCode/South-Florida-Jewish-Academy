@@ -2,7 +2,7 @@
 import React from 'react';
 import FormManager from '../FormManager/FormManager';
 import PreviewBlankForm from './PreviewBlankForm';
-import PropTypes from 'prop-types';
+import PropTypes, {instanceOf} from 'prop-types';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Button} from '@material-ui/core';
+import {Cookies, withCookies} from 'react-cookie';
 
 const textSize = {
   fontSize: '13px',
@@ -21,6 +22,7 @@ const textSize = {
 class Upload extends React.Component {
   static propTypes = {
     formsList: PropTypes.any,
+    cookies: instanceOf(Cookies).isRequired,
   };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
@@ -38,7 +40,15 @@ class Upload extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   fetchData() {
-    fetch('http://localhost:5000/getBlankFormDetails')
+    const {cookies} = this.props;
+    const body = {
+      token: cookies.get('token'),
+    };
+    fetch('http://localhost:5000/getBlankFormDetails', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    })
         .then((res) => res.json())
         .then((data) => {
           this.setState({formsList: data.forms});
@@ -47,8 +57,10 @@ class Upload extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   trashForm(formid) {
+    const {cookies} = this.props;
     const body = {
       form_id: formid,
+      token: cookies.get('token'),
     };
     fetch('http://127.0.0.1:5000/deleteBlankForm', {
       method: 'POST',
@@ -144,4 +156,4 @@ class Upload extends React.Component {
   }
 }
 
-export default Upload;
+export default withCookies(Upload);

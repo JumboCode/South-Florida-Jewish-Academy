@@ -178,12 +178,14 @@ def getAllForms():
     token = request.json['token']
     return { 'forms': blankFormsDOM.getAll()}
 
-@app.route('/getBlankFormDetails', methods=['GET'])
+@app.route('/getBlankFormDetails', methods=['POST'])
 def getBlankFormDetails():
+    token = request.json['token']
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
 @app.route('/deleteBlankForm', methods=['POST'])
 def deleteBlankForm():
+    token = request.json['token']
     id = request.json['form_id']
     blankFormsDOM.deleteForm(ObjectId(id))
     return '0'
