@@ -11,7 +11,7 @@
     "bootstrap-styl": "^5.0.9",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
     "classnames": "^2.2.6",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "minimist": "^1.2.5",
     "node-jquery": "^0.1.0",
     "node-sass": "^4.13.1",
