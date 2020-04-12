@@ -200,6 +200,7 @@ def updateFormName():
 
 @app.route('/addStudent', methods = ['POST'])
 def addStudent():
+    token = request.json['token']
     student = request.json['studentData']
 
     parentIds = []
