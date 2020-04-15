@@ -89,7 +89,8 @@ def getStudents():
             'middle_name': content['middle_name'],
             'last_name': content['last_name'],
             'DOB': content['DOB'].strftime("%m/%d/%Y"),
-            'form_ids': content['form_ids']
+            'form_ids': content['form_ids'],
+            'grade': content['grade']
         }
         students.append(info)
 

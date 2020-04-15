@@ -18,6 +18,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import {withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -40,12 +41,16 @@ class Students extends React.Component {
   static propTypes = {
     students: PropTypes.any,
     classes: PropTypes.any,
+    sortBy: PropTypes.any,
+    order: PropTypes.any,
   };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
     this.state = {
       students: null,
+      sortBy: '',
+      order: 'incr',
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -59,17 +64,58 @@ class Students extends React.Component {
         .catch(console.log);
   }
   // eslint-disable-next-line require-jsdoc
+  descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+  // eslint-disable-next-line require-jsdoc
+  getComparator(order, orderBy) {
+    return order === 'desc' ?
+        (a, b) => this.descendingComparator(a, b, orderBy) :
+        (a, b) => -this.descendingComparator(a, b, orderBy);
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+  // eslint-disable-next-line require-jsdoc
+  sort(whatToSortOn) {
+    const {students, order} = this.state;
+    const newData = this.stableSort(
+        students,
+        this.getComparator(order, whatToSortOn),
+    );
+    this.setState({
+      sortBy: whatToSortOn,
+      students: newData,
+      order: order === 'desc' ? 'asc' : 'desc',
+    });
+  }
+
+  // eslint-disable-next-line require-jsdoc
   render() {
-    const {students} = this.state;
+    const {students, sortBy, order} = this.state;
 
     // eslint-disable-next-line react/prop-types
-    const {updateCurrView, classes, className} = this.props;
+    const {classes, className} = this.props;
     // console.log(classes);
     const tableStyle = clsx(classes.text, className);
     if (!students) {
       return (
         <div>
-          Loading...
+            Loading...
         </div>
       );
     }
@@ -77,7 +123,7 @@ class Students extends React.Component {
       <div>
         <div style={studentPageStyle}>
           <div style={filterStyle}>
-            <p onClick={() => updateCurrView('student')}> Filters </p>
+            <p> Filters </p>
           </div>
           <div style={studentInfoStyle}>
             <div style={searchBarStyle}>
@@ -91,13 +137,39 @@ class Students extends React.Component {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell className= {tableStyle}>First Name</TableCell>
-                    <TableCell align="left" className= {tableStyle}>Last Name
-                    </TableCell>
-                    <TableCell align="left" className= {tableStyle}>DOB
+                    <TableCell className= {tableStyle}>
+                      <TableSortLabel
+                        onClick={(e) => this.sort('first_name')}
+                        active={sortBy === 'first_name'}
+                        direction={order === 'asc' ? 'desc' : 'asc'}
+                      />
+                        First Name
                     </TableCell>
                     <TableCell align="left" className= {tableStyle}>
-                      Completed Forms
+                      <TableSortLabel
+                        onClick={(e) => this.sort('last_name')}
+                        active={sortBy === 'last_name'}
+                        direction={order === 'asc' ? 'desc' : 'asc'}
+                      />
+                        Last Name
+                    </TableCell>
+                    <TableCell align="left" className= {tableStyle}>
+                      <TableSortLabel
+                        onClick={(e) => this.sort('grade')}
+                        active={sortBy === 'grade'}
+                        direction={order === 'asc' ? 'desc' : 'asc'}
+                      />
+                        Grade
+                    </TableCell>
+                    <TableCell align="center" className= {tableStyle}>DOB
+                    </TableCell>
+                    <TableCell align="left" className= {tableStyle}>
+                      <TableSortLabel
+                        onClick={(e) => this.sort('forms_completed')}
+                        active={sortBy === 'forms_completed'}
+                        direction={order === 'asc' ? 'desc' : 'asc'}
+                      />
+                        Completed Forms
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -107,15 +179,17 @@ class Students extends React.Component {
                       <TableCell component="th" scope="row"
                         className={tableStyle}>
                         <NavLink to={'/profile/' + student.student_id}>
-                          <Typography align="left" className={tableStyle}>
+                          <Typography align="center" className={tableStyle}>
                             {student.first_name}</Typography>
                         </NavLink>
                       </TableCell>
-                      <TableCell align="left" className= {tableStyle}>
+                      <TableCell align="center" className= {tableStyle}>
                         {student.last_name}</TableCell>
-                      <TableCell align="left" className= {tableStyle}>
+                      <TableCell align="center" className= {tableStyle}>
+                        {student.grade}</TableCell>
+                      <TableCell align="center" className= {tableStyle}>
                         {student.DOB}</TableCell>
-                      <TableCell align="left" className= {tableStyle}>
+                      <TableCell align="center" className= {tableStyle}>
                         {student.forms_completed}
                       </TableCell>
                     </TableRow>
