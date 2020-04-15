@@ -1,16 +1,15 @@
 import React from 'react';
-import FormManager from './FormManager/FormManager';
 
 // eslint-disable-next-line require-jsdoc
-class Upload extends React.Component {
+class ParentDash extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     return (
       <div>
-        <FormManager/>
+        welcome
       </div>
     );
   }
 }
 
-export default Upload;
+export default ParentDash;

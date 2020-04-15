@@ -1,20 +1,22 @@
+/* eslint-disable max-len */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import {Auth0Provider} from './react-auth0-spa';
 import config from './auth_config.json';
 import history from './utils/history';
-import Form from './Form';
+import ParentHeader from './components/ParentDash/ParentHeader';
+import ParentDash from './components/ParentDash/ParentDash';
+import StudentDash from './components/ParentDash/StudentDash';
 import {Route, BrowserRouter as Router, Redirect} from 'react-router-dom';
 import Header from './components/Header';
-import Student from './components/Students/Student';
+import StudentProfile from './components/StudentProfile/StudentProfile';
 import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
 import AddStudent from './components/AddStudent/AddStudent';
 import LoginPage from './components/LoginPage';
 import Logout from './components/Logout';
-import Upload from './components/Upload';
-
+import Upload from './components/Upload/Upload';
 
 // A function that routes the user to the right place
 // after login
@@ -34,9 +36,10 @@ const routing = (
       <Route exact path="/">
         <Redirect to="/dashboard" />
       </Route>
-      {/* <Route exact path="/admin" component={Admin} />*/}
-      <Route path="/form/:key" component={Form} />
-      <Route path="/profile/:id" component={Student} />
+      <Route path={['/parentdash/:parentKey/:studentId', '/parentdash/:parentKey/']} component={ParentHeader} />
+      <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
+      <Route exact path="/parentdash/:parentKey/:studentId" component={StudentDash}/>
+      <Route path="/profile/:id" component={StudentProfile} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/students" component={Students} />
       <Route exact path="/upload" component={Upload} />
