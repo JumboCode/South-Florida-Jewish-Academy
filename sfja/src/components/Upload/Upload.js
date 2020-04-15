@@ -2,7 +2,7 @@
 import React from 'react';
 import FormManager from '../FormManager/FormManager';
 import PreviewBlankForm from './PreviewBlankForm';
-import PropTypes from 'prop-types';
+import PropTypes, {instanceOf} from 'prop-types';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Button} from '@material-ui/core';
+import {Cookies, withCookies} from 'react-cookie';
 
 const textSize = {
   fontSize: '13px',
@@ -21,6 +22,7 @@ const textSize = {
 class Upload extends React.Component {
   static propTypes = {
     formsList: PropTypes.any,
+    cookies: instanceOf(Cookies).isRequired,
   };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
@@ -29,7 +31,6 @@ class Upload extends React.Component {
       createForm: false,
       currentForm: null,
       formsList: null,
-      somethingDeleted: false,
       viewForm: false,
     };
   }
@@ -39,7 +40,13 @@ class Upload extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   fetchData() {
-    fetch('http://localhost:5000/getBlankFormDetails')
+    const {cookies} = this.props;
+    fetch('http://localhost:5000/getBlankFormDetails', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+    })
         .then((res) => res.json())
         .then((data) => {
           this.setState({formsList: data.forms});
@@ -48,30 +55,35 @@ class Upload extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   trashForm(formid) {
+    const {cookies} = this.props;
     const body = {
       form_id: formid,
     };
-    fetch('http://127.0.0.1:5000/deleteBlankForm/' + formid, {
+    fetch('http://127.0.0.1:5000/deleteBlankForm', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
     })
         .then((res) => res.text())
-        .then((res) => console.log(res));
-    setTimeout( () => {
-      this.setState(() => ({somethingDeleted: true}));
-    }, 300);
-    this.fetchData();
+        .then((res) => console.log(res))
+        .then(() => {
+          this.fetchData();
+        });
   }
 
   // eslint-disable-next-line require-jsdoc
-  setCreateFrom(newCreateFrom) {
-    this.setState({createForm: newCreateFrom});
+  setCreateForm(newCreateForm) {
+    this.fetchData();
+    this.setState({createForm: newCreateForm});
   }
 
   // eslint-disable-next-line require-jsdoc
   setViewForm(newViewForm) {
+    this.fetchData();
     this.setState({viewForm: newViewForm});
   }
 
@@ -99,7 +111,7 @@ class Upload extends React.Component {
     }
     return (
       <div style={{padding: 20}}>
-        {createForm ? <FormManager setCreateForm={this.setCreateFrom.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
+        {createForm ? <FormManager setCreateForm={this.setCreateForm.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
          viewForm ? <PreviewBlankForm parentData={this.state.currentForm} setViewForm={this.setViewForm.bind(this)}/>:
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <div style={{width: '100%', maxWidth: 700}}>
@@ -144,4 +156,4 @@ class Upload extends React.Component {
   }
 }
 
-export default Upload;
+export default withCookies(Upload);
