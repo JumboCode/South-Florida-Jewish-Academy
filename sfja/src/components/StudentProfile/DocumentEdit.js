@@ -1,6 +1,7 @@
 import React from 'react'
 import Moment from 'moment'
-
+import Upload from'./Upload.js'
+import SimpleReactFileUpload from './SimpleReactFileUpload.js'
 import FileBrowser, {Icons} from 'react-keyed-file-browser'
 
 class DocumentEdit extends React.Component {
@@ -145,20 +146,23 @@ class DocumentEdit extends React.Component {
   }
 
   render() {
+      
     return (
-      <FileBrowser
-        files={this.state.files}
-        icons={Icons.FontAwesome(4)}
+      // <FileBrowser
+      //   files={this.state.files}
+      //   icons={Icons.FontAwesome(4)}
 
-        onCreateFolder={this.handleCreateFolder}
-        onCreateFiles={this.handleCreateFiles}
-        onMoveFolder={this.handleRenameFolder}
-        onMoveFile={this.handleRenameFile}
-        onRenameFolder={this.handleRenameFolder}
-        onRenameFile={this.handleRenameFile}
-        onDeleteFolder={this.handleDeleteFolder}
-        onDeleteFile={this.handleDeleteFile}
-      />
+      //   onCreateFolder={this.handleCreateFolder}
+      //   onCreateFiles={this.handleCreateFiles}
+      //   onMoveFolder={this.handleRenameFolder}
+      //   onMoveFile={this.handleRenameFile}
+      //   onRenameFolder={this.handleRenameFolder}
+      //   onRenameFile={this.handleRenameFile}
+      //   onDeleteFolder={this.handleDeleteFolder}
+      //   onDeleteFile={this.handleDeleteFile}
+      // />
+      // <Upload/>
+      <SimpleReactFileUpload/>
     )
   }
 }
