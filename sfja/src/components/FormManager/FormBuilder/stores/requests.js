@@ -9,12 +9,16 @@ const headers = {
 };
 
 // eslint-disable-next-line require-jsdoc
-export function post(url, data) {
+export function post(url, data, token) {
   return fetch(url, {
     method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({data: data}),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      data: data,
+    }),
     // eslint-disable-next-line arrow-parens
   }).then(response => response);
 }
