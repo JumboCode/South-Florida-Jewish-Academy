@@ -112,15 +112,14 @@ class StudentDash extends React.Component {
           </Table>
         </TableContainer>
         {console.log("FORM GENERATOR")} 
-        {console.log(typeof JSON.parse(blankFormData))}
-        {console.log(blankFormData)}
+        {console.log(typeof blankFormData)}
         {blankFormData !== null      
           ? <ReactFormGenerator
               form_action=""
               form_method="POST"
               task_id={12}
-              answer_data={JSON.parse(formFilledData)}
-              data={JSON.parse(blankFormData)} // Question data
+              answer_data={formFilledData}
+              data={blankFormData} // Question data
             />
           : <h1>Please select a form.</h1>
         }

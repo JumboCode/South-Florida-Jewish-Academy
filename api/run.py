@@ -313,11 +313,11 @@ def updateFormName():
 @app.route('/newform', methods = ['POST'])
 @requires_auth
 def addForm():
-
-    byte_data = request.data.decode('utf8').replace("'", '"')
-    data = json.loads(byte_data)
-    data_json = json.dumps(data, indent=4, sort_keys=True)
-    blankFormsDOM.createForm(data_json)
+    # byte_data = request.data.decode('utf8').replace("'", '"')
+    # data = json.loads(byte_data)
+    # data_json = json.dumps(data, indent=4, sort_keys=True)
+    data = request.json['data']
+    blankFormsDOM.createForm(data)
     return '0'
 
 '''======================  ADD STUDENT ======================'''
@@ -347,7 +347,7 @@ def addStudent():
         for parentId in parentIds:
             id = form['id']
             # createForm(id, date, required, comp, data, parentID):
-            currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, None, parentId)
+            currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, [], parentId)
             formIds.append(currID)
 
 
