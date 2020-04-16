@@ -60,7 +60,6 @@ class SuccessMessage extends React.Component {
     }
     return (
       <div>
-        SUCCESS
         {/* eslint-disable-next-line react/prop-types,max-len */}
         <Snackbar open={true} autoHideDuration={6000} onClose={this.handleClose}>
           <MuiAlert
