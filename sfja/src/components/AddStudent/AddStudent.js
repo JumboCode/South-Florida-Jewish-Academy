@@ -7,7 +7,6 @@ import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 // eslint-disable max-len
 
-
 // eslint-disable-next-line require-jsdoc
 class AddStudent extends React.PureComponent {
   static propTypes = {
