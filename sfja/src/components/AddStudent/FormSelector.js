@@ -2,6 +2,7 @@ import React from 'react';
 import {List, ListItem, ListItemIcon, Checkbox} from '@material-ui/core';
 import {instanceOf, PropTypes} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class FormSelector extends React.Component {
@@ -22,7 +23,7 @@ class FormSelector extends React.Component {
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
     const {cookies} = this.props;
-    fetch('http://127.0.0.1:5000/getAllForms', {
+    fetch(apiUrl() + '/getAllForms', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${cookies.get('token')}`,

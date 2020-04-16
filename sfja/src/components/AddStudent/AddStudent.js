@@ -4,6 +4,7 @@ import FormSelector from './FormSelector';
 import {Button, Paper} from '@material-ui/core';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
+import apiUrl from '../../utils/Env';
 // eslint-disable max-len
 
 // eslint-disable-next-line require-jsdoc
@@ -58,7 +59,7 @@ class AddStudent extends React.PureComponent {
       forms: forms,
     };
 
-    return fetch('http://127.0.0.1:5000/addStudent', {
+    return fetch(apiUrl() + '/addStudent', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

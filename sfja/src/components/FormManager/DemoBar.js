@@ -3,6 +3,7 @@ import store from './FormBuilder/stores/store';
 import {post} from './FormBuilder/stores/requests';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class Demobar extends React.Component {
@@ -35,7 +36,7 @@ class Demobar extends React.Component {
   // eslint-disable-next-line require-jsdoc
   _onSubmit(data) {
     const {cookies} = this.props;
-    post('http://127.0.0.1:5000/newform', data, cookies.get('token'));
+    post(apiUrl() + '/newform', data, cookies.get('token'));
     // Place code to post json data to server here
   }
 

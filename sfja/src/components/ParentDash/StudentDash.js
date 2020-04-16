@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Select, InputLabel, MenuItem} from '@material-ui/core';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class StudentDash extends React.Component {
@@ -29,7 +30,7 @@ class StudentDash extends React.Component {
 
     // eslint-disable-next-line require-jsdoc
     refreshStudentForms() {
-      fetch('http://127.0.0.1:5000/getStudentForms', {
+      fetch(apiUrl() + '/getStudentForms', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({student_id: this.state.studentId}),

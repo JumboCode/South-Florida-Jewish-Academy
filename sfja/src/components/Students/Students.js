@@ -23,7 +23,7 @@ import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
-
+import apiUrl from '../../utils/Env';
 
 const useStyles = {
   text: {
@@ -57,7 +57,7 @@ class Students extends React.Component {
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
     const {cookies} = this.props;
-    fetch('http://127.0.0.1:5000/students', {
+    fetch(apiUrl() + '/students', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${cookies.get('token')}`,

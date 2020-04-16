@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactFormGenerator from '../FormManager/FormBuilder/form';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class FormDisplay extends React.Component {
@@ -14,7 +15,7 @@ class FormDisplay extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    fetch('http://127.0.0.1:5000/getForm', {
+    fetch(apiUrl() + '/getForm', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
