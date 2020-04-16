@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
-import BlankFormBuilder from '../FormManager/BlankFormBuilder';
+import BlankFormBuilder from './BlankFormBuilder/BlankFormBuilder';
 import PreviewBlankForm from './PreviewBlankForm';
 import PropTypes, {instanceOf} from 'prop-types';
 
@@ -26,7 +26,7 @@ const textSize = {
 };
 
 // eslint-disable-next-line require-jsdoc
-class Upload extends React.Component {
+class FormManager extends React.Component {
   static propTypes = {
     formsList: PropTypes.any,
     cookies: instanceOf(Cookies).isRequired,
@@ -175,7 +175,7 @@ class Upload extends React.Component {
         >
           <DialogTitle style={{fontSize: 10}} id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
           <DialogContent>
-            <DialogContentText style={{fontSize: 20, textAlign: 'left'}} id="alert-dialog-description">
+            <DialogContentText style={{fontSize: 15, textAlign: 'left'}} id="alert-dialog-description">
               Are you sure you want to delete this form? Deleting forms in existence will cause serious bugs.
             </DialogContentText>
           </DialogContent>
@@ -183,7 +183,7 @@ class Upload extends React.Component {
             <Button onClick={() => {
               this.setState({showWarning: false});
             }}
-            color='primary'
+            color='#0068af'
             variant='contained'
             style={{fontSize: 12}}
             >
@@ -192,7 +192,7 @@ class Upload extends React.Component {
             <Button onClick={() => {
               this.setState({showWarning: false});
               this.trashForm();
-            }} color="primary"
+            }} color='#0068af'
             autoFocus
             variant='contained'
             style={{fontSize: 12}}>
@@ -205,4 +205,4 @@ class Upload extends React.Component {
   }
 }
 
-export default withCookies(Upload);
+export default withCookies(FormManager);

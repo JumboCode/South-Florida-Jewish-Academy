@@ -1,6 +1,6 @@
 import React from 'react';
 import DemoBar from './DemoBar';
-import FormBuilder from './FormBuilder/index';
+import FormBuilder from './FormBuilder';
 import {Button} from '@material-ui/core';
 import PropTyes from 'prop-types';
 
