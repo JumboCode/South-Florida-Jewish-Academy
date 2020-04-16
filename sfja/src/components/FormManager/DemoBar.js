@@ -4,6 +4,7 @@ import {post} from './FormBuilder/stores/requests';
 import {instanceOf} from 'prop-types';
 import {Button, TextField} from '@material-ui/core';
 import {Cookies, withCookies} from 'react-cookie';
+import PropTypes from 'prop-types';
 
 // eslint-disable-next-line require-jsdoc
 class Demobar extends React.Component {
