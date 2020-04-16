@@ -9,7 +9,7 @@ const headers = {
 };
 
 // eslint-disable-next-line require-jsdoc
-export function post(url, data, token) {
+export function post(url, data, token, formName) {
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -18,6 +18,7 @@ export function post(url, data, token) {
     },
     body: JSON.stringify({
       data: data,
+      formName: formName,
     }),
     // eslint-disable-next-line arrow-parens
   }).then(response => response);

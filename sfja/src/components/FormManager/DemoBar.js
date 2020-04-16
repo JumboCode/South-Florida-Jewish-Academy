@@ -2,12 +2,14 @@ import React from 'react';
 import store from './FormBuilder/stores/store';
 import {post} from './FormBuilder/stores/requests';
 import {instanceOf} from 'prop-types';
+import {Button, TextField} from '@material-ui/core';
 import {Cookies, withCookies} from 'react-cookie';
 
 // eslint-disable-next-line require-jsdoc
 class Demobar extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired,
+    setOpenSuccessSnackBar: PropTypes.any,
   };
 
   // eslint-disable-next-line require-jsdoc
@@ -15,6 +17,8 @@ class Demobar extends React.Component {
     super(props);
     this.state = {
       data: [],
+      formName: '',
+      showSuccess: false,
     };
 
     const update = this._onChange.bind(this);
@@ -33,20 +37,29 @@ class Demobar extends React.Component {
 
   // eslint-disable-next-line no-unused-vars
   // eslint-disable-next-line require-jsdoc
-  _onSubmit(data) {
-    const {cookies} = this.props;
-    post('http://127.0.0.1:5000/newform', data, cookies.get('token'));
+  _onSubmit(data, formName) {
+    const {cookies, setOpenSuccessSnackBar} = this.props;
+    post('http://127.0.0.1:5000/newform', data, cookies.get('token'), formName);
+    this.setState({formName: '', data: []});
+    setOpenSuccessSnackBar(true);
     // Place code to post json data to server here
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
+    const {formName, data} = this.state;
     return (
       <div className="clearfix" style={{margin: '10px', width: '70%'}}>
-        <h4 className="pull-left">Preview</h4>
-        <button className="btn btn-primary pull-right" style={{marginRight:
-          // eslint-disable-next-line max-len
-          '10px'}} onClick={() => this._onSubmit(this.state.data)}>Submit Form</button>
+        {/* eslint-disable-next-line max-len */}
+        <TextField error={formName === ''} onChange={(ev) => this.setState({formName: ev.target.value})} value={formName} variant='outlined' id="standard-basic" label="Form Name" required={true}/>
+        <Button className="btn btn-primary pull-right"
+          style={{marginRight: '10px', marginTop: 10}}
+          variant='contained'
+          onClick={() => this._onSubmit(this.state.data, formName)}
+          disabled={formName === '' || data.length === 0}
+        >
+          Add Form
+        </Button>
       </div>
     );
   }
