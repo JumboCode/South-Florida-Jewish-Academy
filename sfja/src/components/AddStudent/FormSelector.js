@@ -67,6 +67,7 @@ class FormSelector extends React.Component {
     }
   }
 
+  // eslint-disable-next-line require-jsdoc
   showErrorMessage() {
     if (this.state.forms.every((form) => !form.checked)) {
       return (
@@ -78,7 +79,7 @@ class FormSelector extends React.Component {
         <div style={{fontSize: 10, paddingTop: 5}}>
           <br/>
         </div>
-      )
+      );
     }
   }
 
