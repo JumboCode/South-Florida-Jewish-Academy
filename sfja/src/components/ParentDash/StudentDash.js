@@ -74,6 +74,16 @@ class StudentDash extends React.Component {
     this.refreshFormData(formId)
   }
 
+  handleSubmit(formId, answerData){
+    fetch('http://127.0.0.1:5000/submitForm', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      // eslint-disable-next-line react/prop-types
+      body: JSON.stringify({form_id: formId,
+                            answer_data: answerData}),
+    }).then(response => response);
+  }
+
   // eslint-disable-next-line require-jsdoc
   render() {
     const {studentId, formData, selected, formFilledData, blankFormData, showForm} = this.state;
@@ -115,11 +125,13 @@ class StudentDash extends React.Component {
         {console.log(typeof blankFormData)}
         {blankFormData !== null      
           ? <ReactFormGenerator
+              onSubmit={this.handleSubmit}
               form_action=""
               form_method="POST"
               task_id={12}
               answer_data={formFilledData}
               data={blankFormData} // Question data
+              form_id={selected}
             />
           : <h1>Please select a form.</h1>
         }

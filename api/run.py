@@ -212,6 +212,16 @@ def checkKey():
     else -> 403 errorr
  """
 
+@app.route('/submitForm', methods = ['POST'])
+def submitForm():
+    form_id = request.json['form_id']
+    answer_data = request.json['answer_data']
+    FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
+
+
+
+
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 

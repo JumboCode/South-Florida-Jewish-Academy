@@ -54,8 +54,8 @@ def getForm(id):
         return content
 
 # Updates form data.
-def updateFormData(id, ques, ans):
-    writeR = dict(mongo.db.forms.update({'form_id': str(id)}, {'$set': {'form_data.' + str(ques): ans}}))
+def updateFormData(id, data):
+    writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'form_data': data}}))
     return writeR['nModified'] > 0
 
 
