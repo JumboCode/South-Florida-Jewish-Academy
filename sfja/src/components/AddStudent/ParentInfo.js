@@ -1,7 +1,11 @@
 import React from 'react';
 import {TextField} from '@material-ui/core';
 
-const textSize = {style: {fontSize: 15}};
+const textInputProps = {
+  style: {fontSize: 15},
+  autocomplete: 'new-password',
+};
+
 const textWidth = {
   padding: 10,
   marginTop: 10,

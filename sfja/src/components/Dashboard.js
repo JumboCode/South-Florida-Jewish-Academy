@@ -1,16 +1,27 @@
 import React from 'react';
+import {useAuth0} from '../react-auth0-spa';
 
+
+const welcomeStyle = {
+  fontSize: 30,
+  fontFamily: 'Futura',
+  color: 'SteelBlue',
+};
+
+const wrapperStyle = {
+  margin: 20,
+};
 
 // eslint-disable-next-line require-jsdoc
-class Dashboard extends React.Component {
-  // eslint-disable-next-line require-jsdoc
-  render() {
-    return (
-      <div>
-        dashboard
-      </div>
-    );
-  }
-}
+export default function Dashboard() {
+  const {user} = useAuth0();
 
-export default Dashboard;
+  return (
+    <div style={wrapperStyle}>
+      <div style={welcomeStyle}>
+        Welcome, {user ? user.nickname : null}
+      </div>
+    </div>
+
+  );
+}

@@ -9,7 +9,14 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import PropTypes from 'prop-types';
 
-const textSize = {style: {fontSize: 15}};
+const textInputProps = {
+  style: {fontSize: 15},
+  autocomplete: 'new-password',
+  form: {
+    autocomplete: 'off',
+  },
+};
+
 const textWidth = {
   padding: 10,
   marginBottom: 10,
