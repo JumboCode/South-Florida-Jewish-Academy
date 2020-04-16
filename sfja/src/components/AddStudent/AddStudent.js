@@ -3,11 +3,17 @@ import Input from './Input';
 import FormSelector from './FormSelector';
 import {Button, Paper} from '@material-ui/core';
 import SuccessMessage from './SuccessMessage';
+import {withCookies, Cookies} from 'react-cookie';
+import {instanceOf} from 'prop-types';
 // eslint-disable max-len
 
 
 // eslint-disable-next-line require-jsdoc
 class AddStudent extends React.PureComponent {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired,
+  };
+
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -37,6 +43,7 @@ class AddStudent extends React.PureComponent {
 
   // eslint-disable-next-line require-jsdoc
   submit() {
+    const {cookies} = this.props;
     const {inputData, formData} = this.state;
     const studentData = {
       firstName: inputData.firstNameStudent,
@@ -57,7 +64,10 @@ class AddStudent extends React.PureComponent {
 
     return fetch('http://127.0.0.1:5000/addStudent', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
     }).then(response => {
@@ -143,5 +153,4 @@ class AddStudent extends React.PureComponent {
   }
 }
 
-
-export default AddStudent;
+export default withCookies(AddStudent);

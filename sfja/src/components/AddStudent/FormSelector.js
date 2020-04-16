@@ -1,9 +1,15 @@
 import React from 'react';
 import {List, ListItem, ListItemIcon, Checkbox} from '@material-ui/core';
-import PropTypes from 'prop-types';
+import {instanceOf, PropTypes} from 'prop-types';
+import {withCookies, Cookies} from 'react-cookie';
 
 // eslint-disable-next-line require-jsdoc
 class FormSelector extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired,
+    submitTime: PropTypes.any,
+  };
+
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -15,7 +21,13 @@ class FormSelector extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    fetch('http://127.0.0.1:5000/getAllForms').then((res) => res.json()).then((result) => {
+    const {cookies} = this.props;
+    fetch('http://127.0.0.1:5000/getAllForms', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+    }).then((res) => res.json()).then((result) => {
       const newForms = [];
       result.forms.map((currForm) => {
         newForms.push(
@@ -138,8 +150,4 @@ class FormSelector extends React.Component {
   }
 }
 
-FormSelector.propTypes = {
-  submitTime: PropTypes.any,
-};
-
-export default FormSelector;
+export default withCookies(FormSelector);
