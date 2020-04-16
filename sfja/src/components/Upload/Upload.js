@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
-import FormManager from '../FormManager/FormManager';
+import BlankFormBuilder from '../FormManager/BlankFormBuilder';
 import PreviewBlankForm from './PreviewBlankForm';
 import PropTypes, {instanceOf} from 'prop-types';
 
@@ -121,7 +121,7 @@ class Upload extends React.Component {
     }
     return (
       <div style={{padding: 20}}>
-        {createForm ? <FormManager setCreateForm={this.setCreateForm.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
+        {createForm ? <BlankFormBuilder setCreateForm={this.setCreateForm.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
          viewForm ? <PreviewBlankForm parentData={this.state.currentForm} setViewForm={this.setViewForm.bind(this)}/>:
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <div style={{width: '100%', maxWidth: 700}}>

@@ -9,7 +9,7 @@ import './css/font-awesome.min.css';
 require('./scss/application.scss');
 
 // eslint-disable-next-line require-jsdoc
-class FormManager extends React.Component {
+class BlankFormBuilder extends React.Component {
   // eslint-disable-next-line require-jsdoc
   static propTypes = {
     setCreateForm: PropTyes.func,
@@ -35,4 +35,4 @@ class FormManager extends React.Component {
 }
 
 
-export default FormManager;
+export default BlankFormBuilder;
