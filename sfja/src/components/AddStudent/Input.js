@@ -9,7 +9,14 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import PropTypes from 'prop-types';
 
-const textSize = {style: {fontSize: 15}};
+const textInputProps = {
+  style: {fontSize: 15},
+  autocomplete: 'new-password',
+  form: {
+    autocomplete: 'off',
+  },
+};
+
 const textWidth = {
   padding: 10,
   marginBottom: 10,
@@ -134,18 +141,18 @@ class Input extends React.Component {
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
-          <TextField onChange={(ev) => this.setState({firstNameStudent: ev.target.value})} value={firstNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}/>
+          <TextField onChange={(ev) => this.setState({firstNameStudent: ev.target.value})} value={firstNameStudent} style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="First Name" required={true}/>
           {/* eslint-disable-next-line max-len */}
-          <TextField onChange={(ev) => this.setState({middleNameStudent: ev.target.value})} value={middleNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Middle Name" required={true}/>
+          <TextField onChange={(ev) => this.setState({middleNameStudent: ev.target.value})} value={middleNameStudent} style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="Middle Name" required={true}/>
           {/* eslint-disable-next-line max-len */}
-          <TextField onChange={(ev) => this.setState({lastNameStudent: ev.target.value})} value={lastNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}/>
+          <TextField onChange={(ev) => this.setState({lastNameStudent: ev.target.value})} value={lastNameStudent} style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="Last Name" required={true}/>
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
-          <TextField onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
+          <TextField onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="Grade" required={true}/>
           <MuiPickersUtilsProvider utils={DateFnsUtils} >
             <KeyboardDatePicker
-              inputProps={textSize}
+              inputProps={textInputProps}
               style={{marginLeft: 10, width: 175}}
               disableToolbar
               variant="inline"

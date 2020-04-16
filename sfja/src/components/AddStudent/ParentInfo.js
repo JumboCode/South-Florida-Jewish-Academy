@@ -1,7 +1,11 @@
 import React from 'react';
 import {TextField} from '@material-ui/core';
 
-const textSize = {style: {fontSize: 15}};
+const textInputProps = {
+  style: {fontSize: 15},
+  autocomplete: 'new-password',
+};
+
 const textWidth = {
   padding: 10,
   marginTop: 10,
@@ -20,21 +24,21 @@ class ParentInfo extends React.Component {
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}
+          <TextField style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="First Name" required={true}
             onChange={(e) => {
               addParentData(num, e.target.value, email, lastName);
             }}
             value={firstName ? firstName : ''}
           />
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}
+          <TextField style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="Last Name" required={true}
             onChange={(e) => {
               addParentData(num, firstName, email, e.target.value);
             }}
             value={lastName ? lastName : ''}
           />
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Email" required={true}
+          <TextField style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="Email" required={true}
             onChange={(e) => {
               addParentData(num, firstName, e.target.value, lastName);
             }}
