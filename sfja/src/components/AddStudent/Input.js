@@ -9,7 +9,7 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import PropTypes from 'prop-types';
 
-const textInputProps = {
+const textSize = {
   style: {fontSize: 15},
   autocomplete: 'new-password',
   form: {
@@ -146,7 +146,7 @@ class Input extends React.Component {
           {/* eslint-disable-next-line max-len */}
           <TextField error={firstNameStudent === ''} onChange={(ev) => this.setState({firstNameStudent: ev.target.value})} value={firstNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}/>
           {/* eslint-disable-next-line max-len */}
-          <TextField error={false} onChange={(ev) => this.setState({middleNameStudent: ev.target.value})} value={middleNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Middle Name" required={true}/>
+          <TextField error={false} onChange={(ev) => this.setState({middleNameStudent: ev.target.value})} value={middleNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Middle Name" required={false}/>
           {/* eslint-disable-next-line max-len */}
           <TextField error={lastNameStudent === ''} onChange={(ev) => this.setState({lastNameStudent: ev.target.value})} value={lastNameStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}/>
         </div>
@@ -156,6 +156,7 @@ class Input extends React.Component {
           <MuiPickersUtilsProvider utils={DateFnsUtils} >
             <KeyboardDatePicker
               error={dob === null}
+              required={true}
               inputProps={textSize}
               style={{marginLeft: 10, width: 175}}
               disableToolbar

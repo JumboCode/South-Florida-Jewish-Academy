@@ -47,7 +47,7 @@ class SuccessMessage extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {oldOpen} = this.state;
+    const {oldOpen, open} = this.state;
     const {successParents} = this.props;
     if (successParents.length === 0) {
       return (<div/>);
@@ -61,7 +61,7 @@ class SuccessMessage extends React.Component {
     return (
       <div>
         {/* eslint-disable-next-line react/prop-types,max-len */}
-        <Snackbar open={true} autoHideDuration={6000} onClose={this.handleClose}>
+        <Snackbar open={open} autoHideDuration={6000} onClose={this.handleClose}>
           <MuiAlert
             elevation={6}
             variant="filled"
