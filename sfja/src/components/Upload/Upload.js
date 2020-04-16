@@ -11,7 +11,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import {Button} from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@material-ui/core';
 import {Cookies, withCookies} from 'react-cookie';
 
 const textSize = {
@@ -32,6 +39,8 @@ class Upload extends React.Component {
       currentForm: null,
       formsList: null,
       viewForm: false,
+      showWarning: false,
+      formToTrash: null,
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -54,10 +63,11 @@ class Upload extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  trashForm(formid) {
+  trashForm() {
+    const {formToTrash} = this.state;
     const {cookies} = this.props;
     const body = {
-      form_id: formid,
+      form_id: formToTrash,
     };
     fetch('http://127.0.0.1:5000/deleteBlankForm', {
       method: 'POST',
@@ -89,7 +99,7 @@ class Upload extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {createForm, viewForm, formsList} = this.state;
+    const {createForm, viewForm, formsList, showWarning} = this.state;
 
     if (formsList === null) {
       return (
@@ -139,8 +149,12 @@ class Upload extends React.Component {
                             {row.name}
                           </TableCell>
                           <TableCell style={textSize} align="right">{row.date}</TableCell>
-                          <TableCell style={textSize} align="right"> <Button onClick={() =>
-                            this.trashForm(row.id)}>Delete</Button>
+                          <TableCell style={textSize} align="right">
+                            <Button onClick={
+                              () => {
+                                this.setState({formToTrash: row.id, showWarning: true});
+                              }
+                            }>Delete</Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -151,6 +165,41 @@ class Upload extends React.Component {
             </div>
           </div>
         }
+        <Dialog
+          open={showWarning}
+          onClose={() => {
+            this.setState({showWarning: false});
+          }}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle style={{fontSize: 10}} id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText style={{fontSize: 20, textAlign: 'left'}} id="alert-dialog-description">
+              Are you sure you want to delete this form? Deleting forms in existence will cause serious bugs.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => {
+              this.setState({showWarning: false});
+            }}
+            color='primary'
+            variant='contained'
+            style={{fontSize: 12}}
+            >
+              Cancel
+            </Button>
+            <Button onClick={() => {
+              this.setState({showWarning: false});
+              this.trashForm();
+            }} color="primary"
+            autoFocus
+            variant='contained'
+            style={{fontSize: 12}}>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
