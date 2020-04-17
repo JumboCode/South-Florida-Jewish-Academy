@@ -271,6 +271,7 @@ def getStudentProfile():
         curr_form_data['form_name'] = str(formName)
         curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
         curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
+        curr_form_data['last_updated'] = curr_form_data_raw['last_updated']
         parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data_raw['parent_id']))
         curr_form_data['p_first_name'] = parent_data['first_name']
         curr_form_data['p_last_name'] = parent_data['last_name']
