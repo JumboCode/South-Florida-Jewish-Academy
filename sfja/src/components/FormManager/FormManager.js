@@ -20,6 +20,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 import {Cookies, withCookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 const textSize = {
   fontSize: '13px',
@@ -50,7 +51,7 @@ class FormManager extends React.Component {
   // eslint-disable-next-line require-jsdoc
   fetchData() {
     const {cookies} = this.props;
-    fetch('http://localhost:5000/getBlankFormDetails', {
+    fetch(apiUrl() + '/getBlankFormDetails', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${cookies.get('token')}`,
@@ -69,7 +70,7 @@ class FormManager extends React.Component {
     const body = {
       form_id: formToTrash,
     };
-    fetch('http://127.0.0.1:5000/deleteBlankForm', {
+    fetch(apiUrl() + '/deleteBlankForm', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
