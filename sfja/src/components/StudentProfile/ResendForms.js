@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
 import Proptypes, {instanceOf} from 'prop-types';
-import apiUrl from '../../utils/Env';
 import {Cookies, withCookies} from 'react-cookie';
 import {Button, Checkbox, List, ListItem, ListItemIcon, Paper} from '@material-ui/core';
 import CommentIcon from '@material-ui/icons/Comment';
@@ -18,77 +17,50 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 class ResendForms extends React.Component {
   static propTypes = {
     studentId: Proptypes.string,
+    blankForms: Proptypes.array,
+    studentForms: Proptypes.array,
     cookies: instanceOf(Cookies).isRequired,
   };
 
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
+    const {studentForms, blankForms} = this.props;
+    const processedStudentForms = this.processStudentForms(studentForms);
+    const processedBlankForms = this.processBlankForms(blankForms);
+    const displayFormData = this.processDisplayFormData(processedStudentForms, processedBlankForms)
     this.state = {
       studentId: props.studentId,
-      allBlankForms: [],
-      studentBlankForms: [],
-      forms: [],
+      studentForms: processedStudentForms,
+      blankForms: processedBlankForms,
+      forms: displayFormData,
       openDialog: false,
       dialogId: 0,
     };
   }
 
-
-  // maybe do one call later? Depends. Don't know what we would rather yet.
   // eslint-disable-next-line require-jsdoc
-  componentDidMount() {
-    const {studentId} = this.state;
-    const {cookies} = this.props;
-    const body = {
-      id: studentId,
-    };
+  processDisplayFormData(studentForms, blankForms) {
+    const studentFormIds = studentForms.map((form) => (form.id));
+    return blankForms.map((form) => ({
+      id: form.id,
+      name: form.name,
+      checked: studentFormIds.includes(form.id),
+    }));
+  }
+  // eslint-disable-next-line require-jsdoc
+  processStudentForms(forms) {
+    return forms.map((form) => ({
+      id: form.blank_forms_id,
+    }));
+  }
 
-    fetch(apiUrl() + '/studentProfileBlankForms', {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
-      },
-    }).then((response) => response.json())
-        .then((data) => {
-          this.setState({
-            studentBlankForms: data.forms.map((currForm) => ({
-              id: currForm.blankFormId,
-              name: currForm.blankFormName,
-            })),
-          });
-        }).then(() => {
-          fetch(apiUrl() + '/getAllForms', {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${cookies.get('token')}`,
-            },
-          }).then((res) => res.json())
-              .then((result) => {
-                const {studentBlankForms} = this.state;
-                const allBlankForms = result.forms.map((currForm) => (
-                  {
-                    id: currForm.id,
-                    name: currForm.name,
-                  }
-                ));
-                // eslint-disable-next-line max-len
-                const studentBlankFormsIds = studentBlankForms.map((currForm) => currForm.id);
-                const currBlankForms = allBlankForms.map((currForm) => (
-                  {
-                    id: currForm.id,
-                    name: currForm.name,
-                    checked: studentBlankFormsIds.includes(currForm.id),
-                  }
-                ));
-                this.setState({
-                  allBlankForms: allBlankForms,
-                  forms: currBlankForms,
-                });
-              });
-        });
+  // eslint-disable-next-line require-jsdoc
+  processBlankForms(forms) {
+    return forms.map((form) => ({
+      id: form.id,
+      name: form.name,
+    }));
   }
 
   // eslint-disable-next-line require-jsdoc

@@ -265,12 +265,13 @@ def getStudentProfile():
     students_forms = studentsDOM.getForms(studentID)
     forms = []
     for formId in students_forms:
-        curr_form_data = FormsDOM.getForm(formId)
-        formName = blankFormsDOM.getBlankFormName(curr_form_data['blank_forms_id'])
+        curr_form_data_raw = FormsDOM.getForm(formId)
+        formName = blankFormsDOM.getBlankFormName(curr_form_data_raw['blank_forms_id'])
+        curr_form_data = dict()
         curr_form_data['form_name'] = str(formName)
-        del curr_form_data['blank_forms_id']
-        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data['parent_id']))
-        del curr_form_data['parent_id']
+        curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
+        curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
+        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data_raw['parent_id']))
         curr_form_data['p_first_name'] = parent_data['first_name']
         curr_form_data['p_last_name'] = parent_data['last_name']
         curr_form_data['p_email'] = parent_data['email']
@@ -278,25 +279,9 @@ def getStudentProfile():
             
     return {
         'forms': forms,
-        'basic_info': studentsDOM.getBasicInfo(studentID)
+        'basic_info': studentsDOM.getBasicInfo(studentID),
+        'blank_forms': blankFormsDOM.getAll()
     }
-
-# returns blank form IDs and names of forms to be filled out for the student
-@app.route('/studentProfileBlankForms', methods = ['POST'])
-# @requires_auth
-def getStudentBlankForms():
-    studentId = ObjectId(request.json['id'])
-    student_forms = studentsDOM.getForms(studentId)
-    forms = []
-    for formID in student_forms:
-        blankFormId = FormsDOM.getInfo(formID, 'blank_forms_id')
-        print(formID, blankFormId)
-        d = dict()
-        d['blankFormName'] = blankFormsDOM.getBlankFormName(blankFormId)
-        d['blankFormId'] = str(blankFormId)
-        forms.append(d)
-
-    return {'forms': forms}
 
 '''====================  FORM MANAGEMENT ===================='''
 
