@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactFormGenerator from '../FormManager/FormBuilder/form';
 import apiUrl from '../../utils/Env';
+import ReactFormGenerator from '../FormManager/BlankFormBuilder/FormBuilder/form';
 
 // eslint-disable-next-line require-jsdoc
 class FormDisplay extends React.Component {

@@ -9,7 +9,7 @@ import StudentDash from './components/ParentDash/StudentDash';
 import StudentProfile from './components/StudentProfile/StudentProfile';
 import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
-import Upload from './components/Upload/Upload';
+import FormManager from './components/FormManager/FormManager';
 import AddStudent from './components/AddStudent/AddStudent';
 import LoginPage from './components/LoginPage';
 import Logout from './components/Logout';
@@ -40,7 +40,7 @@ export default function App() {
       >
         <Router>
           <div style={{width: '100vw'}}>
-            <Route path={['/dashboard', '/students', '/upload', '/addStudent', '/profile']} component={Header}/>
+            <Route path={['/dashboard', '/students', '/formManager', '/addStudent', '/profile']} component={Header}/>
             <Route exact path="/">
               <Redirect to="/dashboard" />
             </Route>
@@ -50,7 +50,7 @@ export default function App() {
             <Route path="/profile/:id" render={(props) => <StudentProfile {...props}/>} />
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/students" component={Students} />
-            <Route exact path="/upload" component={Upload} />
+            <Route exact path="/formManager" component={FormManager} />
             <Route exact path="/addStudent" component={AddStudent} />
             <Route exact path="/login" component={LoginPage}/>
             <Route exact path="/logout" component={Logout}/>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Demobar from './DemoBar';
-import FormBuilder from './FormBuilder/index';
+import FormBuilder from './FormBuilder';
 
 import './css/bootstrap.min.css';
 import './css/font-awesome.min.css';
