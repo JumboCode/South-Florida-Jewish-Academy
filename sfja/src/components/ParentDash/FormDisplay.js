@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import apiUrl from '../../utils/Env';
+// eslint-disable-next-line max-len
 import ReactFormGenerator from '../FormManager/BlankFormBuilder/FormBuilder/form';
 
 // eslint-disable-next-line require-jsdoc
