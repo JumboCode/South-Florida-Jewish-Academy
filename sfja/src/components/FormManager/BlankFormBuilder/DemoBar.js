@@ -1,9 +1,16 @@
 import React from 'react';
 import store from './FormBuilder/stores/store';
 import {post} from './FormBuilder/stores/requests';
+import {instanceOf} from 'prop-types';
+import {Cookies, withCookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
-export default class Demobar extends React.Component {
+class Demobar extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired,
+  };
+
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -28,7 +35,8 @@ export default class Demobar extends React.Component {
   // eslint-disable-next-line no-unused-vars
   // eslint-disable-next-line require-jsdoc
   _onSubmit(data) {
-    post('http://127.0.0.1:5000/newform', data);
+    const {cookies} = this.props;
+    post(apiUrl() + '/newform', data, cookies.get('token'));
     // Place code to post json data to server here
   }
 
@@ -44,3 +52,5 @@ export default class Demobar extends React.Component {
     );
   }
 }
+
+export default withCookies(Demobar);

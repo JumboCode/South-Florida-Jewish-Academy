@@ -3,35 +3,80 @@ import {useAuth0} from '../react-auth0-spa';
 import './LoginPage.css';
 import CircleLogo from '../assets/CircleLogo.png';
 import {Redirect} from 'react-router-dom';
+import {useCookies} from 'react-cookie';
+import {Button} from '@material-ui/core';
+import {Paper} from '@material-ui/core';
 /* eslint react/prop-types: 0 */
 
-const LoginPage = () => {
-  const {isAuthenticated, loginWithPopup} = useAuth0();
+const boxStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const imageStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingTop: 20,
+};
+
+const buttonBoxStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingBottom: 20,
+};
+
+const buttonStyle = {
+  width: 150,
+  fontSize: 25,
+  backgroundColor: 'DarkOrange',
+};
+
+
+const LoginPage = (props) => {
+  const {isAuthenticated, loginWithPopup, getTokenSilently} = useAuth0();
+  // eslint-disable-next-line no-unused-vars
+  const [cookies, setCookie] = useCookies();
 
   if (isAuthenticated) {
+    getTokenSilently().then((token) => {
+      setCookie('token', token, {path: '/'});
+    });
     return (
       <Redirect to="/dashboard"/>
     );
   }
   return (
-    <div className="App">
+    <div>
       <h1>
-                South Florida Jewish Academy
+        South Florida Jewish Academy
       </h1>
       <h6>
-                Kindergarten to Grade 12, give your child
+        Kindergarten to Grade 12, give your child
         <br/>the best Education
       </h6>
       <br/>
-      <div className="center_rect">
-        <img className="logo" id="CircleLogo" src={CircleLogo}></img>
-        <p>Administration Login </p>
-        <hr/>
-        <div className="button_container">
-          <button className="button" onClick={() => loginWithPopup({})}>
-            log in
-          </button>
-        </div>
+      <div style={boxStyle}>
+        <Paper
+          elevation={5}
+          style={{width: 350}}>
+          <div style={imageStyle}>
+            <img src={CircleLogo}/>
+          </div>
+          <p>Administration Login </p>
+          <hr/>
+          <div style={buttonBoxStyle}>
+            <Button
+              variant={'contained'}
+              size={'large'}
+              style={buttonStyle}
+              onClick={() => loginWithPopup({})}>
+              log in
+            </Button>
+          </div>
+        </Paper>
       </div>
       <div className="bottom_message">
         Looking for your student&apos;s form? <br/>

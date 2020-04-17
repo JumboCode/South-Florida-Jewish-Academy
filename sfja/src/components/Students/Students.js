@@ -10,7 +10,6 @@ import {
   InputStyle,
   MagnifyingGlassStyle,
 } from './Styles';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -19,11 +18,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-
 import {withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
-
+import {instanceOf} from 'prop-types';
+import {Cookies, withCookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 const useStyles = {
   text: {
@@ -41,6 +41,7 @@ class Students extends React.Component {
   static propTypes = {
     students: PropTypes.any,
     classes: PropTypes.any,
+    cookies: instanceOf(Cookies).isRequired,
     sortBy: PropTypes.any,
     order: PropTypes.any,
   };
@@ -55,7 +56,13 @@ class Students extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    fetch('http://127.0.0.1:5000/students')
+    const {cookies} = this.props;
+    fetch(apiUrl() + '/students', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+    })
         .then((res) => res.json())
         .then((data) => {
           this.setState({students: data.students});
@@ -205,5 +212,5 @@ class Students extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(Students);
+export default withCookies(withStyles(useStyles)(Students));
 // export default Students;
