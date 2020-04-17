@@ -1,7 +1,7 @@
 import React from 'react';
 import {TextField} from '@material-ui/core';
 
-const textInputProps = {
+const textSize = {
   style: {fontSize: 15},
   autocomplete: 'new-password',
 };
@@ -24,21 +24,21 @@ class ParentInfo extends React.Component {
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="First Name" required={true}
+          <TextField error={firstName === ''} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="First Name" required={true}
             onChange={(e) => {
               addParentData(num, e.target.value, email, lastName);
             }}
             value={firstName ? firstName : ''}
           />
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="Last Name" required={true}
+          <TextField error={lastName === ''} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Last Name" required={true}
             onChange={(e) => {
               addParentData(num, firstName, email, e.target.value);
             }}
             value={lastName ? lastName : ''}
           />
           {/* eslint-disable-next-line max-len */}
-          <TextField style={textWidth} inputProps={textInputProps} variant='outlined' id="standard-basic" label="Email" required={true}
+          <TextField error={num === 0 && email === ''} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Email" required={num === 0}
             onChange={(e) => {
               addParentData(num, firstName, e.target.value, lastName);
             }}
