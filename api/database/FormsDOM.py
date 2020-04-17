@@ -30,7 +30,7 @@ def deleteForm(id):
 
 # Gets form info, specifically.
 def getInfo(id, key):
-    contents = list(mongo.db.forms.find({'form_id': str(id)}))
+    contents = list(mongo.db.forms.find({'_id': id}))
     for content in contents:
         return content[key]
 

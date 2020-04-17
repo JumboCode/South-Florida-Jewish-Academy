@@ -281,6 +281,22 @@ def getStudentProfile():
         'basic_info': studentsDOM.getBasicInfo(studentID)
     }
 
+# returns blank form IDs and names of forms to be filled out for the student
+@app.route('/studentProfileBlankForms', methods = ['POST'])
+# @requires_auth
+def getStudentBlankForms():
+    studentId = ObjectId(request.json['id'])
+    student_forms = studentsDOM.getForms(studentId)
+    forms = []
+    for formID in student_forms:
+        blankFormId = FormsDOM.getInfo(formID, 'blank_forms_id')
+        print(formID, blankFormId)
+        d = dict()
+        d['blankFormName'] = blankFormsDOM.getBlankFormName(blankFormId)
+        d['blankFormId'] = str(blankFormId)
+        forms.append(d)
+
+    return {'forms': forms}
 
 '''====================  FORM MANAGEMENT ===================='''
 
