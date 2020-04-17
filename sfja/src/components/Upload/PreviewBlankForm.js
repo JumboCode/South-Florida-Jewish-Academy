@@ -46,7 +46,7 @@ class PreviewBlankForm extends React.Component {
     render() {
       const {setViewForm} = this.props;
       return (
-        <div>
+        <div style={{padding: 20}}>
           <Button
             onClick={() => setViewForm(false)}
             variant='contained'
@@ -54,13 +54,24 @@ class PreviewBlankForm extends React.Component {
             Back
           </Button>
           <br/>
-          <TextField onChange={(e) => {
-            this.setState({value: e.target.value});
-          }} id="name-field" defaultValue={this.props.parentData.name}>
-          </TextField>
+          <div>
+            <TextField onChange={(e) => {
+              this.setState({value: e.target.value});
+            }} id="name-field" 
+              defaultValue={this.props.parentData.name}
+              style={{paddingRight: 20}}
+              >
+            </TextField>
+            <Button 
+              onClick={() => this.updateName()}
+              variant='contained'>
+                Change Name
+            </Button>
+          </div>
           <br />
-          <button onClick={() => this.updateName()}>Change Name</button>
-          <div> [Form data goes here]</div>
+          <div> 
+            <FormCreator></FormCreator>
+          </div>
         </div>
       );
     }

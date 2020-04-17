@@ -12,6 +12,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Button} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 
@@ -60,7 +62,7 @@ class Upload extends React.Component {
     const body = {
       form_id: formid,
     };
-    fetch(apiUrl() + 'deleteBlankForm', {
+    fetch(apiUrl() + '/deleteBlankForm', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -140,8 +142,11 @@ class Upload extends React.Component {
                             {row.name}
                           </TableCell>
                           <TableCell style={textSize} align="right">{row.date}</TableCell>
-                          <TableCell style={textSize} align="right"> <Button onClick={() =>
-                            this.trashForm(row.id)}>Delete</Button>
+                          <TableCell style={textSize} align="right"> 
+                            <IconButton
+                              onClick={() => this.trashForm(row.id)}>
+                                <DeleteIcon />
+                            </IconButton>
                           </TableCell>
                         </TableRow>
                       ))}
