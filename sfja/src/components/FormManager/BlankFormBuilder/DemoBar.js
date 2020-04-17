@@ -3,7 +3,7 @@ import store from './FormBuilder/stores/store';
 import {post} from './FormBuilder/stores/requests';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
-import apiUrl from '../../utils/Env';
+import apiUrl from '../../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class Demobar extends React.Component {
