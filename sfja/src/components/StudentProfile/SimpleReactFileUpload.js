@@ -12,6 +12,7 @@ class SimpleReactFileUpload extends React.Component {
     this.onChange = this.onChange.bind(this)
     this.fileUpload = this.fileUpload.bind(this)
   }
+  
   onFormSubmit(e){
     e.preventDefault() // Stop form submit
     this.fileUpload(this.state.file).then((response)=>{
@@ -22,7 +23,7 @@ class SimpleReactFileUpload extends React.Component {
     this.setState({file:e.target.files[0]})
   }
   fileUpload(file){
-    const url = 'http://example.com/file-upload';
+    const url = 'http://127.0.0.1:5000/submitForm';
     const formData = new FormData();
     formData.append('file',file)
     const config = {
@@ -43,6 +44,7 @@ class SimpleReactFileUpload extends React.Component {
    )
   }
 }
+
 
 
 

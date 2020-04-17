@@ -149,28 +149,32 @@ def getForms():
     # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
     return {'forms': FormsDOM.getForms()}
 
-@app.route('/studentProfile', methods = ['GET'])
+@app.route('/studentProfile', methods = ['POST'])
+@requires_auth
 def getStudentProfile():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_student_forms"])
-    studentID = ObjectId(request.args.get('id'))
+    studentID = ObjectId(request.json['id'])
     students_forms = studentsDOM.getForms(studentID)
     forms = []
     for formId in students_forms:
-        curr_form_data = FormsDOM.getForm(formId)
-        formName = blankFormsDOM.getBlankFormName(curr_form_data['blank_forms_id'])
+        curr_form_data_raw = FormsDOM.getForm(formId)
+        formName = blankFormsDOM.getBlankFormName(curr_form_data_raw['blank_forms_id'])
+        curr_form_data = dict()
         curr_form_data['form_name'] = str(formName)
-        del curr_form_data['blank_forms_id']
-        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data['parent_id']))
-        del curr_form_data['parent_id']
+        curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
+        curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
+        curr_form_data['last_updated'] = curr_form_data_raw['last_updated']
+        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data_raw['parent_id']))
         curr_form_data['p_first_name'] = parent_data['first_name']
         curr_form_data['p_last_name'] = parent_data['last_name']
         curr_form_data['p_email'] = parent_data['email']
         forms.append(curr_form_data)
-            
     return {
         'forms': forms,
-        'basic_info': studentsDOM.getBasicInfo(studentID)
+        'basic_info': studentsDOM.getBasicInfo(studentID),
+        'blank_forms': blankFormsDOM.getAll()
     }
+    
 @app.route('/getAllForms', methods=['GET'])
 def getAllForms():
     return { 'forms': blankFormsDOM.getAll()}
@@ -226,6 +230,7 @@ def addStudent():
         emailParent(parentId)
 
     return '0'
+
 
 if __name__ == '__main__':
     app.run(debug=True)
