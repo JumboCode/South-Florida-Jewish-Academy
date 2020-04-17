@@ -12,6 +12,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ModeCommentIcon from '@material-ui/icons/ModeComment';
 
 // eslint-disable-next-line require-jsdoc
 class ResendForms extends React.Component {
@@ -28,7 +29,8 @@ class ResendForms extends React.Component {
     const {studentForms, blankForms} = this.props;
     const processedStudentForms = this.processStudentForms(studentForms);
     const processedBlankForms = this.processBlankForms(blankForms);
-    const displayFormData = this.processDisplayFormData(processedStudentForms, processedBlankForms)
+    const displayFormData = this.processDisplayFormData(processedStudentForms, processedBlankForms);
+    const makeComments = this.makeBlankComments(blankForms);
     this.state = {
       studentId: props.studentId,
       studentForms: processedStudentForms,
@@ -36,9 +38,19 @@ class ResendForms extends React.Component {
       forms: displayFormData,
       openDialog: false,
       dialogId: 0,
+      dialogName: '',
+      comments: makeComments,
+      message: 'Please note the new changes made on your student\'s forms.',
     };
   }
 
+  // eslint-disable-next-line require-jsdoc
+  makeBlankComments(blankForms) {
+    return blankForms.map((form) => ({
+      id: form.id,
+      comment: '',
+    }));
+  }
   // eslint-disable-next-line require-jsdoc
   processDisplayFormData(studentForms, blankForms) {
     const studentFormIds = studentForms.map((form) => (form.id));
@@ -46,12 +58,14 @@ class ResendForms extends React.Component {
       id: form.id,
       name: form.name,
       checked: studentFormIds.includes(form.id),
+      lastUpdated: studentFormIds.includes(form.id) ? studentForms.filter((studentForm) => studentForm.id === form.id)[0].lastUpdated : ' - Not Sent',
     }));
   }
   // eslint-disable-next-line require-jsdoc
   processStudentForms(forms) {
     return forms.map((form) => ({
       id: form.blank_forms_id,
+      lastUpdated: form.last_updated ? form.last_updated : ' - Not Started',
     }));
   }
 
@@ -75,7 +89,7 @@ class ResendForms extends React.Component {
   formFlipper(formID) {
     const oldForms = this.state.forms;
     // eslint-disable-next-line max-len
-    const newForms = oldForms.map((currForm) => (currForm.id === formID ? {id: currForm.id, name: currForm.name, checked: !currForm.checked} : currForm));
+    const newForms = oldForms.map((currForm) => (currForm.id === formID ? {id: currForm.id, name: currForm.name, checked: !currForm.checked, lastUpdated: currForm.lastUpdated} : currForm));
     this.setState({
       forms: newForms,
     });
@@ -85,15 +99,48 @@ class ResendForms extends React.Component {
   selectAll(theBool) {
     const oldForms = this.state.forms;
     // eslint-disable-next-line max-len
-    const newForms = oldForms.map((currForm) => ({id: currForm.id, name: currForm.name, checked: theBool}));
+    const newForms = oldForms.map((currForm) => ({id: currForm.id, name: currForm.name, checked: theBool, lastUpdated: currForm.lastUpdated}));
     this.setState({
       forms: newForms,
     });
   }
 
   // eslint-disable-next-line require-jsdoc
+  updateComment(dialogId, newComment) {
+    const {comments} = this.state;
+    const newComments = comments.map((curr) => ({
+      id: curr.id,
+      comment: curr.id === dialogId ? newComment : curr.comment,
+    }));
+    this.setState({
+      comments: newComments,
+    });
+  }
+  getComment(id){
+    const {comments} = this.state;
+    const theComment = comments.filter((comment) => comment.id === id)
+    return theComment.length === 1 ? theComment[0].comment : '';
+  }
+  hasComment(id){
+    const {comments} = this.state;
+    const theComment = comments.filter((comment) => comment.id === id)
+    return theComment.length === 1 && theComment[0].comment !== '';
+  }
+  deleteAndClose(id){
+    this.updateComment(id, '');
+    this.setState({
+      openDialog: false,
+      dialogId: 0,
+    });
+  }
+  updateMessage(newMessage){
+    this.setState({
+      message: newMessage,
+    });
+  }
+  // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, openDialog, dialogId} = this.state;
+    const {forms, openDialog, dialogId, dialogName, message} = this.state;
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40}}>
@@ -133,16 +180,16 @@ class ResendForms extends React.Component {
                               inputProps={{'aria-labelledby': labelId}}
                             />
                           </ListItemIcon>
-                          {value.name}
+                          {value.name}{value.lastUpdated}
                           <ListItemSecondaryAction>
                             <IconButton
                               edge="end"
                               aria-label="comments"
                               onClick={() => {
-                                this.setState({openDialog: true, dialogId: value.id});
+                                this.setState({openDialog: true, dialogId: value.id, dialogName: value.name});
                               }}
                             >
-                              <CommentIcon />
+                              {this.hasComment(value.id) ? <CommentIcon/> : <ModeCommentIcon/>}
                             </IconButton>
                           </ListItemSecondaryAction>
                         </ListItem>
@@ -152,8 +199,22 @@ class ResendForms extends React.Component {
                 </div>
               </Paper>
               <br/>
-              <Paper elevation={3} style={{display: 'flex', margin: 10}}>
-                right?
+              <Paper elevation={3} style={{display: 'flex', margin: 10, flexDirection: 'column'}}>
+                <div style={{display: 'flex', marginTop: 10, marginLeft: 10, marginRight: 10, flexDirection: 'column'}}>
+                  Optional Additional Message:
+                </div>
+                <div style={{display: 'flex', marginTop: 10, marginLeft: 10, marginRight: 10, flexDirection: 'column'}}>
+                  <TextField
+                    multiline
+                    autoFocus
+                    margin="dense"
+                    id="message"
+                    label="message"
+                    type="text"
+                    value={message}
+                    onChange={(e) => this.updateMessage(e.target.value)}
+                  />
+                </div>
               </Paper>
             </div>
             <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
@@ -162,23 +223,23 @@ class ResendForms extends React.Component {
           </Paper>
         </div>
         <Dialog open={openDialog} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+          <DialogTitle id="form-dialog-title">Comment on {dialogName}</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              To subscribe to this website, please enter your email address here. We will send updates
-              occasionally. {dialogId}
-            </DialogContentText>
+              Write your comment here for {dialogName}:
             <TextField
+              multiline
               autoFocus
               margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
+              id="comment"
+              label="comment"
+              type="text"
               fullWidth
+              value={this.getComment(dialogId)}
+              onChange={(e) => this.updateComment(dialogId, e.target.value)}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose.bind(this)} color="primary">
+            <Button onClick={() => this.deleteAndClose.bind(this)(dialogId)} color="primary">
               Cancel
             </Button>
             <Button onClick={this.handleClose.bind(this)} color="primary">
