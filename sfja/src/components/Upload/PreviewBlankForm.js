@@ -1,4 +1,5 @@
 import React from 'react';
+import FormCreator from '../FormManager/FormCreator';
 import fetch from 'isomorphic-fetch';
 import TextField from '@material-ui/core/TextField';
 import PropTypes, {instanceOf} from 'prop-types';
