@@ -12,15 +12,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ModeCommentIcon from '@material-ui/icons/ModeComment';
-import apiUrl from "../../utils/Env";
-
-const textSize = {
-  style: {fontSize: 15},
-  autocomplete: 'new-password',
-  form: {
-    autocomplete: 'off',
-  },
-};
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class ResendForms extends React.Component {
