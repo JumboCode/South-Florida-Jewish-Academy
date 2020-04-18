@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len,require-jsdoc */
 import React from 'react';
 import Proptypes, {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
@@ -13,6 +13,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ModeCommentIcon from '@material-ui/icons/ModeComment';
 import apiUrl from '../../utils/Env';
+import ConfirmationDialog from './ConfirmationDialog';
 
 // eslint-disable-next-line require-jsdoc
 class ResendForms extends React.Component {
@@ -24,7 +25,6 @@ class ResendForms extends React.Component {
     parents: Proptypes.array,
   };
 
-  // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
     const {studentForms, blankForms} = this.props;
@@ -44,8 +44,11 @@ class ResendForms extends React.Component {
       message: 'Please note the new changes made on your student\'s forms.\n\nThank you for your attention.',
     };
   }
-
-  // eslint-disable-next-line require-jsdoc
+  setOpenConfirmationDialog(newBool) {
+    this.setState({
+      openConfirmationDialog: newBool,
+    });
+  }
   resendForms() {
     const {comments, message, forms} = this.state;
     const {studentId, cookies} = this.props;
@@ -64,14 +67,12 @@ class ResendForms extends React.Component {
       body: JSON.stringify(body),
     }).then(() => {});
   }
-  // eslint-disable-next-line require-jsdoc
   makeBlankComments(blankForms) {
     return blankForms.map((form) => ({
       id: form.id,
       comment: '',
     }));
   }
-  // eslint-disable-next-line require-jsdoc
   processDisplayFormData(studentForms, blankForms) {
     const studentFormIds = studentForms.map((form) => (form.id));
     return blankForms.map((form) => ({
@@ -81,31 +82,24 @@ class ResendForms extends React.Component {
       lastUpdated: studentFormIds.includes(form.id) ? studentForms.filter((studentForm) => studentForm.id === form.id)[0].lastUpdated : ' - Not Sent',
     }));
   }
-  // eslint-disable-next-line require-jsdoc
   processStudentForms(forms) {
     return forms.map((form) => ({
       id: form.blank_forms_id,
       lastUpdated: form.last_updated ? form.last_updated : ' - Not Started',
     }));
   }
-
-  // eslint-disable-next-line require-jsdoc
   processBlankForms(forms) {
     return forms.map((form) => ({
       id: form.id,
       name: form.name,
     }));
   }
-
-  // eslint-disable-next-line require-jsdoc
   handleCommentClose() {
     this.setState({
       openCommentDialog: false,
       dialogCommentId: 0,
     });
   }
-
-  // eslint-disable-next-line require-jsdoc
   formFlipper(formID) {
     const oldForms = this.state.forms;
     // eslint-disable-next-line max-len
@@ -114,8 +108,6 @@ class ResendForms extends React.Component {
       forms: newForms,
     });
   }
-
-  // eslint-disable-next-line require-jsdoc
   selectAll(theBool) {
     const oldForms = this.state.forms;
     // eslint-disable-next-line max-len
@@ -125,7 +117,6 @@ class ResendForms extends React.Component {
     });
   }
 
-  // eslint-disable-next-line require-jsdoc
   updateComment(dialogId, newComment) {
     const {comments} = this.state;
     const newComments = comments.map((curr) => ({
@@ -136,29 +127,29 @@ class ResendForms extends React.Component {
       comments: newComments,
     });
   }
-  getComment(id){
+  getComment(id) {
     const {comments} = this.state;
-    const theComment = comments.filter((comment) => comment.id === id)
+    const theComment = comments.filter((comment) => comment.id === id);
     return theComment.length === 1 ? theComment[0].comment : '';
   }
-  hasComment(id){
+  hasComment(id) {
     const {comments} = this.state;
-    const theComment = comments.filter((comment) => comment.id === id)
+    const theComment = comments.filter((comment) => comment.id === id);
     return theComment.length === 1 && theComment[0].comment !== '';
   }
-  deleteAndClose(id){
+  deleteAndClose(id) {
     this.updateComment(id, '');
     this.setState({
       openCommentDialog: false,
       dialogCommentId: 0,
     });
   }
-  updateMessage(newMessage){
+  updateMessage(newMessage) {
     this.setState({
       message: newMessage,
     });
   }
-  // eslint-disable-next-line require-jsdoc
+
   render() {
     const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message, openConfirmationDialog} = this.state;
     const {parents} = this.props;
@@ -268,30 +259,11 @@ class ResendForms extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-        <Dialog open={openConfirmationDialog} onClose={() => this.setState({openConfirmationDialog: false})} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Email?</DialogTitle>
-          <DialogContent>
-            Are you sure you want to resend these forms?
-          </DialogContent>
-          <DialogContent>
-            Emails will be sent to parents whose emails are on record:
-            {parents.filter((parent) => (parent.email !== '')).map((parent) => (
-              <div key={parent.email}>
-                {parent.first_name} {parent.last_name} - {parent.email}
-              </div>))}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.setState({openConfirmationDialog: false})} variant="contained">
-              Cancel
-            </Button>
-            <Button onClick={() => {
-              this.setState({openConfirmationDialog: false});
-              this.resendForms();
-            }} variant="contained">
-              Send
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <ConfirmationDialog
+          parents={parents}
+          setOpenConfirmationDialog={this.setOpenConfirmationDialog.bind(this)}
+          openConfirmationDialog={openConfirmationDialog}
+          resendForms={this.resendForms.bind(this)}/>
       </div>
     );
   }
