@@ -12,6 +12,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ModeCommentIcon from '@material-ui/icons/ModeComment';
+import apiUrl from "../../utils/Env";
 
 const textSize = {
   style: {fontSize: 15},
@@ -28,6 +29,7 @@ class ResendForms extends React.Component {
     blankForms: Proptypes.array,
     studentForms: Proptypes.array,
     cookies: instanceOf(Cookies).isRequired,
+    parents: Proptypes.array,
   };
 
   // eslint-disable-next-line require-jsdoc
@@ -39,7 +41,6 @@ class ResendForms extends React.Component {
     const displayFormData = this.processDisplayFormData(processedStudentForms, processedBlankForms);
     const makeComments = this.makeBlankComments(blankForms);
     this.state = {
-      studentId: props.studentId,
       studentForms: processedStudentForms,
       blankForms: processedBlankForms,
       forms: displayFormData,
@@ -48,10 +49,29 @@ class ResendForms extends React.Component {
       dialogCommentName: '',
       openConfirmationDialog: false,
       comments: makeComments,
-      message: 'Please note the new changes made on your student\'s forms.',
+      message: 'Please note the new changes made on your student\'s forms.\n\nThank you for your attention.',
     };
   }
 
+  // eslint-disable-next-line require-jsdoc
+  resendForms() {
+    const {comments, message, forms} = this.state;
+    const {studentId, cookies} = this.props;
+    const body = {
+      comments: comments,
+      message: message,
+      id: studentId,
+      forms: forms,
+    };
+    fetch(apiUrl() + '/resendForms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      body: JSON.stringify(body),
+    }).then(() => {});
+  }
   // eslint-disable-next-line require-jsdoc
   makeBlankComments(blankForms) {
     return blankForms.map((form) => ({
@@ -149,6 +169,7 @@ class ResendForms extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message, openConfirmationDialog} = this.state;
+    const {parents} = this.props;
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40}}>
@@ -247,36 +268,10 @@ class ResendForms extends React.Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.deleteAndClose.bind(this)(dialogCommentId)} color="primary">
+            <Button onClick={() => this.deleteAndClose.bind(this)(dialogCommentId)} variant="contained">
               Delete
             </Button>
-            <Button onClick={this.handleCommentClose.bind(this)} color="primary">
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog open={openCommentDialog} onClose={this.handleCommentClose.bind(this)} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Comment on {dialogCommentName}</DialogTitle>
-          <DialogContent>
-            Write your comment here for {dialogCommentName}:
-            <TextField
-              multiline
-              autoFocus
-              margin="dense"
-              id="comment"
-              label="comment"
-              type="text"
-              fullWidth
-              value={this.getComment(dialogCommentId)}
-              inputProps={textSize}
-              onChange={(e) => this.updateComment(dialogCommentId, e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.deleteAndClose.bind(this)(dialogCommentId)} color="primary">
-              Delete
-            </Button>
-            <Button onClick={this.handleCommentClose.bind(this)} color="primary">
+            <Button onClick={this.handleCommentClose.bind(this)} variant="contained">
               Save
             </Button>
           </DialogActions>
@@ -287,14 +282,21 @@ class ResendForms extends React.Component {
             Are you sure you want to resend these forms?
           </DialogContent>
           <DialogContent>
-            Emails will be sent to {}
+            Emails will be sent to parents whose emails are on record:
+            {parents.filter((parent) => (parent.email !== '')).map((parent) => (
+              <div key={parent.email}>
+                {parent.first_name} {parent.last_name} - {parent.email}
+              </div>))}
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.setState({openConfirmationDialog: false})} color="primary">
+            <Button onClick={() => this.setState({openConfirmationDialog: false})} variant="contained">
               Cancel
             </Button>
-            <Button onClose={() => this.setState({openConfirmationDialog: false})} color="primary">
-              Save
+            <Button onClick={() => {
+              this.setState({openConfirmationDialog: false});
+              this.resendForms();
+            }} variant="contained">
+              Send
             </Button>
           </DialogActions>
         </Dialog>

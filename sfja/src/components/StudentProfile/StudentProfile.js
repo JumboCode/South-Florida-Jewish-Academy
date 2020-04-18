@@ -75,6 +75,7 @@ class StudentProfile extends React.Component {
             forms: data.forms,
             basicInfo: data.basic_info,
             blankForms: data.blank_forms,
+            parents: data.parents,
           });
         }).catch((error) => {
           console.log(error);
@@ -83,7 +84,7 @@ class StudentProfile extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, basicInfo, currTab, blankForms} = this.state;
+    const {forms, basicInfo, currTab, blankForms, parents} = this.state;
     // const {classes, children, className, ...other} = this.props;
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
@@ -139,7 +140,13 @@ class StudentProfile extends React.Component {
                 {currTab === 0 && <Forms forms={forms}/>}
                 {currTab === 1 && <div>documents</div>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
-                {currTab === 3 && <ResendForms studentForms={forms} blankForms={blankForms} studentId={basicInfo['_id']}/>}
+                {currTab === 3 &&
+                <ResendForms
+                  studentForms={forms}
+                  blankForms={blankForms}
+                  studentId={basicInfo['_id']}
+                  parents={parents}
+                />}
               </div>
             </Paper>
           </div>

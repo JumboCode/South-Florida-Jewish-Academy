@@ -291,6 +291,47 @@ def getStudentProfile():
         'parents': parents
     }
 
+@app.route('/resendForms', methods = ['POST'])
+@requires_auth
+def resendForms():
+    studentId = ObjectId(request.json['id'])
+    comments = request.json['comments']
+    message = request.json['message']
+    newBlankForms = request.json['forms']
+
+    currFormIds = studentsDOM.getForms(studentId)
+    blankFormIds = []
+    for currFormId in currFormIds:
+        blankFormIds.append(FormsDOM.getBlankFormId(currFormId))
+
+    uniqueBlankFormIds = set(blankFormIds)
+
+    parentIds = studentsDOM.getParents(studentId)
+
+    formIds = []
+
+    additionalBlankForms = []
+
+    print(uniqueBlankFormIds)
+
+    for newBlankForm in newBlankForms:
+        newBlankFormId = ObjectId(newBlankForm['id'])
+        print(newBlankFormId)
+        if newBlankForm['checked'] and newBlankFormId not in uniqueBlankFormIds:
+            for parentId in parentIds:
+                # createForm(id, date, required, comp, data, parentID):
+                currID = FormsDOM.createForm(newBlankFormId, None, None, True, False, None, parentId)
+                formIds.append(currID)
+            additionalBlankForms.append(newBlankFormId)
+
+    for formId in formIds:
+        studentsDOM.addNewFormId(studentId, formId)
+
+    print('sent')
+    return '0'
+    ## send email
+
+
 '''====================  FORM MANAGEMENT ===================='''
 
 @app.route('/getBlankFormDetails', methods=['GET'])
