@@ -10,9 +10,16 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ModeCommentIcon from '@material-ui/icons/ModeComment';
+
+const textSize = {
+  style: {fontSize: 15},
+  autocomplete: 'new-password',
+  form: {
+    autocomplete: 'off',
+  },
+};
 
 // eslint-disable-next-line require-jsdoc
 class ResendForms extends React.Component {
@@ -39,6 +46,7 @@ class ResendForms extends React.Component {
       openCommentDialog: false,
       dialogCommentId: 0,
       dialogCommentName: '',
+      openConfirmationDialog: false,
       comments: makeComments,
       message: 'Please note the new changes made on your student\'s forms.',
     };
@@ -140,7 +148,7 @@ class ResendForms extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message} = this.state;
+    const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message, openConfirmationDialog} = this.state;
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40}}>
@@ -218,7 +226,7 @@ class ResendForms extends React.Component {
               </Paper>
             </div>
             <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
-              <Button variant='contained' size='large' onClick={()=> {}}>Send Email</Button>
+              <Button variant='contained' size='large' onClick={() => this.setState({openConfirmationDialog: true})}>Send Email</Button>
             </div>
           </Paper>
         </div>
@@ -260,6 +268,7 @@ class ResendForms extends React.Component {
               type="text"
               fullWidth
               value={this.getComment(dialogCommentId)}
+              inputProps={textSize}
               onChange={(e) => this.updateComment(dialogCommentId, e.target.value)}
             />
           </DialogContent>
@@ -268,6 +277,23 @@ class ResendForms extends React.Component {
               Delete
             </Button>
             <Button onClick={this.handleCommentClose.bind(this)} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={openConfirmationDialog} onClose={() => this.setState({openConfirmationDialog: false})} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Email?</DialogTitle>
+          <DialogContent>
+            Are you sure you want to resend these forms?
+          </DialogContent>
+          <DialogContent>
+            Emails will be sent to {}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.setState({openConfirmationDialog: false})} color="primary">
+              Cancel
+            </Button>
+            <Button onClose={() => this.setState({openConfirmationDialog: false})} color="primary">
               Save
             </Button>
           </DialogActions>
