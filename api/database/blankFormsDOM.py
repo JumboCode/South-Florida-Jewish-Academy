@@ -10,9 +10,9 @@ app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 # Creates new form.
-def createForm(data):
+def createForm(formName, data):
     initData = {
-                'form_name': 'New Form',
+                'form_name': formName,
                 'form_data': data,
                 'date_created': datetime.now(timezone('US/Eastern'))
                 }
