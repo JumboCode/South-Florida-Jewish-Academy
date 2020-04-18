@@ -98,6 +98,8 @@ def addStudentId(id, studentId):
 def getParentProfile(id):
     contents = list(mongo.db.parents.find({'_id': id}))
     for content in contents:
-        del content['student_ids']
-        del content['_id']
-        return content
+        cleanedContent = {}
+        cleanedContent['email'] = content['email']
+        cleanedContent['first_name'] = content['first_name']
+        cleanedContent['last_name'] = content['last_name']
+        return cleanedContent

@@ -79,6 +79,16 @@ def getStudentForm(id, formNum):
     forms = dict(content['form'])
     return forms[formNum]
 
+# Gets parents
+def getParents(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    for content in contents:
+        return content['parent_ids']
+
 def getStudents():
     contents = list(mongo.db.students.find())
     students = []

@@ -277,11 +277,18 @@ def getStudentProfile():
         curr_form_data['p_last_name'] = parent_data['last_name']
         curr_form_data['p_email'] = parent_data['email']
         forms.append(curr_form_data)
-            
+
+
+    parentIds = studentsDOM.getParents(studentID)
+    parents = []
+    for parentId in parentIds:
+        parents.append(parentsDOM.getParentProfile(parentId))
+
     return {
         'forms': forms,
         'basic_info': studentsDOM.getBasicInfo(studentID),
-        'blank_forms': blankFormsDOM.getAll()
+        'blank_forms': blankFormsDOM.getAll(),
+        'parents': parents
     }
 
 '''====================  FORM MANAGEMENT ===================='''
