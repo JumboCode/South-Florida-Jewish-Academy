@@ -4,7 +4,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import {Button} from '@material-ui/core';
-
+import PropTypes from 'prop-types';
 
 // eslint-disable-next-line require-jsdoc
 export default function ConfirmationDialog(props) {

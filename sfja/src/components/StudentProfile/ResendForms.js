@@ -14,6 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import ModeCommentIcon from '@material-ui/icons/ModeComment';
 import apiUrl from '../../utils/Env';
 import ConfirmationDialog from './ConfirmationDialog';
+import MessageBox from './MessageBox';
 
 // eslint-disable-next-line require-jsdoc
 class ResendForms extends React.Component {
@@ -211,23 +212,7 @@ class ResendForms extends React.Component {
                 </div>
               </Paper>
               <br/>
-              <Paper elevation={3} style={{display: 'flex', margin: 10, flexDirection: 'column'}}>
-                <div style={{display: 'flex', marginTop: 10, marginLeft: 10, marginRight: 10, flexDirection: 'column'}}>
-                  Optional Additional Message:
-                </div>
-                <div style={{display: 'flex', marginTop: 10, marginLeft: 10, marginRight: 10, flexDirection: 'column'}}>
-                  <TextField
-                    multiline
-                    autoFocus
-                    margin="dense"
-                    id="message"
-                    label="message"
-                    type="text"
-                    value={message}
-                    onChange={(e) => this.updateMessage(e.target.value)}
-                  />
-                </div>
-              </Paper>
+              <MessageBox message={message} updateMessage={this.updateMessage.bind(this)}/>
             </div>
             <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
               <Button variant='contained' size='large' onClick={() => this.setState({openConfirmationDialog: true})}>Send Email</Button>
