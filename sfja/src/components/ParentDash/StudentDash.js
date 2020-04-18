@@ -9,6 +9,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import {Select, InputLabel, MenuItem} from '@material-ui/core';
+import apiUrl from '../../utils/Env';
 
 const useStyles = makeStyles({
   table: {
@@ -40,18 +42,18 @@ class StudentDash extends React.Component {
     this.refreshStudentForms();
   }
 
-  // eslint-disable-next-line require-jsdoc
-  refreshStudentForms() {
-    fetch('http://127.0.0.1:5000/getStudentForms', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({student_id: this.state.studentId}),
-    }).then((res) => res.json())
+    // eslint-disable-next-line require-jsdoc
+    refreshStudentForms() {
+      fetch(apiUrl() + '/getStudentForms', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({student_id: this.state.studentId}),
+      }).then((res) => res.json())
         .then((data) => {
           this.setState({formData : data.form_data});
           console.log(data);
         }).catch(console.log);
-  }
+    }
 
   refreshFormData(formId){
     fetch('http://127.0.0.1:5000/getForm', {

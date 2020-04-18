@@ -13,26 +13,20 @@ code {
 }
 
 h1 {
-
     font-size: 50px;
     font-family: Futura;
     color: SteelBlue;
     text-align: center;
     margin-top: 100px;
-    margin-bottom: 0px
-
 }
 
 h6 {
     font-size: 32px;
     font-family: Futura;
     text-align: center;
-    margin-top: 0px;
     margin-bottom: 40px;
     color: DarkOrange;
     position: center;
-
-
 }
 
 button {
@@ -78,31 +72,21 @@ button {
 
 p {
     text-align: center;
-    margin-top: 40px;
-    margin-bottom: 0px;
+    margin-top: 20px;
+    margin-bottom: -10px;
     font-size: 32px;
-    color: #1F3F7F;
+    color: SteelBlue;
     font-weight: 500;
     font-family: Futura;
 }
 
 hr {
-    width: 370px;
+    width: 100%;
     border-top: 1px solid darkorange;
-}
-
-.logo {
-    margin-left: 120px;
-    margin-top: 60px;
-    margin-bottom: 0px;
-    border: solid #1F3F7F 3px;
-    background: white;
-    height: 150px;
-    width: 170px;
-
 }
 
 .bottom_message {
     text-align: center;
     font-family: Futura;
+    margin-top: 40px;
 }

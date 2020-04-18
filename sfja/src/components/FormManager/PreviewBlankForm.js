@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import PropTypes, {instanceOf} from 'prop-types';
 import {Button} from '@material-ui/core';
 import {Cookies, withCookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class PreviewBlankForm extends React.Component {
@@ -30,7 +31,7 @@ class PreviewBlankForm extends React.Component {
         form_id: id,
         form_name: name,
       };
-      fetch('http://127.0.0.1:5000/updateFormName', {
+      fetch(apiUrl() + '/updateFormName', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -323,11 +323,9 @@ def updateFormName():
 @app.route('/newform', methods = ['POST'])
 @requires_auth
 def addForm():
-    # byte_data = request.data.decode('utf8').replace("'", '"')
-    # data = json.loads(byte_data)
-    # data_json = json.dumps(data, indent=4, sort_keys=True)
     data = request.json['data']
-    blankFormsDOM.createForm(data)
+    form_name = request.json['formName']
+    blankFormsDOM.createForm(form_name, data)
     return '0'
 
 '''======================  ADD STUDENT ======================'''

@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactFormGenerator from '../FormManager/FormBuilder/form';
 import Paper from '@material-ui/core/Paper';
+import apiUrl from '../../utils/Env';
+// eslint-disable-next-line max-len
+import ReactFormGenerator from '../FormManager/BlankFormBuilder/FormBuilder/form';
 
 // eslint-disable-next-line require-jsdoc
 class FormDisplay extends React.Component {
@@ -20,7 +22,7 @@ class FormDisplay extends React.Component {
   }
 
   refreshFormData(){
-    fetch('http://127.0.0.1:5000/getForm', {
+    fetch(apiUrl() + '/getForm', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
