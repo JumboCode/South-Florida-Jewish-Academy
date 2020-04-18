@@ -1,5 +1,5 @@
 import React from 'react';
-import FormCreator from './BlankFormBuilder/FormCreator';
+import ReactFormGenerator from './BlankFormBuilder/FormBuilder/form';
 import fetch from 'isomorphic-fetch';
 import TextField from '@material-ui/core/TextField';
 import PropTypes, {instanceOf} from 'prop-types';
@@ -70,7 +70,7 @@ class PreviewBlankForm extends React.Component {
           </div>
           <br />
           <div> 
-            <FormCreator></FormCreator>
+            {/* <ReactFormGenerator></ReactFormGenerator> */}
           </div>
         </div>
       );

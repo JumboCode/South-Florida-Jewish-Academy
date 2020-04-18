@@ -4,13 +4,7 @@ import BlankFormBuilder from './BlankFormBuilder/BlankFormBuilder';
 import PreviewBlankForm from './PreviewBlankForm';
 import PropTypes, {instanceOf} from 'prop-types';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
 import {
   Button,
   Dialog,
@@ -18,6 +12,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
 } from '@material-ui/core';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
@@ -151,11 +153,13 @@ class FormManager extends React.Component {
                           </TableCell>
                           <TableCell style={textSize} align="right">{row.date}</TableCell>
                           <TableCell style={textSize} align="right">
-                            <Button onClick={
+                            <IconButton onClick={
                               () => {
                                 this.setState({formToTrash: row.id, showWarning: true});
                               }
-                            }>Delete</Button>
+                            }>
+                              <DeleteIcon />
+                            </IconButton>
                           </TableCell>
                         </TableRow>
                       ))}
