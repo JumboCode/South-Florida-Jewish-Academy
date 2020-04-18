@@ -312,11 +312,8 @@ def resendForms():
 
     additionalBlankForms = []
 
-    print(uniqueBlankFormIds)
-
     for newBlankForm in newBlankForms:
         newBlankFormId = ObjectId(newBlankForm['id'])
-        print(newBlankFormId)
         if newBlankForm['checked'] and newBlankFormId not in uniqueBlankFormIds:
             for parentId in parentIds:
                 # createForm(id, date, required, comp, data, parentID):
@@ -327,9 +324,9 @@ def resendForms():
     for formId in formIds:
         studentsDOM.addNewFormId(studentId, formId)
 
-    print('sent')
-    return '0'
-    ## send email
+    ## send email here!
+    result = {'success': True}
+    return jsonify(result), 200
 
 
 '''====================  FORM MANAGEMENT ===================='''
