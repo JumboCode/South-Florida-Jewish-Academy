@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactFormGenerator from '../FormManager/FormBuilder/form';
+import Paper from '@material-ui/core/Paper';
 
 // eslint-disable-next-line require-jsdoc
 class FormDisplay extends React.Component {
@@ -41,13 +42,15 @@ class FormDisplay extends React.Component {
 
     return (
       <div>
-        <ReactFormGenerator
-          form_action=""
-          form_method="POST"
-          task_id={12}
-          answer_data={JSON.parse(formData)}
-          data={JSON.parse(blankFormData)} // Question data
-        />
+        <Paper>
+          <ReactFormGenerator
+            form_action=""
+            form_method="POST"
+            task_id={12}
+            answer_data={JSON.parse(formData)}
+            data={JSON.parse(blankFormData)} // Question data
+          />
+        </Paper>
       </div>
     );
   }
