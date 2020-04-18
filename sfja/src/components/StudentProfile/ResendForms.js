@@ -6,15 +6,11 @@ import {Button, Checkbox, List, ListItem, ListItemIcon, Paper} from '@material-u
 import CommentIcon from '@material-ui/icons/Comment';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import ModeCommentIcon from '@material-ui/icons/ModeComment';
 import apiUrl from '../../utils/Env';
 import ConfirmationDialog from './ConfirmationDialog';
 import MessageBox from './MessageBox';
+import CommentDialog from './CommentDialog';
 
 // eslint-disable-next-line require-jsdoc
 class ResendForms extends React.Component {
@@ -219,31 +215,15 @@ class ResendForms extends React.Component {
             </div>
           </Paper>
         </div>
-        <Dialog open={openCommentDialog} onClose={this.handleCommentClose.bind(this)} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Comment on {dialogCommentName}</DialogTitle>
-          <DialogContent>
-              Write your comment here for {dialogCommentName}:
-            <TextField
-              multiline
-              autoFocus
-              margin="dense"
-              id="comment"
-              label="comment"
-              type="text"
-              fullWidth
-              value={this.getComment(dialogCommentId)}
-              onChange={(e) => this.updateComment(dialogCommentId, e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.deleteAndClose.bind(this)(dialogCommentId)} variant="contained">
-              Delete
-            </Button>
-            <Button onClick={this.handleCommentClose.bind(this)} variant="contained">
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <CommentDialog
+          open={openCommentDialog}
+          dialogCommentName={dialogCommentName}
+          dialogCommentId={dialogCommentId}
+          handleCommentClose={this.handleCommentClose.bind(this)}
+          comment={this.getComment(dialogCommentId)}
+          updateComment={this.updateComment.bind(this)}
+          deleteAndClose={this.deleteAndClose.bind(this)}
+        />
         <ConfirmationDialog
           parents={parents}
           setOpenConfirmationDialog={this.setOpenConfirmationDialog.bind(this)}
