@@ -11,6 +11,7 @@ import apiUrl from '../../utils/Env';
 import ConfirmationDialog from './ConfirmationDialog';
 import MessageBox from './MessageBox';
 import CommentDialog from './CommentDialog';
+import SuccessMessage from './SuccessMessage';
 
 // eslint-disable-next-line require-jsdoc
 class ResendForms extends React.Component {
@@ -39,6 +40,7 @@ class ResendForms extends React.Component {
       openConfirmationDialog: false,
       comments: makeComments,
       message: 'Please note the new changes made on your student\'s forms.\n\nThank you for your attention.',
+      openSuccessMessage: false,
     };
   }
   setOpenConfirmationDialog(newBool) {
@@ -63,6 +65,9 @@ class ResendForms extends React.Component {
       },
       body: JSON.stringify(body),
     }).then(() => {});
+    this.setState({
+      openSuccessMessage: true,
+    });
   }
   makeBlankComments(blankForms) {
     return blankForms.map((form) => ({
@@ -148,7 +153,7 @@ class ResendForms extends React.Component {
   }
 
   render() {
-    const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message, openConfirmationDialog} = this.state;
+    const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message, openConfirmationDialog, openSuccessMessage} = this.state;
     const {parents} = this.props;
     return (
       <div>
@@ -228,7 +233,12 @@ class ResendForms extends React.Component {
           parents={parents}
           setOpenConfirmationDialog={this.setOpenConfirmationDialog.bind(this)}
           openConfirmationDialog={openConfirmationDialog}
-          resendForms={this.resendForms.bind(this)}/>
+          resendForms={this.resendForms.bind(this)}
+        />
+        <SuccessMessage
+          open={openSuccessMessage}
+          closeSuccessMessage={() => this.setState({openSuccessMessage: false})}
+        />
       </div>
     );
   }
