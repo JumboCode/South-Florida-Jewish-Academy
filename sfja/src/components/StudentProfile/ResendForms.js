@@ -41,6 +41,18 @@ class ResendForms extends React.Component {
       comments: makeComments,
       message: 'Please note the new changes made on your student\'s forms.\n\nThank you for your attention.',
       openSuccessMessage: false,
+      initialState: {
+        studentForms: processedStudentForms,
+        blankForms: processedBlankForms,
+        forms: displayFormData,
+        openCommentDialog: false,
+        dialogCommentId: 0,
+        dialogCommentName: '',
+        openConfirmationDialog: false,
+        comments: makeComments,
+        message: 'Please note the new changes made on your student\'s forms.\n\nThank you for your attention.',
+        openSuccessMessage: false,
+      },
     };
   }
   setOpenConfirmationDialog(newBool) {
@@ -81,7 +93,7 @@ class ResendForms extends React.Component {
       id: form.id,
       name: form.name,
       checked: studentFormIds.includes(form.id),
-      lastUpdated: studentFormIds.includes(form.id) ? studentForms.filter((studentForm) => studentForm.id === form.id)[0].lastUpdated : ' - Not Sent',
+      lastUpdated: studentFormIds.includes(form.id) ? studentForms.filter((studentForm) => studentForm.id === form.id)[0].lastUpdated : null,
     }));
   }
   processStudentForms(forms) {
@@ -153,11 +165,11 @@ class ResendForms extends React.Component {
   }
 
   render() {
-    const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message, openConfirmationDialog, openSuccessMessage} = this.state;
+    const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message, openConfirmationDialog, openSuccessMessage, initialState} = this.state;
     const {parents} = this.props;
     return (
       <div>
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40}}>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40, paddingBottom: 40}}>
           <Paper elevation={2} style={{padding: 10}}>
             <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: 10}}>
               <Paper elevation={3} style={{display: 'flex', margin: 10}}>
@@ -188,13 +200,14 @@ class ResendForms extends React.Component {
                           <ListItemIcon>
                             <Checkbox
                               edge="start"
-                              checked={value.checked}
+                              checked={value.checked || value.lastUpdated}
+                              disabled={value.lastUpdated}
                               tabIndex={-1}
-                              disableRipple
                               inputProps={{'aria-labelledby': labelId}}
+                              readOnly={value.lastUpdated}
                             />
                           </ListItemIcon>
-                          {value.name}{value.lastUpdated}
+                          {value.name}{value.lastUpdated ? value.lastUpdated : ' - Not Sent'}
                           <ListItemSecondaryAction>
                             <IconButton
                               edge="end"
@@ -215,8 +228,9 @@ class ResendForms extends React.Component {
               <br/>
               <MessageBox message={message} updateMessage={this.updateMessage.bind(this)}/>
             </div>
-            <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
+            <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', marginTop: 10, marginRight: 20, marginBottom: 10}}>
               <Button variant='contained' size='large' onClick={() => this.setState({openConfirmationDialog: true})}>Send Email</Button>
+              <Button variant='contained' size='large' onClick={() => this.setState(initialState)} style={{marginRight: 10}}>Reset Form</Button>
             </div>
           </Paper>
         </div>
