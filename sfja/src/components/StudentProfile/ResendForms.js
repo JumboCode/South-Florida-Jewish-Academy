@@ -78,7 +78,7 @@ class ResendForms extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  handleClose() {
+  handleCommentClose() {
     this.setState({
       openCommentDialog: false,
       dialogCommentId: 0,
@@ -218,11 +218,11 @@ class ResendForms extends React.Component {
               </Paper>
             </div>
             <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
-              <Button variant='contained' size='large' onClick={()=> {}}>Submit</Button>
+              <Button variant='contained' size='large' onClick={()=> {}}>Send Email</Button>
             </div>
           </Paper>
         </div>
-        <Dialog open={openCommentDialog} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title">
+        <Dialog open={openCommentDialog} onClose={this.handleCommentClose.bind(this)} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Comment on {dialogCommentName}</DialogTitle>
           <DialogContent>
               Write your comment here for {dialogCommentName}:
@@ -242,7 +242,32 @@ class ResendForms extends React.Component {
             <Button onClick={() => this.deleteAndClose.bind(this)(dialogCommentId)} color="primary">
               Delete
             </Button>
-            <Button onClick={this.handleClose.bind(this)} color="primary">
+            <Button onClick={this.handleCommentClose.bind(this)} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={openCommentDialog} onClose={this.handleCommentClose.bind(this)} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Comment on {dialogCommentName}</DialogTitle>
+          <DialogContent>
+            Write your comment here for {dialogCommentName}:
+            <TextField
+              multiline
+              autoFocus
+              margin="dense"
+              id="comment"
+              label="comment"
+              type="text"
+              fullWidth
+              value={this.getComment(dialogCommentId)}
+              onChange={(e) => this.updateComment(dialogCommentId, e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.deleteAndClose.bind(this)(dialogCommentId)} color="primary">
+              Delete
+            </Button>
+            <Button onClick={this.handleCommentClose.bind(this)} color="primary">
               Save
             </Button>
           </DialogActions>
