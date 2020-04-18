@@ -36,9 +36,9 @@ class ResendForms extends React.Component {
       studentForms: processedStudentForms,
       blankForms: processedBlankForms,
       forms: displayFormData,
-      openDialog: false,
-      dialogId: 0,
-      dialogName: '',
+      openCommentDialog: false,
+      dialogCommentId: 0,
+      dialogCommentName: '',
       comments: makeComments,
       message: 'Please note the new changes made on your student\'s forms.',
     };
@@ -80,8 +80,8 @@ class ResendForms extends React.Component {
   // eslint-disable-next-line require-jsdoc
   handleClose() {
     this.setState({
-      openDialog: false,
-      dialogId: 0,
+      openCommentDialog: false,
+      dialogCommentId: 0,
     });
   }
 
@@ -129,8 +129,8 @@ class ResendForms extends React.Component {
   deleteAndClose(id){
     this.updateComment(id, '');
     this.setState({
-      openDialog: false,
-      dialogId: 0,
+      openCommentDialog: false,
+      dialogCommentId: 0,
     });
   }
   updateMessage(newMessage){
@@ -140,7 +140,7 @@ class ResendForms extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, openDialog, dialogId, dialogName, message} = this.state;
+    const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message} = this.state;
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40}}>
@@ -186,7 +186,7 @@ class ResendForms extends React.Component {
                               edge="end"
                               aria-label="comments"
                               onClick={() => {
-                                this.setState({openDialog: true, dialogId: value.id, dialogName: value.name});
+                                this.setState({openCommentDialog: true, dialogCommentId: value.id, dialogCommentName: value.name});
                               }}
                             >
                               {this.hasComment(value.id) ? <CommentIcon/> : <ModeCommentIcon/>}
@@ -222,10 +222,10 @@ class ResendForms extends React.Component {
             </div>
           </Paper>
         </div>
-        <Dialog open={openDialog} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Comment on {dialogName}</DialogTitle>
+        <Dialog open={openCommentDialog} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Comment on {dialogCommentName}</DialogTitle>
           <DialogContent>
-              Write your comment here for {dialogName}:
+              Write your comment here for {dialogCommentName}:
             <TextField
               multiline
               autoFocus
@@ -234,13 +234,13 @@ class ResendForms extends React.Component {
               label="comment"
               type="text"
               fullWidth
-              value={this.getComment(dialogId)}
-              onChange={(e) => this.updateComment(dialogId, e.target.value)}
+              value={this.getComment(dialogCommentId)}
+              onChange={(e) => this.updateComment(dialogCommentId, e.target.value)}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.deleteAndClose.bind(this)(dialogId)} color="primary">
-              Cancel
+            <Button onClick={() => this.deleteAndClose.bind(this)(dialogCommentId)} color="primary">
+              Delete
             </Button>
             <Button onClick={this.handleClose.bind(this)} color="primary">
               Save
