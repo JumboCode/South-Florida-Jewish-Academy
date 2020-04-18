@@ -11,6 +11,7 @@ import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import {instanceOf, PropTypes} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 const imageStyle = {
   width: 60,
@@ -58,7 +59,7 @@ class StudentProfile extends React.Component {
       id: this.props.match.params.id,
     };
 
-    fetch('http://127.0.0.1:5000/studentProfile', {
+    fetch(apiUrl() + '/studentProfile', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -2,6 +2,7 @@ import React from 'react';
 import {List, ListItem, ListItemIcon, Checkbox} from '@material-ui/core';
 import {instanceOf, PropTypes} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class FormSelector extends React.Component {
@@ -22,7 +23,7 @@ class FormSelector extends React.Component {
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
     const {cookies} = this.props;
-    fetch('http://127.0.0.1:5000/getAllForms', {
+    fetch(apiUrl() + '/getAllForms', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${cookies.get('token')}`,
@@ -80,12 +81,31 @@ class FormSelector extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
+  showErrorMessage() {
+    if (this.state.forms.every((form) => !form.checked)) {
+      return (
+        <div style={{fontSize: 10, paddingTop: 5, color: 'red'}}>
+          Please Select at least one form
+        </div>);
+    } else {
+      return (
+        <div style={{fontSize: 10, paddingTop: 5}}>
+          <br/>
+        </div>
+      );
+    }
+  }
+
+  // eslint-disable-next-line require-jsdoc
   render() {
     const {forms} = this.state;
     return (
       <div style={{paddingTop: 10}}>
         <div style={{paddingLeft: 10}}>
-          Select Forms:
+          <div>
+            Select Forms:
+          </div>
+          {this.showErrorMessage()}
           <div style={{width: 300}}>
             <List>
               {/* eslint-disable-next-line max-len */}

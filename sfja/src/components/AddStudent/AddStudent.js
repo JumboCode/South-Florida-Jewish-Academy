@@ -2,8 +2,10 @@ import React from 'react';
 import Input from './Input';
 import FormSelector from './FormSelector';
 import {Button, Paper} from '@material-ui/core';
+import SuccessMessage from './SuccessMessage';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
+import apiUrl from '../../utils/Env';
 // eslint-disable max-len
 
 // eslint-disable-next-line require-jsdoc
@@ -20,6 +22,8 @@ class AddStudent extends React.PureComponent {
           inputData: null,
           formData: null,
           submitTime: Date.now(),
+          successMessage: false,
+          successParents: [],
         };
   }
 
@@ -50,7 +54,7 @@ class AddStudent extends React.PureComponent {
     };
 
     // eslint-disable-next-line max-len
-    const parentData = inputData.parents.filter((currParent) => (currParent.firstName));
+    const parentData = inputData.parents.filter((currParent) => (currParent.firstName)); // null check
     const forms = formData.forms.filter((currForm) => (currForm.checked));
     const body = {
       studentData: studentData,
@@ -58,7 +62,7 @@ class AddStudent extends React.PureComponent {
       forms: forms,
     };
 
-    return fetch('http://127.0.0.1:5000/addStudent', {
+    return fetch(apiUrl() + '/addStudent', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -67,14 +71,63 @@ class AddStudent extends React.PureComponent {
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
     }).then(response => {
-      this.setState({submitTime: Date.now()});
+      this.setState({
+        submitTime: Date.now(),
+        successMessage: true,
+        successParents: inputData.parents.filter((parent) => (parent.email))
+            .map((parent) => parent.email),
+      });
+    }).then(() => {
+      this.setState({
+        successMessage: false,
+      });
     });
   };
 
+  // eslint-disable-next-line require-jsdoc
+  submitButtonDisabled() {
+    const {inputData, formData} = this.state;
+    if (inputData === null) {
+      return true;
+    }
+    if (inputData.firstNameStudent === '' ||
+        inputData.lastNameStudent === '' ||
+        inputData.gradeStudent === '' ||
+        inputData.dob === null
+    ) {
+      return true;
+    }
+    inputData.parents.forEach((parent) => {
+      if (parent.firstName === '' || parent.lastName === '') {
+        return true;
+      }
+    });
+    if (inputData.parents[0].email === '') {
+      return true;
+    }
+
+    if (formData.forms.every((form) => !form.checked)) {
+      return true;
+    }
+
+    return false;
+  }
 
   // eslint-disable-next-line require-jsdoc
+  submitButton(disabled) {
+    return (
+      <Button
+        disabled={disabled}
+        variant='contained'
+        size='large'
+        onClick={()=> this.submit()}>
+        Submit
+      </Button>
+    );
+  }
+  // eslint-disable-next-line require-jsdoc
   render() {
-    const {submitTime} = this.state;
+    const {submitTime, successMessage, successParents} = this.state;
     return (
       <div>
         {/* eslint-disable max-len */}
@@ -90,10 +143,11 @@ class AddStudent extends React.PureComponent {
               </Paper>
             </div>
             <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', margin: 20}}>
-              <Button variant='contained' size='large' onClick={()=> this.submit()}>Submit</Button>
+              {this.submitButton(this.submitButtonDisabled())}
             </div>
           </Paper>
         </div>
+        <SuccessMessage open={successMessage} successParents={successParents}/>
       </div>
     );
   }

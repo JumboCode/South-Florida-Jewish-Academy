@@ -5,6 +5,7 @@ import {instanceOf} from 'prop-types';
 import {Button, TextField} from '@material-ui/core';
 import {Cookies, withCookies} from 'react-cookie';
 import PropTypes from 'prop-types';
+import apiUrl from '../../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class Demobar extends React.Component {
@@ -40,10 +41,9 @@ class Demobar extends React.Component {
   // eslint-disable-next-line require-jsdoc
   _onSubmit(data, formName) {
     const {cookies, setOpenSuccessSnackBar} = this.props;
-    post('http://127.0.0.1:5000/newform', data, cookies.get('token'), formName);
+    post(apiUrl() + '/newform', data, cookies.get('token'), formName);
     this.setState({formName: '', data: []});
     setOpenSuccessSnackBar(true);
-    // Place code to post json data to server here
   }
 
   // eslint-disable-next-line require-jsdoc

@@ -1,4 +1,4 @@
 #!/bin/bash
 heroku git:remote -a sfjaforms
-git subtree push --prefix sfja heroku master
+git push heroku `git subtree split --prefix sfja master`:master --force
 

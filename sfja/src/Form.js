@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import apiUrl from './utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class Form extends React.Component {
@@ -8,7 +9,7 @@ class Form extends React.Component {
       const body = {
         key: key,
       };
-      fetch('http://127.0.0.1:5000/checkKey', {
+      fetch(apiUrl() + '/checkKey', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {
