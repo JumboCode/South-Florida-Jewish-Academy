@@ -21,6 +21,7 @@ class ResendForms extends React.Component {
     studentForms: Proptypes.array,
     cookies: instanceOf(Cookies).isRequired,
     parents: Proptypes.array,
+    updateStudentProfile: Proptypes.func,
   };
 
   constructor(props) {
@@ -31,8 +32,6 @@ class ResendForms extends React.Component {
     const displayFormData = this.processDisplayFormData(processedStudentForms, processedBlankForms);
     const makeComments = this.makeBlankComments(blankForms);
     this.state = {
-      studentForms: processedStudentForms,
-      blankForms: processedBlankForms,
       forms: displayFormData,
       openCommentDialog: false,
       dialogCommentId: 0,
@@ -43,8 +42,6 @@ class ResendForms extends React.Component {
       openSentMessage: false,
       success: true,
       initialState: {
-        studentForms: processedStudentForms,
-        blankForms: processedBlankForms,
         forms: displayFormData,
         openCommentDialog: false,
         dialogCommentId: 0,
@@ -64,7 +61,7 @@ class ResendForms extends React.Component {
   }
   resendForms() {
     const {comments, message, forms} = this.state;
-    const {studentId, cookies} = this.props;
+    const {studentId, cookies, updateStudentProfile} = this.props;
     const body = {
       comments: comments,
       message: message,
@@ -90,6 +87,12 @@ class ResendForms extends React.Component {
           success: false,
         });
       }
+    }).then(() => {
+      updateStudentProfile();
+      const newForms = forms.map((currForm) => ({id: currForm.id, name: currForm.name, checked: currForm.checked, lastUpdated: !!currForm.lastUpdated ? currForm.lastUpdated : currForm.checked ? ' - Not Started' : null}));
+      this.setState({
+        forms: newForms,
+      });
     });
   }
   makeBlankComments(blankForms) {
@@ -128,7 +131,7 @@ class ResendForms extends React.Component {
   formFlipper(formID) {
     const oldForms = this.state.forms;
     // eslint-disable-next-line max-len
-    const newForms = oldForms.map((currForm) => (currForm.id === formID ? {id: currForm.id, name: currForm.name, checked: !currForm.checked, lastUpdated: currForm.lastUpdated} : currForm));
+    const newForms = oldForms.map((currForm) => (currForm.id === formID && currForm.lastUpdated === null ? {id: currForm.id, name: currForm.name, checked: !currForm.checked, lastUpdated: currForm.lastUpdated} : currForm));
     this.setState({
       forms: newForms,
     });
@@ -136,7 +139,7 @@ class ResendForms extends React.Component {
   selectAll(theBool) {
     const oldForms = this.state.forms;
     // eslint-disable-next-line max-len
-    const newForms = oldForms.map((currForm) => ({id: currForm.id, name: currForm.name, checked: theBool, lastUpdated: currForm.lastUpdated}));
+    const newForms = oldForms.map((currForm) => (currForm.lastUpdated === null ? {id: currForm.id, name: currForm.name, checked: theBool, lastUpdated: currForm.lastUpdated} : currForm));
     this.setState({
       forms: newForms,
     });
@@ -211,11 +214,10 @@ class ResendForms extends React.Component {
                           <ListItemIcon>
                             <Checkbox
                               edge="start"
-                              checked={value.checked || value.lastUpdated}
-                              disabled={value.lastUpdated}
+                              checked={value.checked || !!value.lastUpdated}
+                              disabled={!!value.lastUpdated}
                               tabIndex={-1}
                               inputProps={{'aria-labelledby': labelId}}
-                              readOnly={value.lastUpdated}
                             />
                           </ListItemIcon>
                           {value.name}{value.lastUpdated ? value.lastUpdated : ' - Not Sent'}

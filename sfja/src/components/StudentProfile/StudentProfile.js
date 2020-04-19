@@ -55,7 +55,7 @@ class StudentProfile extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  componentDidMount() {
+  updateStudentProfile() {
     const {cookies} = this.props;
     const body = {
       id: this.props.match.params.id,
@@ -68,8 +68,7 @@ class StudentProfile extends React.Component {
         'Authorization': `Bearer ${cookies.get('token')}`,
       },
       body: JSON.stringify(body),
-    })
-        .then((res) => res.json())
+    }).then((res) => res.json())
         .then((data) => {
           this.setState({
             forms: data.forms,
@@ -80,6 +79,11 @@ class StudentProfile extends React.Component {
         }).catch((error) => {
           console.log(error);
         });
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  componentDidMount() {
+    this.updateStudentProfile();
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -146,6 +150,7 @@ class StudentProfile extends React.Component {
                   blankForms={blankForms}
                   studentId={basicInfo['_id']}
                   parents={parents}
+                  updateStudentProfile={this.updateStudentProfile.bind(this)}
                 />}
               </div>
             </Paper>
