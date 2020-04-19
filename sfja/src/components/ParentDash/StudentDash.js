@@ -1,81 +1,151 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Select, InputLabel, MenuItem} from '@material-ui/core';
+// eslint-disable-next-line max-len
+import ReactFormGenerator from '../FormManager/BlankFormBuilder/FormBuilder/form';
+import {makeStyles} from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import TableContainer from '@material-ui/core/TableContainer';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 import apiUrl from '../../utils/Env';
 
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+
+});
 // eslint-disable-next-line require-jsdoc
 class StudentDash extends React.Component {
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
-    console.log('constructor');
     super(props);
     this.state = {
       studentId: this.props.match.params.studentId,
-      formIds: [],
-      formNames: [],
-      currForm: null,
-      currName: '',
+      formData: [],
+      selected: null,
+      blankFormData: null,
+      formFilledData: null,
     };
   }
 
-    handleChange = (event) => {
-      // eslint-disable-next-line no-invalid-this
-      this.setState({currName: event.target.value});
-    };
+  handleChange = (event) => {
+    // eslint-disable-next-line no-invalid-this
+    this.setState({currName: event.target.value});
+  };
 
-    // eslint-disable-next-line require-jsdoc
-    componentDidMount() {
+  // eslint-disable-next-line require-jsdoc
+  componentDidMount() {
+    this.refreshStudentForms();
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  refreshStudentForms() {
+    fetch(apiUrl() + '/getStudentForms', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({student_id: this.state.studentId}),
+    }).then((res) => res.json())
+        .then((data) => {
+          this.setState({formData: data.form_data});
+          console.log(data);
+        }).catch(console.log);
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  refreshFormData(formId) {
+    fetch('http://127.0.0.1:5000/getForm', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      // eslint-disable-next-line react/prop-types
+      body: JSON.stringify({form_id: formId}),
+    }).then((res) => res.json())
+        .then((data) => {
+          this.setState({blankFormData: data.blank_form_data,
+            formFilledData: data.form_data});
+          console.log(data);
+        }).catch(console.log);
+  }
+
+  // eslint-disable-next-line no-invalid-this
+  isSelected = (formId) => this.state.selected == formId
+
+  handleOnClick = (event, formId) => {
+    // eslint-disable-next-line no-invalid-this
+    this.setState({selected: formId});
+    // eslint-disable-next-line no-invalid-this
+    this.refreshFormData(formId);
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  handleSubmit(formId, answerData) {
+    fetch('http://127.0.0.1:5000/submitForm', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      // eslint-disable-next-line react/prop-types
+      body: JSON.stringify({form_id: formId,
+        answer_data: answerData}),
+    }).then((response) => response);
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  render() {
+    // eslint-disable-next-line max-len
+    const {studentId, formData, selected, formFilledData, blankFormData} = this.state;
+
+    if (studentId !== this.props.match.params.studentId) {
       this.refreshStudentForms();
     }
-
-    // eslint-disable-next-line require-jsdoc
-    refreshStudentForms() {
-      fetch(apiUrl() + '/getStudentForms', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({student_id: this.state.studentId}),
-      }).then((res) => res.json())
-          .then((data) => {
-            this.setState({
-              formIds: data.form_ids,
-              formNames: data.form_names,
-              studentId: this.props.match.params.studentId,
-            });
-            console.log(data);
-          }).catch(console.log);
-    }
-
-
-    // eslint-disable-next-line require-jsdoc
-    render() {
-      const {studentId, formIds, formNames, currName} = this.state;
-
-      if (studentId !== this.props.match.params.studentId) {
-        this.refreshStudentForms();
-      }
-
-      return (
-        <div>
-          <h1>HELLO STUDENT {studentId}</h1>
-          <InputLabel id="form-label">Forms</InputLabel>
-          <Select
-            labelId="label"
-            id="select"
-            value={currName}
-            onChange={this.handleChange}>
-            {formIds.map((value) => {
-              return (
-                <MenuItem
-                  key={formIds.indexOf(value)}
-                  value={value}>
-                  {formNames[formIds.indexOf(value)]}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </div>
-      );
-    }
+    console.log(blankFormData);
+    return (
+      <div>
+        <h1>HELLO STUDENT {studentId}</h1>
+        <TableContainer component={Paper}>
+          <Table className={useStyles.table} aria-label="form table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Form Name</TableCell>
+                <TableCell align="right">Last Updated</TableCell>
+                <TableCell align="right">Last Viewed</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {formData.map((form) => (
+                <TableRow
+                  key={form.form_id}
+                  onClick={(event) => this.handleOnClick(event, form.form_id)}
+                  selected={this.isSelected(form.form_id)}
+                >
+                  <TableCell component="th" scope="row">
+                    {form.form_name}
+                  </TableCell>
+                  <TableCell align="right">{form.last_updated}</TableCell>
+                  <TableCell align="right">{form.last_viewed}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {console.log('FORM GENERATOR')}
+        {console.log(typeof blankFormData)}
+        {blankFormData !== null ?
+          <ReactFormGenerator
+            onSubmit={this.handleSubmit}
+            form_action=""
+            form_method="POST"
+            task_id={12}
+            answer_data={formFilledData}
+            data={blankFormData} // Question data
+            form_id={selected}
+          /> :
+          <h1>Please select a form.</h1>
+        }
+      </div>
+    );
+  }
 }
 
 StudentDash.propTypes = {

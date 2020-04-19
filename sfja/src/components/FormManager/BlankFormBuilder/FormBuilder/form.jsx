@@ -193,10 +193,10 @@ export default class ReactForm extends React.Component {
 
     // Only submit if there are no errors.
     if (errors.length < 1) {
-      const { onSubmit } = this.props;
+      const { onSubmit, form_id } = this.props;
       if (onSubmit) {
         const data = this._collectFormData(this.props.data);
-        onSubmit(data);
+        onSubmit(form_id, data);
       } else {
         const $form = ReactDOM.findDOMNode(this.form);
         $form.submit();
