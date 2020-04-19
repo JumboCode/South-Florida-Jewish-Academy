@@ -171,22 +171,28 @@ def getStudentsOfParent():
 def getStudentForms():
     student_id = request.json['student_id']
     form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
-    form_names = []
+    form_data = []
     for id in form_ids:
-        form_names.append(FormsDOM.getFormName(ObjectId(id)))
-    return {'form_ids': form_ids,
-            'form_names': form_names}
+        curr_form = {'form_id' : id,
+                     'form_name' : FormsDOM.getFormName(ObjectId(id)),
+                     'last_updated' : FormsDOM.getLastUpdated(ObjectId(id)),
+                     'last_viewed' : FormsDOM.getLastViewed(ObjectId(id))}
+        form_data.append(curr_form)
+    return {'form_data': form_data}
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
-    print("HELLO HERERE")
     form_id = request.json['form_id']
-    blank_form_data = FormsDOM.getBlankForm(form_id)
-    form_data = FormsDOM.getFormData(form_id)
+    blank_form_data = FormsDOM.getBlankForm(ObjectId(form_id))
+    form_data = FormsDOM.getFormData(ObjectId(form_id))
 
-    print(blank_form_data)
     return {'blank_form_data' : blank_form_data,
             'form_data' : form_data}
+  
+@app.route('/forms', methods = ['GET', 'POST'])
+def getForms():
+    # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
+    return {'forms': FormsDOM.getForms()}
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
@@ -205,6 +211,16 @@ def checkKey():
     return email iff key exists in database
     else -> 403 errorr
  """
+
+@app.route('/submitForm', methods = ['POST'])
+def submitForm():
+    form_id = request.json['form_id']
+    answer_data = request.json['answer_data']
+    FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
+
+
+
 
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
@@ -307,11 +323,9 @@ def updateFormName():
 @app.route('/newform', methods = ['POST'])
 @requires_auth
 def addForm():
+    data = request.json['data']
     form_name = request.json['formName']
-    byte_data = request.data.decode('utf8').replace("'", '"')
-    data = json.loads(byte_data)
-    data_json = json.dumps(data, indent=4, sort_keys=True)
-    blankFormsDOM.createForm(form_name, data_json)
+    blankFormsDOM.createForm(form_name, data)
     return '0'
 
 '''======================  ADD STUDENT ======================'''
@@ -341,7 +355,7 @@ def addStudent():
         for parentId in parentIds:
             id = form['id']
             # createForm(id, date, required, comp, data, parentID):
-            currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, None, parentId)
+            currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, [], parentId)
             formIds.append(currID)
 
 

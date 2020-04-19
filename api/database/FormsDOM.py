@@ -36,7 +36,7 @@ def getInfo(id, key):
 
 # Gets form data.
 def getFormData(id):
-    contents = list(mongo.db.forms.find({'_id': str(id)}))
+    contents = list(mongo.db.forms.find({'_id': id}))
 
     if len(contents) != 1:
         return False
@@ -53,8 +53,8 @@ def getForm(id):
         return content
 
 # Updates form data.
-def updateFormData(id, ques, ans):
-    writeR = dict(mongo.db.forms.update({'form_id': str(id)}, {'$set': {'form_data.' + str(ques): ans}}))
+def updateFormData(id, data):
+    writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'form_data': data}}))
     return writeR['nModified'] > 0
 
 
@@ -85,9 +85,27 @@ def getFormName(id):
     for content in contents:
         return blankFormsDOM.getFormName(ObjectId(content['blank_forms_id']))
 
-def getBlankForm(id):
+def getLastUpdated(id):
     contents = list(mongo.db.forms.find({'_id': id}))
     
+    if len(contents) != 1:
+        return False
+    
+    for content in contents:
+        return content['last_updated']
+
+def getLastViewed(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    
+    if len(contents) != 1:
+        return False
+    
+    for content in contents:
+        return content['last_viewed']
+
+def getBlankForm(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+
     if len(contents) != 1:
         return False
     
