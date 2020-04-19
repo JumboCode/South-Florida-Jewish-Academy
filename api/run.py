@@ -271,8 +271,8 @@ def getUsers():
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
     return {'users': usersDOM.getUsers()}
 
-
 '''====================  STUDENT INFO ===================='''
+
 @app.route('/studentProfile', methods = ['POST'])
 @requires_auth
 def getStudentProfile():
