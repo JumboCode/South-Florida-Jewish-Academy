@@ -16,7 +16,7 @@ from bson.objectid import ObjectId
 from jose import jwt
 from functools import wraps
 from six.moves.urllib.request import urlopen
-
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -229,6 +229,9 @@ def submitForm():
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
 def getStudents():
+    endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
+    headers = {"Authorization": "Bearer " + get_token_auth_header()}
+    print(requests.post(endpoint, headers=headers).json())
     usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
     students = studentsDOM.getStudents()
     forms_completed = 0
