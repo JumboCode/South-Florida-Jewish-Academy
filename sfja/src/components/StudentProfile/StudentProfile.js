@@ -9,6 +9,9 @@ import Forms from './Forms';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
+import {instanceOf, PropTypes} from 'prop-types';
+import {withCookies, Cookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 const imageStyle = {
   width: 60,
@@ -33,6 +36,11 @@ const childLeft= {
 
 // eslint-disable-next-line require-jsdoc
 class StudentProfile extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired,
+    match: instanceOf(PropTypes.any),
+  };
+
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -46,10 +54,19 @@ class StudentProfile extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    // eslint-disable-next-line react/prop-types
-    const id = this.props.match.params.id;
+    const {cookies} = this.props;
+    const body = {
+      id: this.props.match.params.id,
+    };
 
-    fetch('http://127.0.0.1:5000/studentProfile?id=' + id)
+    fetch(apiUrl() + '/studentProfile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      body: JSON.stringify(body),
+    })
         .then((res) => res.json())
         .then((data) => {
           this.setState({
@@ -128,4 +145,4 @@ class StudentProfile extends React.Component {
 }
 
 // export default withStyles(useStyles)(StudentProfile);
-export default StudentProfile;
+export default withCookies(StudentProfile);

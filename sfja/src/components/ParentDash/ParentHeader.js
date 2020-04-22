@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import PersonIcon from '@material-ui/icons/Person';
 import HomeIcon from '@material-ui/icons/Home';
+import apiUrl from '../../utils/Env';
 
 const tabStyle = {color: 'grey', fontSize: 10, outline: 'none',
   textDecoration: 'none', minWidth: 20};
@@ -29,7 +30,7 @@ class ParentHeader extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    fetch('http://127.0.0.1:5000/getStudentsOfParent', {
+    fetch(apiUrl() + '/getStudentsOfParent', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({curr_link: this.state.parentKey}),

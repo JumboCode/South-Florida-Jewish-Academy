@@ -1,9 +1,16 @@
 import React from 'react';
 import {List, ListItem, ListItemIcon, Checkbox} from '@material-ui/core';
-import PropTypes from 'prop-types';
+import {instanceOf, PropTypes} from 'prop-types';
+import {withCookies, Cookies} from 'react-cookie';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class FormSelector extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired,
+    submitTime: PropTypes.any,
+  };
+
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -15,7 +22,13 @@ class FormSelector extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    fetch('http://127.0.0.1:5000/getAllForms').then((res) => res.json()).then((result) => {
+    const {cookies} = this.props;
+    fetch(apiUrl() + '/getAllForms', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+    }).then((res) => res.json()).then((result) => {
       const newForms = [];
       result.forms.map((currForm) => {
         newForms.push(
@@ -68,12 +81,31 @@ class FormSelector extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
+  showErrorMessage() {
+    if (this.state.forms.every((form) => !form.checked)) {
+      return (
+        <div style={{fontSize: 10, paddingTop: 5, color: 'red'}}>
+          Please Select at least one form
+        </div>);
+    } else {
+      return (
+        <div style={{fontSize: 10, paddingTop: 5}}>
+          <br/>
+        </div>
+      );
+    }
+  }
+
+  // eslint-disable-next-line require-jsdoc
   render() {
     const {forms} = this.state;
     return (
       <div style={{paddingTop: 10}}>
         <div style={{paddingLeft: 10}}>
-          Select Forms:
+          <div>
+            Select Forms:
+          </div>
+          {this.showErrorMessage()}
           <div style={{width: 300}}>
             <List>
               {/* eslint-disable-next-line max-len */}
@@ -119,8 +151,4 @@ class FormSelector extends React.Component {
   }
 }
 
-FormSelector.propTypes = {
-  submitTime: PropTypes.any,
-};
-
-export default FormSelector;
+export default withCookies(FormSelector);

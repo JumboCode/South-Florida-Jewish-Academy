@@ -47,11 +47,12 @@ const store = new Store({
       this.setData(context, elements, true);
     },
 
+    // TODO figure out if this is actually used anywhere
     save(data) {
       if (_onPost) {
         _onPost({task_data: data});
       } else if (_saveUrl) {
-        post(_saveUrl, {task_data: data});
+        post(_saveUrl, {task_data: data}, '');
       }
     },
   },
