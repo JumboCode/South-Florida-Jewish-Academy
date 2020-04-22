@@ -16,6 +16,7 @@ from bson.objectid import ObjectId
 from jose import jwt
 from functools import wraps
 from six.moves.urllib.request import urlopen
+import requests
 
 
 app = Flask(__name__)
@@ -24,10 +25,18 @@ api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 
+"""
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
+"""
+
+AUTH0_DOMAIN = "sfja.auth0.com"
+API_IDENTIFIER = "https://api.sfjaadmin.org"
 ALGORITHMS = ["RS256"]
 
+
+# create a user (once we're able to get specific user) if it does not
+# exist in the database; if all else fails, use JWT as payload
 
 # big thanks to https://auth0.com/docs/quickstart/backend/python/01-authorization?download=true
 # Format error response and append status code.
@@ -54,7 +63,6 @@ def get_token_auth_header():
                             "Authorization header is expected"}, 401)
 
     parts = auth.split()
-
     if parts[0].lower() != "bearer":
         raise AuthError({"code": "invalid_header",
                         "description":
@@ -213,7 +221,12 @@ def checkKey():
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
 def getStudents():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
+    endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
+    headers = {"Authorization": "Bearer " + get_token_auth_header()}
+    user_info = request.post(endpoint, headers=headers).json()
+    print(user_info)
+    usersDOM.createUser(user_info['nickname'], user_info['email'], [])
+    usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
     students = studentsDOM.getStudents()
     forms_completed = 0
     for student in students:
@@ -226,7 +239,12 @@ def getStudents():
 
 # accepts ObjectId parentId
 def emailParent(parentId):
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["email"])
+    endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
+    headers = {"Authorization": "Bearer " + get_token_auth_header()}
+    user_info = request.post(endpoint, headers=headers).json()
+    print(user_info)
+    usersDOM.createUser(user_info['nickname'], user_info['email'], [])
+    usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["email"])
     # mail = SendGrid(app)
     #generates a unique key
     generatedKey = generateKey()
@@ -287,6 +305,12 @@ def getStudentProfile():
 @app.route('/getBlankFormDetails', methods=['GET'])
 @requires_auth
 def getBlankFormDetails():
+    endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
+    headers = {"Authorization": "Bearer " + get_token_auth_header()}
+    user_info = requests.post(endpoint, headers=headers).json()
+    print(user_info)
+    usersDOM.createUser(user_info['nickname'], user_info['email'], [])
+    usersDOM.addAction(user_info['nickname'],datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit['get_forms'])
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
 @app.route('/deleteBlankForm', methods=['POST'])
@@ -358,4 +382,4 @@ def addStudent():
     return '0'
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000, host="127.0.0.1")
+    app.run(debug=True, port=5000, host="127.0.0.1")

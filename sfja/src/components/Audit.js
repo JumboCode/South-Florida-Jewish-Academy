@@ -9,12 +9,16 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import {withCookies, Cookies} from 'react-cookie';
+import {instanceOf} from 'prop-types';
+import apiUrl from '../utils/Env';
 
 //hello
 class Audit extends React.Component{
     static propTypes = {
         users: PropTypes.any,
         data: PropTypes.any,
+        cookies: instanceOf(Cookies).isRequired,
     };
 
     constructor(props) {
@@ -69,16 +73,30 @@ class Audit extends React.Component{
     };
 
     componentDidMount() {
-        fetch('http://127.0.0.1:8000/users')
-            .then((res) => res.json())
+        const {cookies} = this.props;
+        fetch(apiUrl() + '/users', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${cookies.get('token')}`,
+            },
+            // eslint-disable-next-line arrow-parens
+          })
+            .then((res) =>res.json())
             .then((data) => {
+                console.log(data);
                 this.setState({users: data.users});
                 this.setState({data: 
                     data.users.reduce(
-                        function (acc, x) { 
+                        function (acc, x) {
                             x.actions.forEach(
-                                (action) => acc.push(this.createData(x.user_id, action[0], action[1], x.email))); 
-                                return acc;
+                                (a) => {
+                                    console.log(a);
+                                    let id = x.user_id, time = a[0], action = a[1], email = x.email;
+                                    let rec = {id, time, action, email};
+                                    acc.push(rec);
+                                }); 
+                            return acc;
                             }, [])});
             })
             .catch(console.log);
@@ -90,7 +108,7 @@ class Audit extends React.Component{
         if (!users || !data) {
             return(
                 <div>
-                   <Header currTab='admin'/>
+                   <Header value='audit'/>
                    Loading
                 </div>
             );
@@ -98,7 +116,7 @@ class Audit extends React.Component{
         
         return(
             <div>
-                <Header currTab='admin'/>
+                <Header value='audit'/>
             
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
@@ -124,7 +142,7 @@ class Audit extends React.Component{
                     </TableHead>
                     <TableBody>
                     {data.map(d => (
-                        <TableRow key={d['_id']}>
+                        <TableRow key={d.email + d.time}>
                         <TableCell component="th" scope="row">
                             {d.id}
                         </TableCell>
@@ -136,7 +154,6 @@ class Audit extends React.Component{
                     </TableBody>
                 </Table>
             </TableContainer>
-                U r in audit
             </div>
 
         );
@@ -144,4 +161,4 @@ class Audit extends React.Component{
     }
 }
 
-export default Audit;
+export default withCookies(Audit);

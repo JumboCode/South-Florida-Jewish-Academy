@@ -7,4 +7,5 @@ audit_mapper = {
     "get_students"          : 5,
     "get_users"             : 6,
     "get_student_forms"     : 7,
+    'get_forms'             : 8,
 }

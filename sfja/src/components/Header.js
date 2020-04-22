@@ -9,6 +9,7 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
 import {useAuth0} from '../react-auth0-spa';
 /* eslint-disable max-len */
 
@@ -46,6 +47,7 @@ export default function Header() {
           <Tab icon={<HomeIcon fontSize='medium'/>} label='dashboard' to={'/dashboard'} component={Link} style={tabStyle}/>
           <Tab icon={<PeopleAltIcon fontSize='medium'/>} label='students' to='/students' component={Link} style={tabStyle}/>
           <Tab icon={<ListAltIcon fontSize='medium'/>} label='forms' to='/formManager' component={Link} style={tabStyle}/>
+          <Tab icon={<RemoveRedEyeIcon fontSize='medium'/>} label='audit' to='/audit' component={Link} style={tabStyle}/>
           <Tab icon={<PersonAddIcon fontSize='medium'/>} label='add student' to='/addStudent' component={Link} style={tabStyle}/>
           <Tab icon={<ExitToAppIcon fontSize='medium'/>} label='logout' to='/logout' component={Link} style={tabStyle}/>
         </Tabs>
