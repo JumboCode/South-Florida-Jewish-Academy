@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import EditIcon from '@material-ui/icons/Edit';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import Forms from './Forms';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -12,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import {instanceOf, PropTypes} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
+import ResendForms from './ResendForms';
 
 const imageStyle = {
   width: 60,
@@ -53,7 +55,7 @@ class StudentProfile extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  componentDidMount() {
+  updateStudentProfile() {
     const {cookies} = this.props;
     const body = {
       id: this.props.match.params.id,
@@ -66,12 +68,13 @@ class StudentProfile extends React.Component {
         'Authorization': `Bearer ${cookies.get('token')}`,
       },
       body: JSON.stringify(body),
-    })
-        .then((res) => res.json())
+    }).then((res) => res.json())
         .then((data) => {
           this.setState({
             forms: data.forms,
             basicInfo: data.basic_info,
+            blankForms: data.blank_forms,
+            parents: data.parents,
           });
         }).catch((error) => {
           console.log(error);
@@ -79,8 +82,13 @@ class StudentProfile extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
+  componentDidMount() {
+    this.updateStudentProfile();
+  }
+
+  // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, basicInfo, currTab} = this.state;
+    const {forms, basicInfo, currTab, blankForms, parents} = this.state;
     // const {classes, children, className, ...other} = this.props;
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
@@ -130,11 +138,20 @@ class StudentProfile extends React.Component {
                 <Tab icon={<ReceiptIcon />} label="Forms" />
                 <Tab icon={<InsertDriveFileIcon />} label="Documents" />
                 <Tab icon={<EditIcon />} label="Edit Student Info" />
+                <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
                 {currTab === 0 && <Forms forms={forms}/>}
                 {currTab === 1 && <div>documents</div>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
+                {currTab === 3 &&
+                <ResendForms
+                  studentForms={forms}
+                  blankForms={blankForms}
+                  studentId={basicInfo['_id']}
+                  parents={parents}
+                  updateStudentProfile={this.updateStudentProfile.bind(this)}
+                />}
               </div>
             </Paper>
           </div>

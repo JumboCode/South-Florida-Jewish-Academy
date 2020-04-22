@@ -284,21 +284,68 @@ def getStudentProfile():
     students_forms = studentsDOM.getForms(studentID)
     forms = []
     for formId in students_forms:
-        curr_form_data = FormsDOM.getForm(formId)
-        formName = blankFormsDOM.getBlankFormName(curr_form_data['blank_forms_id'])
+        curr_form_data_raw = FormsDOM.getForm(formId)
+        formName = blankFormsDOM.getBlankFormName(curr_form_data_raw['blank_forms_id'])
+        curr_form_data = dict()
         curr_form_data['form_name'] = str(formName)
-        del curr_form_data['blank_forms_id']
-        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data['parent_id']))
-        del curr_form_data['parent_id']
+        curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
+        curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
+        curr_form_data['last_updated'] = curr_form_data_raw['last_updated']
+        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data_raw['parent_id']))
         curr_form_data['p_first_name'] = parent_data['first_name']
         curr_form_data['p_last_name'] = parent_data['last_name']
         curr_form_data['p_email'] = parent_data['email']
         forms.append(curr_form_data)
-            
+
+
+    parentIds = studentsDOM.getParents(studentID)
+    parents = []
+    for parentId in parentIds:
+        parents.append(parentsDOM.getParentProfile(parentId))
+
     return {
         'forms': forms,
-        'basic_info': studentsDOM.getBasicInfo(studentID)
+        'basic_info': studentsDOM.getBasicInfo(studentID),
+        'blank_forms': blankFormsDOM.getAll(),
+        'parents': parents
     }
+
+@app.route('/resendForms', methods = ['POST'])
+@requires_auth
+def resendForms():
+    studentId = ObjectId(request.json['id'])
+    comments = request.json['comments']
+    message = request.json['message']
+    newBlankForms = request.json['forms']
+
+    currFormIds = studentsDOM.getForms(studentId)
+    blankFormIds = []
+    for currFormId in currFormIds:
+        blankFormIds.append(FormsDOM.getBlankFormId(currFormId))
+
+    uniqueBlankFormIds = set(blankFormIds)
+
+    parentIds = studentsDOM.getParents(studentId)
+
+    formIds = []
+
+    additionalBlankForms = []
+
+    for newBlankForm in newBlankForms:
+        newBlankFormId = ObjectId(newBlankForm['id'])
+        if newBlankForm['checked'] and newBlankFormId not in uniqueBlankFormIds:
+            for parentId in parentIds:
+                # createForm(id, date, required, comp, data, parentID):
+                currID = FormsDOM.createForm(newBlankFormId, None, None, True, False, None, parentId)
+                formIds.append(currID)
+            additionalBlankForms.append(newBlankFormId)
+
+    for formId in formIds:
+        studentsDOM.addNewFormId(studentId, formId)
+
+    ## send email here!
+    result = {'success': True}
+    return jsonify(result), 200
 
 
 '''====================  FORM MANAGEMENT ===================='''
