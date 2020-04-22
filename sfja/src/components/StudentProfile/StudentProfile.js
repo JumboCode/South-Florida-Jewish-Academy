@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
 import ProfileEdit from '../Students/ProfileEdit';
-import TextField from '@material-ui/core/TextField';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import EditIcon from '@material-ui/icons/Edit';
@@ -12,27 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import {instanceOf, PropTypes} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-
-const imageStyle = {
-  width: 60,
-  height: 60,
-};
-const parent = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingTop: '40px',
-  padding: 20,
-};
-
-const childRight= {
-  display: 'flex',
-};
-
-const childLeft= {
-  display: 'flex',
-  marginLeft: 'auto',
-};
+import ProfileHeader from './ProfileHeader';
 
 // eslint-disable-next-line require-jsdoc
 class StudentProfile extends React.Component {
@@ -94,27 +73,7 @@ class StudentProfile extends React.Component {
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <div style={{maxWidth: 1000, width: '100%'}}>
-            <div style= {parent}>
-              <div style={childRight}>
-                <img alt="student_image"
-                  style={imageStyle}
-                  src="https://i1.wp.com/acaweb.org/wp-content/uploads/2018/12/profile-placeholder.png"
-                />
-                <div style={{marginLeft: 10, fontSize: 20}}>
-                  <div>{basicInfo['first_name']} {basicInfo['last_name']}</div>
-                  <div> ID: {basicInfo['_id']}</div>
-                  {/* <div> <div style={line}> </div></div>*/}
-                </div>
-              </div>
-              <div style={childLeft}>
-                <TextField id="outlined-basic"
-                  label="Search for Forms"
-                  style ={{width: 250}}
-                  variant="outlined" />
-              </div>
-            </div>
-          </div>
+          <ProfileHeader basicInfo={basicInfo}/>
         </div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <div style={{maxWidth: 1000, width: '100%'}}>
@@ -132,7 +91,7 @@ class StudentProfile extends React.Component {
                 <Tab icon={<EditIcon />} label="Edit Student Info" />
               </Tabs>
               <div>
-                {currTab === 0 && <Forms forms={forms}/>}
+                {currTab === 0 && <Forms forms={forms} studentId={basicInfo['_id']}/>}
                 {currTab === 1 && <div>documents</div>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
               </div>
