@@ -1,19 +1,19 @@
 import React from 'react';
-import DemoBar from './DemoBar';
-import FormBuilder from './FormBuilder';
 import {Button} from '@material-ui/core';
-import PropTyes from 'prop-types';
-
+import PropTypes from 'prop-types';
+import {ReactFormBuilder} from 'react-form-builder2';
 import './css/bootstrap.min.css';
 import './css/font-awesome.min.css';
+import DemoBar from './DemoBar';
 require('./scss/application.scss');
 
 // eslint-disable-next-line require-jsdoc
 class BlankFormBuilder extends React.Component {
   // eslint-disable-next-line require-jsdoc
   static propTypes = {
-    setCreateForm: PropTyes.func,
+    setCreateForm: PropTypes.func,
   };
+
   // eslint-disable-next-line require-jsdoc
   render() {
     const {setCreateForm} = this.props;
@@ -23,11 +23,13 @@ class BlankFormBuilder extends React.Component {
           <Button
             variant='contained'
             onClick={() => setCreateForm(false)}
+            style={{margin: 10}}
           >
             back
           </Button>
+          {/* eslint-disable-next-line max-len */}
           <DemoBar/>
-          <FormBuilder.ReactFormBuilder/>
+          <ReactFormBuilder/>
         </React.Fragment>
       </div>
     );
