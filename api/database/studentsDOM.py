@@ -79,6 +79,16 @@ def getStudentForm(id, formNum):
     forms = dict(content['form'])
     return forms[formNum]
 
+# Gets parents
+def getParents(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    for content in contents:
+        return content['parent_ids']
+
 def getStudents():
     contents = list(mongo.db.students.find())
     students = []
@@ -108,3 +118,16 @@ def getAllFormIds(id):
 
     for content in contents:
         return list(map(str, content['form_ids']))
+
+def addNewFormId(id, newFormId):
+    contents = list(mongo.db.students.find({'_id': id}))
+    if len(contents) != 1:
+        return False
+
+    oldForms = []
+    for content in contents:
+        oldForms = content['form_ids']
+
+    oldForms.append(newFormId)
+    writeR = dict(mongo.db.students.update({'_id': id}, {'$set': {'form_ids': oldForms}}))
+    return writeR['nModified'] > 0
