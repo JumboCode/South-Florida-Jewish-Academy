@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line max-len
-import ReactFormGenerator from '../FormManager/BlankFormBuilder/FormBuilder/form';
+import ReactFormGenerator from 'react-form-builder2';
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -137,8 +137,8 @@ class StudentDash extends React.Component {
             form_action=""
             form_method="POST"
             task_id={12}
-            answer_data={formFilledData}
-            data={blankFormData} // Question data
+            // answer_data={formFilledData}
+            // data={blankFormData} // Question data
             form_id={selected}
           /> :
           <h1>Please select a form.</h1>

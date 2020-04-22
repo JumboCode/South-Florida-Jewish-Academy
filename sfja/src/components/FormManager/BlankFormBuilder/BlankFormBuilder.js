@@ -1,13 +1,12 @@
 import React from 'react';
-import DemoBar from './DemoBar';
-import FormBuilder from './FormBuilder/index';
 import {Button} from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import PropTyes from 'prop-types';
-
+import {ReactFormBuilder} from 'react-form-builder2';
 import './css/bootstrap.min.css';
 import './css/font-awesome.min.css';
+import Demo from './Demo';
 require('./scss/application.scss');
 
 // eslint-disable-next-line require-jsdoc
@@ -22,6 +21,7 @@ class BlankFormBuilder extends React.Component {
     super(props);
     this.state = {
       openSuccessSnackBar: false,
+      data: {},
     };
   }
 
@@ -44,8 +44,9 @@ class BlankFormBuilder extends React.Component {
             back
           </Button>
           {/* eslint-disable-next-line max-len */}
-          <DemoBar setOpenSuccessSnackBar={this.setOpenSuccessSnackBar.bind(this)}/>
-          <FormBuilder.ReactFormBuilder/>
+          <Demo/>
+          <ReactFormBuilder onPost={(data) => {console.log(data)}}
+          />
         </React.Fragment>
         <div>
           {/* eslint-disable-next-line react/prop-types,max-len */}
