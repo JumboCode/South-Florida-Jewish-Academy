@@ -16,11 +16,14 @@ from bson.objectid import ObjectId
 from jose import jwt
 from functools import wraps
 from six.moves.urllib.request import urlopen
+import gridfs
+import werkzeug
 
 
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
+fs = gridfs.GridFS(db)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 
@@ -315,8 +318,55 @@ def addForm():
     data_json = json.dumps(data, indent=4, sort_keys=True)
     blankFormsDOM.createForm(data_json)
     return '0'
+'''====================== UPLOAD DOCUMENTS======================'''
+# @app.route('/uploadDoc', methods=['GET', 'POST'])
+# def uploadDoc():
+#     studentID = request.args.get('uid') 
+#     print("upload DOc")
+#     imagefile = request.files['image']
+#     print('imagefile Retrieved')
+#     # retrieve dateTime string from request params
+#     dateTime = dict(request.form)['dateTime']
+#     print('dateTime', dateTime)
+#     # retrieve filename from file
+#     filename = werkzeug.utils.secure_filename(imagefile.filename)
+#     # save image file (temp)
+#     imagefile.save(filename)
+#     # print(filename)
+#     a = None
+#     with open(filename, "rb") as image:
+#         f = image.read()
+#         # save image file
+#         a = fs.put(f)
 
-'''======================  ADD STUDENT ======================'''
+#     if len(list(db.forms.find({"uid": userID}))) == 0:
+#         print('first')
+#         data = {
+#             'special': 'true',
+#             'forms': [{
+#                 'location': 'N/A',
+#                 'description': '0',
+#                 'dateTime': dateTime
+#             }],
+#             'images': [a],
+#             'uid': userID
+#         }
+#         db.forms.insert_one(data)
+#     else:
+#         # print('second')
+#         # userProfile = list(db.forms.find({"uid": userID}))[0]
+#         # db.forms.delete_one({"uid": userID})
+#         # userProfile['images'].append(a)
+#         # userProfile['forms'].insert(0, {
+#         #         'location': 'N/A',
+#         #         'description': len(userProfile['images']) - 1,
+#         #         'dateTime': dateTime
+#         #     })
+#         # db.forms.insert_one(userProfile)
+
+#     # print('done')
+#     return "Image Uploaded Successfully"
+  '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])
 @requires_auth
