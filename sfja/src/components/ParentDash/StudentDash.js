@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line max-len
-import ReactFormGenerator from 'react-form-builder2';
+import {ReactFormGenerator} from 'react-form-builder2';
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -64,14 +64,16 @@ class StudentDash extends React.Component {
       body: JSON.stringify({form_id: formId}),
     }).then((res) => res.json())
         .then((data) => {
-          this.setState({blankFormData: data.blank_form_data,
-            formFilledData: data.form_data});
+          this.setState({
+            blankFormData: data.blank_form_data,
+            formFilledData: data.form_data,
+          });
           console.log(data);
         }).catch(console.log);
   }
 
   // eslint-disable-next-line no-invalid-this
-  isSelected = (formId) => this.state.selected == formId
+  isSelected = (formId) => this.state.selected === formId
 
   handleOnClick = (event, formId) => {
     // eslint-disable-next-line no-invalid-this
@@ -81,12 +83,13 @@ class StudentDash extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  handleSubmit(formId, answerData) {
+  handleSubmit(answerData) {
+    const {selected} = this.state;
     fetch('http://127.0.0.1:5000/submitForm', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
-      body: JSON.stringify({form_id: formId,
+      body: JSON.stringify({form_id: selected,
         answer_data: answerData}),
     }).then((response) => response);
   }
@@ -94,7 +97,7 @@ class StudentDash extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     // eslint-disable-next-line max-len
-    const {studentId, formData, selected, formFilledData, blankFormData} = this.state;
+    const {studentId, formData, formFilledData, blankFormData} = this.state;
 
     if (studentId !== this.props.match.params.studentId) {
       this.refreshStudentForms();
@@ -129,17 +132,12 @@ class StudentDash extends React.Component {
             </TableBody>
           </Table>
         </TableContainer>
-        {console.log('FORM GENERATOR')}
-        {console.log(typeof blankFormData)}
         {blankFormData !== null ?
           <ReactFormGenerator
-            onSubmit={this.handleSubmit}
-            form_action=""
-            form_method="POST"
-            task_id={12}
-            // answer_data={formFilledData}
-            // data={blankFormData} // Question data
-            form_id={selected}
+            onSubmit={this.handleSubmit.bind(this)}
+            answer_data={formFilledData}
+            data={blankFormData} // Question data
+            // form_id={selected}
           /> :
           <h1>Please select a form.</h1>
         }

@@ -45,8 +45,7 @@ class BlankFormBuilder extends React.Component {
           </Button>
           {/* eslint-disable-next-line max-len */}
           <Demo/>
-          <ReactFormBuilder onPost={(data) => {console.log(data)}}
-          />
+          <ReactFormBuilder/>
         </React.Fragment>
         <div>
           {/* eslint-disable-next-line react/prop-types,max-len */}

@@ -64,6 +64,7 @@ class Demo extends React.Component {
 
   _onSubmit(data, formName) {
     const {cookies, setOpenSuccessSnackBar} = this.props;
+    console.log(data)
     post(apiUrl() + '/newform', data, cookies.get('token'), formName);
     this.setState({formName: '', data: []});
     setOpenSuccessSnackBar(true);
