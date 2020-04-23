@@ -41,7 +41,7 @@ export default function App() {
       >
         <Router>
           <div style={{width: '100vw'}}>
-            <Route path={['/dashboard', '/students', '/formManager', '/addStudent', '/profile']} component={Header}/>
+            <Route path={['/dashboard', '/students', '/formManager', '/addStudent', '/profile', '/audit']} component={Header}/>
             <Route exact path="/">
               <Redirect to="/dashboard" />
             </Route>

@@ -108,7 +108,6 @@ class Audit extends React.Component{
         if (!users || !data) {
             return(
                 <div>
-                   <Header value='audit'/>
                    Loading
                 </div>
             );
@@ -116,7 +115,6 @@ class Audit extends React.Component{
         
         return(
             <div>
-                <Header value='audit'/>
             
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
