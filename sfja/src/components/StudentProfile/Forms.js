@@ -41,7 +41,7 @@ export default function Forms({forms, studentId}) {
             {forms.map((form) => (
               <TableRow key={form['_id']}>
                 <TableCell>
-                  <NavLink to={'/profile/' + studentId + '/' + form['_id']}>
+                  <NavLink to={'/profile/' + studentId + '/' + form['form_id']}>
                     <Typography align="left" style={textSize}>
                       {form['form_name']}</Typography>
                   </NavLink>
