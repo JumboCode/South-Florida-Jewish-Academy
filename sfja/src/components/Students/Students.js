@@ -19,9 +19,14 @@ import Typography from '@material-ui/core/Typography';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import TextField from 'material-ui/TextField';
+import {TextField} from '@material-ui/core';
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {main: '#086fb3'},
+  },
+});
 
 const useStyles = {
   text: {
@@ -31,6 +36,16 @@ const useStyles = {
       fontSize: '1em',
       color: 'purple',
     },
+  },
+};
+
+const textSize = {
+  style: {
+    fontSize: 17,
+  },
+  autocomplete: 'new-password',
+  form: {
+    autocomplete: 'off',
   },
 };
 
@@ -137,31 +152,26 @@ class Students extends React.Component {
     // eslint-disable-next-line require-jsdoc
     render() {
       const {students, sortBy, order} = this.state;
-
       // eslint-disable-next-line react/prop-types
       const {classes, className} = this.props;
-      // console.log(classes);
       const tableStyle = clsx(classes.text, className);
-      if (!students) {
-        return (
-          <div>
-                    Loading...
-          </div>
-        );
-      }
       return (
         <div>
           <div style={studentPageStyle}>
             <div style={filterStyle}>
               <p> Filters </p>
             </div>
-            <div>
-              <div>
-                <MuiThemeProvider>
+            <div style={{width: '100%', maxWidth: 1000}}>
+              <div style={{paddingTop: 10, paddingBottom: 10}}>
+                <MuiThemeProvider theme={theme}>
                   <TextField
-                    hintText={'Search by first or last name'}
-                    floatingLabelText={'Search'}
+                    placeholder='Search by first or last name'
+                    label={'Search'}
                     value={this.state.query}
+                    inputProps={textSize}
+                    fullWidth
+                    color={'#086fb3'}
+                    InputLabelProps={textSize}
                     onChange={(e) => {
                       this.setState({query: e.target.value});
                       this.updateStudents(e.target.value);
