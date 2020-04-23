@@ -18,20 +18,14 @@ from functools import wraps
 from six.moves.urllib.request import urlopen
 import requests
 
-
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 
-"""
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
-"""
-
-AUTH0_DOMAIN = "sfja.auth0.com"
-API_IDENTIFIER = "https://api.sfjaadmin.org"
 ALGORITHMS = ["RS256"]
 
 
@@ -183,24 +177,30 @@ def getStudentForms():
     log_action('get_student_forms')
 
     form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
-    form_names = []
+    form_data = []
     for id in form_ids:
-        form_names.append(FormsDOM.getFormName(ObjectId(id)))
-    return {'form_ids': form_ids,
-            'form_names': form_names}
+        curr_form = {'form_id' : id,
+                     'form_name' : FormsDOM.getFormName(ObjectId(id)),
+                     'last_updated' : FormsDOM.getLastUpdated(ObjectId(id)),
+                     'last_viewed' : FormsDOM.getLastViewed(ObjectId(id))}
+        form_data.append(curr_form)
+    return {'form_data': form_data}
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
-    print("HELLO HERERE")
     log_action('get_form')
-
+    
     form_id = request.json['form_id']
-    blank_form_data = FormsDOM.getBlankForm(form_id)
-    form_data = FormsDOM.getFormData(form_id)
+    blank_form_data = FormsDOM.getBlankForm(ObjectId(form_id))
+    form_data = FormsDOM.getFormData(ObjectId(form_id))
 
-    print(blank_form_data)
     return {'blank_form_data' : blank_form_data,
             'form_data' : form_data}
+  
+@app.route('/forms', methods = ['GET', 'POST'])
+def getForms():
+    # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
+    return {'forms': FormsDOM.getForms()}
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
@@ -221,6 +221,16 @@ def checkKey():
     else -> 403 errorr
  """
 
+@app.route('/submitForm', methods = ['POST'])
+def submitForm():
+    form_id = request.json['form_id']
+    answer_data = request.json['answer_data']
+    FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
+
+
+
+
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 def log_action(action):
@@ -235,6 +245,7 @@ def log_action(action):
 @requires_auth
 def getStudents():
     log_action("get_students")
+    
     students = studentsDOM.getStudents()
     forms_completed = 0
     for student in students:
@@ -286,21 +297,68 @@ def getStudentProfile():
     students_forms = studentsDOM.getForms(studentID)
     forms = []
     for formId in students_forms:
-        curr_form_data = FormsDOM.getForm(formId)
-        formName = blankFormsDOM.getBlankFormName(curr_form_data['blank_forms_id'])
+        curr_form_data_raw = FormsDOM.getForm(formId)
+        formName = blankFormsDOM.getBlankFormName(curr_form_data_raw['blank_forms_id'])
+        curr_form_data = dict()
         curr_form_data['form_name'] = str(formName)
-        del curr_form_data['blank_forms_id']
-        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data['parent_id']))
-        del curr_form_data['parent_id']
+        curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
+        curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
+        curr_form_data['last_updated'] = curr_form_data_raw['last_updated']
+        parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data_raw['parent_id']))
         curr_form_data['p_first_name'] = parent_data['first_name']
         curr_form_data['p_last_name'] = parent_data['last_name']
         curr_form_data['p_email'] = parent_data['email']
         forms.append(curr_form_data)
-            
+
+
+    parentIds = studentsDOM.getParents(studentID)
+    parents = []
+    for parentId in parentIds:
+        parents.append(parentsDOM.getParentProfile(parentId))
+
     return {
         'forms': forms,
-        'basic_info': studentsDOM.getBasicInfo(studentID)
+        'basic_info': studentsDOM.getBasicInfo(studentID),
+        'blank_forms': blankFormsDOM.getAll(),
+        'parents': parents
     }
+
+@app.route('/resendForms', methods = ['POST'])
+@requires_auth
+def resendForms():
+    studentId = ObjectId(request.json['id'])
+    comments = request.json['comments']
+    message = request.json['message']
+    newBlankForms = request.json['forms']
+
+    currFormIds = studentsDOM.getForms(studentId)
+    blankFormIds = []
+    for currFormId in currFormIds:
+        blankFormIds.append(FormsDOM.getBlankFormId(currFormId))
+
+    uniqueBlankFormIds = set(blankFormIds)
+
+    parentIds = studentsDOM.getParents(studentId)
+
+    formIds = []
+
+    additionalBlankForms = []
+
+    for newBlankForm in newBlankForms:
+        newBlankFormId = ObjectId(newBlankForm['id'])
+        if newBlankForm['checked'] and newBlankFormId not in uniqueBlankFormIds:
+            for parentId in parentIds:
+                # createForm(id, date, required, comp, data, parentID):
+                currID = FormsDOM.createForm(newBlankFormId, None, None, True, False, None, parentId)
+                formIds.append(currID)
+            additionalBlankForms.append(newBlankFormId)
+
+    for formId in formIds:
+        studentsDOM.addNewFormId(studentId, formId)
+
+    ## send email here!
+    result = {'success': True}
+    return jsonify(result), 200
 
 
 '''====================  FORM MANAGEMENT ===================='''
@@ -333,12 +391,10 @@ def updateFormName():
 @requires_auth
 def addForm():
     log_action('add_form')
-
+    
+    data = request.json['data']
     form_name = request.json['formName']
-    byte_data = request.data.decode('utf8').replace("'", '"')
-    data = json.loads(byte_data)
-    data_json = json.dumps(data, indent=4, sort_keys=True)
-    blankFormsDOM.createForm(form_name, data_json)
+    blankFormsDOM.createForm(form_name, data)
     return '0'
 
 '''======================  ADD STUDENT ======================'''
@@ -371,7 +427,7 @@ def addStudent():
         for parentId in parentIds:
             id = form['id']
             # createForm(id, date, required, comp, data, parentID):
-            currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, None, parentId)
+            currID = FormsDOM.createForm(ObjectId(id), None, None, True, False, [], parentId)
             formIds.append(currID)
 
 

@@ -35,7 +35,6 @@ export default function Header() {
           }}
           variant="fullWidth"
           TabIndicatorProps={{style: {background: '#0068af'}}}
-          textColor="primary"
           aria-label="icon tabs example"
         >
           <div>

@@ -11,9 +11,9 @@ import PropTypes from 'prop-types';
 
 const textSize = {
   style: {fontSize: 15},
-  autocomplete: 'new-password',
+  autoComplete: 'new-password',
   form: {
-    autocomplete: 'off',
+    autoComplete: 'off',
   },
 };
 
