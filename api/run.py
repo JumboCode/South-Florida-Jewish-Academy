@@ -200,6 +200,7 @@ def getForm():
 @app.route('/forms', methods = ['GET', 'POST'])
 def getForms():
     # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
+    log_action('get_forms')
     return {'forms': FormsDOM.getForms()}
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
@@ -223,6 +224,7 @@ def checkKey():
 
 @app.route('/submitForm', methods = ['POST'])
 def submitForm():
+    log_action('submit_form')
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
     FormsDOM.updateFormData(form_id, answer_data)
@@ -326,6 +328,7 @@ def getStudentProfile():
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
 def resendForms():
+    log_action('resend_forms')
     studentId = ObjectId(request.json['id'])
     comments = request.json['comments']
     message = request.json['message']
@@ -402,7 +405,7 @@ def addForm():
 @app.route('/getAllForms', methods=['GET'])
 @requires_auth
 def getAllForms():
-    log_action('get_forms')
+    log_action('get_all_forms')
     return { 'forms': blankFormsDOM.getAll()}
 
 @app.route('/addStudent', methods = ['POST'])

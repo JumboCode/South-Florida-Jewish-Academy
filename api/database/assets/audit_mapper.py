@@ -16,5 +16,8 @@ audit_mapper = {
     'get_form'              : 14,
     'get_student_forms'     : 15,
     'get_students_of_parent': 16,
+    'resend_forms'          : 17,
+    'get_all_forms'         : 18,
+    'submit_form'           : 19,
     
 }
