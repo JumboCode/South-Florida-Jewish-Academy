@@ -156,20 +156,20 @@ class Students extends React.Component {
               <p> Filters </p>
             </div>
             <div>
-              <MuiThemeProvider>
-                <TextField
-                  hintText={'Search by first or last name'}
-                  floatingLabelText={'Search'}
-                  value={this.state.query}
-                  onChange={(e) => {
-                    this.setState({query: e.target.value});
-                    this.updateStudents(e.target.value);
-                  }}
-                >
-                </TextField>
-              </MuiThemeProvider>
-            </div>
-            <div>
+              <div>
+                <MuiThemeProvider>
+                  <TextField
+                    hintText={'Search by first or last name'}
+                    floatingLabelText={'Search'}
+                    value={this.state.query}
+                    onChange={(e) => {
+                      this.setState({query: e.target.value});
+                      this.updateStudents(e.target.value);
+                    }}
+                  >
+                  </TextField>
+                </MuiThemeProvider>
+              </div>
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead>
