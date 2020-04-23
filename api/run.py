@@ -89,7 +89,6 @@ def requires_scope(required_scope):
 
 
 def requires_auth(f):
-    print ("requires auth")
     """Determines if the access token is valid
     """
     @wraps(f)
@@ -335,6 +334,14 @@ def getStudentProfileForm():
         'parent_profile': parent_profile,
         'form_info': form_info
     }
+
+@app.route('/submitFormAuth', methods = ['POST'])
+@requires_auth
+def submitFormAuth():
+    form_id = request.json['form_id']
+    answer_data = request.json['answer_data']
+    FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
 
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth

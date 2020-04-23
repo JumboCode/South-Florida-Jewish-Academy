@@ -1,3 +1,4 @@
+/* eslint-disable max-len,react/prop-types */
 import React from 'react';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
@@ -6,6 +7,7 @@ import ProfileHeader from './ProfileHeader';
 import {ReactFormGenerator} from 'react-form-builder2';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import ConfirmationDialog from '../../utils/ConfirmationDialog';
 
 // eslint-disable-next-line require-jsdoc
 class FormViewer extends React.Component {
@@ -17,12 +19,14 @@ class FormViewer extends React.Component {
     super(props);
     this.state = {
       formData: [],
-      blankFormData: [],
+      blankFormData: null,
       basicInfo: null,
       parentProfile: null,
       formInfo: null,
+      openDialog: false,
     };
   }
+  // eslint-disable-next-line require-jsdoc
   componentDidMount() {
     const {cookies} = this.props;
     const body = {
@@ -50,17 +54,35 @@ class FormViewer extends React.Component {
           console.log(error);
         });
   }
+  // eslint-disable-next-line require-jsdoc
+  setOpenDialog(newBool) {
+    this.setState({openDialog: newBool});
+  }
+  // eslint-disable-next-line require-jsdoc
   handleSubmit(data) {
-    console.log(data);
     this.setState({
       formData: data,
-    })
+      openDialog: true,
+    });
   }
-
+  // eslint-disable-next-line require-jsdoc
+  handleSubmitForm() {
+    const {formData} = this.state;
+    fetch(apiUrl() + '/submitForm', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      // eslint-disable-next-line react/prop-types
+      body: JSON.stringify({
+        // eslint-disable-next-line react/prop-types
+        form_id: this.props.match.params.formId,
+        answer_data: formData,
+      }),
+    }).then((response) => response);
+  }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile} = this.state;
-    console.log(formData)
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog} = this.state;
+    console.log(formData);
     return (
       <div>
         {/* eslint-disable-next-line max-len */}
@@ -96,17 +118,25 @@ class FormViewer extends React.Component {
                   <br/>
                 </div>
               </div>}
-              <div style={{backgroundColor: '#0068af', width: '100%', height: 2}}/>
-              {blankFormData &&
+              <div style={{backgroundColor: '#0068af', width: '100%', height: 2, marginTop: 10}}/>
+              {blankFormData !== null ?
               <ReactFormGenerator
                 onSubmit={this.handleSubmit.bind(this)}
                 answer_data={formData}
                 data={blankFormData}
                 action_name={'Override Parent\'s Data'}
-              />}
+              /> : <div/>}
             </Paper>
           </div>
         </div>
+        <ConfirmationDialog
+          showWarning={openDialog}
+          setShowWarning={this.setOpenDialog.bind(this)}
+          onConfirm={this.handleSubmitForm.bind(this)}
+          message='You are attempting to overwrite form data. Are you sure?'
+          confirmMessage='Yes'
+          notConfirmMessage='Back'
+        />
       </div>
     );
   }
