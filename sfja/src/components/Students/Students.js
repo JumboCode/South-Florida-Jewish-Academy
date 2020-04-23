@@ -43,9 +43,9 @@ const textSize = {
   style: {
     fontSize: 17,
   },
-  autocomplete: 'new-password',
+  autoComplete: 'new-password',
   form: {
-    autocomplete: 'off',
+    autoComplete: 'off',
   },
 };
 
@@ -170,7 +170,6 @@ class Students extends React.Component {
                     value={this.state.query}
                     inputProps={textSize}
                     fullWidth
-                    color={'#086fb3'}
                     InputLabelProps={textSize}
                     onChange={(e) => {
                       this.setState({query: e.target.value});
