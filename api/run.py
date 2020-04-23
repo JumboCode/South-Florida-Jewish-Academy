@@ -310,6 +310,32 @@ def getStudentProfile():
         'parents': parents
     }
 
+@app.route('/studentProfileForm', methods = ['POST'])
+def getStudentProfileForm():
+    studentID = ObjectId(request.json['student_id'])
+    form_id = ObjectId(request.json['form_id'])
+
+    form_data = FormsDOM.getFormData(ObjectId(form_id))
+
+    blank_form_id = FormsDOM.getBlankFormId(form_id)
+    blank_form_data = blankFormsDOM.getFormData(blank_form_id)
+
+    parent_id = FormsDOM.getInfo(form_id, 'parent_id')
+    parent_profile = parentsDOM.getParentProfile(parent_id)
+
+    form_info = {}
+    form_info['name'] = blankFormsDOM.getFormName(blank_form_id)
+    form_info['last_updated'] = FormsDOM.getLastUpdated(form_id)
+    form_info['completed'] = FormsDOM.isComplete(form_id)
+
+    return {
+        'form_data': form_data,
+        'blank_form_data': blank_form_data,
+        'basic_info': studentsDOM.getBasicInfo(studentID),
+        'parent_profile': parent_profile,
+        'form_info': form_info
+    }
+
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
 def resendForms():
