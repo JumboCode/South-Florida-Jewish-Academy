@@ -39,12 +39,7 @@ export default function ProfileHeader({basicInfo}) {
             {/* <div> <div style={line}> </div></div>*/}
           </div>
         </div>
-        <div style={childLeft}>
-          <TextField id="outlined-basic"
-            label="Search for Forms"
-            style ={{width: 250}}
-            variant="outlined" />
-        </div>
+        <div style={childLeft}/>
       </div>
     </div>
   );
