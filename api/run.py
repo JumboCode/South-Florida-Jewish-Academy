@@ -169,7 +169,7 @@ def requires_auth(f):
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    get_curr_user('get_students_of_parent')
+    log_action('get_students_of_parent')
 
     student_ids = parentsDOM.listStudents(curr_link)
     student_names = []
@@ -192,7 +192,7 @@ def getStudentForms():
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
     print("HELLO HERERE")
-    get_curr_user('get_form')
+    log_action('get_form')
 
     form_id = request.json['form_id']
     blank_form_data = FormsDOM.getBlankForm(form_id)
@@ -204,7 +204,7 @@ def getForm():
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
-    get_curr_user('check_key')
+    log_action('check_key')
 
     #checkKey only works with json requests, so you can't test it without the front end
     print(request.json['key'])
@@ -223,7 +223,7 @@ def checkKey():
 
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
-def get_curr_user(action):
+def log_action(action):
     endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
     headers = {"Authorization": "Bearer " + get_token_auth_header()}
     user_info = requests.post(endpoint, headers=headers).json()
@@ -234,7 +234,7 @@ def get_curr_user(action):
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
 def getStudents():
-    get_curr_user("get_students")
+    log_action("get_students")
     students = studentsDOM.getStudents()
     forms_completed = 0
     for student in students:
@@ -247,7 +247,7 @@ def getStudents():
 
 # accepts ObjectId parentId
 def emailParent(parentId):
-    get_curr_user("email")
+    log_action("email")
     # mail = SendGrid(app)
     #generates a unique key
     generatedKey = generateKey()
@@ -273,7 +273,7 @@ def emailParent(parentId):
 @app.route('/users', methods = ['GET', 'POST'])
 @requires_auth
 def getUsers():
-    get_curr_user("get_users")
+    log_action("get_users")
     return {'users': usersDOM.getUsers()}
 
 '''====================  STUDENT INFO ===================='''
@@ -281,7 +281,7 @@ def getUsers():
 @app.route('/studentProfile', methods = ['POST'])
 @requires_auth
 def getStudentProfile():
-    get_curr_user("get_student_info")
+    log_action("get_student_info")
     studentID = ObjectId(request.json['id'])
     students_forms = studentsDOM.getForms(studentID)
     forms = []
@@ -308,13 +308,13 @@ def getStudentProfile():
 @app.route('/getBlankFormDetails', methods=['GET'])
 @requires_auth
 def getBlankFormDetails():
-    get_curr_user('get_blank_forms')
+    log_action('get_blank_forms')
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
 @app.route('/deleteBlankForm', methods=['POST'])
 @requires_auth
 def deleteBlankForm():
-    get_curr_user('delete_blank_form')
+    log_action('delete_blank_form')
     id = request.json['form_id']
     blankFormsDOM.deleteForm(ObjectId(id))
     return '0'
@@ -322,7 +322,7 @@ def deleteBlankForm():
 @app.route('/updateFormName', methods=['POST'])
 @requires_auth
 def updateFormName():
-    get_curr_user('update_form_name')
+    log_action('update_form_name')
 
     id = request.json['form_id']
     form_name = request.json['form_name']
@@ -332,7 +332,7 @@ def updateFormName():
 @app.route('/newform', methods = ['POST'])
 @requires_auth
 def addForm():
-    get_curr_user('add_form')
+    log_action('add_form')
 
     form_name = request.json['formName']
     byte_data = request.data.decode('utf8').replace("'", '"')
@@ -346,7 +346,7 @@ def addForm():
 @app.route('/getAllForms', methods=['GET'])
 @requires_auth
 def getAllForms():
-    get_curr_user('get_forms')
+    log_action('get_forms')
     return { 'forms': blankFormsDOM.getAll()}
 
 @app.route('/addStudent', methods = ['POST'])
@@ -354,7 +354,7 @@ def getAllForms():
 def addStudent():
     student = request.json['studentData']
 
-    get_curr_user('add_student')
+    log_action('add_student')
 
     parentIds = []
     parents = request.json['parentData']
