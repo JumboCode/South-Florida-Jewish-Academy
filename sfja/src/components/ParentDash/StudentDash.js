@@ -80,7 +80,7 @@ class StudentDash extends React.Component {
     this.setState({selected: formId});
     // eslint-disable-next-line no-invalid-this
     this.refreshFormData(formId);
-  }
+  };
 
   // eslint-disable-next-line require-jsdoc
   handleSubmit(answerData) {
@@ -102,7 +102,6 @@ class StudentDash extends React.Component {
     if (studentId !== this.props.match.params.studentId) {
       this.refreshStudentForms();
     }
-    console.log(formFilledData);
     return (
       <div>
         <h1>HELLO STUDENT {studentId}</h1>

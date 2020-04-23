@@ -82,7 +82,6 @@ class FormViewer extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog} = this.state;
-    console.log(formData);
     return (
       <div>
         {/* eslint-disable-next-line max-len */}
