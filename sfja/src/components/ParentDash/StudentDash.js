@@ -105,7 +105,6 @@ class StudentDash extends React.Component {
     console.log(blankFormData);
     return (
       <div>
-        <h1>HELLO STUDENT {studentId}</h1>
         <TableContainer component={Paper}>
           <Table className={useStyles.table} aria-label="form table">
             <TableHead>
@@ -133,12 +132,16 @@ class StudentDash extends React.Component {
           </Table>
         </TableContainer>
         {blankFormData !== null ?
-          <ReactFormGenerator
-            onSubmit={this.handleSubmit.bind(this)}
-            answer_data={formFilledData}
-            data={blankFormData} // Question data
-            // form_id={selected}
-          /> :
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10}}>
+            <Paper elevation={2} style={{padding: 40, minWidth: 650, marginTop: 30}}>
+              <ReactFormGenerator
+                onSubmit={this.handleSubmit.bind(this)}
+                answer_data={formFilledData}
+                data={blankFormData} // Question data
+                // form_id={selected}
+              />
+            </Paper>
+          </div> :
           <h1>Please select a form.</h1>
         }
       </div>
