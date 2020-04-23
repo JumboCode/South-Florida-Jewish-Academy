@@ -102,7 +102,7 @@ class StudentDash extends React.Component {
     if (studentId !== this.props.match.params.studentId) {
       this.refreshStudentForms();
     }
-    console.log(blankFormData);
+    console.log(formFilledData);
     return (
       <div>
         <h1>HELLO STUDENT {studentId}</h1>

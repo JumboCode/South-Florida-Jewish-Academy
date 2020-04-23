@@ -1,11 +1,11 @@
 import React from 'react';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
-import apiUrl from "../../utils/Env";
-import ProfileHeader from "./ProfileHeader";
-import {ReactFormGenerator} from "react-form-builder2";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
+import apiUrl from '../../utils/Env';
+import ProfileHeader from './ProfileHeader';
+import {ReactFormGenerator} from 'react-form-builder2';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 
 // eslint-disable-next-line require-jsdoc
 class FormViewer extends React.Component {
@@ -27,7 +27,7 @@ class FormViewer extends React.Component {
     const {cookies} = this.props;
     const body = {
       student_id: this.props.match.params.studentId,
-      form_id: this.props.match.params.formId
+      form_id: this.props.match.params.formId,
     };
 
     fetch(apiUrl() + '/studentProfileForm', {
@@ -50,13 +50,17 @@ class FormViewer extends React.Component {
           console.log(error);
         });
   }
-  handleSubmit(data){
+  handleSubmit(data) {
     console.log(data);
+    this.setState({
+      formData: data,
+    })
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
     const {basicInfo, blankFormData, formData, formInfo, parentProfile} = this.state;
+    console.log(formData)
     return (
       <div>
         {/* eslint-disable-next-line max-len */}
@@ -93,7 +97,7 @@ class FormViewer extends React.Component {
                 </div>
               </div>}
               <div style={{backgroundColor: '#0068af', width: '100%', height: 2}}/>
-              {blankFormData && formData &&
+              {blankFormData &&
               <ReactFormGenerator
                 onSubmit={this.handleSubmit.bind(this)}
                 answer_data={formData}
