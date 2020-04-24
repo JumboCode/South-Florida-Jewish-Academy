@@ -162,7 +162,6 @@ def requires_auth(f):
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    log_action('get_students_of_parent')
 
     student_ids = parentsDOM.listStudents(curr_link)
     student_names = []
@@ -173,7 +172,6 @@ def getStudentsOfParent():
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
     student_id = request.json['student_id']
-    log_action('get_student_forms')
 
     form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
     form_data = []
@@ -187,25 +185,15 @@ def getStudentForms():
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
-    log_action('get_form')
-    
     form_id = request.json['form_id']
     blank_form_data = FormsDOM.getBlankForm(ObjectId(form_id))
     form_data = FormsDOM.getFormData(ObjectId(form_id))
 
     return {'blank_form_data' : blank_form_data,
             'form_data' : form_data}
-  
-@app.route('/forms', methods = ['GET', 'POST'])
-def getForms():
-    # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
-    log_action('get_forms')
-    return {'forms': FormsDOM.getForms()}
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
-    log_action('check_key')
-
     #checkKey only works with json requests, so you can't test it without the front end
     print(request.json['key'])
     result = verifyKey(int(request.json['key']))
@@ -223,7 +211,6 @@ def checkKey():
 
 @app.route('/submitForm', methods = ['POST'])
 def submitForm():
-    log_action('submit_form')
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
     FormsDOM.updateFormData(form_id, answer_data)
@@ -238,7 +225,6 @@ def log_action(action):
     endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
     headers = {"Authorization": "Bearer " + get_token_auth_header()}
     user_info = requests.post(endpoint, headers=headers).json()
-    print(user_info)
     usersDOM.createUser(user_info['nickname'], user_info['email'], [])
     usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit[action])
 
@@ -325,6 +311,7 @@ def getStudentProfile():
     }
 
 @app.route('/studentProfileForm', methods = ['POST'])
+@requires_auth
 def getStudentProfileForm():
     studentID = ObjectId(request.json['student_id'])
     form_id = ObjectId(request.json['form_id'])
@@ -433,6 +420,12 @@ def addForm():
     blankFormsDOM.createForm(form_name, data)
     return '0'
 
+@app.route('/forms', methods = ['GET', 'POST'])
+@requires_auth
+def getForms():
+    # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
+    log_action('get_forms')
+    return {'forms': FormsDOM.getForms()}
 '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])
