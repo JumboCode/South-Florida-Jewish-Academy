@@ -91,7 +91,6 @@ def requires_scope(required_scope):
 
 
 def requires_auth(f):
-    print ("requires auth")
     """Determines if the access token is valid
     """
     @wraps(f)
@@ -324,6 +323,40 @@ def getStudentProfile():
         'blank_forms': blankFormsDOM.getAll(),
         'parents': parents
     }
+
+@app.route('/studentProfileForm', methods = ['POST'])
+def getStudentProfileForm():
+    studentID = ObjectId(request.json['student_id'])
+    form_id = ObjectId(request.json['form_id'])
+
+    form_data = FormsDOM.getFormData(ObjectId(form_id))
+
+    blank_form_id = FormsDOM.getBlankFormId(form_id)
+    blank_form_data = blankFormsDOM.getFormData(blank_form_id)
+
+    parent_id = FormsDOM.getInfo(form_id, 'parent_id')
+    parent_profile = parentsDOM.getParentProfile(parent_id)
+
+    form_info = {}
+    form_info['name'] = blankFormsDOM.getFormName(blank_form_id)
+    form_info['last_updated'] = FormsDOM.getLastUpdated(form_id)
+    form_info['completed'] = FormsDOM.isComplete(form_id)
+
+    return {
+        'form_data': form_data,
+        'blank_form_data': blank_form_data,
+        'basic_info': studentsDOM.getBasicInfo(studentID),
+        'parent_profile': parent_profile,
+        'form_info': form_info
+    }
+
+@app.route('/submitFormAuth', methods = ['POST'])
+@requires_auth
+def submitFormAuth():
+    form_id = request.json['form_id']
+    answer_data = request.json['answer_data']
+    FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
 
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
