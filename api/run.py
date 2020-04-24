@@ -171,12 +171,15 @@ def getStudentForms():
     student_id = request.json['student_id']
     form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
     form_data = []
+    
     for id in form_ids:
-        curr_form = {'form_id' : id,
-                     'form_name' : FormsDOM.getFormName(ObjectId(id)),
-                     'last_updated' : FormsDOM.getLastUpdated(ObjectId(id)),
-                     'last_viewed' : FormsDOM.getLastViewed(ObjectId(id))}
-        form_data.append(curr_form)
+        blank_form_data = FormsDOM.getBlankForm(ObjectId(id))
+        if blank_form_data != False :
+            curr_form = {'form_id' : id,
+                        'form_name' : FormsDOM.getFormName(ObjectId(id)),
+                        'last_updated' : FormsDOM.getLastUpdated(ObjectId(id)),
+                        'last_viewed' : FormsDOM.getLastViewed(ObjectId(id))}
+            form_data.append(curr_form)
     return {'form_data': form_data}
 
 @app.route('/getForm', methods=['GET', 'POST'])
