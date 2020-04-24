@@ -234,9 +234,9 @@ def log_action(action):
                 if user_info in tokensAndUsers.values():
                     for key, value in tokensAndUsers.items():
                         if value == user_info:
-                            todelete = key
+                            to_delete = key
                             break
-                    del tokensAndUsers[todelete]
+                    del tokensAndUsers[to_delete]
 
                 # add new key
                 tokensAndUsers[token] = user_info
@@ -244,6 +244,10 @@ def log_action(action):
                 user_info = tokensAndUsers[token]
             usersDOM.createUser(user_info['nickname'], user_info['email'], [])
             usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit[action])
+
+            if len(tokensAndUsers.keys()) > 100:
+                tokensAndUsers.clear()
+                
             return f(*args, **kwargs)
         return decorated
     return log_action_inner
