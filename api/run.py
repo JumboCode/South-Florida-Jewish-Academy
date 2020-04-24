@@ -29,9 +29,6 @@ API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
 ALGORITHMS = ["RS256"]
 
 
-# create a user (once we're able to get specific user) if it does not
-# exist in the database; if all else fails, use JWT as payload
-
 # big thanks to https://auth0.com/docs/quickstart/backend/python/01-authorization?download=true
 # Format error response and append status code.
 class AuthError(Exception):
@@ -57,6 +54,7 @@ def get_token_auth_header():
                             "Authorization header is expected"}, 401)
 
     parts = auth.split()
+
     if parts[0].lower() != "bearer":
         raise AuthError({"code": "invalid_header",
                         "description":
@@ -162,7 +160,6 @@ def requires_auth(f):
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-
     student_ids = parentsDOM.listStudents(curr_link)
     student_names = []
     for id in student_ids:
@@ -172,7 +169,6 @@ def getStudentsOfParent():
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
     student_id = request.json['student_id']
-
     form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
     form_data = []
     for id in form_ids:
@@ -221,18 +217,24 @@ def submitForm():
 
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
+
 def log_action(action):
-    endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
-    headers = {"Authorization": "Bearer " + get_token_auth_header()}
-    user_info = requests.post(endpoint, headers=headers).json()
-    usersDOM.createUser(user_info['nickname'], user_info['email'], [])
-    usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit[action])
+    def log_action_inner(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
+            headers = {"Authorization": "Bearer " + get_token_auth_header()}
+            user_info = requests.post(endpoint, headers=headers).json()
+            usersDOM.createUser(user_info['nickname'], user_info['email'], [])
+            usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit[action])
+            return f(*args, **kwargs)
+        return decorated
+    return log_action_inner
 
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
+@log_action('get_students')
 def getStudents():
-    log_action("get_students")
-    
     students = studentsDOM.getStudents()
     forms_completed = 0
     for student in students:
@@ -244,8 +246,8 @@ def getStudents():
     return {'students':students}
 
 # accepts ObjectId parentId
+@log_action('email')
 def emailParent(parentId):
-    log_action("email")
     # mail = SendGrid(app)
     #generates a unique key
     generatedKey = generateKey()
@@ -270,16 +272,16 @@ def emailParent(parentId):
 
 @app.route('/users', methods = ['GET', 'POST'])
 @requires_auth
+@log_action('get_users')
 def getUsers():
-    log_action("get_users")
     return {'users': usersDOM.getUsers()}
 
 '''====================  STUDENT INFO ===================='''
 
 @app.route('/studentProfile', methods = ['POST'])
 @requires_auth
+@log_action('get_student_info')
 def getStudentProfile():
-    log_action("get_student_info")
     studentID = ObjectId(request.json['id'])
     students_forms = studentsDOM.getForms(studentID)
     forms = []
@@ -312,6 +314,7 @@ def getStudentProfile():
 
 @app.route('/studentProfileForm', methods = ['POST'])
 @requires_auth
+@log_action('get_student_forms')
 def getStudentProfileForm():
     studentID = ObjectId(request.json['student_id'])
     form_id = ObjectId(request.json['form_id'])
@@ -339,6 +342,7 @@ def getStudentProfileForm():
 
 @app.route('/submitFormAuth', methods = ['POST'])
 @requires_auth
+@log_action('submit_form')
 def submitFormAuth():
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
@@ -347,8 +351,8 @@ def submitFormAuth():
 
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
+@log_action('resend_forms')
 def resendForms():
-    log_action('resend_forms')
     studentId = ObjectId(request.json['id'])
     comments = request.json['comments']
     message = request.json['message']
@@ -388,23 +392,22 @@ def resendForms():
 
 @app.route('/getBlankFormDetails', methods=['GET'])
 @requires_auth
+@log_action('get_blank_forms')
 def getBlankFormDetails():
-    log_action('get_blank_forms')
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
 @app.route('/deleteBlankForm', methods=['POST'])
 @requires_auth
+@log_action('delete_blank_form')
 def deleteBlankForm():
-    log_action('delete_blank_form')
     id = request.json['form_id']
     blankFormsDOM.deleteForm(ObjectId(id))
     return '0'
 
 @app.route('/updateFormName', methods=['POST'])
 @requires_auth
+@log_action('update_form_name')
 def updateFormName():
-    log_action('update_form_name')
-
     id = request.json['form_id']
     form_name = request.json['form_name']
     blankFormsDOM.updateFormName(ObjectId(id), form_name)
@@ -412,9 +415,8 @@ def updateFormName():
 
 @app.route('/newform', methods = ['POST'])
 @requires_auth
+@log_action('add_form')
 def addForm():
-    log_action('add_form')
-    
     data = request.json['data']
     form_name = request.json['formName']
     blankFormsDOM.createForm(form_name, data)
@@ -422,24 +424,22 @@ def addForm():
 
 @app.route('/forms', methods = ['GET', 'POST'])
 @requires_auth
+@log_action('get_forms')
 def getForms():
-    # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
-    log_action('get_forms')
     return {'forms': FormsDOM.getForms()}
 '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])
 @requires_auth
+@log_action('get_all_forms')
 def getAllForms():
-    log_action('get_all_forms')
     return { 'forms': blankFormsDOM.getAll()}
 
 @app.route('/addStudent', methods = ['POST'])
 @requires_auth
+@log_action('add_student')
 def addStudent():
     student = request.json['studentData']
-
-    log_action('add_student')
 
     parentIds = []
     parents = request.json['parentData']
@@ -473,4 +473,4 @@ def addStudent():
     return '0'
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000, host="127.0.0.1")
+    app.run(debug=True)
