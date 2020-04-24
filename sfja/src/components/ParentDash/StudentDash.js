@@ -47,7 +47,7 @@ class StudentDash extends React.Component {
     fetch(apiUrl() + '/getStudentForms', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({student_id: this.state.studentId}),
+      body: JSON.stringify({student_id: this.props.match.params.studentId}),
     }).then((res) => res.json())
         .then((data) => {
           this.setState({formData: data.form_data});
@@ -100,9 +100,11 @@ class StudentDash extends React.Component {
     const {studentId, formData, formFilledData, blankFormData} = this.state;
 
     if (studentId !== this.props.match.params.studentId) {
+      this.setState({studentId: this.props.match.params.studentId});
+      this.setState({blankFormData: null});
       this.refreshStudentForms();
     }
-    console.log(blankFormData);
+
     return (
       <div>
         <TableContainer component={Paper}>
@@ -142,7 +144,9 @@ class StudentDash extends React.Component {
               />
             </Paper>
           </div> :
-          <h1>Please select a form.</h1>
+          <h2 style={{fontSize: 25, fontFamily: 'Futura', color: '#0068af', textAlign: 'center', marginTop: 30}}>
+            Please select a form.
+          </h2>
         }
       </div>
     );
