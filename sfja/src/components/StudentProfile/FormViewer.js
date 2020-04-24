@@ -68,15 +68,20 @@ class FormViewer extends React.Component {
   // eslint-disable-next-line require-jsdoc
   handleSubmitForm() {
     const {formData} = this.state;
-    fetch(apiUrl() + '/submitForm', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+    const {cookies} = this.props;
+    const body = {
       // eslint-disable-next-line react/prop-types
-      body: JSON.stringify({
-        // eslint-disable-next-line react/prop-types
-        form_id: this.props.match.params.formId,
-        answer_data: formData,
-      }),
+      form_id: this.props.match.params.formId,
+      answer_data: formData,
+    };
+    fetch(apiUrl() + '/submitFormAuth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      // eslint-disable-next-line react/prop-types
+      body: JSON.stringify(body),
     }).then((response) => response);
   }
   // eslint-disable-next-line require-jsdoc
