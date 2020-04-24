@@ -134,7 +134,7 @@ class StudentDash extends React.Component {
           </Table>
         </TableContainer>
         {blankFormData !== null ?
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10}}>
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10, paddingBottom: 40}}>
             <Paper elevation={2} style={{padding: 40, minWidth: 650, marginTop: 30}}>
               <ReactFormGenerator
                 onSubmit={this.handleSubmit.bind(this)}
