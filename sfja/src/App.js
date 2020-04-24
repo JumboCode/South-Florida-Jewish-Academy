@@ -13,6 +13,7 @@ import FormManager from './components/FormManager/FormManager';
 import AddStudent from './components/AddStudent/AddStudent';
 import LoginPage from './components/LoginPage';
 import Logout from './components/Logout';
+import FormViewer from './components/StudentProfile/FormViewer';
 import {Auth0Provider} from './react-auth0-spa';
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
@@ -40,14 +41,15 @@ export default function App() {
       >
         <Router>
           <div style={{width: '100vw'}}>
-            <Route path={['/dashboard', '/students', '/formManager', '/addStudent', '/profile']} component={Header}/>
+            <Route path={['/dashboard', '/students', '/formManager', '/addStudent', '/profile', '/formViewer']} component={Header}/>
             <Route exact path="/">
               <Redirect to="/dashboard" />
             </Route>
             <Route path={['/parentdash/:parentKey/:studentId', '/parentdash/:parentKey/']} component={ParentHeader} />
             <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
             <Route exact path="/parentdash/:parentKey/:studentId" component={StudentDash}/>
-            <Route path="/profile/:id" render={(props) => <StudentProfile {...props}/>} />
+            <Route exact path="/profile/:id" component={StudentProfile} />
+            <Route exact path="/profile/:studentId/:formId" component={FormViewer} />
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/students" component={Students} />
             <Route exact path="/formManager" component={FormManager} />
