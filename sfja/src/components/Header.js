@@ -6,6 +6,7 @@ import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import People from '@material-ui/icons/People';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -44,7 +45,7 @@ export default function Header() {
           </div>
           <Tab icon={<HomeIcon fontSize='large'/>} label='dashboard' to={'/dashboard'} component={Link} style={tabStyle}/>
           <Tab icon={<PeopleAltIcon fontSize='large'/>} label='students' to='/students' component={Link} style={tabStyle}/>
-          <Tab icon={<PeopleAltIcon fontSize='large'/>} label='parents' to='/parents' component={Link} style={tabStyle}/>
+          <Tab icon={<People fontSize='large'/>} label='parents' to='/parents' component={Link} style={tabStyle}/>
           <Tab icon={<ListAltIcon fontSize='large'/>} label='forms' to='/formManager' component={Link} style={tabStyle}/>
           <Tab icon={<PersonAddIcon fontSize='large'/>} label='add student' to='/addStudent' component={Link} style={tabStyle}/>
           <Tab icon={<ExitToAppIcon fontSize='large'/>} label='logout' to='/logout' component={Link} style={tabStyle}/>
