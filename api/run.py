@@ -226,7 +226,7 @@ def log_action(action):
             headers = {"Authorization": "Bearer " + get_token_auth_header()}
             user_info = requests.post(endpoint, headers=headers).json()
             usersDOM.createUser(user_info['nickname'], user_info['email'], [])
-            usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit[action])
+            usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), action)
             return f(*args, **kwargs)
         return decorated
     return log_action_inner
