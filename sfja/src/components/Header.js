@@ -44,6 +44,7 @@ export default function Header() {
           </div>
           <Tab icon={<HomeIcon fontSize='large'/>} label='dashboard' to={'/dashboard'} component={Link} style={tabStyle}/>
           <Tab icon={<PeopleAltIcon fontSize='large'/>} label='students' to='/students' component={Link} style={tabStyle}/>
+          <Tab icon={<PeopleAltIcon fontSize='large'/>} label='parents' to='/parents' component={Link} style={tabStyle}/>
           <Tab icon={<ListAltIcon fontSize='large'/>} label='forms' to='/formManager' component={Link} style={tabStyle}/>
           <Tab icon={<PersonAddIcon fontSize='large'/>} label='add student' to='/addStudent' component={Link} style={tabStyle}/>
           <Tab icon={<ExitToAppIcon fontSize='large'/>} label='logout' to='/logout' component={Link} style={tabStyle}/>
