@@ -23,13 +23,9 @@ CORS(app)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
-'''
+
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
-'''
-
-AUTH0_DOMAIN = "sfja.auth0.com"	
-API_IDENTIFIER = "https://api.sfjaadmin.org"
 ALGORITHMS = ["RS256"]
 
 
