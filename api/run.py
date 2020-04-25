@@ -225,15 +225,8 @@ def submitForm():
 def getParents():
     parents = parentsDOM.getParents()
     return {'parents': parents}
-    
-
-
-
-
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
-
-
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
 def getStudents():
