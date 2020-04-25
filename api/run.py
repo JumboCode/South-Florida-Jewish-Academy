@@ -212,25 +212,14 @@ def submitForm():
     FormsDOM.updateFormData(form_id, answer_data)
     return '0'
 
-
-
-
+'''====================  PARENTS DASHBOARD ===================='''
+@app.route('/parents', methods = ['GET', 'POST'])
+@requires_auth
+def getParents():
+    parents = parentsDOM.getParents()
+    return {'parents': parents}
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
-
-def log_action(action):
-    def log_action_inner(f):
-        @wraps(f)
-        def decorated(*args, **kwargs):
-            endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
-            headers = {"Authorization": "Bearer " + get_token_auth_header()}
-            user_info = requests.post(endpoint, headers=headers).json()
-            usersDOM.createUser(user_info['nickname'], user_info['email'], [])
-            usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit[action])
-            return f(*args, **kwargs)
-        return decorated
-    return log_action_inner
-
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
 @log_action('get_students')
@@ -386,7 +375,6 @@ def resendForms():
     ## send email here!
     result = {'success': True}
     return jsonify(result), 200
-
 
 '''====================  FORM MANAGEMENT ===================='''
 
