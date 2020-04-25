@@ -23,9 +23,13 @@ CORS(app)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
-
+'''
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
+'''
+
+AUTH0_DOMAIN = "sfja.auth0.com"	
+API_IDENTIFIER = "https://api.sfjaadmin.org"
 ALGORITHMS = ["RS256"]
 
 
@@ -233,7 +237,7 @@ def log_action(action):
 
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
-@log_action('get_students')
+@log_action('Get students')
 def getStudents():
     students = studentsDOM.getStudents()
     forms_completed = 0
@@ -246,7 +250,7 @@ def getStudents():
     return {'students':students}
 
 # accepts ObjectId parentId
-@log_action('email')
+@log_action('Email Parent')
 def emailParent(parentId):
     # mail = SendGrid(app)
     #generates a unique key
@@ -272,7 +276,7 @@ def emailParent(parentId):
 
 @app.route('/users', methods = ['GET', 'POST'])
 @requires_auth
-@log_action('get_users')
+@log_action('Get users')
 def getUsers():
     return {'users': usersDOM.getUsers()}
 
@@ -280,7 +284,7 @@ def getUsers():
 
 @app.route('/studentProfile', methods = ['POST'])
 @requires_auth
-@log_action('get_student_info')
+@log_action('Get student profile')
 def getStudentProfile():
     studentID = ObjectId(request.json['id'])
     students_forms = studentsDOM.getForms(studentID)
@@ -314,7 +318,7 @@ def getStudentProfile():
 
 @app.route('/studentProfileForm', methods = ['POST'])
 @requires_auth
-@log_action('get_student_forms')
+@log_action('Get student form')
 def getStudentProfileForm():
     studentID = ObjectId(request.json['student_id'])
     form_id = ObjectId(request.json['form_id'])
@@ -342,7 +346,7 @@ def getStudentProfileForm():
 
 @app.route('/submitFormAuth', methods = ['POST'])
 @requires_auth
-@log_action('submit_form')
+@log_action('Submit form')
 def submitFormAuth():
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
@@ -351,7 +355,7 @@ def submitFormAuth():
 
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
-@log_action('resend_forms')
+@log_action('Resend forms')
 def resendForms():
     studentId = ObjectId(request.json['id'])
     comments = request.json['comments']
@@ -392,13 +396,13 @@ def resendForms():
 
 @app.route('/getBlankFormDetails', methods=['GET'])
 @requires_auth
-@log_action('get_blank_forms')
+@log_action('Get blank forms')
 def getBlankFormDetails():
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
 @app.route('/deleteBlankForm', methods=['POST'])
 @requires_auth
-@log_action('delete_blank_form')
+@log_action('Delete blank form')
 def deleteBlankForm():
     id = request.json['form_id']
     blankFormsDOM.deleteForm(ObjectId(id))
@@ -406,7 +410,7 @@ def deleteBlankForm():
 
 @app.route('/updateFormName', methods=['POST'])
 @requires_auth
-@log_action('update_form_name')
+@log_action('Update form name')
 def updateFormName():
     id = request.json['form_id']
     form_name = request.json['form_name']
@@ -415,7 +419,7 @@ def updateFormName():
 
 @app.route('/newform', methods = ['POST'])
 @requires_auth
-@log_action('add_form')
+@log_action('Add form')
 def addForm():
     data = request.json['data']
     form_name = request.json['formName']
@@ -424,20 +428,20 @@ def addForm():
 
 @app.route('/forms', methods = ['GET', 'POST'])
 @requires_auth
-@log_action('get_forms')
+@log_action('Get forms')
 def getForms():
     return {'forms': FormsDOM.getForms()}
 '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])
 @requires_auth
-@log_action('get_all_forms')
+@log_action('Get all forms')
 def getAllForms():
     return { 'forms': blankFormsDOM.getAll()}
 
 @app.route('/addStudent', methods = ['POST'])
 @requires_auth
-@log_action('add_student')
+@log_action('Add student')
 def addStudent():
     student = request.json['studentData']
 
