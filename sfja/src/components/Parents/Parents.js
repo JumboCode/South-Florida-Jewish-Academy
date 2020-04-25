@@ -2,8 +2,8 @@ import React from 'react';
 import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-    parentsPageStyle,
-    filterStyle,
+  parentsPageStyle,
+  filterStyle,
 } from './Styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
