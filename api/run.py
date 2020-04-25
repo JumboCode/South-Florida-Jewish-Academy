@@ -187,15 +187,9 @@ def getForm():
 
     return {'blank_form_data' : blank_form_data,
             'form_data' : form_data}
-  
-@app.route('/forms', methods = ['GET', 'POST'])
-def getForms():
-    # FormsDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_forms"])
-    return {'forms': FormsDOM.getForms()}
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["check_key"])
     #checkKey only works with json requests, so you can't test it without the front end
     print(request.json['key'])
     result = verifyKey(int(request.json['key']))
@@ -224,14 +218,23 @@ def submitForm():
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 
+def log_action(action):
+    def log_action_inner(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
+            headers = {"Authorization": "Bearer " + get_token_auth_header()}
+            user_info = requests.post(endpoint, headers=headers).json()
+            usersDOM.createUser(user_info['nickname'], user_info['email'], [])
+            usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit[action])
+            return f(*args, **kwargs)
+        return decorated
+    return log_action_inner
 
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
+@log_action('get_students')
 def getStudents():
-    endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
-    headers = {"Authorization": "Bearer " + get_token_auth_header()}
-    print(requests.post(endpoint, headers=headers).json())
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_students"])
     students = studentsDOM.getStudents()
     forms_completed = 0
     for student in students:
@@ -243,8 +246,8 @@ def getStudents():
     return {'students':students}
 
 # accepts ObjectId parentId
+@log_action('email')
 def emailParent(parentId):
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["email"])
     # mail = SendGrid(app)
     #generates a unique key
     generatedKey = generateKey()
@@ -269,16 +272,16 @@ def emailParent(parentId):
 
 @app.route('/users', methods = ['GET', 'POST'])
 @requires_auth
+@log_action('get_users')
 def getUsers():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_users"])
     return {'users': usersDOM.getUsers()}
 
 '''====================  STUDENT INFO ===================='''
 
 @app.route('/studentProfile', methods = ['POST'])
 @requires_auth
+@log_action('get_student_info')
 def getStudentProfile():
-    usersDOM.addAction(1, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit["get_student_forms"])
     studentID = ObjectId(request.json['id'])
     students_forms = studentsDOM.getForms(studentID)
     forms = []
@@ -310,6 +313,8 @@ def getStudentProfile():
     }
 
 @app.route('/studentProfileForm', methods = ['POST'])
+@requires_auth
+@log_action('get_student_forms')
 def getStudentProfileForm():
     studentID = ObjectId(request.json['student_id'])
     form_id = ObjectId(request.json['form_id'])
@@ -337,6 +342,7 @@ def getStudentProfileForm():
 
 @app.route('/submitFormAuth', methods = ['POST'])
 @requires_auth
+@log_action('submit_form')
 def submitFormAuth():
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
@@ -345,6 +351,7 @@ def submitFormAuth():
 
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
+@log_action('resend_forms')
 def resendForms():
     studentId = ObjectId(request.json['id'])
     comments = request.json['comments']
@@ -385,11 +392,13 @@ def resendForms():
 
 @app.route('/getBlankFormDetails', methods=['GET'])
 @requires_auth
+@log_action('get_blank_forms')
 def getBlankFormDetails():
     return { 'forms': blankFormsDOM.getBlankFormDetails()}
 
 @app.route('/deleteBlankForm', methods=['POST'])
 @requires_auth
+@log_action('delete_blank_form')
 def deleteBlankForm():
     id = request.json['form_id']
     blankFormsDOM.deleteForm(ObjectId(id))
@@ -397,6 +406,7 @@ def deleteBlankForm():
 
 @app.route('/updateFormName', methods=['POST'])
 @requires_auth
+@log_action('update_form_name')
 def updateFormName():
     id = request.json['form_id']
     form_name = request.json['form_name']
@@ -405,21 +415,29 @@ def updateFormName():
 
 @app.route('/newform', methods = ['POST'])
 @requires_auth
+@log_action('add_form')
 def addForm():
     data = request.json['data']
     form_name = request.json['formName']
     blankFormsDOM.createForm(form_name, data)
     return '0'
 
+@app.route('/forms', methods = ['GET', 'POST'])
+@requires_auth
+@log_action('get_forms')
+def getForms():
+    return {'forms': FormsDOM.getForms()}
 '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])
 @requires_auth
+@log_action('get_all_forms')
 def getAllForms():
     return { 'forms': blankFormsDOM.getAll()}
 
 @app.route('/addStudent', methods = ['POST'])
 @requires_auth
+@log_action('add_student')
 def addStudent():
     student = request.json['studentData']
 
