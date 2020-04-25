@@ -220,28 +220,11 @@ def submitForm():
     return '0'
 
 '''====================  PARENTS DASHBOARD ===================='''
-@app.route('/parentsProfile', methods = ['GET', 'POST'])
+@app.route('/parents', methods = ['GET', 'POST'])
 @requires_auth
-def getParentsProfile():
-    ''' 1. Get all students '''
-    students = studentsDOM.getStudents()
-    ''' 2. Add all parents by form ID and check if existed before adding '''
-    parentIDs = []
-    for student in students:
-        parentID = studentsDOM.getParents(student['student_id'])
-        if not (parentID in parentIDs):
-            parentIDs.append(parentID)
-    ''' 3. '''
-    parentsInfo = []
-    for ID in parentIDs:
-        parent = parentsDOM.getParentProfile(ID)
-        info = {
-                'email': parent['email'],
-                'first_name': parent['first_name'],
-                'last_name': parent['last_name']
-                }
-        parentsInfo.append(info)
-    return {'parents': parentsInfo}
+def getParents():
+    parents = parentsDOM.getParents()
+    return {'parents': parents}
     
 
 

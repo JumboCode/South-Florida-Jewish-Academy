@@ -103,3 +103,17 @@ def getParentProfile(id):
         cleanedContent['first_name'] = content['first_name']
         cleanedContent['last_name'] = content['last_name']
         return cleanedContent
+
+def getParents():
+    contents = list(mongo.db.parents.find())
+    students = []
+    for content in contents:
+        info = {
+            'parent_id': str(content['_id']),
+            'first_name': content['first_name'],
+            'email': content['email'],
+            'last_name': content['last_name'],
+        }
+        students.append(info)
+
+    return students
