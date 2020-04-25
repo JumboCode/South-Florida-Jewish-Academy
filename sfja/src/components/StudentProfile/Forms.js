@@ -10,6 +10,8 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {NavLink} from 'react-router-dom';
+import Typography from '@material-ui/core/Typography';
 
 const formStyle = {
   padding: 20,
@@ -21,7 +23,7 @@ const textSize = {
 
 
 // eslint-disable-next-line require-jsdoc
-export default function Forms({forms}) {
+export default function Forms({forms, studentId}) {
   return (
     <div style={formStyle}>
       <TableContainer component={Paper}>
@@ -38,7 +40,12 @@ export default function Forms({forms}) {
           <TableBody>
             {forms.map((form) => (
               <TableRow key={form['_id']}>
-                <TableCell style={textSize} align = "left" >{form['form_name']}</TableCell>
+                <TableCell>
+                  <NavLink to={'/profile/' + studentId + '/' + form['form_id']}>
+                    <Typography align="left" style={textSize}>
+                      {form['form_name']}</Typography>
+                  </NavLink>
+                </TableCell>
                 <TableCell style={textSize} align = "left" >{form['p_first_name']} {form['p_last_name']}</TableCell>
                 <TableCell style={textSize} align = "left" >{form['p_email']}</TableCell>
                 <TableCell style={textSize} align = "left">{form['last_updated']=== null ? 'N/A': form['last_updated']}</TableCell>
@@ -53,4 +60,5 @@ export default function Forms({forms}) {
 
 Forms.propTypes = {
   forms: PropTypes.object,
+  studentId: PropTypes.string,
 };

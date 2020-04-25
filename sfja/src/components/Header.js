@@ -10,6 +10,7 @@ import People from '@material-ui/icons/People';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
 import {useAuth0} from '../react-auth0-spa';
 /* eslint-disable max-len */
 
