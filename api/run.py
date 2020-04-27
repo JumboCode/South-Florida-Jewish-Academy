@@ -18,6 +18,8 @@ from bson.objectid import ObjectId
 from jose import jwt
 from functools import wraps
 from six.moves.urllib.request import urlopen
+import gridfs
+import werkzeug
 import requests
 from werkzeug.utils import secure_filename
 
@@ -27,6 +29,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
+# fs = gridfs.GridFS(db)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -310,17 +313,17 @@ def getStudentProfile():
         forms.append(curr_form_data)
 
 
-    parentIds = studentsDOM.getParents(studentID)
-    parents = []
-    for parentId in parentIds:
-        parents.append(parentsDOM.getParentProfile(parentId))
+        parentIds = studentsDOM.getParents(studentID)
+        parents = []
+        for parentId in parentIds:
+            parents.append(parentsDOM.getParentProfile(parentId))
 
-    return {
-        'forms': forms,
-        'basic_info': studentsDOM.getBasicInfo(studentID),
-        'blank_forms': blankFormsDOM.getAll(),
-        'parents': parents
-    }
+        return {
+            'forms': forms,
+            'basic_info': studentsDOM.getBasicInfo(studentID),
+            'blank_forms': blankFormsDOM.getAll(),
+            'parents': parents
+        }
 
 @app.route('/studentProfileForm', methods = ['POST'])
 def getStudentProfileForm():
@@ -495,6 +498,7 @@ def addStudent():
         emailParent(parentId)
 
     return '0'
+
 
 if __name__ == '__main__':
     app.run(debug=True)

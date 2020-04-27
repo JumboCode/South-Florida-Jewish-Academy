@@ -31,24 +31,6 @@ class DocumentUpload extends React.Component {
             })
     }
     render(){
-        // const handleImageUpload = event => {
-        //     const files = event.target.files
-        //     const formData = new FormData()
-        //     console.log(files)
-        //     formData.append('myFile', files[0])
-          
-        //     fetch('/saveImage', {
-        //       method: 'POST',
-        //       body: formData
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //       console.log(data)
-        //     })
-        //     .catch(error => {
-        //       console.error(error)
-        //     })
-        //   }
         console.log(this.state)
         return(
             <div>
