@@ -14,6 +14,7 @@ import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import ResendForms from './ResendForms';
+import DocumentUpload from './DocumentUpload'
 
 
 // eslint-disable-next-line require-jsdoc
@@ -102,7 +103,7 @@ class StudentProfile extends React.Component {
               </Tabs>
               <div>
                 {currTab === 0 && <Forms forms={forms} studentId={basicInfo['_id']}/>}
-                {currTab === 1 && <div>documents</div>}
+                {currTab === 1 && <DocumentUpload/>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
                 {currTab === 3 &&
                 <ResendForms

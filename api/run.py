@@ -1,12 +1,14 @@
-from flask import Flask, request
+from flask import Flask, request, flash, request
 from flask_restful import Resource, Api
 from flask_sendgrid import SendGrid
 from flask_cors import CORS
+from flask_pymongo import PyMongo
 from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from database.FormsDOM import getForm
 from generateKey import generateKey 
 import os
 import json
+import gridfs
 from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM, parentsDOM
 from flask import jsonify, request, jsonify, _request_ctx_stack
 import subprocess
@@ -17,16 +19,27 @@ from jose import jwt
 from functools import wraps
 from six.moves.urllib.request import urlopen
 import requests
+from werkzeug.utils import secure_filename
 
+
+UPLOAD_FOLDER = './upload'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+MONGO_URL = os.environ.get('MONGODB_URI')
+app.config["MONGO_URI"] = MONGO_URL
+mongo = PyMongo(app)
+db = mongo.db
+fs = gridfs.GridFS(db)
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
 ALGORITHMS = ["RS256"]
+
 
 
 # big thanks to https://auth0.com/docs/quickstart/backend/python/01-authorization?download=true
@@ -409,6 +422,35 @@ def addForm():
     data = request.json['data']
     form_name = request.json['formName']
     blankFormsDOM.createForm(form_name, data)
+    return '0'
+'''====================== UPLOAD FORM ======================'''
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/saveImage', methods=['POST'])
+def saveImg():
+    print(request.files)
+    print("In saveImg!")
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return '0'
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return '0'
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(filename)
+            with open(filename , "rb") as byteFile:
+                f = byteFile.read()
+                fsId = fs.put(f)
+                print(fsId)
+                return '0'
     return '0'
 
 '''======================  ADD STUDENT ======================'''
