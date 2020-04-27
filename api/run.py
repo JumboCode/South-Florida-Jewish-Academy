@@ -28,6 +28,8 @@ AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
 ALGORITHMS = ["RS256"]
 
+# we store users here to prevent 429s from Auth0
+tokensAndUsers = {}
 
 # big thanks to https://auth0.com/docs/quickstart/backend/python/01-authorization?download=true
 # Format error response and append status code.
@@ -222,11 +224,38 @@ def log_action(action):
     def log_action_inner(f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
-            headers = {"Authorization": "Bearer " + get_token_auth_header()}
-            user_info = requests.post(endpoint, headers=headers).json()
+            token = get_token_auth_header()
+
+            # retrieve stored user
+            if token not in tokensAndUsers.keys():
+                user_info = tokensAndUsers[token]
+            else:
+                endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
+                headers = {"Authorization": "Bearer " + get_token_auth_header()}
+                user_info = requests.post(endpoint, headers=headers)
+                if user_info.status_code == 200:
+                    user_info = user_info.json()
+                    # delete old key
+                    if user_info in tokensAndUsers.values():
+                        for key, value in tokensAndUsers.items():
+                            if value == user_info:
+                                to_delete = key
+                                break
+                        del tokensAndUsers[to_delete]
+
+                    # add new key
+                    tokensAndUsers[token] = user_info
+                else:
+                    user_info = {}
+                    user_info['nickname'] = 'error'
+                    user_info['email'] = 'error'
+
             usersDOM.createUser(user_info['nickname'], user_info['email'], [])
             usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), audit[action])
+
+            if len(tokensAndUsers.keys()) > 100:
+                tokensAndUsers.clear()
+                
             return f(*args, **kwargs)
         return decorated
     return log_action_inner
