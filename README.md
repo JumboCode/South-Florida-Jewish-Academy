@@ -1,4 +1,4 @@
-# South-Florida-Jewish-Academy
+# South Florida Jewish Academy - Form Administration
 [![Build Status](https://travis-ci.org/JumboCode/South-Florida-Jewish-Academy.svg?branch=master)](https://travis-ci.org/JumboCode/South-Florida-Jewish-Academy)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/JumboCode/South-Florida-Jewish-Academy)
 ## Welcome
