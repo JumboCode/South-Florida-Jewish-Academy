@@ -405,7 +405,7 @@ def resendForms():
         if newBlankForm['checked'] and newBlankFormId not in uniqueBlankFormIds:
             for parentId in parentIds:
                 # createForm(id, date, required, comp, data, parentID):
-                currID = FormsDOM.createForm(newBlankFormId, None, None, True, False, None, parentId)
+                currID = FormsDOM.createForm(newBlankFormId, None, None, True, False, [], parentId)
                 formIds.append(currID)
             additionalBlankForms.append(newBlankFormId)
 
