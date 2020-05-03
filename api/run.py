@@ -226,7 +226,7 @@ def log_action(action):
             token = get_token_auth_header()
 
             # retrieve stored user
-            if token not in tokensAndUsers.keys():
+            if token in tokensAndUsers.keys():
                 user_info = tokensAndUsers[token]
             else:
                 endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
