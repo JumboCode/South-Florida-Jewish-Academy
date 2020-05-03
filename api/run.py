@@ -11,7 +11,6 @@ from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankForms
 from flask import jsonify, request, jsonify, _request_ctx_stack
 import subprocess
 from datetime import datetime
-from database.assets.audit_mapper import audit_mapper as audit
 from bson.objectid import ObjectId
 from jose import jwt
 from functools import wraps
