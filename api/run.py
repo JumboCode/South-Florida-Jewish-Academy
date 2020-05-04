@@ -274,6 +274,12 @@ def getStudents():
         del student['form_ids']
     return {'students':students}
 
+
+def makeNote(element):
+    return '<div style="font-family: inherit; text-align: center"><span style="caret-color: rgb(255, 255, 255); color: #ffffff; font-family: courier, monospace; font-size: 16px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; text-align: center; text-indent: 0px; text-transform: none; white-space: pre-wrap; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(0, 104, 175); text-decoration: none; float: none; display: inline">' + element + '</span></div><div></div></div>'
+
+
+
 # accepts ObjectId parentId
 # @log_action('Email Parent')
 def emailParent(parentId):
@@ -286,7 +292,11 @@ def emailParent(parentId):
 
     #currently only sends the email if a new user could be made
     if succeeded:
-        target = 'https://sfjaforms.herokuapp.com/parentdash/' + generatedKey
+        if os.environ.get('ENV') == 'dev':
+            base = 'http://localhost:3000/parentdash/'
+        else:
+            base = 'https://sfjaforms.herokuapp.com/parentdash/'
+        target = base + generatedKey
         message = Mail(
             from_email='chanlawrencet@gmail.com',
             to_emails=send_to,
