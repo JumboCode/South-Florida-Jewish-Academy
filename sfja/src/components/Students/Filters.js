@@ -7,7 +7,6 @@ class Filters extends React.Component {
   render() {
     // eslint-disable-next-line react/prop-types
     const {filters, updateFilter} = this.props;
-    console.log(this.props);
     if (filters === undefined) {
       return (<div/>);
     }
