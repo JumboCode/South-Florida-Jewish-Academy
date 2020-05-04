@@ -8,14 +8,21 @@ class Filters extends React.Component {
     // eslint-disable-next-line react/prop-types
     const {filters, updateFilter} = this.props;
     if (filters === undefined) {
-      return (<div/>);
+      return (<div>
+        <Paper>
+          Filters
+        </Paper>
+      </div>);
     }
     return (<div>
       <Paper>
         Filters
         {Object.keys(filters).map((filter) => (
           <div key={filter}>
-            {filter}:
+            <div style={{textAlign: 'left', paddingLeft: 10}}>
+              {filter[0].toUpperCase().concat(filter.substring(1)).concat(':')}
+            </div>
+
             <List>
               {Object.keys(filters[filter]).sort().map((optionKey) => (
                 <ListItem key={optionKey} onClick={
