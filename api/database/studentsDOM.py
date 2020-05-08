@@ -30,7 +30,7 @@ def deleteStudent(id):
     
 # Updates student basic info.
 def updateInfo(id, key, update):
-    writeR = dict(mongo.db.students.update({'student_id': id}, {'$set': {'basic_info.' + str(key): update}}))
+    writeR = dict(mongo.db.students.update({'_id': id}, {'$set': {str(key): update}}))
     return writeR['nModified'] > 0
 
 # Gets student basic info.
@@ -44,8 +44,9 @@ def getBasicInfo(id):
     contents = list(mongo.db.students.find({'_id': id}))
     for content in contents:
         del content['parent_ids']
-        content['_id'] = str(content['_id'])
         del content['form_ids']
+        content['_id'] = str(content['_id'])
+        content['DOB'] = content['DOB'].strftime("%m/%d/%Y")
         return content
 
 # Gets forms of a student.
