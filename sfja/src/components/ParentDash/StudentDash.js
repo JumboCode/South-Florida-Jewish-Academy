@@ -57,7 +57,7 @@ class StudentDash extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   refreshFormData(formId) {
-    fetch('http://127.0.0.1:5000/getForm', {
+    fetch(apiUrl() + '/getForm', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
