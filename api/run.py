@@ -573,7 +573,7 @@ def addStudent():
 
 
     dateOfBirth = datetime.strptime(student['dob'], '%m/%d/%Y')
-    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, student['grade'], formIds, parentIds)
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, int(student['grade']), formIds, parentIds)
 
     for parentId in parentIds:
         parentsDOM.addStudentId(parentId, studentId)
@@ -598,6 +598,14 @@ def checkRoleAdmin():
 @specific_roles(['admin', 'developer'])
 def deleteStudent():
     studentsDOM.deleteStudent(ObjectId(request.json['id']))
+    return '0'
+
+@app.route('/changeGrades', methods = ['POST'])
+@requires_auth
+@log_action('change grades')
+@specific_roles(['admin', 'developer'])
+def changeGrades():
+    studentsDOM.changeGrades(int(request.json['difference']))
     return '0'
 
 if __name__ == '__main__':
