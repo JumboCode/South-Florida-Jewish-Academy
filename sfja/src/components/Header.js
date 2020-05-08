@@ -48,6 +48,7 @@ export default function Header() {
           <Tab icon={<ListAltIcon fontSize='medium'/>} label='forms' to='/formManager' component={Link} style={tabStyle}/>
           <Tab icon={<RemoveRedEyeIcon fontSize='medium'/>} label='audit' to='/audit' component={Link} style={tabStyle}/>
           <Tab icon={<PersonAddIcon fontSize='medium'/>} label='add student' to='/addStudent' component={Link} style={tabStyle}/>
+          <Tab icon={<PersonAddIcon fontSize='medium'/>} label='administration' to='/administration' component={Link} style={tabStyle}/>
           <Tab icon={<ExitToAppIcon fontSize='medium'/>} label='logout' to='/logout' component={Link} style={tabStyle}/>
         </Tabs>
       </Paper>

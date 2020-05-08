@@ -518,18 +518,10 @@ def addStudent():
     return '0'
 
 '''======================  HIGHER ROLE ENDPOINTS ======================'''
-@app.route('/checkRoleDeveloper', methods = ['GET'])
-@requires_auth
-@log_action('check role developer')
-@specific_roles(['developer'])
-def checkRoleDeveloper():
-    return '0'
-
-
 @app.route('/checkRoleAdmin', methods = ['GET'])
 @requires_auth
 @log_action('check role admin')
-@specific_roles(['admin'])
+@specific_roles(['admin', 'developer'])
 def checkRoleAdmin():
     return '0'
 
