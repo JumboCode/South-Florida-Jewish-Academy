@@ -18,7 +18,7 @@ import {Auth0Provider} from './react-auth0-spa';
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import Audit from './components/Audit';
-import Administration from "./components/Administration/Administration";
+import Administration from './components/Administration/Administration';
 
 // A function that routes the user to the right place
 // after login

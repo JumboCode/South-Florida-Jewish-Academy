@@ -1,7 +1,7 @@
 import React from 'react';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import PropTypes, {instanceOf} from 'prop-types';
+import {instanceOf} from 'prop-types';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
@@ -26,7 +26,7 @@ class Administration extends React.Component {
         'Authorization': `Bearer ${cookies.get('token')}`,
       },
     }).then((response) => {
-      if (response.status === 200){
+      if (response.status === 200) {
         this.setState({
           authorized: true,
         });
