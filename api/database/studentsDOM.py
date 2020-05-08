@@ -132,3 +132,7 @@ def addNewFormId(id, newFormId):
     oldForms.append(newFormId)
     writeR = dict(mongo.db.students.update({'_id': id}, {'$set': {'form_ids': oldForms}}))
     return writeR['nModified'] > 0
+
+def deleteStudent(id):
+    result = mongo.db.students.delete_one({'_id': id})
+    assert result.deleted_count == 1
