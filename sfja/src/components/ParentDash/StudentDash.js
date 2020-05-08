@@ -85,7 +85,7 @@ class StudentDash extends React.Component {
   // eslint-disable-next-line require-jsdoc
   handleSubmit(answerData) {
     const {selected} = this.state;
-    fetch('http://127.0.0.1:5000/submitForm', {
+    fetch(apiUrl() + '/submitForm', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
