@@ -18,6 +18,7 @@ import {Auth0Provider} from './react-auth0-spa';
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import Audit from './components/Audit';
+import Administration from './components/Administration/Administration';
 
 // A function that routes the user to the right place
 // after login
@@ -42,7 +43,7 @@ export default function App() {
       >
         <Router>
           <div style={{width: '100vw'}}>
-            <Route path={['/students', '/formManager', '/addStudent', '/profile', '/audit', '/formViewer']} component={Header}/>
+            <Route path={['/students', '/formManager', '/addStudent', '/profile', '/audit', '/formViewer', '/administration']} component={Header}/>
             <Route exact path="/">
               <Redirect to="/students" />
             </Route>
@@ -53,6 +54,7 @@ export default function App() {
             <Route exact path="/profile/:studentId/:formId" component={FormViewer} />
             {/* <Route exact path="/dashboard" component={Dashboard} />*/}
             <Route exact path="/students" component={Students} />
+            <Route exact path="/administration" component={Administration} />
             <Route exact path="/formManager" component={FormManager} />
             <Route exact path="/addStudent" component={AddStudent} />
             <Route exact path="/login" component={LoginPage}/>

@@ -221,45 +221,62 @@ def submitForm():
 
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 
+def getUser(token):
+    # retrieve stored user
+    if token in tokensAndUsers.keys():
+        user_info = tokensAndUsers[token]
+    else:
+        endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
+        headers = {"Authorization": "Bearer " + get_token_auth_header()}
+        user_info = requests.post(endpoint, headers=headers)
+        if user_info.status_code == 200:
+            user_info = user_info.json()
+            # delete old key
+            if user_info in tokensAndUsers.values():
+                for key, value in tokensAndUsers.items():
+                    if value == user_info:
+                        to_delete = key
+                        break
+                del tokensAndUsers[to_delete]
+
+            # add new key
+            tokensAndUsers[token] = user_info
+        else:
+            user_info = {}
+            user_info['nickname'] = 'error'
+            user_info['email'] = 'error'
+            user_info['http://role'] = 'error'
+
+
+
+    if len(tokensAndUsers.keys()) > 100:
+        tokensAndUsers.clear()
+
+    return user_info
+
 def log_action(action):
     def log_action_inner(f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            token = get_token_auth_header()
-
-            # retrieve stored user
-            if token in tokensAndUsers.keys():
-                user_info = tokensAndUsers[token]
-            else:
-                endpoint = "https://" + AUTH0_DOMAIN + "/userinfo"
-                headers = {"Authorization": "Bearer " + get_token_auth_header()}
-                user_info = requests.post(endpoint, headers=headers)
-                if user_info.status_code == 200:
-                    user_info = user_info.json()
-                    # delete old key
-                    if user_info in tokensAndUsers.values():
-                        for key, value in tokensAndUsers.items():
-                            if value == user_info:
-                                to_delete = key
-                                break
-                        del tokensAndUsers[to_delete]
-
-                    # add new key
-                    tokensAndUsers[token] = user_info
-                else:
-                    user_info = {}
-                    user_info['nickname'] = 'error'
-                    user_info['email'] = 'error'
-
+            user_info = getUser(get_token_auth_header())
             usersDOM.createUser(user_info['nickname'], user_info['email'], [])
             usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), action)
-
-            if len(tokensAndUsers.keys()) > 100:
-                tokensAndUsers.clear()
-                
             return f(*args, **kwargs)
         return decorated
     return log_action_inner
+
+
+def specific_roles(roles):
+    def specific_roles_inner(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            user_info = getUser(get_token_auth_header())
+            if user_info['http://role'] not in roles:
+                raise AuthError({"code": "unauthorized",
+                                 "description": "unauthorized to this endpoint"}, 403)
+            return f(*args, **kwargs)
+        return decorated
+    return specific_roles_inner
 
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
@@ -559,6 +576,15 @@ def addStudent():
         emailParent(parentId)
 
     return '0'
+
+'''======================  HIGHER ROLE ENDPOINTS ======================'''
+@app.route('/checkRoleAdmin', methods = ['GET'])
+@requires_auth
+@log_action('check role admin')
+@specific_roles(['admin', 'developer'])
+def checkRoleAdmin():
+    return '0'
+
 
 if __name__ == '__main__':
     app.run(debug=True)
