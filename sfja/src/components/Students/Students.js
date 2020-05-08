@@ -218,6 +218,10 @@ class Students extends React.Component {
             openFailureMessage: true,
           });
         }
+      }).catch((error) => {
+        this.setState({
+          openFailureMessage: true,
+        });
       });
     }
     // eslint-disable-next-line require-jsdoc
