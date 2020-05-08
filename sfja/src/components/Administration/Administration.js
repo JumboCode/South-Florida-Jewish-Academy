@@ -4,6 +4,7 @@ import apiUrl from '../../utils/Env';
 import {instanceOf} from 'prop-types';
 import ChangeGrades from './ChangeGrades';
 import AuthMessage from './AuthMessage';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
@@ -28,14 +29,13 @@ class Administration extends React.Component {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${cookies.get('token')}`,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-        this.setState({
-          authorized: true,
-          authorizing: false,
+    }).then((response) => (response.json()))
+        .then((data) => {
+          this.setState({
+            authorized: data.isAuthorized,
+            authorizing: false,
+          });
         });
-      }
-    });
   }
   // eslint-disable-next-line require-jsdoc
   render() {
@@ -48,16 +48,16 @@ class Administration extends React.Component {
           alignItems: 'center',
           paddingTop: 20}}
       >
-        {authorized ?
-          <div>
-            <ChangeGrades/>
-          </div> :
-          <AuthMessage
-            message={authorizing ?
-              'Authorizing...' :
-              'You are not authorized to view this page.'}
-          />
-        }
+        {authorizing ? <CircularProgress/> : <div>
+          {authorized ?
+            <div>
+              <ChangeGrades/>
+            </div> :
+            <AuthMessage
+              message='You are not authorized to view this page.'
+            />
+          }
+        </div>}
       </div>
     );
   }

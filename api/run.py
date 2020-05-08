@@ -588,9 +588,10 @@ def addStudent():
 @app.route('/checkRoleAdmin', methods = ['GET'])
 @requires_auth
 @log_action('check role admin')
-@specific_roles(['admin', 'developer'])
 def checkRoleAdmin():
-    return '0'
+    return {
+        'isAuthorized': isAuthorized(get_token_auth_header(), ['developer', 'admin'])
+    }
 
 @app.route('/deleteStudent', methods = ['POST'])
 @requires_auth
