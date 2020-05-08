@@ -45,7 +45,7 @@ const LoginPage = (props) => {
       setCookie('token', token, {path: '/'});
     });
     return (
-      <Redirect to="/dashboard"/>
+      <Redirect to="/students"/>
     );
   }
   return (
