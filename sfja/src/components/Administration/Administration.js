@@ -5,6 +5,7 @@ import {instanceOf} from 'prop-types';
 import ChangeGrades from './ChangeGrades';
 import AuthMessage from './AuthMessage';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Audit from './Audit';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
@@ -45,15 +46,26 @@ class Administration extends React.Component {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          paddingTop: 20}}
+          alignItems: 'center'}}
       >
         {authorizing ? <CircularProgress/> : <div>
           {authorized ?
-            <div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                margin: 40,
+              }}>
               <ChangeGrades/>
+              <Audit/>
             </div> :
             <AuthMessage
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: 20}}
               message='You are not authorized to view this page.'
             />
           }

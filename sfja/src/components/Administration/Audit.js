@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
-import apiUrl from '../utils/Env';
+import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class Audit extends React.Component {
@@ -118,43 +118,49 @@ class Audit extends React.Component {
     }
 
     return (
-      <div>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <TableSortLabel onClick={(e) => this.sortBy('id')}
-                    active={sortBy === 'id'}
-                    direction={order}/>ID</TableCell>
-                <TableCell align="right" onClick={(e) => this.sortBy('email')}>
-                  <TableSortLabel onClick={(e) => this.sortBy('email')}
-                    active={sortBy === 'email'}
-                    direction={order}/>Email</TableCell>
-                <TableCell align="right">
-                  <TableSortLabel onClick={(e) => this.sortBy('time')}
-                    active={sortBy === 'time'}
-                    direction={order}/>Time</TableCell>
-                <TableCell align="right">
-                  <TableSortLabel onClick={(e) => this.sortBy('action')}
-                    active={sortBy === 'action'}
-                    direction={order}/>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((d) => (
-                <TableRow key={d.email + d.time}>
-                  <TableCell component="th" scope="row">
-                    {d.id}
-                  </TableCell>
-                  <TableCell align="right">{d.email}</TableCell>
-                  <TableCell align="right">{d.time}</TableCell>
-                  <TableCell align="right">{d.action}</TableCell>
+      <div style={{width: 700, marginTop: 30}}>
+        <Paper elevation={2} style={{width: 700, padding: 20}}>
+          <div style={{paddingBottom: 10, fontSize: 30}}>
+            Audit logs
+          </div>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <TableSortLabel onClick={(e) => this.sortBy('id')}
+                      active={sortBy === 'id'}
+                      direction={order}/>ID</TableCell>
+                  {/* eslint-disable-next-line max-len */}
+                  <TableCell align="right" onClick={(e) => this.sortBy('email')}>
+                    <TableSortLabel onClick={(e) => this.sortBy('email')}
+                      active={sortBy === 'email'}
+                      direction={order}/>Email</TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel onClick={(e) => this.sortBy('time')}
+                      active={sortBy === 'time'}
+                      direction={order}/>Time</TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel onClick={(e) => this.sortBy('action')}
+                      active={sortBy === 'action'}
+                      direction={order}/>Action</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {data.map((d) => (
+                  <TableRow key={d.email + d.time}>
+                    <TableCell component="th" scope="row">
+                      {d.id}
+                    </TableCell>
+                    <TableCell align="right">{d.email}</TableCell>
+                    <TableCell align="right">{d.time}</TableCell>
+                    <TableCell align="right">{d.action}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
       </div>
     );
   }
