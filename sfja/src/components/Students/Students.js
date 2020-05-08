@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -22,6 +23,9 @@ import apiUrl from '../../utils/Env';
 import {TextField} from '@material-ui/core';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Filters from './Filters';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ConfirmationDialog from '../../utils/ConfirmationDialog';
+import SnackBarMessage from '../../utils/SnackBarMessage';
 
 const theme = createMuiTheme({
   palette: {
@@ -75,6 +79,15 @@ class Students extends React.Component {
         order: 'incr',
         query: '',
         columnToQuery: 'first_name',
+        toDelete: {
+          student_id: '',
+          first_name: '',
+          last_name: '',
+        },
+        authorized: false,
+        showConfirmation: false,
+        openSuccessMessage: false,
+        openFailureMessage: false,
       };
     }
 
@@ -93,8 +106,8 @@ class Students extends React.Component {
               students: data.students,
               originalStudents: data.students,
               filters: this.makeFilters(data.students),
+              authorized: data.authorized,
             });
-            console.log(data);
           })
           .catch(console.log);
     }
@@ -179,8 +192,37 @@ class Students extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
+    deleteStudent(toDelete) {
+      const {cookies} = this.props;
+      const {students, originalStudents} = this.state;
+      const body = {
+        id: toDelete,
+      };
+
+      fetch(apiUrl() + '/deleteStudent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.get('token')}`,
+        },
+        body: JSON.stringify(body),
+      }).then((x) => {
+        if (x.status === 200) {
+          this.setState({
+            openSuccessMessage: true,
+            originalStudents: originalStudents.filter((student) => (student.student_id !== toDelete)),
+            students: students.filter((student) => (student.student_id !== toDelete)),
+          });
+        } else {
+          this.setState({
+            openFailureMessage: true,
+          });
+        }
+      });
+    }
+    // eslint-disable-next-line require-jsdoc
     render() {
-      const {students, sortBy, order, filters} = this.state;
+      const {students, sortBy, order, filters, authorized, showConfirmation, toDelete, openSuccessMessage, openFailureMessage} = this.state;
       // eslint-disable-next-line react/prop-types
       const {classes, className} = this.props;
       const tableStyle = clsx(classes.text, className);
@@ -239,7 +281,8 @@ class Students extends React.Component {
                         />
                                             Grade
                       </TableCell>
-                      <TableCell align="center" className={tableStyle}>DOB
+                      <TableCell align="center" className={tableStyle}>
+                        DOB
                       </TableCell>
                       <TableCell align="left" className={tableStyle}>
                         <TableSortLabel
@@ -249,6 +292,11 @@ class Students extends React.Component {
                         />
                                             Completed Forms
                       </TableCell>
+                      {authorized ? (
+                        <TableCell align="center" className={tableStyle}>
+                          Delete
+                        </TableCell>
+                      ) : null}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -277,6 +325,11 @@ class Students extends React.Component {
                             <TableCell align="center" className={tableStyle}>
                               {student.forms_completed}
                             </TableCell>
+                            {authorized ? (
+                              <TableCell align="center" className={tableStyle}>
+                                <DeleteIcon style={{cursor: 'pointer'}} fontSize='medium' onClick={() => this.setState({toDelete: student, showConfirmation: true})}/>
+                              </TableCell>
+                            ) : null}
                           </TableRow>
                         );
                       }
@@ -286,6 +339,26 @@ class Students extends React.Component {
               </TableContainer>
             </div>
           </div>
+          <ConfirmationDialog
+            showWarning={showConfirmation}
+            setShowWarning={(newVal) => this.setState({showConfirmation: newVal})}
+            onConfirm={() => this.deleteStudent(toDelete.student_id)}
+            message={'Are you sure you want to delete ' + toDelete.first_name + ' ' + toDelete.last_name + '? This is permanent.'}
+            confirmMessage='delete'
+            notConfirmMessage='back'
+          />
+          <SnackBarMessage
+            open={openSuccessMessage}
+            closeSnackbar={() => this.setState({openSuccessMessage: false})}
+            message={toDelete.first_name + ' ' + toDelete.last_name + ' deleted.'}
+            severity='success'
+          />
+          <SnackBarMessage
+            open={openFailureMessage}
+            closeSnackbar={() => this.setState({openFailureMessage: false})}
+            message={'There was an error.'}
+            severity='error'
+          />
         </div>
 
       );
