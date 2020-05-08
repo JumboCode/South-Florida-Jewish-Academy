@@ -279,7 +279,6 @@ def specific_roles(roles):
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
 @log_action('Get students')
-@specific_roles(['developer'])
 def getStudents():
     students = studentsDOM.getStudents()
     forms_completed = 0
@@ -517,6 +516,23 @@ def addStudent():
         emailParent(parentId)
 
     return '0'
+
+'''======================  HIGHER ROLE ENDPOINTS ======================'''
+@app.route('/checkRoleDeveloper', methods = ['GET'])
+@requires_auth
+@log_action('check role developer')
+@specific_roles(['developer'])
+def checkRoleDeveloper():
+    return '0'
+
+
+@app.route('/checkRoleAdmin', methods = ['GET'])
+@requires_auth
+@log_action('check role admin')
+@specific_roles(['admin'])
+def checkRoleAdmin():
+    return '0'
+
 
 if __name__ == '__main__':
     app.run(debug=True)
