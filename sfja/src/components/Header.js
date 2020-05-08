@@ -4,12 +4,13 @@ import {Link, Redirect} from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
-import HomeIcon from '@material-ui/icons/Home';
+// import HomeIcon from '@material-ui/icons/Home';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import {useAuth0} from '../react-auth0-spa';
 /* eslint-disable max-len */
 
@@ -43,11 +44,12 @@ export default function Header() {
             </div>
             <div id="topsubtitle">Admissions Page</div>
           </div>
-          <Tab icon={<HomeIcon fontSize='medium'/>} label='dashboard' to={'/dashboard'} component={Link} style={tabStyle}/>
+          {/* <Tab icon={<HomeIcon fontSize='medium'/>} label='dashboard' to={'/dashboard'} component={Link} style={tabStyle}/>*/}
           <Tab icon={<PeopleAltIcon fontSize='medium'/>} label='students' to='/students' component={Link} style={tabStyle}/>
           <Tab icon={<ListAltIcon fontSize='medium'/>} label='forms' to='/formManager' component={Link} style={tabStyle}/>
           <Tab icon={<RemoveRedEyeIcon fontSize='medium'/>} label='audit' to='/audit' component={Link} style={tabStyle}/>
           <Tab icon={<PersonAddIcon fontSize='medium'/>} label='add student' to='/addStudent' component={Link} style={tabStyle}/>
+          <Tab icon={<SupervisorAccountIcon fontSize='medium'/>} label='administration' to='/administration' component={Link} style={tabStyle}/>
           <Tab icon={<ExitToAppIcon fontSize='medium'/>} label='logout' to='/logout' component={Link} style={tabStyle}/>
         </Tabs>
       </Paper>
