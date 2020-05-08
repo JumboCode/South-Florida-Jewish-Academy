@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -21,6 +22,10 @@ import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import {TextField} from '@material-ui/core';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import Filters from './Filters';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ConfirmationDialog from '../../utils/ConfirmationDialog';
+import SnackBarMessage from '../../utils/SnackBarMessage';
 
 const theme = createMuiTheme({
   palette: {
@@ -59,6 +64,9 @@ class Students extends React.Component {
       order: PropTypes.any,
       query: PropTypes.any,
       columnToQuery: PropTypes.any,
+      filters: {
+        grades: {},
+      },
     };
 
     // eslint-disable-next-line require-jsdoc
@@ -71,6 +79,15 @@ class Students extends React.Component {
         order: 'incr',
         query: '',
         columnToQuery: 'first_name',
+        toDelete: {
+          student_id: '',
+          first_name: '',
+          last_name: '',
+        },
+        authorized: false,
+        showConfirmation: false,
+        openSuccessMessage: false,
+        openFailureMessage: false,
       };
     }
 
@@ -85,11 +102,27 @@ class Students extends React.Component {
       })
           .then((res) => res.json())
           .then((data) => {
-            this.setState({students: data.students,
-              originalStudents: data.students});
-            console.log(data);
+            this.setState({
+              students: data.students,
+              originalStudents: data.students,
+              filters: this.makeFilters(data.students),
+              authorized: data.authorized,
+            });
           })
           .catch(console.log);
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    makeFilters(students) {
+      const filters = {};
+      const grades = {};
+      students.forEach((student) => {
+        if (!Object.keys(grades).includes(student.grade)) {
+          grades[student.grade] = true;
+        }
+      });
+      filters.grades = grades;
+      return filters;
     }
 
     // eslint-disable-next-line require-jsdoc
@@ -150,8 +183,50 @@ class Students extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
+    updateFilter(filterToUpdate, optionToUpdate, set) {
+      const {filters} = this.state;
+      filters[filterToUpdate][optionToUpdate] = set;
+      this.setState({
+        filters: filters,
+      });
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    deleteStudent(toDelete) {
+      const {cookies} = this.props;
+      const {students, originalStudents} = this.state;
+      const body = {
+        id: toDelete,
+      };
+
+      fetch(apiUrl() + '/deleteStudent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.get('token')}`,
+        },
+        body: JSON.stringify(body),
+      }).then((x) => {
+        if (x.status === 200) {
+          this.setState({
+            openSuccessMessage: true,
+            originalStudents: originalStudents.filter((student) => (student.student_id !== toDelete)),
+            students: students.filter((student) => (student.student_id !== toDelete)),
+          });
+        } else {
+          this.setState({
+            openFailureMessage: true,
+          });
+        }
+      }).catch((error) => {
+        this.setState({
+          openFailureMessage: true,
+        });
+      });
+    }
+    // eslint-disable-next-line require-jsdoc
     render() {
-      const {students, sortBy, order} = this.state;
+      const {students, sortBy, order, filters, authorized, showConfirmation, toDelete, openSuccessMessage, openFailureMessage} = this.state;
       // eslint-disable-next-line react/prop-types
       const {classes, className} = this.props;
       const tableStyle = clsx(classes.text, className);
@@ -159,7 +234,10 @@ class Students extends React.Component {
         <div>
           <div style={studentPageStyle}>
             <div style={filterStyle}>
-              <p> Filters </p>
+              <Filters
+                filters={filters}
+                updateFilter={this.updateFilter.bind(this)}
+              />
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
               <div style={{paddingTop: 10, paddingBottom: 10}}>
@@ -207,7 +285,8 @@ class Students extends React.Component {
                         />
                                             Grade
                       </TableCell>
-                      <TableCell align="center" className={tableStyle}>DOB
+                      <TableCell align="center" className={tableStyle}>
+                        DOB
                       </TableCell>
                       <TableCell align="left" className={tableStyle}>
                         <TableSortLabel
@@ -217,34 +296,73 @@ class Students extends React.Component {
                         />
                                             Completed Forms
                       </TableCell>
+                      {authorized ? (
+                        <TableCell align="center" className={tableStyle}>
+                          Delete
+                        </TableCell>
+                      ) : null}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {students.map((student) => (
-                      <TableRow key={student.student_id}>
-                        <TableCell component="th" scope="row"
-                          className={tableStyle}>
-                          <NavLink to={'/profile/' + student.student_id}>
-                            <Typography align="center" className={tableStyle}>
-                              {student.first_name}</Typography>
-                          </NavLink>
-                        </TableCell>
-                        <TableCell align="center" className={tableStyle}>
-                          {student.last_name}</TableCell>
-                        <TableCell align="center" className={tableStyle}>
-                          {student.grade}</TableCell>
-                        <TableCell align="center" className={tableStyle}>
-                          {student.DOB}</TableCell>
-                        <TableCell align="center" className={tableStyle}>
-                          {student.forms_completed}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {students.map((student) => {
+                      // only supporting grade filtering now
+                      if (filters.grades[student.grade]) {
+                        return (
+                          <TableRow key={student.student_id}>
+                            <TableCell component="th" scope="row"
+                              className={tableStyle}>
+                              <NavLink to={'/profile/' + student.student_id}>
+                                <Typography
+                                  align="center"
+                                  className={tableStyle}
+                                >
+                                  {student.first_name}
+                                </Typography>
+                              </NavLink>
+                            </TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.last_name}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.grade}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.DOB}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.forms_completed}
+                            </TableCell>
+                            {authorized ? (
+                              <TableCell align="center" className={tableStyle}>
+                                <DeleteIcon style={{cursor: 'pointer'}} fontSize='medium' onClick={() => this.setState({toDelete: student, showConfirmation: true})}/>
+                              </TableCell>
+                            ) : null}
+                          </TableRow>
+                        );
+                      }
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>
             </div>
           </div>
+          <ConfirmationDialog
+            showWarning={showConfirmation}
+            setShowWarning={(newVal) => this.setState({showConfirmation: newVal})}
+            onConfirm={() => this.deleteStudent(toDelete.student_id)}
+            message={'Are you sure you want to delete ' + toDelete.first_name + ' ' + toDelete.last_name + '? This is permanent.'}
+            confirmMessage='delete'
+            notConfirmMessage='back'
+          />
+          <SnackBarMessage
+            open={openSuccessMessage}
+            closeSnackbar={() => this.setState({openSuccessMessage: false})}
+            message={toDelete.first_name + ' ' + toDelete.last_name + ' deleted.'}
+            severity='success'
+          />
+          <SnackBarMessage
+            open={openFailureMessage}
+            closeSnackbar={() => this.setState({openFailureMessage: false})}
+            message={'There was an error.'}
+            severity='error'
+          />
         </div>
 
       );

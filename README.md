@@ -1,8 +1,8 @@
-# South-Florida-Jewish-Academy
+# South Florida Jewish Academy - Form Administration
 [![Build Status](https://travis-ci.org/JumboCode/South-Florida-Jewish-Academy.svg?branch=master)](https://travis-ci.org/JumboCode/South-Florida-Jewish-Academy)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/JumboCode/South-Florida-Jewish-Academy)
 ## Welcome
-Welcome to the South Florida Jewish Academy project, a project run through Tufts JumboCode. Here are some steps to get you started.
+Welcome to the South Florida Jewish Academy project, a project run through [Tufts JumboCode](https://www.jumbocode.org). Here are some steps to get you started.
 ## The team
 Current team members:
 - PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)

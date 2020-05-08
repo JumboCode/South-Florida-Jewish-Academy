@@ -7,7 +7,7 @@ import ParentHeader from './components/ParentDash/ParentHeader';
 import ParentDash from './components/ParentDash/ParentDash';
 import StudentDash from './components/ParentDash/StudentDash';
 import StudentProfile from './components/StudentProfile/StudentProfile';
-import Dashboard from './components/Dashboard';
+// import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
 import FormManager from './components/FormManager/FormManager';
 import AddStudent from './components/AddStudent/AddStudent';
@@ -18,6 +18,7 @@ import {Auth0Provider} from './react-auth0-spa';
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import Audit from './components/Audit';
+import Administration from './components/Administration/Administration';
 
 // A function that routes the user to the right place
 // after login
@@ -42,17 +43,18 @@ export default function App() {
       >
         <Router>
           <div style={{width: '100vw'}}>
-            <Route path={['/dashboard', '/students', '/formManager', '/addStudent', '/profile', '/audit', '/formViewer']} component={Header}/>
+            <Route path={['/students', '/formManager', '/addStudent', '/profile', '/audit', '/formViewer', '/administration']} component={Header}/>
             <Route exact path="/">
-              <Redirect to="/dashboard" />
+              <Redirect to="/students" />
             </Route>
             <Route path={['/parentdash/:parentKey/:studentId', '/parentdash/:parentKey/']} component={ParentHeader} />
             <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
             <Route exact path="/parentdash/:parentKey/:studentId" component={StudentDash}/>
             <Route exact path="/profile/:id" component={StudentProfile} />
             <Route exact path="/profile/:studentId/:formId" component={FormViewer} />
-            <Route exact path="/dashboard" component={Dashboard} />
+            {/* <Route exact path="/dashboard" component={Dashboard} />*/}
             <Route exact path="/students" component={Students} />
+            <Route exact path="/administration" component={Administration} />
             <Route exact path="/formManager" component={FormManager} />
             <Route exact path="/addStudent" component={AddStudent} />
             <Route exact path="/login" component={LoginPage}/>
