@@ -1,10 +1,14 @@
 import React from 'react';
 import {Button, TextField} from '@material-ui/core';
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
+import SnackBarMessage from '../../utils/SnackBarMessage';
 
 const textSize = {
   style: {fontSize: 15},
@@ -33,6 +37,8 @@ class ProfileEdit extends React.Component {
     this.state = {
       oldBasicInfo: oldBasicInfo,
       basicInfo: basicInfo,
+      openSuccessMessage: false,
+      disableButton: true,
     };
   }
 
@@ -40,6 +46,9 @@ class ProfileEdit extends React.Component {
   sendUpdate() {
     const {cookies} = this.props;
     const {basicInfo} = this.state;
+    this.setState({
+      disableButton: true,
+    });
     const body = {
       basicInfo: basicInfo,
       id: basicInfo['_id'],
@@ -53,19 +62,13 @@ class ProfileEdit extends React.Component {
       },
       body: JSON.stringify(body),
     }).then((x) => {
-      console.log(x);
+      if (x.status === 200) {
+        this.setState({
+          oldBasicInfo: JSON.parse(JSON.stringify(basicInfo)),
+          openSuccessMessage: true,
+        });
+      }
     });
-    //   .then((data) => {
-    //     this.setState({
-    //       formData: data.form_data,
-    //       blankFormData: data.blank_form_data,
-    //       basicInfo: data.basic_info,
-    //       parentProfile: data.parent_profile,
-    //       formInfo: data.form_info,
-    //     });
-    //   }).catch((error) => {
-    //   console.log(error);
-    // });
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -74,6 +77,7 @@ class ProfileEdit extends React.Component {
     basicInfo[key] = value;
     this.setState({
       basicInfo: basicInfo,
+      disableButton: !this.isDifference(),
     });
   }
   // eslint-disable-next-line require-jsdoc
@@ -94,7 +98,7 @@ class ProfileEdit extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo} = this.state;
+    const {basicInfo, openSuccessMessage, disableButton} = this.state;
     return (
       <div style={{padding: 20}}>
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
@@ -130,7 +134,22 @@ class ProfileEdit extends React.Component {
           </MuiPickersUtilsProvider>
         </div>
         {/* eslint-disable-next-line max-len */}
-        <Button variant='outlined' onClick={this.sendUpdate.bind(this)} disabled={!this.isDifference()} >Update</Button>
+        <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+          <Button
+            variant='contained'
+            size='large'
+            onClick={this.sendUpdate.bind(this)}
+            disabled={disableButton}>
+            Update
+          </Button>
+        </div>
+
+        <SnackBarMessage
+          open={openSuccessMessage}
+          closeSnackbar={() => this.setState({openSuccessMessage: false})}
+          severity='success'
+          message='Successfully Updated.'
+        />
       </div>
     );
   }
