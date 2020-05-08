@@ -6,7 +6,7 @@ from database.FormsDOM import getForm
 from generateKey import generateKey 
 import os
 import json
-from database import testDB, studentsDOM, usersDOM, assets, FormsDOM, blankFormsDOM, parentsDOM
+from database import testDB, studentsDOM, usersDOM, FormsDOM, blankFormsDOM, parentsDOM
 from flask import jsonify, request, jsonify, _request_ctx_stack
 import subprocess
 from datetime import datetime
