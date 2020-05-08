@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 from flask_cors import CORS
 from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from database.FormsDOM import getForm
-from generateKey import generateKey 
+from generateKey import generateKey
 import os
 import json
 from database import testDB, studentsDOM, usersDOM, FormsDOM, blankFormsDOM, parentsDOM
@@ -270,13 +270,17 @@ def specific_roles(roles):
     def specific_roles_inner(f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            user_info = getUser(get_token_auth_header())
-            if user_info['http://role'] not in roles:
+            if not isAuthorized(get_token_auth_header(), roles):
                 raise AuthError({"code": "unauthorized",
                                  "description": "unauthorized to this endpoint"}, 403)
             return f(*args, **kwargs)
         return decorated
     return specific_roles_inner
+
+
+def isAuthorized(token, roles):
+    user_info = getUser(token)
+    return user_info['http://role'] in roles
 
 @app.route('/students', methods = ['GET', 'POST'])
 @requires_auth
@@ -290,7 +294,10 @@ def getStudents():
                 forms_completed += 1
         student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
         del student['form_ids']
-    return {'students':students}
+    return {
+        'students': students,
+        'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin'])
+    }
 
 
 def escape_html(text):
@@ -585,6 +592,13 @@ def addStudent():
 def checkRoleAdmin():
     return '0'
 
+@app.route('/deleteStudent', methods = ['POST'])
+@requires_auth
+@log_action('delete student')
+@specific_roles(['admin', 'developer'])
+def deleteStudent():
+    studentsDOM.deleteStudent(ObjectId(request.json['id']))
+    return '0'
 
 if __name__ == '__main__':
     app.run(debug=True)
