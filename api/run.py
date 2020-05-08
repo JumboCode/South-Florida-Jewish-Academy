@@ -368,6 +368,22 @@ def getStudentProfileForm():
         'form_info': form_info
     }
 
+@app.route('/studentProfileUpdate', methods = ['POST'])
+@requires_auth
+@log_action('Update Profile')
+def studentProfileUpdate():
+    studentID = ObjectId(request.json['id'])
+    basicInfo = request.json['basicInfo']
+
+    for key, value in basicInfo.items():
+        if key == '_id':
+            continue
+        if key == 'DOB':
+            value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
+        studentsDOM.updateInfo(studentID, key, value)
+
+    return '0'
+
 @app.route('/submitFormAuth', methods = ['POST'])
 @requires_auth
 @log_action('Submit form')

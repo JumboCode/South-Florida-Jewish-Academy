@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
-import ProfileEdit from '../Students/ProfileEdit';
+import ProfileEdit from './ProfileEdit';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import EditIcon from '@material-ui/icons/Edit';
