@@ -23,11 +23,6 @@ def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentId
     result = mongo.db.students.insert_one(initData)
     return result.inserted_id
 
-# Deletes student.
-def deleteStudent(id):
-    results = mongo.db.students.delete_one({'student_id': id})
-    return results
-    
 # Updates student basic info.
 def updateInfo(id, key, update):
     writeR = dict(mongo.db.students.update({'_id': id}, {'$set': {str(key): update}}))
@@ -136,3 +131,9 @@ def addNewFormId(id, newFormId):
 def deleteStudent(id):
     result = mongo.db.students.delete_one({'_id': id})
     assert result.deleted_count == 1
+
+def changeGrades(difference):
+    contents = list(mongo.db.students.find())
+    for content in contents:
+        # cast just in case for old data
+        mongo.db.students.update({'_id': content['_id']}, {'$set': {'grade': int(content['grade']) + difference}})
