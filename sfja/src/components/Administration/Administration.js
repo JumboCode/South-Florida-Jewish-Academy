@@ -7,6 +7,7 @@ import AuthMessage from './AuthMessage';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DataExports from './DataExports';
 import Audit from './Audit';
+import DeleteArchived from './DeleteArchived';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
@@ -20,6 +21,7 @@ class Administration extends React.Component {
     this.state = {
       authorizing: true,
       authorized: false,
+      numArchived: 0,
     };
   }
 
@@ -36,12 +38,13 @@ class Administration extends React.Component {
           this.setState({
             authorized: data.isAuthorized,
             authorizing: false,
+            numArchived: data.numArchived,
           });
         });
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {authorized, authorizing} = this.state;
+    const {authorized, authorizing, numArchived} = this.state;
     return (
       <div>
         {authorizing ? <div
@@ -74,6 +77,13 @@ class Administration extends React.Component {
                     marginTop: 20,
                   }}>
                   <ChangeGrades/>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    marginTop: 20,
+                  }}>
+                  <DeleteArchived numArchived={numArchived}/>
                 </div>
               </div>
               <div

@@ -589,8 +589,10 @@ def addStudent():
 @requires_auth
 @log_action('check role admin')
 def checkRoleAdmin():
+    isAuthorizedBool = isAuthorized(get_token_auth_header(), ['developer', 'admin'])
     return {
-        'isAuthorized': isAuthorized(get_token_auth_header(), ['developer', 'admin'])
+        'isAuthorized': isAuthorizedBool,
+        'numArchived': len(studentsDOM.getArchivedStudents()) if isAuthorizedBool else 0,
     }
 
 @app.route('/archiveStudent', methods = ['POST'])
@@ -641,5 +643,25 @@ def dataDownload():
         subprocess.call('rm -f users.csv', shell=True)
         subprocess.call('mongoexport --db sfja --collection users --type=csv --fields _id,user_id,email,actions --out users.csv', shell=True)
         return send_from_directory('.', 'users.csv', as_attachment=True)
+
+@app.route('/deleteArchivedStudents', methods = ['POST'])
+@requires_auth
+@log_action('delete archived students')
+@specific_roles(['admin', 'developer'])
+def deleteArchivedStudents():
+    toDeleteStudents = studentsDOM.getArchivedStudents()
+    parentsToUpdate = set()
+    for student in toDeleteStudents:
+        studentsDOM.deleteStudent(student['_id'])
+        for formId in student['form_ids']:
+            parentsToUpdate.add((FormsDOM.getParentID(formId), student['_id']))
+            FormsDOM.deleteForm(formId)
+
+    for (parentId, studentId) in parentsToUpdate:
+        parentsDOM.removeStudentId(parentId, studentId)
+
+    return {
+        'numDeleted': len(toDeleteStudents)
+    }
 if __name__ == '__main__':
     app.run(debug=True)
