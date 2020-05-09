@@ -126,6 +126,19 @@ class Students extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
+    refreshFilters(students, oldFilters) {
+      const filters = {};
+      const grades = {};
+      students.forEach((student) => {
+        if (!Object.keys(grades).includes(student.grade)) {
+          grades[student.grade] = oldFilters.grades[student.grade];
+        }
+      });
+      filters.grades = grades;
+      return filters;
+    }
+
+    // eslint-disable-next-line require-jsdoc
     descendingComparator(a, b, orderBy) {
       if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -194,7 +207,7 @@ class Students extends React.Component {
     // eslint-disable-next-line require-jsdoc
     deleteStudent(toDelete) {
       const {cookies} = this.props;
-      const {students, originalStudents} = this.state;
+      const {students, originalStudents, filters} = this.state;
       const body = {
         id: toDelete,
       };
@@ -214,7 +227,7 @@ class Students extends React.Component {
             openSuccessMessage: true,
             originalStudents: newOriginalData,
             students: newStudents,
-            filters: this.makeFilters(newStudents),
+            filters: this.refreshFilters(students, filters),
           });
         } else {
           this.setState({
