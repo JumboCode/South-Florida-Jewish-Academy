@@ -110,7 +110,7 @@ class Audit extends React.Component {
     let count = 0;
     return (
       <div style={{width: 700}}>
-        <Paper elevation={2} style={{width: 700, padding: 20}}>
+        <Paper elevation={2} style={{width: 750, padding: 20}}>
           <div style={{paddingBottom: 10, fontSize: 30}}>
             Audit Logs
           </div>

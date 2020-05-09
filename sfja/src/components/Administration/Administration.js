@@ -53,21 +53,32 @@ class Administration extends React.Component {
           <CircularProgress/>
         </div>: <div>
           {authorized ?
-            <div>
+            <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'row',
+              margin: 40,
+            }}>
               <div
                 style={{
                   display: 'flex',
                   margin: 40,
-                  justifyContent: 'space-evenly',
+                  flexDirection: 'column',
                 }}>
-                <ChangeGrades/>
                 <DataExports/>
+                <div
+                  style={{
+                    display: 'flex',
+                    marginTop: 40,
+                  }}>
+                  <ChangeGrades/>
+                  </div>
               </div>
               <div
                 style={{
                   display: 'flex',
                   margin: 40,
-                  justifyContent: 'space-evenly',
                 }}>
                 <Audit/>
               </div>
