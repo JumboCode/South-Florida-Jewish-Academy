@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, send_from_directory
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from database.emailKeysDOM import makeUser, verifyKey, verifyUser
@@ -609,5 +609,27 @@ def changeGrades():
     studentsDOM.changeGrades(int(request.json['difference']))
     return '0'
 
+@app.route('/dataDownload', methods = ['POST'])
+@requires_auth
+@log_action('data download')
+@specific_roles(['admin', 'developer'])
+def dataDownload():
+    toDownload = request.json['toDownload']
+    if toDownload == 'students':
+        subprocess.call('rm -f students.csv', shell=True)
+        subprocess.call('mongoexport --db sfja --collection students --type=csv --fields _id,first_name,middle_name,last_name,grade,DOB,parent_ids,form_ids --out students.csv', shell=True)
+        return send_from_directory('.', 'students.csv', as_attachment=True)
+    elif toDownload == 'parents':
+        subprocess.call('rm -f parents.csv', shell=True)
+        subprocess.call('mongoexport --db sfja --collection parents --type=csv --fields _id,first_name,last_name,email,student_ids --out parents.csv', shell=True)
+        return send_from_directory('.', 'parents.csv', as_attachment=True)
+    elif toDownload == 'forms':
+        subprocess.call('rm -f forms.csv', shell=True)
+        subprocess.call('mongoexport --db sfja --collection forms --type=csv --fields _id,blank_forms_id,parent_id,last_updated,last_viewed,completed,form_data --out forms.csv', shell=True)
+        return send_from_directory('.', 'forms.csv', as_attachment=True)
+    elif toDownload == 'users':
+        subprocess.call('rm -f users.csv', shell=True)
+        subprocess.call('mongoexport --db sfja --collection users --type=csv --fields _id,user_id,email,actions --out users.csv', shell=True)
+        return send_from_directory('.', 'users.csv', as_attachment=True)
 if __name__ == '__main__':
     app.run(debug=True)

@@ -5,6 +5,7 @@ import {instanceOf} from 'prop-types';
 import ChangeGrades from './ChangeGrades';
 import AuthMessage from './AuthMessage';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import DataExports from './DataExports';
 import Audit from './Audit';
 
 // eslint-disable-next-line require-jsdoc
@@ -42,23 +43,46 @@ class Administration extends React.Component {
   render() {
     const {authorized, authorizing} = this.state;
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'}}
-      >
-        {authorizing ? <CircularProgress style={{marginTop: 40}}/> : <div>
+      <div>
+        {authorizing ? <div
+          style={{
+            display: 'flex',
+            margin: 40,
+            justifyContent: 'space-evenly',
+          }}>
+          <CircularProgress/>
+        </div>: <div>
           {authorized ?
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                margin: 40,
+                justifyContent: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                margin: 20,
               }}>
-              <ChangeGrades/>
-              <Audit/>
+              <div
+                style={{
+                  display: 'flex',
+                  margin: 20,
+                  flexDirection: 'column',
+                }}>
+                <DataExports/>
+                <div
+                  style={{
+                    display: 'flex',
+                    marginTop: 20,
+                  }}>
+                  <ChangeGrades/>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  margin: 20,
+                }}>
+                <Audit/>
+              </div>
             </div> :
             <AuthMessage
               style={{
