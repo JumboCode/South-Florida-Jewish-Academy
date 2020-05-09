@@ -1,4 +1,4 @@
-/* eslint-disable indent */
+/* eslint-disable indent,max-len */
 import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -119,20 +119,20 @@ class Audit extends React.Component {
               <Table aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>
+                    <TableCell style={{fontSize: 14}}>
                       <TableSortLabel onClick={(e) => this.sortBy('id')}
                                       active={sortBy === 'id'}
                                       direction={order}/>ID</TableCell>
                     {/* eslint-disable-next-line max-len */}
-                    <TableCell align="right" onClick={(e) => this.sortBy('email')}>
+                    <TableCell style={{fontSize: 14}} align="right" onClick={(e) => this.sortBy('email')}>
                       <TableSortLabel onClick={(e) => this.sortBy('email')}
                                       active={sortBy === 'email'}
                                       direction={order}/>Email</TableCell>
-                    <TableCell align="right">
+                    <TableCell style={{fontSize: 14}} align="right">
                       <TableSortLabel onClick={(e) => this.sortBy('time')}
                                       active={sortBy === 'time'}
                                       direction={order}/>Time</TableCell>
-                    <TableCell align="right">
+                    <TableCell style={{fontSize: 14}} align="right">
                       <TableSortLabel onClick={(e) => this.sortBy('action')}
                                       active={sortBy === 'action'}
                                       direction={order}/>Action</TableCell>
@@ -145,12 +145,12 @@ class Audit extends React.Component {
                       count = count + 1;
                       return (
                         <TableRow key={count}>
-                          <TableCell component="th" scope="row">
+                          <TableCell component="th" scope="row" style={{fontSize: 14}}>
                             {d.id}
                           </TableCell>
-                          <TableCell align="right">{d.email}</TableCell>
-                          <TableCell align="right">{d.time}</TableCell>
-                          <TableCell align="right">{d.action}</TableCell>
+                          <TableCell align="right" style={{fontSize: 14}}>{d.email}</TableCell>
+                          <TableCell align="right" style={{fontSize: 14}}>{d.time}</TableCell>
+                          <TableCell align="right" style={{fontSize: 14}}>{d.action}</TableCell>
                         </TableRow>
                       );
                     })}
