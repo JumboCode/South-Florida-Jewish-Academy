@@ -109,7 +109,7 @@ class Audit extends React.Component {
     const {data, order, sortBy, rowsPerPage, pageNum} = this.state;
     let count = 0;
     return (
-      <div style={{width: 700, marginTop: 30}}>
+      <div style={{width: 700}}>
         <Paper elevation={2} style={{width: 700, padding: 20}}>
           <div style={{paddingBottom: 10, fontSize: 30}}>
             Audit logs

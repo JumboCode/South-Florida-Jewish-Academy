@@ -43,24 +43,34 @@ class Administration extends React.Component {
   render() {
     const {authorized, authorizing} = this.state;
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'}}
-      >
-        {authorizing ? <CircularProgress style={{marginTop: 40}}/> : <div>
+      <div>
+        {authorizing ? <div
+          style={{
+            display: 'flex',
+            margin: 40,
+            justifyContent: 'space-evenly',
+          }}>
+          <CircularProgress/>
+        </div>: <div>
           {authorized ?
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                margin: 40,
-              }}>
-              <ChangeGrades/>
-              <DataExports/>
-              <Audit/>
+            <div>
+              <div
+                style={{
+                  display: 'flex',
+                  margin: 40,
+                  justifyContent: 'space-evenly',
+                }}>
+                <ChangeGrades/>
+                <DataExports/>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  margin: 40,
+                  justifyContent: 'space-evenly',
+                }}>
+                <Audit/>
+              </div>
             </div> :
             <AuthMessage
               style={{
