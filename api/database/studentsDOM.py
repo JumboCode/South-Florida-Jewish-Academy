@@ -162,3 +162,7 @@ def changeGrades(difference):
     for content in contents:
         # cast just in case for old data
         mongo.db.students.update({'_id': content['_id']}, {'$set': {'grade': int(content['grade']) + difference}})
+
+def isArchived(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    return contents[0]['archived']

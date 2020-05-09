@@ -61,7 +61,9 @@ class DeleteArchived extends React.Component {
             Delete Archived
           </div>
           <div style={{paddingBottom: 10, fontSize: 15}}>
-            Delete {numDeleted === 0 ? numArchived : 0} archived students. {numArchived === 0 || numDeleted !== 0 ? 'No archived students to delete.' : 'This cannot be undone.'}
+            Delete {numDeleted === 0 ? numArchived : 0} archived students.
+            <br/>
+            {numArchived === 0 || numDeleted !== 0 ? 'No archived students to delete.' : 'This cannot be undone.'}
           </div>
           <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'}}>
             <Button

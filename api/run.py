@@ -163,11 +163,16 @@ def requires_auth(f):
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    student_ids = parentsDOM.listStudents(curr_link)
+    all_student_ids = parentsDOM.listStudents(curr_link)
+    unarchived_student_ids = []
+    for id in all_student_ids:
+        if not studentsDOM.isArchived(ObjectId(id)):
+            unarchived_student_ids.append(id)
+
     student_names = []
-    for id in student_ids:
+    for id in unarchived_student_ids:
         student_names.append(studentsDOM.getName(ObjectId(id)))
-    return {'student_ids': student_ids, 'student_names': student_names}
+    return {'student_ids': unarchived_student_ids, 'student_names': student_names}
 
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
