@@ -8,6 +8,8 @@ import {ReactFormGenerator} from 'react-form-builder2';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
+import MuiAlert from '@material-ui/lab/Alert';
+import {CircularProgress} from '@material-ui/core';
 
 // eslint-disable-next-line require-jsdoc
 class FormViewer extends React.Component {
@@ -87,8 +89,26 @@ class FormViewer extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog} = this.state;
+    if (!basicInfo) {
+      return (
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+          <CircularProgress/>
+        </div>
+      );
+    }
     return (
       <div>
+        {basicInfo.archived ?
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              severity='error'
+              style={{fontSize: 15, maxWidth: 1000, width: '100%'}}>
+              This student is archived. Please ask the administrator to unarchive to make changes.
+            </MuiAlert>
+          </div> :
+          null}
         {/* eslint-disable-next-line max-len */}
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <div style={{maxWidth: 1000, width: '100%', padding: 10}}>
@@ -125,10 +145,15 @@ class FormViewer extends React.Component {
               <div style={{backgroundColor: '#0068af', width: '100%', height: 2, marginTop: 10}}/>
               {blankFormData !== null ?
               <ReactFormGenerator
-                onSubmit={this.handleSubmit.bind(this)}
+                onSubmit={(data) => {
+                  if (! basicInfo.archived) {
+                    this.handleSubmit(data);
+                  }
+                }}
                 answer_data={formData}
                 data={blankFormData}
-                action_name={'Override Parent\'s Data'}
+                read_only={basicInfo.archived}
+                action_name={basicInfo.archived ? 'This student is archived' : 'Override Parent\'s Data'}
               /> : <div/>}
             </Paper>
           </div>

@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 
 // eslint-disable-next-line require-jsdoc
 export default function MessageBox(props) {
-  const {message, updateMessage} = props;
+  const {message, updateMessage, disabled} = props;
   return (
     // eslint-disable-next-line max-len
     <Paper elevation={3} style={{display: 'flex', margin: 10, flexDirection: 'column'}}>
@@ -17,6 +17,7 @@ export default function MessageBox(props) {
       {/* eslint-disable-next-line max-len */}
       <div style={{display: 'flex', marginTop: 10, marginLeft: 10, marginRight: 10, flexDirection: 'column'}}>
         <TextField
+          disabled={disabled}
           multiline
           autoFocus
           margin="dense"

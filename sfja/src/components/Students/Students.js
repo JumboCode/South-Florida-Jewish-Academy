@@ -347,7 +347,7 @@ class Students extends React.Component {
                       // only supporting grade filtering now
                       if (filters.grades[student.grade] && ((filters.archived.show && student.archived) || !student.archived)) {
                         return (
-                          <TableRow key={student.student_id}>
+                          <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>
                             <TableCell component="th" scope="row"
                               className={tableStyle}>
                               <NavLink to={'/profile/' + student.student_id}>

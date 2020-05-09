@@ -8,12 +8,14 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import Forms from './Forms';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import MuiAlert from '@material-ui/lab/Alert';
 import Paper from '@material-ui/core/Paper';
 import {instanceOf, PropTypes} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import ResendForms from './ResendForms';
+import Snackbar from "@material-ui/core/Snackbar";
 
 
 // eslint-disable-next-line require-jsdoc
@@ -81,6 +83,17 @@ class StudentProfile extends React.Component {
     // const classes = useStyles();
     return (
       <div>
+        {basicInfo.archived ?
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              severity='error'
+              style={{fontSize: 15, maxWidth: 1000, width: '100%'}}>
+              This student is archived. Please ask the administrator to unarchive to make changes.
+            </MuiAlert>
+          </div> :
+           null}
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <ProfileHeader basicInfo={basicInfo}/>
         </div>
@@ -111,6 +124,7 @@ class StudentProfile extends React.Component {
                   studentId={basicInfo['_id']}
                   parents={parents}
                   updateStudentProfile={this.updateStudentProfile.bind(this)}
+                  archived={basicInfo.archived}
                 />}
               </div>
             </Paper>
