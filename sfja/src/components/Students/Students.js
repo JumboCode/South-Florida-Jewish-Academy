@@ -331,7 +331,14 @@ class Students extends React.Component {
                         />
                                             Completed Forms
                       </TableCell>
-                      <TableCell align="center" className={tableStyle}>
+                      <TableCell align="center" className={tableStyle}
+                      >
+                        <TableSortLabel
+                          onClick={(e) => this.sort('archived')}
+                          active={sortBy === 'archived'}
+                          direction={order === 'asc' ? 'desc' : 'asc'}
+                        >
+                        </TableSortLabel>
                         Archived?
                       </TableCell>
                       {authorized ? (
