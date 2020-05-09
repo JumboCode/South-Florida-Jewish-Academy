@@ -11,6 +11,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import apiUrl from '../../utils/Env';
+import SnackBarMessage from '../../utils/SnackBarMessage';
 
 const useStyles = makeStyles({
   table: {
@@ -29,6 +30,8 @@ class StudentDash extends React.Component {
       selected: null,
       blankFormData: null,
       formFilledData: null,
+      openSentMessage: false,
+      success: true,
     };
   }
 
@@ -91,13 +94,26 @@ class StudentDash extends React.Component {
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify({form_id: selected,
         answer_data: answerData}),
-    }).then((response) => response);
+    }).then((response) => {
+      if (response.ok) {
+        this.setState({
+          openSentMessage: true,
+          success: true,
+        });
+      } else {
+        this.setState({
+          openSentMessage: true,
+          success: false,
+        });
+      }
+    },
+    );
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
     // eslint-disable-next-line max-len
-    const {studentId, formData, formFilledData, blankFormData} = this.state;
+    const {studentId, formData, formFilledData, blankFormData, openSentMessage, success} = this.state;
 
     if (studentId !== this.props.match.params.studentId) {
       this.setState({studentId: this.props.match.params.studentId});
@@ -134,8 +150,16 @@ class StudentDash extends React.Component {
           </Table>
         </TableContainer>
         {blankFormData !== null ?
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10, paddingBottom: 40}}>
-            <Paper elevation={2} style={{padding: 40, minWidth: 650, marginTop: 30}}>
+          <div style={{display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingTop: 10,
+            paddingBottom: 40}}>
+            <Paper elevation={2} style={{paddingTop: 10,
+              paddingLeft: 40,
+              paddingBottom: 40,
+              minWidth: 650,
+              marginTop: 30}}>
               <ReactFormGenerator
                 onSubmit={this.handleSubmit.bind(this)}
                 answer_data={formFilledData}
@@ -144,10 +168,20 @@ class StudentDash extends React.Component {
               />
             </Paper>
           </div> :
-          <h2 style={{fontSize: 25, fontFamily: 'Futura', color: '#0068af', textAlign: 'center', marginTop: 30}}>
+          <h2 style={{fontSize: 25,
+            fontFamily: 'Futura',
+            color: '#0068af',
+            textAlign: 'center',
+            marginTop: 30}}>
             Please select a form.
           </h2>
         }
+        <SnackBarMessage
+          open={openSentMessage}
+          closeSnackbar={() => this.setState({openSentMessage: false})}
+          severity={success ? 'success' : 'error'}
+          message={success ? 'Form Submitted!' : 'An error occurred.'}
+        />
       </div>
     );
   }
