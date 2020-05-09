@@ -214,8 +214,8 @@ class Students extends React.Component {
       });
     }
 
-  // eslint-disable-next-line require-jsdoc
-    flipArchival(studentId, students){
+    // eslint-disable-next-line require-jsdoc
+    flipArchival(studentId, students) {
       return students.map((s) => (s.student_id !== studentId ? s : {
         student_id: s.student_id,
         first_name: s.first_name,
@@ -254,7 +254,6 @@ class Students extends React.Component {
           });
         }
       }).catch((error) => {
-        console.log(error)
         this.setState({
           openFailureMessage: true,
         });

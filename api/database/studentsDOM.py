@@ -103,6 +103,19 @@ def getStudents():
         students.append(info)
 
     return students
+def getFullInfo(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    for content in contents:
+        return {
+            '_id': content['_id'],
+            'first_name': content['first_name'],
+            'middle_name': content['middle_name'],
+            'last_name': content['last_name'],
+            'DOB': content['DOB'].strftime("%m/%d/%Y"),
+            'form_ids': content['form_ids'],
+            'grade': content['grade'],
+            'archived': content['archived'],
+        }
 
 def getArchivedStudents():
     contents = list(mongo.db.students.find({'archived': True}))

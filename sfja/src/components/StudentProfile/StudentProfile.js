@@ -15,7 +15,7 @@ import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import ResendForms from './ResendForms';
-import Snackbar from "@material-ui/core/Snackbar";
+import AdminZone from './AdminZone';
 
 
 // eslint-disable-next-line require-jsdoc
@@ -33,6 +33,7 @@ class StudentProfile extends React.Component {
       basicInfo: null,
       currTab: 0,
       value: 0,
+      authorized: false,
     };
   }
 
@@ -57,6 +58,7 @@ class StudentProfile extends React.Component {
             basicInfo: data.basic_info,
             blankForms: data.blank_forms,
             parents: data.parents,
+            authorized: data.authorized,
           });
         }).catch((error) => {
           console.log(error);
@@ -70,7 +72,7 @@ class StudentProfile extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, basicInfo, currTab, blankForms, parents} = this.state;
+    const {forms, basicInfo, currTab, blankForms, parents, authorized} = this.state;
     // const {classes, children, className, ...other} = this.props;
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
@@ -90,7 +92,7 @@ class StudentProfile extends React.Component {
               variant="filled"
               severity='error'
               style={{fontSize: 15, maxWidth: 1000, width: '100%'}}>
-              This student is archived. Please ask the administrator to unarchive to make changes.
+              This student is archived. Please ask the administrator to unarchive from the students page to make changes.
             </MuiAlert>
           </div> :
            null}
@@ -130,6 +132,10 @@ class StudentProfile extends React.Component {
             </Paper>
           </div>
         </div>
+        {authorized ?
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
+            <AdminZone studentId={basicInfo['_id']}/>
+          </div> : null}
       </div>
     );
   }

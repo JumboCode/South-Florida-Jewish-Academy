@@ -35,4 +35,5 @@ export default function MessageBox(props) {
 MessageBox.propTypes = {
   message: PropTypes.string,
   updateMessage: PropTypes.func,
+  disabled: PropTypes.bool,
 };

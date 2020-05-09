@@ -105,7 +105,7 @@ class FormViewer extends React.Component {
               variant="filled"
               severity='error'
               style={{fontSize: 15, maxWidth: 1000, width: '100%'}}>
-              This student is archived. Please ask the administrator to unarchive to make changes.
+              This student is archived. Please ask the administrator to unarchive from the students page to make changes.
             </MuiAlert>
           </div> :
           null}
