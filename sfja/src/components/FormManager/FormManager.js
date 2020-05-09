@@ -123,16 +123,16 @@ class FormManager extends React.Component {
     return (
       <div style={{padding: 20}}>
         {createForm ? <BlankFormBuilder setCreateForm={this.setCreateForm.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
-         viewForm ? <PreviewBlankForm parentData={this.state.currentForm} setViewForm={this.setViewForm.bind(this)}/>:
+         viewForm ? <PreviewBlankForm currentForm={this.state.currentForm} setViewForm={this.setViewForm.bind(this)}/>:
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <div style={{width: '100%', maxWidth: 700}}>
+            <div style={{width: '100%', maxWidth: 700, marginTop: 10}}>
               <Button
                 onClick= {() => this.setState({createForm: true})}
                 variant="contained"
               >
                 Add Form
               </Button>
-              <div style={{paddingTop: 5}}>
+              <div style={{paddingTop: 10}}>
                 <TableContainer component={Paper}>
                   <Table aria-label="simple table">
                     <TableHead>
@@ -145,7 +145,7 @@ class FormManager extends React.Component {
                     <TableBody>
                       {allInfoArr.map((row) => (
                         <TableRow key={row.id}>
-                          <TableCell style={textSize} component="th" scope="row"
+                          <TableCell style={{cursor: 'pointer', fontSize: '13px'}} component="th" scope="row"
                             onClick={() => this.setState({currentForm: row, viewForm: true})}>
                             {row.name}
                           </TableCell>
