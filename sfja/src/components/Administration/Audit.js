@@ -112,7 +112,7 @@ class Audit extends React.Component {
       <div style={{width: 700}}>
         <Paper elevation={2} style={{width: 700, padding: 20}}>
           <div style={{paddingBottom: 10, fontSize: 30}}>
-            Audit logs
+            Audit Logs
           </div>
           {data ? <div>
             <TableContainer component={Paper}>
