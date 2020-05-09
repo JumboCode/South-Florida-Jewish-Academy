@@ -28,10 +28,12 @@ class StudentDash extends React.Component {
       studentId: this.props.match.params.studentId,
       formData: [],
       selected: null,
+      selectedName: '',
       blankFormData: null,
       formFilledData: null,
       openSentMessage: false,
       success: true,
+      studentInfo: '',
     };
   }
 
@@ -53,7 +55,11 @@ class StudentDash extends React.Component {
       body: JSON.stringify({student_id: this.props.match.params.studentId}),
     }).then((res) => res.json())
         .then((data) => {
-          this.setState({formData: data.form_data});
+          this.setState({
+            formData: data.form_data,
+            studentInfo: data.student_info,
+            selected: null,
+          });
           console.log(data);
         }).catch(console.log);
   }
@@ -78,9 +84,9 @@ class StudentDash extends React.Component {
   // eslint-disable-next-line no-invalid-this
   isSelected = (formId) => this.state.selected === formId
 
-  handleOnClick = (event, formId) => {
+  handleOnClick = (event, formId, formName) => {
     // eslint-disable-next-line no-invalid-this
-    this.setState({selected: formId});
+    this.setState({selected: formId, selectedName: formName});
     // eslint-disable-next-line no-invalid-this
     this.refreshFormData(formId);
   };
@@ -113,7 +119,7 @@ class StudentDash extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     // eslint-disable-next-line max-len
-    const {studentId, formData, formFilledData, blankFormData, openSentMessage, success} = this.state;
+    const {studentId, formData, formFilledData, blankFormData, openSentMessage, success, studentInfo, selectedName} = this.state;
 
     if (studentId !== this.props.match.params.studentId) {
       this.setState({studentId: this.props.match.params.studentId});
@@ -122,32 +128,48 @@ class StudentDash extends React.Component {
     }
     return (
       <div>
-        <TableContainer component={Paper}>
-          <Table className={useStyles.table} aria-label="form table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Form Name</TableCell>
-                <TableCell align="right">Last Updated</TableCell>
-                <TableCell align="right">Last Viewed</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {formData.map((form) => (
-                <TableRow
-                  key={form.form_id}
-                  onClick={(event) => this.handleOnClick(event, form.form_id)}
-                  selected={this.isSelected(form.form_id)}
-                >
-                  <TableCell component="th" scope="row">
-                    {form.form_name}
-                  </TableCell>
-                  <TableCell align="right">{form.last_updated}</TableCell>
-                  <TableCell align="right">{form.last_viewed}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
+          <Paper elevation={2} style={{padding: 20, minWidth: 650}} >
+            <div style={{paddingBottom: 10, fontSize: 20}}>
+              {studentInfo.first_name} {studentInfo.last_name}
+            </div>
+            <div style={{paddingBottom: 10, fontSize: 15}}>
+              DOB: {studentInfo.DOB}
+              <br/>
+              Grade: {studentInfo.grade}
+            </div>
+            <div style={{paddingBottom: 10, fontSize: 15}}>
+              Please click on a form below, fill it out, and submit it.
+            </div>
+            <TableContainer component={Paper}>
+              <Table aria-label="form table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={{fontSize: 12}}>Form Name</TableCell>
+                    <TableCell align="right" style={{fontSize: 12}}>Last Updated</TableCell>
+                    <TableCell align="right" style={{fontSize: 12}}>Last Viewed</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {formData.map((form) => (
+                    <TableRow
+                      style={{cursor: 'pointer'}}
+                      key={form.form_id}
+                      onClick={(event) => this.handleOnClick(event, form.form_id, form.form_name)}
+                      selected={this.isSelected(form.form_id)}
+                    >
+                      <TableCell component="th" scope="row" style={{fontSize: 12}}>
+                        {form.form_name}
+                      </TableCell>
+                      <TableCell align="right" style={{fontSize: 12}}>{form.last_updated}</TableCell>
+                      <TableCell align="right" style={{fontSize: 12}}>{form.last_viewed}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </div>
         {blankFormData !== null ?
           <div style={{display: 'flex',
             justifyContent: 'center',
@@ -159,6 +181,9 @@ class StudentDash extends React.Component {
               paddingBottom: 40,
               minWidth: 650,
               marginTop: 30}}>
+              <div style={{paddingBottom: 10, fontSize: 20, paddingTop: 10}}>
+                {selectedName}
+              </div>
               <ReactFormGenerator
                 onSubmit={this.handleSubmit.bind(this)}
                 answer_data={formFilledData}
@@ -179,7 +204,7 @@ class StudentDash extends React.Component {
           open={openSentMessage}
           closeSnackbar={() => this.setState({openSentMessage: false})}
           severity={success ? 'success' : 'error'}
-          message={success ? 'Form Submitted!' : 'An error occurred.'}
+          message={success ? 'Form submitted! Thank you.' : 'An error occurred.'}
         />
       </div>
     );

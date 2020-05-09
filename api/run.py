@@ -171,13 +171,13 @@ def getStudentsOfParent():
 
     student_names = []
     for id in unarchived_student_ids:
-        student_names.append(studentsDOM.getName(ObjectId(id)))
+        student_names.append(studentsDOM.getFirstName(ObjectId(id)))
     return {'student_ids': unarchived_student_ids, 'student_names': student_names}
 
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
-    student_id = request.json['student_id']
-    form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
+    student_id = ObjectId(request.json['student_id'])
+    form_ids = studentsDOM.getAllFormIds(student_id)
     form_data = []
     for id in form_ids:
         blank_form_data = FormsDOM.getBlankForm(ObjectId(id))
@@ -187,7 +187,10 @@ def getStudentForms():
                         'last_updated' : FormsDOM.getLastUpdated(ObjectId(id)),
                         'last_viewed' : FormsDOM.getLastViewed(ObjectId(id))}
             form_data.append(curr_form)
-    return {'form_data': form_data}
+    return {
+        'form_data': form_data,
+        'student_info': studentsDOM.getBasicInfo(student_id),
+    }
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
