@@ -5,6 +5,7 @@ import {instanceOf} from 'prop-types';
 import ChangeGrades from './ChangeGrades';
 import AuthMessage from './AuthMessage';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import DataExports from './DataExports';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
@@ -52,6 +53,7 @@ class Administration extends React.Component {
           {authorized ?
             <div>
               <ChangeGrades/>
+              <DataExports/>
             </div> :
             <AuthMessage
               message='You are not authorized to view this page.'
