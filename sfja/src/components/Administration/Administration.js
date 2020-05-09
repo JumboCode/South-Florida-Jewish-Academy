@@ -2,6 +2,10 @@ import React from 'react';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import {instanceOf} from 'prop-types';
+import ChangeGrades from './ChangeGrades';
+import AuthMessage from './AuthMessage';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Audit from './Audit';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
@@ -13,6 +17,7 @@ class Administration extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      authorizing: true,
       authorized: false,
     };
   }
@@ -25,20 +30,46 @@ class Administration extends React.Component {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${cookies.get('token')}`,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-        this.setState({
-          authorized: true,
+    }).then((response) => (response.json()))
+        .then((data) => {
+          this.setState({
+            authorized: data.isAuthorized,
+            authorizing: false,
+          });
         });
-      }
-    });
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {authorized} = this.state;
+    const {authorized, authorizing} = this.state;
     return (
-      <div>
-        {authorized ? <div>authorized</div> : <div>not authorized</div>}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'}}
+      >
+        {authorizing ? <CircularProgress style={{marginTop: 40}}/> : <div>
+          {authorized ?
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                margin: 40,
+              }}>
+              <ChangeGrades/>
+              <Audit/>
+            </div> :
+            <AuthMessage
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: 20}}
+              message='You are not authorized to view this page.'
+            />
+          }
+        </div>}
       </div>
     );
   }
