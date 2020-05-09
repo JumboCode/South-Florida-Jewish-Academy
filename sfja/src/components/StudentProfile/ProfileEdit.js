@@ -106,11 +106,12 @@ class ProfileEdit extends React.Component {
           {Object.keys(basicInfo).filter((key) => (key !== '_id' && key !== 'DOB')).map((key) => (
             <div key={key}>
               {/* eslint-disable-next-line max-len */}
-              <TextField onChange={(event) => this.updateValue(key, event.target.value)} value={basicInfo[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
+              <TextField onChange={(event) => this.updateValue(key, event.target.value)} disabled={basicInfo.archived} value={basicInfo[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
             </div>
           ))}
           <MuiPickersUtilsProvider utils={DateFnsUtils} >
             <KeyboardDatePicker
+              disabled={basicInfo.archived}
               error={basicInfo.DOB === null}
               required={true}
               inputProps={textSize}
@@ -139,7 +140,7 @@ class ProfileEdit extends React.Component {
             variant='contained'
             size='large'
             onClick={this.sendUpdate.bind(this)}
-            disabled={disableButton}>
+            disabled={disableButton || basicInfo.archived}>
             Update
           </Button>
         </div>

@@ -23,9 +23,10 @@ import apiUrl from '../../utils/Env';
 import {TextField} from '@material-ui/core';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Filters from './Filters';
-import DeleteIcon from '@material-ui/icons/Delete';
+import ArchiveIcon from '@material-ui/icons/Archive';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
 
 const theme = createMuiTheme({
   palette: {
@@ -66,6 +67,9 @@ class Students extends React.Component {
       columnToQuery: PropTypes.any,
       filters: {
         grades: {},
+        archived: {
+          show: false,
+        },
       },
     };
 
@@ -79,13 +83,14 @@ class Students extends React.Component {
         order: 'incr',
         query: '',
         columnToQuery: 'first_name',
-        toDelete: {
+        toArchiveOrUnarchive: {
           student_id: '',
           first_name: '',
           last_name: '',
         },
         authorized: false,
-        showConfirmation: false,
+        showArchiveConfirmation: false,
+        showUnArchiveConfirmation: false,
         openSuccessMessage: false,
         openFailureMessage: false,
       };
@@ -122,6 +127,24 @@ class Students extends React.Component {
         }
       });
       filters.grades = grades;
+      const archived = {
+        show: false,
+      };
+      filters.archived = archived;
+      return filters;
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    refreshFilters(students, oldFilters) {
+      const filters = {};
+      const grades = {};
+      students.forEach((student) => {
+        if (!Object.keys(grades).includes(student.grade)) {
+          grades[student.grade] = oldFilters.grades[student.grade];
+        }
+      });
+      filters.grades = grades;
+      filters.archived = oldFilters.archived;
       return filters;
     }
 
@@ -174,9 +197,10 @@ class Students extends React.Component {
       if (originalStudents === null) {
         console.log('null');
       }
+      query = query.toLowerCase();
       const filtered = originalStudents.filter((currStudent) =>
-        (currStudent.first_name.startsWith(query) ||
-            currStudent.last_name.startsWith(query)));
+        (currStudent.first_name.toLowerCase().startsWith(query) ||
+            currStudent.last_name.toLowerCase().startsWith(query)));
       this.setState({
         students: filtered,
       });
@@ -192,14 +216,27 @@ class Students extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
-    deleteStudent(toDelete) {
+    flipArchival(studentId, students) {
+      return students.map((s) => (s.student_id !== studentId ? s : {
+        student_id: s.student_id,
+        first_name: s.first_name,
+        middle_name: s.middle_name,
+        last_name: s.last_name,
+        DOB: s.DOB,
+        grade: s.grade,
+        forms_completed: s.forms_completed,
+        archived: !s.archived,
+      }));
+    }
+    // eslint-disable-next-line require-jsdoc
+    archivalStudentChanger(studentId, action) {
       const {cookies} = this.props;
-      const {students, originalStudents} = this.state;
+      const {students, originalStudents, filters} = this.state;
       const body = {
-        id: toDelete,
+        id: studentId,
       };
 
-      fetch(apiUrl() + '/deleteStudent', {
+      fetch(apiUrl() + '/' + action + 'Student', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -208,14 +245,13 @@ class Students extends React.Component {
         body: JSON.stringify(body),
       }).then((x) => {
         if (x.status === 200) {
+          const newOriginalData = this.flipArchival(studentId, originalStudents);
+          const newStudents = this.flipArchival(studentId, students);
           this.setState({
             openSuccessMessage: true,
-            originalStudents: originalStudents.filter((student) => (student.student_id !== toDelete)),
-            students: students.filter((student) => (student.student_id !== toDelete)),
-          });
-        } else {
-          this.setState({
-            openFailureMessage: true,
+            originalStudents: newOriginalData,
+            students: newStudents,
+            filters: this.refreshFilters(students, filters),
           });
         }
       }).catch((error) => {
@@ -226,7 +262,7 @@ class Students extends React.Component {
     }
     // eslint-disable-next-line require-jsdoc
     render() {
-      const {students, sortBy, order, filters, authorized, showConfirmation, toDelete, openSuccessMessage, openFailureMessage} = this.state;
+      const {students, sortBy, order, filters, authorized, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation} = this.state;
       // eslint-disable-next-line react/prop-types
       const {classes, className} = this.props;
       const tableStyle = clsx(classes.text, className);
@@ -296,9 +332,19 @@ class Students extends React.Component {
                         />
                                             Completed Forms
                       </TableCell>
+                      <TableCell align="center" className={tableStyle}
+                      >
+                        <TableSortLabel
+                          onClick={(e) => this.sort('archived')}
+                          active={sortBy === 'archived'}
+                          direction={order === 'asc' ? 'desc' : 'asc'}
+                        >
+                        </TableSortLabel>
+                        Archived?
+                      </TableCell>
                       {authorized ? (
                         <TableCell align="center" className={tableStyle}>
-                          Delete
+                          Archive
                         </TableCell>
                       ) : null}
                     </TableRow>
@@ -306,9 +352,9 @@ class Students extends React.Component {
                   <TableBody>
                     {students.map((student) => {
                       // only supporting grade filtering now
-                      if (filters.grades[student.grade]) {
+                      if (filters.grades[student.grade] && ((filters.archived.show && student.archived) || !student.archived)) {
                         return (
-                          <TableRow key={student.student_id}>
+                          <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>
                             <TableCell component="th" scope="row"
                               className={tableStyle}>
                               <NavLink to={'/profile/' + student.student_id}>
@@ -329,9 +375,16 @@ class Students extends React.Component {
                             <TableCell align="center" className={tableStyle}>
                               {student.forms_completed}
                             </TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.archived ? 'Y' : 'N'}
+                            </TableCell>
                             {authorized ? (
                               <TableCell align="center" className={tableStyle}>
-                                <DeleteIcon style={{cursor: 'pointer'}} fontSize='medium' onClick={() => this.setState({toDelete: student, showConfirmation: true})}/>
+                                {student.archived ? <div>
+                                  <UnarchiveIcon style={{cursor: 'pointer'}} fontSize='large' onClick={() => this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true})}/>
+                                </div>:<div>
+                                  <ArchiveIcon style={{cursor: 'pointer'}} fontSize='large' onClick={() => this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true})}/>
+                                </div>}
                               </TableCell>
                             ) : null}
                           </TableRow>
@@ -344,17 +397,25 @@ class Students extends React.Component {
             </div>
           </div>
           <ConfirmationDialog
-            showWarning={showConfirmation}
-            setShowWarning={(newVal) => this.setState({showConfirmation: newVal})}
-            onConfirm={() => this.deleteStudent(toDelete.student_id)}
-            message={'Are you sure you want to delete ' + toDelete.first_name + ' ' + toDelete.last_name + '? This is permanent.'}
-            confirmMessage='delete'
+            showWarning={showArchiveConfirmation}
+            setShowWarning={(newVal) => this.setState({showArchiveConfirmation: newVal})}
+            onConfirm={() => this.archivalStudentChanger(toArchiveOrUnarchive.student_id, 'archive')}
+            message={'Are you sure you want to archive ' + toArchiveOrUnarchive.first_name + ' ' + toArchiveOrUnarchive.last_name + '?'}
+            confirmMessage='archive'
+            notConfirmMessage='back'
+          />
+          <ConfirmationDialog
+            showWarning={showUnArchiveConfirmation}
+            setShowWarning={(newVal) => this.setState({showUnArchiveConfirmation: newVal})}
+            onConfirm={() => this.archivalStudentChanger(toArchiveOrUnarchive.student_id, 'unarchive')}
+            message={'Are you sure you want to unarchive ' + toArchiveOrUnarchive.first_name + ' ' + toArchiveOrUnarchive.last_name + '?'}
+            confirmMessage='unarchive'
             notConfirmMessage='back'
           />
           <SnackBarMessage
             open={openSuccessMessage}
             closeSnackbar={() => this.setState({openSuccessMessage: false})}
-            message={toDelete.first_name + ' ' + toDelete.last_name + ' deleted.'}
+            message={toArchiveOrUnarchive.first_name + ' ' + toArchiveOrUnarchive.last_name + ' action complete.'}
             severity='success'
           />
           <SnackBarMessage
