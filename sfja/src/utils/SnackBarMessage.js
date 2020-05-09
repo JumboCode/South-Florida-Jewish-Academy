@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -9,9 +10,9 @@ import MuiAlert from '@material-ui/lab/Alert';
 // message - message to display
 // eslint-disable-next-line require-jsdoc
 export default function SnackBarMessage(props) {
-  const {open, closeSnackbar, severity, message} = props;
+  const {open, closeSnackbar, severity, message, autoHideDuration} = props;
   return (
-    <Snackbar open={open} autoHideDuration={6000} onClose={closeSnackbar}>
+    <Snackbar open={open} autoHideDuration={autoHideDuration} onClose={closeSnackbar}>
       <MuiAlert
         elevation={6}
         variant="filled"
@@ -29,4 +30,9 @@ SnackBarMessage.propTypes = {
   closeSnackbar: PropTypes.func,
   severity: PropTypes.string,
   message: PropTypes.string,
+  autoHideDuration: PropTypes.number,
+};
+
+SnackBarMessage.defaultProps = {
+  autoHideDuration: 6000,
 };
