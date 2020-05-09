@@ -54,31 +54,32 @@ class Administration extends React.Component {
         </div>: <div>
           {authorized ?
             <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              margin: 40,
-            }}>
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                margin: 20,
+              }}>
               <div
                 style={{
                   display: 'flex',
-                  margin: 40,
+                  margin: 20,
                   flexDirection: 'column',
                 }}>
                 <DataExports/>
                 <div
                   style={{
                     display: 'flex',
-                    marginTop: 40,
+                    marginTop: 20,
                   }}>
                   <ChangeGrades/>
-                  </div>
+                </div>
               </div>
               <div
                 style={{
                   display: 'flex',
-                  margin: 40,
+                  margin: 20,
                 }}>
                 <Audit/>
               </div>

@@ -42,8 +42,8 @@ class DataExports extends React.Component {
     // const {, difference} = this.state;
     return (
       <div>
-        <Paper elevation={2} style={{width: 500, padding: 20}}>
-          <div style={{paddingBottom: 10, fontSize: 30}}>
+        <Paper elevation={2} style={{width: 300, padding: 20}}>
+          <div style={{paddingBottom: 10, fontSize: 20}}>
             Data Exports
           </div>
           <div style={{paddingBottom: 10, fontSize: 15}}>
@@ -56,6 +56,9 @@ class DataExports extends React.Component {
             <Button onClick={() => {
               this.downloadData('parents');
             }} variant='contained' >Parent Data</Button>
+          </div>
+          <br/>
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'}}>
             <Button onClick={() => {
               this.downloadData('forms');
             }} variant='contained' >Form Data</Button>

@@ -109,9 +109,9 @@ class Audit extends React.Component {
     const {data, order, sortBy, rowsPerPage, pageNum} = this.state;
     let count = 0;
     return (
-      <div style={{width: 700}}>
-        <Paper elevation={2} style={{width: 750, padding: 20}}>
-          <div style={{paddingBottom: 10, fontSize: 30}}>
+      <div>
+        <Paper elevation={2} style={{padding: 20}}>
+          <div style={{paddingBottom: 10, fontSize: 20}}>
             Audit Logs
           </div>
           {data ? <div>
@@ -119,20 +119,20 @@ class Audit extends React.Component {
               <Table aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{fontSize: 14}}>
+                    <TableCell style={{fontSize: 12}}>
                       <TableSortLabel onClick={(e) => this.sortBy('id')}
                                       active={sortBy === 'id'}
                                       direction={order}/>ID</TableCell>
                     {/* eslint-disable-next-line max-len */}
-                    <TableCell style={{fontSize: 14}} align="right" onClick={(e) => this.sortBy('email')}>
+                    <TableCell style={{fontSize: 12}} align="right" onClick={(e) => this.sortBy('email')}>
                       <TableSortLabel onClick={(e) => this.sortBy('email')}
                                       active={sortBy === 'email'}
                                       direction={order}/>Email</TableCell>
-                    <TableCell style={{fontSize: 14}} align="right">
+                    <TableCell style={{fontSize: 12}} align="right">
                       <TableSortLabel onClick={(e) => this.sortBy('time')}
                                       active={sortBy === 'time'}
                                       direction={order}/>Time</TableCell>
-                    <TableCell style={{fontSize: 14}} align="right">
+                    <TableCell style={{fontSize: 12}} align="right">
                       <TableSortLabel onClick={(e) => this.sortBy('action')}
                                       active={sortBy === 'action'}
                                       direction={order}/>Action</TableCell>
@@ -145,12 +145,12 @@ class Audit extends React.Component {
                       count = count + 1;
                       return (
                         <TableRow key={count}>
-                          <TableCell component="th" scope="row" style={{fontSize: 14}}>
+                          <TableCell component="th" scope="row" style={{fontSize: 12}}>
                             {d.id}
                           </TableCell>
-                          <TableCell align="right" style={{fontSize: 14}}>{d.email}</TableCell>
-                          <TableCell align="right" style={{fontSize: 14}}>{d.time}</TableCell>
-                          <TableCell align="right" style={{fontSize: 14}}>{d.action}</TableCell>
+                          <TableCell align="right" style={{fontSize: 12}}>{d.email}</TableCell>
+                          <TableCell align="right" style={{fontSize: 12}}>{d.time}</TableCell>
+                          <TableCell align="right" style={{fontSize: 12}}>{d.action}</TableCell>
                         </TableRow>
                       );
                     })}
