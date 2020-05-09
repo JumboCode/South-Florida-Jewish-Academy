@@ -6,6 +6,7 @@ import ChangeGrades from './ChangeGrades';
 import AuthMessage from './AuthMessage';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DataExports from './DataExports';
+import Audit from './Audit';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
@@ -46,16 +47,27 @@ class Administration extends React.Component {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          paddingTop: 20}}
+          alignItems: 'center'}}
       >
-        {authorizing ? <CircularProgress/> : <div>
+        {authorizing ? <CircularProgress style={{marginTop: 40}}/> : <div>
           {authorized ?
-            <div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                margin: 40,
+              }}>
               <ChangeGrades/>
               <DataExports/>
+              <Audit/>
             </div> :
             <AuthMessage
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: 20}}
               message='You are not authorized to view this page.'
             />
           }
