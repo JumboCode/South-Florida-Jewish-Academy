@@ -208,10 +208,13 @@ class Students extends React.Component {
         body: JSON.stringify(body),
       }).then((x) => {
         if (x.status === 200) {
+          const newOriginalData = originalStudents.filter((student) => (student.student_id !== toDelete));
+          const newStudents = students.filter((student) => (student.student_id !== toDelete));
           this.setState({
             openSuccessMessage: true,
-            originalStudents: originalStudents.filter((student) => (student.student_id !== toDelete)),
-            students: students.filter((student) => (student.student_id !== toDelete)),
+            originalStudents: newOriginalData,
+            students: newStudents,
+            filters: this.makeFilters(newStudents),
           });
         } else {
           this.setState({
