@@ -4,6 +4,7 @@ export const studentPageStyle = {
   paddingLeft: '15px',
   paddingRight: '15px',
   fontFamily: 'Futura',
+  justifyContent: 'center',
 };
 
 export const filterStyle = {

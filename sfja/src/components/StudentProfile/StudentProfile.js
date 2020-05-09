@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
-import ProfileEdit from '../Students/ProfileEdit';
-import TextField from '@material-ui/core/TextField';
+import ProfileEdit from './ProfileEdit';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import EditIcon from '@material-ui/icons/Edit';
@@ -9,32 +8,15 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import Forms from './Forms';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import MuiAlert from '@material-ui/lab/Alert';
 import Paper from '@material-ui/core/Paper';
 import {instanceOf, PropTypes} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
+import ProfileHeader from './ProfileHeader';
 import ResendForms from './ResendForms';
+import AdminZone from './AdminZone';
 
-const imageStyle = {
-  width: 60,
-  height: 60,
-};
-const parent = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingTop: '40px',
-  padding: 20,
-};
-
-const childRight= {
-  display: 'flex',
-};
-
-const childLeft= {
-  display: 'flex',
-  marginLeft: 'auto',
-};
 
 // eslint-disable-next-line require-jsdoc
 class StudentProfile extends React.Component {
@@ -51,6 +33,7 @@ class StudentProfile extends React.Component {
       basicInfo: null,
       currTab: 0,
       value: 0,
+      authorized: false,
     };
   }
 
@@ -75,6 +58,7 @@ class StudentProfile extends React.Component {
             basicInfo: data.basic_info,
             blankForms: data.blank_forms,
             parents: data.parents,
+            authorized: data.authorized,
           });
         }).catch((error) => {
           console.log(error);
@@ -88,7 +72,7 @@ class StudentProfile extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, basicInfo, currTab, blankForms, parents} = this.state;
+    const {forms, basicInfo, currTab, blankForms, parents, authorized} = this.state;
     // const {classes, children, className, ...other} = this.props;
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
@@ -101,28 +85,19 @@ class StudentProfile extends React.Component {
     // const classes = useStyles();
     return (
       <div>
+        {basicInfo.archived ?
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              severity='error'
+              style={{fontSize: 15, maxWidth: 1000, width: '100%'}}>
+              This student is archived. Please ask the administrator to unarchive from the students page to make changes.
+            </MuiAlert>
+          </div> :
+           null}
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <div style={{maxWidth: 1000, width: '100%'}}>
-            <div style= {parent}>
-              <div style={childRight}>
-                <img alt="student_image"
-                  style={imageStyle}
-                  src="https://i1.wp.com/acaweb.org/wp-content/uploads/2018/12/profile-placeholder.png"
-                />
-                <div style={{marginLeft: 10, fontSize: 20}}>
-                  <div>{basicInfo['first_name']} {basicInfo['last_name']}</div>
-                  <div> ID: {basicInfo['_id']}</div>
-                  {/* <div> <div style={line}> </div></div>*/}
-                </div>
-              </div>
-              <div style={childLeft}>
-                <TextField id="outlined-basic"
-                  label="Search for Forms"
-                  style ={{width: 250}}
-                  variant="outlined" />
-              </div>
-            </div>
-          </div>
+          <ProfileHeader basicInfo={basicInfo}/>
         </div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <div style={{maxWidth: 1000, width: '100%'}}>
@@ -141,7 +116,7 @@ class StudentProfile extends React.Component {
                 <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
-                {currTab === 0 && <Forms forms={forms}/>}
+                {currTab === 0 && <Forms forms={forms} studentId={basicInfo['_id']}/>}
                 {currTab === 1 && <div>documents</div>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
                 {currTab === 3 &&
@@ -151,11 +126,16 @@ class StudentProfile extends React.Component {
                   studentId={basicInfo['_id']}
                   parents={parents}
                   updateStudentProfile={this.updateStudentProfile.bind(this)}
+                  archived={basicInfo.archived}
                 />}
               </div>
             </Paper>
           </div>
         </div>
+        {authorized ?
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
+            <AdminZone studentId={basicInfo['_id']}/>
+          </div> : null}
       </div>
     );
   }

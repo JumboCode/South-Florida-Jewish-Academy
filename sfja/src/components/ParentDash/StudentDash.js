@@ -60,7 +60,7 @@ class StudentDash extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   refreshFormData(formId) {
-    fetch('http://127.0.0.1:5000/getForm', {
+    fetch(apiUrl() + '/getForm', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
@@ -83,12 +83,12 @@ class StudentDash extends React.Component {
     this.setState({selected: formId});
     // eslint-disable-next-line no-invalid-this
     this.refreshFormData(formId);
-  }
+  };
 
   // eslint-disable-next-line require-jsdoc
   handleSubmit(answerData) {
     const {selected} = this.state;
-    fetch('http://127.0.0.1:5000/submitForm', {
+    fetch(apiUrl() + '/submitForm', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
@@ -120,7 +120,6 @@ class StudentDash extends React.Component {
       this.setState({blankFormData: null});
       this.refreshStudentForms();
     }
-
     return (
       <div>
         <TableContainer component={Paper}>

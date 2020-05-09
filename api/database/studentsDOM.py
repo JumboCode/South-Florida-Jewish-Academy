@@ -19,18 +19,14 @@ def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentId
                 'grade': grade,
                 'parent_ids': parentIds,
                 'form_ids': formIds,
+                'archived': False,
                 }
     result = mongo.db.students.insert_one(initData)
     return result.inserted_id
 
-# Deletes student.
-def deleteStudent(id):
-    results = mongo.db.students.delete_one({'student_id': id})
-    return results
-    
 # Updates student basic info.
 def updateInfo(id, key, update):
-    writeR = dict(mongo.db.students.update({'student_id': id}, {'$set': {'basic_info.' + str(key): update}}))
+    writeR = dict(mongo.db.students.update({'_id': id}, {'$set': {str(key): update}}))
     return writeR['nModified'] > 0
 
 # Gets student basic info.
@@ -44,8 +40,9 @@ def getBasicInfo(id):
     contents = list(mongo.db.students.find({'_id': id}))
     for content in contents:
         del content['parent_ids']
-        content['_id'] = str(content['_id'])
         del content['form_ids']
+        content['_id'] = str(content['_id'])
+        content['DOB'] = content['DOB'].strftime("%m/%d/%Y")
         return content
 
 # Gets forms of a student.
@@ -100,10 +97,34 @@ def getStudents():
             'last_name': content['last_name'],
             'DOB': content['DOB'].strftime("%m/%d/%Y"),
             'form_ids': content['form_ids'],
-            'grade': content['grade']
+            'grade': content['grade'],
+            'archived': content['archived'],
         }
         students.append(info)
 
+    return students
+def getFullInfo(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    for content in contents:
+        return {
+            '_id': content['_id'],
+            'first_name': content['first_name'],
+            'middle_name': content['middle_name'],
+            'last_name': content['last_name'],
+            'DOB': content['DOB'].strftime("%m/%d/%Y"),
+            'form_ids': content['form_ids'],
+            'grade': content['grade'],
+            'archived': content['archived'],
+        }
+
+def getArchivedStudents():
+    contents = list(mongo.db.students.find({'archived': True}))
+    students = []
+    for content in contents:
+        students.append({
+            '_id': content['_id'],
+            'form_ids': content['form_ids'],
+        })
     return students
 
 def getName(id):
@@ -131,3 +152,17 @@ def addNewFormId(id, newFormId):
     oldForms.append(newFormId)
     writeR = dict(mongo.db.students.update({'_id': id}, {'$set': {'form_ids': oldForms}}))
     return writeR['nModified'] > 0
+
+def deleteStudent(id):
+    result = mongo.db.students.delete_one({'_id': id})
+    assert result.deleted_count == 1
+
+def changeGrades(difference):
+    contents = list(mongo.db.students.find())
+    for content in contents:
+        # cast just in case for old data
+        mongo.db.students.update({'_id': content['_id']}, {'$set': {'grade': int(content['grade']) + difference}})
+
+def isArchived(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    return contents[0]['archived']
