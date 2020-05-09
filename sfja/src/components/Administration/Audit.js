@@ -65,7 +65,6 @@ class Audit extends React.Component {
     const {data, order} = this.state;
     // eslint-disable-next-line max-len
     const newData = this.stableSort(data, this.getComparator(order === 'desc' ? 'asc' : 'desc', feature));
-    console.log('new data: ', newData);
     this.setState({
       sortBy: feature,
       data: newData,
@@ -86,14 +85,12 @@ class Audit extends React.Component {
     })
         .then((res) =>res.json())
         .then((data) => {
-          console.log(data);
           this.setState({users: data.users});
           this.setState({data:
                   data.users.reduce(
                       function(acc, x) {
                         x.actions.forEach(
                             (a) => {
-                              console.log(a);
                               // eslint-disable-next-line max-len
                               const id = x.user_id; const time = a[0]; const action = a[1]; const email = x.email;
                               const rec = {id, time, action, email};
@@ -108,7 +105,7 @@ class Audit extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {users, data, order, sortBy} = this.state;
-    console.log(data);
+    let count = 0;
     if (!users || !data) {
       return (
         <div>
@@ -147,16 +144,19 @@ class Audit extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((d) => (
-                  <TableRow key={d.email + d.time}>
-                    <TableCell component="th" scope="row">
-                      {d.id}
-                    </TableCell>
-                    <TableCell align="right">{d.email}</TableCell>
-                    <TableCell align="right">{d.time}</TableCell>
-                    <TableCell align="right">{d.action}</TableCell>
-                  </TableRow>
-                ))}
+                {data.map((d) => {
+                  count = count + 1;
+                  return (
+                    <TableRow key={count}>
+                      <TableCell component="th" scope="row">
+                        {d.id}
+                      </TableCell>
+                      <TableCell align="right">{d.email}</TableCell>
+                      <TableCell align="right">{d.time}</TableCell>
+                      <TableCell align="right">{d.action}</TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
