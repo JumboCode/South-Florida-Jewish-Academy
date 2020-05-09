@@ -1,5 +1,5 @@
+/* eslint-disable indent */
 import React from 'react';
-import PropTypes from 'prop-types';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,12 +11,13 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import apiUrl from '../../utils/Env';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
+import {CircularProgress} from '@material-ui/core';
 
 // eslint-disable-next-line require-jsdoc
 class Audit extends React.Component {
   static propTypes = {
-    users: PropTypes.any,
-    data: PropTypes.any,
     cookies: instanceOf(Cookies).isRequired,
   };
 
@@ -24,10 +25,11 @@ class Audit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: null,
       data: null,
       order: 'asc',
       sortBy: 'id',
+      rowsPerPage: 10,
+      pageNum: 0,
     };
   };
 
@@ -85,7 +87,6 @@ class Audit extends React.Component {
     })
         .then((res) =>res.json())
         .then((data) => {
-          this.setState({users: data.users});
           this.setState({data:
                   data.users.reduce(
                       function(acc, x) {
@@ -98,68 +99,85 @@ class Audit extends React.Component {
                             });
                         return acc;
                       }, [])});
-        })
-        .catch(console.log);
+        }).then(() => {
+          this.sortBy('time');
+        }).catch(console.log);
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {users, data, order, sortBy} = this.state;
+    const {data, order, sortBy, rowsPerPage, pageNum} = this.state;
     let count = 0;
-    if (!users || !data) {
-      return (
-        <div>
-                 Loading
-        </div>
-      );
-    }
-
     return (
       <div style={{width: 700, marginTop: 30}}>
         <Paper elevation={2} style={{width: 700, padding: 20}}>
           <div style={{paddingBottom: 10, fontSize: 30}}>
             Audit logs
           </div>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                    <TableSortLabel onClick={(e) => this.sortBy('id')}
-                      active={sortBy === 'id'}
-                      direction={order}/>ID</TableCell>
+          {data ? <div>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <TableSortLabel onClick={(e) => this.sortBy('id')}
+                                      active={sortBy === 'id'}
+                                      direction={order}/>ID</TableCell>
+                    {/* eslint-disable-next-line max-len */}
+                    <TableCell align="right" onClick={(e) => this.sortBy('email')}>
+                      <TableSortLabel onClick={(e) => this.sortBy('email')}
+                                      active={sortBy === 'email'}
+                                      direction={order}/>Email</TableCell>
+                    <TableCell align="right">
+                      <TableSortLabel onClick={(e) => this.sortBy('time')}
+                                      active={sortBy === 'time'}
+                                      direction={order}/>Time</TableCell>
+                    <TableCell align="right">
+                      <TableSortLabel onClick={(e) => this.sortBy('action')}
+                                      active={sortBy === 'action'}
+                                      direction={order}/>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {/* eslint-disable-next-line max-len */}
-                  <TableCell align="right" onClick={(e) => this.sortBy('email')}>
-                    <TableSortLabel onClick={(e) => this.sortBy('email')}
-                      active={sortBy === 'email'}
-                      direction={order}/>Email</TableCell>
-                  <TableCell align="right">
-                    <TableSortLabel onClick={(e) => this.sortBy('time')}
-                      active={sortBy === 'time'}
-                      direction={order}/>Time</TableCell>
-                  <TableCell align="right">
-                    <TableSortLabel onClick={(e) => this.sortBy('action')}
-                      active={sortBy === 'action'}
-                      direction={order}/>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((d) => {
-                  count = count + 1;
-                  return (
-                    <TableRow key={count}>
-                      <TableCell component="th" scope="row">
-                        {d.id}
-                      </TableCell>
-                      <TableCell align="right">{d.email}</TableCell>
-                      <TableCell align="right">{d.time}</TableCell>
-                      <TableCell align="right">{d.action}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                  {data.slice(pageNum * rowsPerPage, pageNum * rowsPerPage + rowsPerPage)
+                    .map((d) => {
+                      count = count + 1;
+                      return (
+                        <TableRow key={count}>
+                          <TableCell component="th" scope="row">
+                            {d.id}
+                          </TableCell>
+                          <TableCell align="right">{d.email}</TableCell>
+                          <TableCell align="right">{d.time}</TableCell>
+                          <TableCell align="right">{d.action}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      count={data.length}
+                      rowsPerPage={rowsPerPage}
+                      page={pageNum}
+                      onChangePage={(event, newPage) => {
+                        this.setState({
+                          pageNum: newPage,
+                        });
+                      }}
+                      onChangeRowsPerPage={(event) => {
+                        this.setState({
+                          rowsPerPage: parseInt(event.target.value, 10),
+                          pageNum: 0,
+                        });
+                      }}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          </div> : <CircularProgress/>}
         </Paper>
       </div>
     );
