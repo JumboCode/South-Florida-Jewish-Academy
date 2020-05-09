@@ -70,7 +70,7 @@ class AdminZone extends React.Component {
           <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Paper elevation={2} style={{padding: 20, width: 400}}>
               <div style={{fontSize: 20}}>
-                Delete student.
+                Delete Student
               </div>
               <div style={{fontSize: 15}}>
                 This operation cannot be undone.
