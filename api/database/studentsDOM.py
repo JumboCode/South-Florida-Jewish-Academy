@@ -19,6 +19,7 @@ def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentId
                 'grade': grade,
                 'parent_ids': parentIds,
                 'form_ids': formIds,
+                'archived': False,
                 }
     result = mongo.db.students.insert_one(initData)
     return result.inserted_id
@@ -96,7 +97,8 @@ def getStudents():
             'last_name': content['last_name'],
             'DOB': content['DOB'].strftime("%m/%d/%Y"),
             'form_ids': content['form_ids'],
-            'grade': content['grade']
+            'grade': content['grade'],
+            'archived': content['archived'],
         }
         students.append(info)
 

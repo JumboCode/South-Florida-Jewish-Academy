@@ -593,12 +593,22 @@ def checkRoleAdmin():
         'isAuthorized': isAuthorized(get_token_auth_header(), ['developer', 'admin'])
     }
 
-@app.route('/deleteStudent', methods = ['POST'])
+@app.route('/archiveStudent', methods = ['POST'])
 @requires_auth
-@log_action('delete student')
+@log_action('archive student')
 @specific_roles(['admin', 'developer'])
-def deleteStudent():
-    studentsDOM.deleteStudent(ObjectId(request.json['id']))
+def archiveStudent():
+    studentID = ObjectId(request.json['id'])
+    studentsDOM.updateInfo(studentID, 'archived', True)
+    return '0'
+
+@app.route('/unarchiveStudent', methods = ['POST'])
+@requires_auth
+@log_action('unarchive student')
+@specific_roles(['admin', 'developer'])
+def unarchiveStudent():
+    studentID = ObjectId(request.json['id'])
+    studentsDOM.updateInfo(studentID, 'archived', False)
     return '0'
 
 @app.route('/changeGrades', methods = ['POST'])
