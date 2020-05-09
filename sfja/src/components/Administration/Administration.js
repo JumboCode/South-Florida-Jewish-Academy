@@ -7,6 +7,8 @@ import AuthMessage from './AuthMessage';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DataExports from './DataExports';
 import Audit from './Audit';
+import DeleteArchived from './DeleteArchived';
+import ClearLogins from './ClearLogins';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
@@ -20,6 +22,8 @@ class Administration extends React.Component {
     this.state = {
       authorizing: true,
       authorized: false,
+      numArchived: 0,
+      cacheSize: 0,
     };
   }
 
@@ -36,12 +40,14 @@ class Administration extends React.Component {
           this.setState({
             authorized: data.isAuthorized,
             authorizing: false,
+            numArchived: data.numArchived,
+            cacheSize: data.cacheSize,
           });
         });
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {authorized, authorizing} = this.state;
+    const {authorized, authorizing, numArchived, cacheSize} = this.state;
     return (
       <div>
         {authorizing ? <div
@@ -75,6 +81,20 @@ class Administration extends React.Component {
                   }}>
                   <ChangeGrades/>
                 </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    marginTop: 20,
+                  }}>
+                  <DeleteArchived numArchived={numArchived}/>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    marginTop: 20,
+                  }}>
+                  <ClearLogins cacheSize={cacheSize}/>
+                </div>
               </div>
               <div
                 style={{
@@ -84,14 +104,16 @@ class Administration extends React.Component {
                 <Audit/>
               </div>
             </div> :
-            <AuthMessage
+            <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: 20}}
-              message='You are not authorized to view this page.'
-            />
+                padding: 20}}>
+              <AuthMessage
+                message='You are not authorized to view this page.'
+              />
+            </div>
           }
         </div>}
       </div>

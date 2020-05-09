@@ -163,11 +163,16 @@ def requires_auth(f):
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    student_ids = parentsDOM.listStudents(curr_link)
+    all_student_ids = parentsDOM.listStudents(curr_link)
+    unarchived_student_ids = []
+    for id in all_student_ids:
+        if not studentsDOM.isArchived(ObjectId(id)):
+            unarchived_student_ids.append(id)
+
     student_names = []
-    for id in student_ids:
+    for id in unarchived_student_ids:
         student_names.append(studentsDOM.getName(ObjectId(id)))
-    return {'student_ids': student_ids, 'student_names': student_names}
+    return {'student_ids': unarchived_student_ids, 'student_names': student_names}
 
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
@@ -401,7 +406,8 @@ def getStudentProfile():
         'forms': forms,
         'basic_info': studentsDOM.getBasicInfo(studentID),
         'blank_forms': blankFormsDOM.getAll(),
-        'parents': parents
+        'parents': parents,
+        'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin']),
     }
 
 @app.route('/studentProfileForm', methods = ['POST'])
@@ -597,16 +603,29 @@ def addStudent():
 @requires_auth
 @log_action('check role admin')
 def checkRoleAdmin():
+    isAuthorizedBool = isAuthorized(get_token_auth_header(), ['developer', 'admin'])
     return {
-        'isAuthorized': isAuthorized(get_token_auth_header(), ['developer', 'admin'])
+        'isAuthorized': isAuthorizedBool,
+        'numArchived': len(studentsDOM.getArchivedStudents()) if isAuthorizedBool else 0,
+        'cacheSize': len(tokensAndUsers) if isAuthorizedBool else 0,
     }
 
-@app.route('/deleteStudent', methods = ['POST'])
+@app.route('/archiveStudent', methods = ['POST'])
 @requires_auth
-@log_action('delete student')
+@log_action('archive student')
 @specific_roles(['admin', 'developer'])
-def deleteStudent():
-    studentsDOM.deleteStudent(ObjectId(request.json['id']))
+def archiveStudent():
+    studentID = ObjectId(request.json['id'])
+    studentsDOM.updateInfo(studentID, 'archived', True)
+    return '0'
+
+@app.route('/unarchiveStudent', methods = ['POST'])
+@requires_auth
+@log_action('unarchive student')
+@specific_roles(['admin', 'developer'])
+def unarchiveStudent():
+    studentID = ObjectId(request.json['id'])
+    studentsDOM.updateInfo(studentID, 'archived', False)
     return '0'
 
 @app.route('/changeGrades', methods = ['POST'])
@@ -625,7 +644,7 @@ def dataDownload():
     toDownload = request.json['toDownload']
     if toDownload == 'students':
         subprocess.call('rm -f students.csv', shell=True)
-        subprocess.call('mongoexport --db sfja --collection students --type=csv --fields _id,first_name,middle_name,last_name,grade,DOB,parent_ids,form_ids --out students.csv', shell=True)
+        subprocess.call('mongoexport --db sfja --collection students --type=csv --fields _id,first_name,middle_name,last_name,grade,DOB,archived,parent_ids,form_ids --out students.csv', shell=True)
         return send_from_directory('.', 'students.csv', as_attachment=True)
     elif toDownload == 'parents':
         subprocess.call('rm -f parents.csv', shell=True)
@@ -639,5 +658,50 @@ def dataDownload():
         subprocess.call('rm -f users.csv', shell=True)
         subprocess.call('mongoexport --db sfja --collection users --type=csv --fields _id,user_id,email,actions --out users.csv', shell=True)
         return send_from_directory('.', 'users.csv', as_attachment=True)
+
+
+def deleteStudents(toDeleteStudents):
+    parentsToUpdate = set()
+    for student in toDeleteStudents:
+        studentsDOM.deleteStudent(student['_id'])
+        for formId in student['form_ids']:
+            parentsToUpdate.add((FormsDOM.getParentID(formId), student['_id']))
+            FormsDOM.deleteForm(formId)
+
+    for (parentId, studentId) in parentsToUpdate:
+        parentsDOM.removeStudentId(parentId, studentId)
+
+@app.route('/deleteArchivedStudents', methods = ['POST'])
+@requires_auth
+@log_action('delete archived students')
+@specific_roles(['admin', 'developer'])
+def deleteArchivedStudents():
+    toDeleteStudents = studentsDOM.getArchivedStudents()
+    deleteStudents(toDeleteStudents)
+
+    return {
+        'numDeleted': len(toDeleteStudents)
+    }
+
+@app.route('/deleteStudent', methods = ['POST'])
+@requires_auth
+@log_action('delete archived students')
+@specific_roles(['admin', 'developer'])
+def deleteStudent():
+    student = studentsDOM.getFullInfo(ObjectId(request.json['id']))
+    deleteStudents([student])
+    return {
+        'success': True,
+    }
+
+@app.route('/clearLogins', methods = ['POST'])
+@requires_auth
+@log_action('clear logins')
+@specific_roles(['admin', 'developer'])
+def clearLogins():
+    tokensAndUsers.clear()
+    return {
+        'success': True,
+    }
 if __name__ == '__main__':
     app.run(debug=True)

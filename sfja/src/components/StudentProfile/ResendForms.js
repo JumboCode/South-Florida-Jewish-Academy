@@ -22,6 +22,7 @@ class ResendForms extends React.Component {
     cookies: instanceOf(Cookies).isRequired,
     parents: Proptypes.array,
     updateStudentProfile: Proptypes.func,
+    archived: Proptypes.bool,
   };
 
   constructor(props) {
@@ -180,7 +181,7 @@ class ResendForms extends React.Component {
 
   render() {
     const {forms, openCommentDialog, dialogCommentId, dialogCommentName, message, openConfirmationDialog, openSentMessage, initialState, success} = this.state;
-    const {parents} = this.props;
+    const {parents, archived} = this.props;
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 40, paddingBottom: 40}}>
@@ -190,7 +191,7 @@ class ResendForms extends React.Component {
                 <div style={{width: 300}}>
                   <List>
                     {/* eslint-disable-next-line max-len */}
-                    <ListItem key={'select_all'} role={undefined} dense button onClick={() => {
+                    <ListItem key={'select_all'} role={undefined} disabled={archived} dense button onClick={() => {
                       this.selectAll(!forms.every((currForm) => currForm.checked));
                     }}>
                       <ListItemIcon>
@@ -208,14 +209,14 @@ class ResendForms extends React.Component {
                       const labelId = `checkbox-list-label-${value}`;
                       return (
                         // eslint-disable-next-line max-len
-                        <ListItem key={value.id} role={undefined} dense button onClick={() => {
+                        <ListItem key={value.id} role={undefined} disabled={archived} dense button onClick={() => {
                           this.formFlipper(value.id);
                         }}>
                           <ListItemIcon>
                             <Checkbox
                               edge="start"
                               checked={value.checked || !!value.lastUpdated}
-                              disabled={!!value.lastUpdated}
+                              disabled={!!value.lastUpdated || archived}
                               tabIndex={-1}
                               inputProps={{'aria-labelledby': labelId}}
                             />
@@ -223,6 +224,7 @@ class ResendForms extends React.Component {
                           {value.name}{value.lastUpdated ? value.lastUpdated : ' - Not Sent'}
                           <ListItemSecondaryAction>
                             <IconButton
+                              disabled={archived}
                               edge="end"
                               aria-label="comments"
                               onClick={() => {
@@ -239,11 +241,11 @@ class ResendForms extends React.Component {
                 </div>
               </Paper>
               <br/>
-              <MessageBox message={message} updateMessage={this.updateMessage.bind(this)}/>
+              <MessageBox message={message} updateMessage={this.updateMessage.bind(this)} disabled={archived}/>
             </div>
             <div style={{display: 'flex', justifyContent: 'right', alignItems: 'right', flexDirection: 'row-reverse', marginTop: 10, marginRight: 20, marginBottom: 10}}>
-              <Button variant='contained' size='large' onClick={() => this.setState({openConfirmationDialog: true})}>Send Email</Button>
-              <Button variant='contained' size='large' onClick={() => this.setState(initialState)} style={{marginRight: 10}}>Reset Form</Button>
+              <Button disabled={archived} variant='contained' size='large' onClick={() => this.setState({openConfirmationDialog: true})}>Send Email</Button>
+              <Button disabled={archived} variant='contained' size='large' onClick={() => this.setState(initialState)} style={{marginRight: 10}}>Reset Form</Button>
             </div>
           </Paper>
         </div>

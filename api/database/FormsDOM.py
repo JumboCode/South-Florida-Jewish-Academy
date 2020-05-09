@@ -25,7 +25,7 @@ def createForm(id, lastUpdated, lastViewed, required, completed, data, parentID)
 
 # Deletes form.
 def deleteForm(id):
-        results = mongo.db.forms.delete_one({'form_id': str(id)})
+        results = mongo.db.forms.delete_one({'_id': id})
         return results
 
 # Gets form info, specifically.
@@ -51,6 +51,11 @@ def getForm(id):
         content['_id'] = str(content['_id'])
         content['parent_id'] = str(content['parent_id'])
         return content
+
+def getParentID(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    for content in contents:
+        return content['parent_id']
 
 # Updates form data.
 def updateFormData(id, data):
