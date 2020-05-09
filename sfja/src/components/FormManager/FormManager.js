@@ -3,7 +3,7 @@ import React from 'react';
 import BlankFormBuilder from './BlankFormBuilder/BlankFormBuilder';
 import PreviewBlankForm from './PreviewBlankForm';
 import PropTypes, {instanceOf} from 'prop-types';
-
+import {CircularProgress} from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -104,8 +104,8 @@ class FormManager extends React.Component {
 
     if (formsList === null) {
       return (
-        <div>
-          loading...
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+          <CircularProgress/>
         </div>
       );
     }

@@ -9,6 +9,7 @@ import apiUrl from '../../utils/Env';
 import Paper from '@material-ui/core/Paper';
 import {ReactFormGenerator} from 'react-form-builder2';
 import SnackBarMessage from '../../utils/SnackBarMessage';
+import {CircularProgress} from '@material-ui/core';
 
 const textSize = {
   style: {fontSize: 15},
@@ -138,7 +139,9 @@ class PreviewBlankForm extends React.Component {
                     />
                   </Paper>
                 </div>:
-                <h1>Please select a form.</h1>
+                <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+                  <CircularProgress/>
+                </div>
               }
             </Paper>
           </div>
