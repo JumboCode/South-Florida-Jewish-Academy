@@ -17,7 +17,6 @@ import FormViewer from './components/StudentProfile/FormViewer';
 import {Auth0Provider} from './react-auth0-spa';
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
-import Audit from './components/Audit';
 import Administration from './components/Administration/Administration';
 
 // A function that routes the user to the right place
@@ -59,7 +58,6 @@ export default function App() {
             <Route exact path="/addStudent" component={AddStudent} />
             <Route exact path="/login" component={LoginPage}/>
             <Route exact path="/logout" component={Logout}/>
-            <Route exact path="/audit" component={Audit}/>
           </div>
         </Router>
       </Auth0Provider>
