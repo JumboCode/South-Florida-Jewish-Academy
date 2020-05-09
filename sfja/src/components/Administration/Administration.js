@@ -48,7 +48,7 @@ class Administration extends React.Component {
           flexDirection: 'column',
           alignItems: 'center'}}
       >
-        {authorizing ? <CircularProgress/> : <div>
+        {authorizing ? <CircularProgress style={{marginTop: 40}}/> : <div>
           {authorized ?
             <div
               style={{
