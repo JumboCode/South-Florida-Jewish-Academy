@@ -19,6 +19,7 @@ def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentId
                 'grade': grade,
                 'parent_ids': parentIds,
                 'form_ids': formIds,
+                'archived': False,
                 }
     result = mongo.db.students.insert_one(initData)
     return result.inserted_id
@@ -96,10 +97,34 @@ def getStudents():
             'last_name': content['last_name'],
             'DOB': content['DOB'].strftime("%m/%d/%Y"),
             'form_ids': content['form_ids'],
-            'grade': content['grade']
+            'grade': content['grade'],
+            'archived': content['archived'],
         }
         students.append(info)
 
+    return students
+def getFullInfo(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    for content in contents:
+        return {
+            '_id': content['_id'],
+            'first_name': content['first_name'],
+            'middle_name': content['middle_name'],
+            'last_name': content['last_name'],
+            'DOB': content['DOB'].strftime("%m/%d/%Y"),
+            'form_ids': content['form_ids'],
+            'grade': content['grade'],
+            'archived': content['archived'],
+        }
+
+def getArchivedStudents():
+    contents = list(mongo.db.students.find({'archived': True}))
+    students = []
+    for content in contents:
+        students.append({
+            '_id': content['_id'],
+            'form_ids': content['form_ids'],
+        })
     return students
 
 def getName(id):
@@ -137,3 +162,7 @@ def changeGrades(difference):
     for content in contents:
         # cast just in case for old data
         mongo.db.students.update({'_id': content['_id']}, {'$set': {'grade': int(content['grade']) + difference}})
+
+def isArchived(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    return contents[0]['archived']

@@ -95,6 +95,19 @@ def addStudentId(id, studentId):
     writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'student_ids': oldStudents}}))
     return writeR['nModified'] > 0
 
+def removeStudentId(id, studentId):
+    contents = list(mongo.db.parents.find({'_id': id}))
+    if len(contents) != 1:
+        return False
+
+    oldStudents = []
+    for content in contents:
+        oldStudents = content['student_ids']
+
+    oldStudents.remove(studentId)
+    writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'student_ids': oldStudents}}))
+    return writeR['nModified'] > 0
+
 def getParentProfile(id):
     contents = list(mongo.db.parents.find({'_id': id}))
     for content in contents:
