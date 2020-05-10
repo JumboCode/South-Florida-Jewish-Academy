@@ -28,6 +28,7 @@ class StudentDash extends React.Component {
       formFilledData: null,
       openSentMessage: false,
       success: true,
+      submitted: false,
       studentInfo: '',
       numIncomplete: 0,
     };
@@ -73,6 +74,7 @@ class StudentDash extends React.Component {
           this.setState({
             blankFormData: data.blank_form_data,
             formFilledData: data.form_data,
+            submitted: data.submitted,
           });
           console.log(data);
         }).catch(console.log);
@@ -109,13 +111,16 @@ class StudentDash extends React.Component {
           success: false,
         });
       }
-    },
-    );
+    })
+        .then(this.refreshStudentForms())
+        .then(this.refreshFormData(this.state.selected));
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {studentId, formData, formFilledData, blankFormData, openSentMessage, success, studentInfo, selectedName, numIncomplete} = this.state;
+    const {studentId, formData, formFilledData, blankFormData, openSentMessage,
+      success, studentInfo, selectedName, numIncomplete,
+      submitted} = this.state;
 
     if (studentId !== this.props.match.params.studentId) {
       this.setState({studentId: this.props.match.params.studentId});
@@ -125,7 +130,7 @@ class StudentDash extends React.Component {
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
-          <Paper elevation={2} style={{padding: 20, minWidth: 650}} >
+          <Paper elevation={2} style={{padding: 20, minWidth: 750}} >
             <div style={{paddingBottom: 10, fontSize: 20}}>
               {studentInfo.first_name} {studentInfo.last_name}
             </div>
@@ -177,10 +182,11 @@ class StudentDash extends React.Component {
             alignItems: 'center',
             paddingTop: 10,
             paddingBottom: 40}}>
-            <Paper elevation={2} style={{paddingTop: 10,
+            <Paper elevation={2} style={{paddingTop: 20,
               paddingLeft: 40,
               paddingBottom: 40,
-              minWidth: 650,
+              paddingRight: 40,
+              minWidth: 750,
               marginTop: 30}}>
               <div style={{paddingBottom: 10, fontSize: 20, paddingTop: 10}}>
                 {selectedName}
@@ -189,7 +195,8 @@ class StudentDash extends React.Component {
                 onSubmit={this.handleSubmit.bind(this)}
                 answer_data={formFilledData}
                 data={blankFormData} // Question data
-                // form_id={selected}
+                hide_actions={submitted}
+                read_only={submitted}
               />
             </Paper>
           </div> :

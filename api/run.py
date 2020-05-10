@@ -219,6 +219,7 @@ def getForm():
     return {
         'blank_form_data': blank_form_data,
         'form_data': form_data,
+        'submitted': form_data != [],
     }
 
 @app.route('/submitForm', methods = ['POST'])
