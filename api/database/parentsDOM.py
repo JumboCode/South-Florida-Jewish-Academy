@@ -53,7 +53,7 @@ def updateKey(id, newLink):
     return writR['nModified'] == 1
 
 
-def get(email=None, firstName=None, lastName=None):
+def get(email=None, firstName=None, lastName=None, currLink=None):
     contents = None
     if email is not None:
         contents = list(mongo.db.parents.find({'email': email}))
@@ -61,7 +61,8 @@ def get(email=None, firstName=None, lastName=None):
         contents = list(mongo.db.parents.find({'first_name': firstName}))
     elif lastName is not None:
         contents = list(mongo.db.parents.find({'last_name': lastName}))
-
+    elif currLink is not None:
+        contents = list(mongo.db.parents.find({'curr_link': currLink}))
     assert len(contents) == 1
     return contents[0]['_id']
 
@@ -92,6 +93,19 @@ def addStudentId(id, studentId):
         oldStudents = content['student_ids']
 
     oldStudents.append(studentId)
+    writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'student_ids': oldStudents}}))
+    return writeR['nModified'] > 0
+
+def removeStudentId(id, studentId):
+    contents = list(mongo.db.parents.find({'_id': id}))
+    if len(contents) != 1:
+        return False
+
+    oldStudents = []
+    for content in contents:
+        oldStudents = content['student_ids']
+
+    oldStudents.remove(studentId)
     writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'student_ids': oldStudents}}))
     return writeR['nModified'] > 0
 

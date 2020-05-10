@@ -176,27 +176,50 @@ def requires_auth(f):
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 
 '''==================== PARENT/STUDENT DASHBOARDS ===================='''
+
+@app.route('/getParentInfo', methods = ['POST'])
+def getParentInfo():
+    currLink = request.json['curr_link']
+    parentId = parentsDOM.get(currLink=currLink)
+    parentInfo = parentsDOM.getParentProfile(parentId)
+    return {
+        'first_name': parentInfo['first_name'],
+        'last_name': parentInfo['last_name'],
+        'email': parentInfo['email'],
+    }
+
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    student_ids = parentsDOM.listStudents(curr_link)
+    all_student_ids = parentsDOM.listStudents(curr_link)
+    unarchived_student_ids = []
+    for id in all_student_ids:
+        if not studentsDOM.isArchived(ObjectId(id)):
+            unarchived_student_ids.append(id)
+
     student_names = []
-    for id in student_ids:
-        student_names.append(studentsDOM.getName(ObjectId(id)))
-    return {'student_ids': student_ids, 'student_names': student_names}
+    for id in unarchived_student_ids:
+        student_names.append(studentsDOM.getFirstName(ObjectId(id)))
+    return {'student_ids': unarchived_student_ids, 'student_names': student_names}
 
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
-    student_id = request.json['student_id']
-    form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
+    student_id = ObjectId(request.json['student_id'])
+    form_ids = studentsDOM.getAllFormIds(student_id)
     form_data = []
     for id in form_ids:
-        curr_form = {'form_id' : id,
-                     'form_name' : FormsDOM.getFormName(ObjectId(id)),
-                     'last_updated' : FormsDOM.getLastUpdated(ObjectId(id)),
-                     'last_viewed' : FormsDOM.getLastViewed(ObjectId(id))}
-        form_data.append(curr_form)
-    return {'form_data': form_data}
+        blank_form_data = FormsDOM.getBlankForm(ObjectId(id))
+        if blank_form_data != False:
+            curr_form = {'form_id': id,
+                        'form_name': FormsDOM.getFormName(ObjectId(id)),
+                        'last_updated': FormsDOM.getLastUpdated(ObjectId(id)),
+                        'last_viewed': FormsDOM.getLastViewed(ObjectId(id)),
+                        'completed': len(FormsDOM.getFormData(ObjectId(id))) != 0}
+            form_data.append(curr_form)
+    return {
+        'form_data': form_data,
+        'student_info': studentsDOM.getBasicInfo(student_id),
+    }
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
@@ -303,12 +326,13 @@ def isAuthorized(token, roles):
 @log_action('Get students')
 def getStudents():
     students = studentsDOM.getStudents()
-    forms_completed = 0
     for student in students:
+        forms_completed = 0
         for form in student['form_ids']:
             if FormsDOM.isComplete(form):
                 forms_completed += 1
         student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+        student['completion_rate'] = forms_completed / len(student['form_ids'])
         del student['form_ids']
     return {
         'students': students,
@@ -401,6 +425,7 @@ def getStudentProfile():
         curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
         curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
         curr_form_data['last_updated'] = curr_form_data_raw['last_updated']
+        curr_form_data['completed'] = FormsDOM.isComplete(formId)
         parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data_raw['parent_id']))
         curr_form_data['p_first_name'] = parent_data['first_name']
         curr_form_data['p_last_name'] = parent_data['last_name']
@@ -413,12 +438,13 @@ def getStudentProfile():
         for parentId in parentIds:
             parents.append(parentsDOM.getParentProfile(parentId))
 
-        return {
-            'forms': forms,
-            'basic_info': studentsDOM.getBasicInfo(studentID),
-            'blank_forms': blankFormsDOM.getAll(),
-            'parents': parents
-        }
+    return {
+        'forms': forms,
+        'basic_info': studentsDOM.getBasicInfo(studentID),
+        'blank_forms': blankFormsDOM.getAll(),
+        'parents': parents,
+        'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin']),
+    }
 
 @app.route('/studentProfileForm', methods = ['POST'])
 @requires_auth
@@ -610,7 +636,12 @@ def getFiles():
 def getForms():
     return {'forms': FormsDOM.getForms()}
 
-
+@app.route('/getBlankForm', methods = ['GET', 'POST'])
+@requires_auth
+@log_action('Get blank form')
+def getBlankForm():
+    blankForm_id = ObjectId(request.json['form_id'])
+    return {'data': blankFormsDOM.getFormData(blankForm_id)}
 
 '''======================  ADD STUDENT ======================'''
 
@@ -662,16 +693,29 @@ def addStudent():
 @requires_auth
 @log_action('check role admin')
 def checkRoleAdmin():
+    isAuthorizedBool = isAuthorized(get_token_auth_header(), ['developer', 'admin'])
     return {
-        'isAuthorized': isAuthorized(get_token_auth_header(), ['developer', 'admin'])
+        'isAuthorized': isAuthorizedBool,
+        'numArchived': len(studentsDOM.getArchivedStudents()) if isAuthorizedBool else 0,
+        'cacheSize': len(tokensAndUsers) if isAuthorizedBool else 0,
     }
 
-@app.route('/deleteStudent', methods = ['POST'])
+@app.route('/archiveStudent', methods = ['POST'])
 @requires_auth
-@log_action('delete student')
+@log_action('archive student')
 @specific_roles(['admin', 'developer'])
-def deleteStudent():
-    studentsDOM.deleteStudent(ObjectId(request.json['id']))
+def archiveStudent():
+    studentID = ObjectId(request.json['id'])
+    studentsDOM.updateInfo(studentID, 'archived', True)
+    return '0'
+
+@app.route('/unarchiveStudent', methods = ['POST'])
+@requires_auth
+@log_action('unarchive student')
+@specific_roles(['admin', 'developer'])
+def unarchiveStudent():
+    studentID = ObjectId(request.json['id'])
+    studentsDOM.updateInfo(studentID, 'archived', False)
     return '0'
 
 @app.route('/changeGrades', methods = ['POST'])
@@ -690,7 +734,7 @@ def dataDownload():
     toDownload = request.json['toDownload']
     if toDownload == 'students':
         subprocess.call('rm -f students.csv', shell=True)
-        subprocess.call('mongoexport --db sfja --collection students --type=csv --fields _id,first_name,middle_name,last_name,grade,DOB,parent_ids,form_ids --out students.csv', shell=True)
+        subprocess.call('mongoexport --db sfja --collection students --type=csv --fields _id,first_name,middle_name,last_name,grade,DOB,archived,parent_ids,form_ids --out students.csv', shell=True)
         return send_from_directory('.', 'students.csv', as_attachment=True)
     elif toDownload == 'parents':
         subprocess.call('rm -f parents.csv', shell=True)
@@ -704,5 +748,50 @@ def dataDownload():
         subprocess.call('rm -f users.csv', shell=True)
         subprocess.call('mongoexport --db sfja --collection users --type=csv --fields _id,user_id,email,actions --out users.csv', shell=True)
         return send_from_directory('.', 'users.csv', as_attachment=True)
+
+
+def deleteStudents(toDeleteStudents):
+    parentsToUpdate = set()
+    for student in toDeleteStudents:
+        studentsDOM.deleteStudent(student['_id'])
+        for formId in student['form_ids']:
+            parentsToUpdate.add((FormsDOM.getParentID(formId), student['_id']))
+            FormsDOM.deleteForm(formId)
+
+    for (parentId, studentId) in parentsToUpdate:
+        parentsDOM.removeStudentId(parentId, studentId)
+
+@app.route('/deleteArchivedStudents', methods = ['POST'])
+@requires_auth
+@log_action('delete archived students')
+@specific_roles(['admin', 'developer'])
+def deleteArchivedStudents():
+    toDeleteStudents = studentsDOM.getArchivedStudents()
+    deleteStudents(toDeleteStudents)
+
+    return {
+        'numDeleted': len(toDeleteStudents)
+    }
+
+@app.route('/deleteStudent', methods = ['POST'])
+@requires_auth
+@log_action('delete archived students')
+@specific_roles(['admin', 'developer'])
+def deleteStudent():
+    student = studentsDOM.getFullInfo(ObjectId(request.json['id']))
+    deleteStudents([student])
+    return {
+        'success': True,
+    }
+
+@app.route('/clearLogins', methods = ['POST'])
+@requires_auth
+@log_action('clear logins')
+@specific_roles(['admin', 'developer'])
+def clearLogins():
+    tokensAndUsers.clear()
+    return {
+        'success': True,
+    }
 if __name__ == '__main__':
     app.run(debug=True)

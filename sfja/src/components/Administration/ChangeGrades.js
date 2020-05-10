@@ -90,7 +90,7 @@ class ChangeGrades extends React.Component {
       <div>
         <Paper elevation={2} style={{width: 300, padding: 20}}>
           <div style={{paddingBottom: 10, fontSize: 20}}>
-            Bulk Change Grades:
+            Bulk Change Grades
           </div>
           <div style={{paddingBottom: 10, fontSize: 15}}>
             Change grades with a positive or negative integer. (eg: &apos;-1&apos; or &apos;1&apos;)
