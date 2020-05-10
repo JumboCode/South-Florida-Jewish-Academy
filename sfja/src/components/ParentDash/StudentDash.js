@@ -32,6 +32,7 @@ class StudentDash extends React.Component {
       formFilledData: null,
       openSentMessage: false,
       success: true,
+      submitted: false,
     };
   }
 
@@ -70,6 +71,7 @@ class StudentDash extends React.Component {
           this.setState({
             blankFormData: data.blank_form_data,
             formFilledData: data.form_data,
+            submitted: data.submitted,
           });
           console.log(data);
         }).catch(console.log);
@@ -112,8 +114,8 @@ class StudentDash extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    // eslint-disable-next-line max-len
-    const {studentId, formData, formFilledData, blankFormData, openSentMessage, success} = this.state;
+    const {studentId, formData, formFilledData, blankFormData, 
+            openSentMessage, success, submitted} = this.state;
 
     if (studentId !== this.props.match.params.studentId) {
       this.setState({studentId: this.props.match.params.studentId});
@@ -163,7 +165,7 @@ class StudentDash extends React.Component {
                 onSubmit={this.handleSubmit.bind(this)}
                 answer_data={formFilledData}
                 data={blankFormData} // Question data
-                // form_id={selected}
+                hide_actions = {submitted}
               />
             </Paper>
           </div> :

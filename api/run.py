@@ -196,7 +196,8 @@ def getForm():
     form_data = FormsDOM.getFormData(ObjectId(form_id))
 
     return {'blank_form_data' : blank_form_data,
-            'form_data' : form_data}
+            'form_data' : form_data,
+            'submitted': form_data != []}
 
 @app.route('/checkKey', methods = ['GET', 'POST'])
 def checkKey():
