@@ -1,5 +1,12 @@
 import React from 'react';
-import {Checkbox, List, ListItem, ListItemIcon, Paper} from '@material-ui/core';
+import {
+  Checkbox,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemIcon,
+  Paper
+} from '@material-ui/core';
 
 
 // eslint-disable-next-line require-jsdoc
@@ -57,6 +64,11 @@ class Filters extends React.Component {
                   </ListItemIcon>
                 </ListItem>
               ))}
+              {Object.keys(filters[filter]).length === 0 ?
+                // eslint-disable-next-line max-len
+                <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+                  <CircularProgress/>
+                </div> : null}
             </List>
           </div>
         ))}

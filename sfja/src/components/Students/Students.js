@@ -20,7 +20,7 @@ import Typography from '@material-ui/core/Typography';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {TextField} from '@material-ui/core';
+import {CircularProgress, TextField} from '@material-ui/core';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Filters from './Filters';
 import ArchiveIcon from '@material-ui/icons/Archive';
@@ -123,10 +123,11 @@ class Students extends React.Component {
           .catch(console.log);
     }
 
+  // eslint-disable-next-line require-jsdoc
     everyTrue(filter) {
       const {filters} = this.state;
-      console.log(filters)
-      return Object.keys(filters[filter]).every((key) => !filters[filter][key])
+      console.log(filters);
+      return Object.keys(filters[filter]).every((key) => !filters[filter][key]);
     }
 
     // eslint-disable-next-line require-jsdoc
@@ -313,109 +314,114 @@ class Students extends React.Component {
                   </TextField>
                 </MuiThemeProvider>
               </div>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell className={tableStyle}>
-                        <TableSortLabel
-                          onClick={(e) => this.sort('first_name')}
-                          active={sortBy === 'first_name'}
-                          direction={order === 'asc' ? 'desc' : 'asc'}
-                        />
-                                            First Name
-                      </TableCell>
-                      <TableCell align="left" className={tableStyle}>
-                        <TableSortLabel
-                          onClick={(e) => this.sort('last_name')}
-                          active={sortBy === 'last_name'}
-                          direction={order === 'asc' ? 'desc' : 'asc'}
-                        />
-                                            Last Name
-                      </TableCell>
-                      <TableCell align="left" className={tableStyle}>
-                        <TableSortLabel
-                          onClick={(e) => this.sort('grade')}
-                          active={sortBy === 'grade'}
-                          direction={order === 'asc' ? 'desc' : 'asc'}
-                        />
-                                            Grade
-                      </TableCell>
-                      <TableCell align="center" className={tableStyle}>
-                        DOB
-                      </TableCell>
-                      <TableCell align="left" className={tableStyle}>
-                        <TableSortLabel
-                          onClick={(e) => this.sort('completion_rate')}
-                          active={sortBy === 'completion_rate'}
-                          direction={order === 'asc' ? 'desc' : 'asc'}
-                        />
-                                            Completed Forms
-                      </TableCell>
-                      <TableCell align="center" className={tableStyle}
-                      >
-                        <TableSortLabel
-                          onClick={(e) => this.sort('archived')}
-                          active={sortBy === 'archived'}
-                          direction={order === 'asc' ? 'desc' : 'asc'}
-                        >
-                        </TableSortLabel>
-                        Archived?
-                      </TableCell>
-                      {authorized ? (
-                        <TableCell align="center" className={tableStyle}>
-                          Archive
+              {students.length === 0 ?
+                <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+                  <CircularProgress/>
+                </div> :
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell className={tableStyle}>
+                          <TableSortLabel
+                            onClick={(e) => this.sort('first_name')}
+                            active={sortBy === 'first_name'}
+                            direction={order === 'asc' ? 'desc' : 'asc'}
+                          />
+                          First Name
                         </TableCell>
-                      ) : null}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {students.map((student) => {
-                      const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
-                      const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
-                      const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
-                      if (showGrades && showArchived && showComplete) {
-                        return (
-                          <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>
-                            <TableCell component="th" scope="row"
-                              className={tableStyle}>
-                              <NavLink to={'/profile/' + student.student_id}>
-                                <Typography
-                                  align="center"
-                                  className={tableStyle}
-                                >
-                                  {student.first_name}
-                                </Typography>
-                              </NavLink>
-                            </TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.last_name}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.grade}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.DOB}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.forms_completed}
-                            </TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.archived ? 'Y' : 'N'}
-                            </TableCell>
-                            {authorized ? (
-                              <TableCell align="center" className={tableStyle}>
-                                {student.archived ? <div>
-                                  <UnarchiveIcon style={{cursor: 'pointer'}} fontSize='large' onClick={() => this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true})}/>
-                                </div>:<div>
-                                  <ArchiveIcon style={{cursor: 'pointer'}} fontSize='large' onClick={() => this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true})}/>
-                                </div>}
+                        <TableCell align="left" className={tableStyle}>
+                          <TableSortLabel
+                            onClick={(e) => this.sort('last_name')}
+                            active={sortBy === 'last_name'}
+                            direction={order === 'asc' ? 'desc' : 'asc'}
+                          />
+                          Last Name
+                        </TableCell>
+                        <TableCell align="left" className={tableStyle}>
+                          <TableSortLabel
+                            onClick={(e) => this.sort('grade')}
+                            active={sortBy === 'grade'}
+                            direction={order === 'asc' ? 'desc' : 'asc'}
+                          />
+                          Grade
+                        </TableCell>
+                        <TableCell align="center" className={tableStyle}>
+                          DOB
+                        </TableCell>
+                        <TableCell align="left" className={tableStyle}>
+                          <TableSortLabel
+                            onClick={(e) => this.sort('completion_rate')}
+                            active={sortBy === 'completion_rate'}
+                            direction={order === 'asc' ? 'desc' : 'asc'}
+                          />
+                          Completed Forms
+                        </TableCell>
+                        <TableCell align="center" className={tableStyle}
+                        >
+                          <TableSortLabel
+                            onClick={(e) => this.sort('archived')}
+                            active={sortBy === 'archived'}
+                            direction={order === 'asc' ? 'desc' : 'asc'}
+                          >
+                          </TableSortLabel>
+                          Archived?
+                        </TableCell>
+                        {authorized ? (
+                          <TableCell align="center" className={tableStyle}>
+                            Archive
+                          </TableCell>
+                        ) : null}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {students.map((student) => {
+                        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+                        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+                        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+                        if (showGrades && showArchived && showComplete) {
+                          return (
+                            <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>
+                              <TableCell component="th" scope="row"
+                                className={tableStyle}>
+                                <NavLink to={'/profile/' + student.student_id}>
+                                  <Typography
+                                    align="center"
+                                    className={tableStyle}
+                                  >
+                                    {student.first_name}
+                                  </Typography>
+                                </NavLink>
                               </TableCell>
-                            ) : null}
-                          </TableRow>
-                        );
-                      }
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.last_name}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.grade}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.DOB}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.forms_completed}
+                              </TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.archived ? 'Y' : 'N'}
+                              </TableCell>
+                              {authorized ? (
+                                <TableCell align="center" className={tableStyle}>
+                                  {student.archived ? <div>
+                                    <UnarchiveIcon style={{cursor: 'pointer'}} fontSize='large' onClick={() => this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true})}/>
+                                  </div>:<div>
+                                    <ArchiveIcon style={{cursor: 'pointer'}} fontSize='large' onClick={() => this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true})}/>
+                                  </div>}
+                                </TableCell>
+                              ) : null}
+                            </TableRow>
+                          );
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              }
             </div>
           </div>
           <ConfirmationDialog

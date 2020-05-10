@@ -16,6 +16,7 @@ import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import ResendForms from './ResendForms';
 import AdminZone from './AdminZone';
+import {CircularProgress} from '@material-ui/core';
 
 
 // eslint-disable-next-line require-jsdoc
@@ -77,8 +78,8 @@ class StudentProfile extends React.Component {
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
       return (
-        <div>
-          Loading...
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+          <CircularProgress/>
         </div>
       );
     }
