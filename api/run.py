@@ -549,15 +549,14 @@ def addForm():
     form_name = request.json['formName']
     blankFormsDOM.createForm(form_name, data)
     return '0'
-'''====================== UPLOAD FORM ======================'''
+'''====================== UPLOAD FILE ======================'''
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/saveImage', methods=['POST'])
 def saveImg():
-    print(request.files)
-    print("In saveImg!")
+    studentId = ObjectId(request.args.get('studentId'))
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -574,16 +573,45 @@ def saveImg():
             file.save(filename)
             with open(filename , "rb") as byteFile:
                 f = byteFile.read()
-                fsId = fs.put(f)
-                print(fsId)
-                return '0'
+                fileId = fs.put(f)
+                print(fileId)
+                studentsDOM.addNewFile(studentId, fileId,filename)
+                studentId = ObjectId(request.args.get('studentId'))
+                files = studentsDOM.getFiles(studentId)
+
+                cleanFiles=[]
+
+                for file in files:
+                    tempDict ={}
+                    tempDict['file_id'] = str(file['fileId'])
+                    tempDict['file_name'] = file['filename']
+                    cleanFiles.append(tempDict)
+                
+                return{'files': cleanFiles}
     return '0'
+
+@app.route('/getFiles', methods=['POST'])
+def getFiles():
+    studentId = ObjectId(request.args.get('studentId'))
+    files = studentsDOM.getFiles(studentId)
+
+    cleanFiles=[]
+    for file in files:
+        tempDict = {}
+        tempDict['file_id'] = str(file['fileId'])
+        tempDict['file_name'] = file['filename']
+        cleanFiles.append(tempDict)
+    
+    return{'files': cleanFiles}
 
 @app.route('/forms', methods = ['GET', 'POST'])
 @requires_auth
 @log_action('Get forms')
 def getForms():
     return {'forms': FormsDOM.getForms()}
+
+
+
 '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])

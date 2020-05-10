@@ -19,6 +19,7 @@ def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentId
                 'grade': grade,
                 'parent_ids': parentIds,
                 'form_ids': formIds,
+                'files':[],
                 }
     result = mongo.db.students.insert_one(initData)
     return result.inserted_id
@@ -40,6 +41,7 @@ def getBasicInfo(id):
     for content in contents:
         del content['parent_ids']
         del content['form_ids']
+        del content['files']
         content['_id'] = str(content['_id'])
         content['DOB'] = content['DOB'].strftime("%m/%d/%Y")
         return content
@@ -127,6 +129,26 @@ def addNewFormId(id, newFormId):
     oldForms.append(newFormId)
     writeR = dict(mongo.db.students.update({'_id': id}, {'$set': {'form_ids': oldForms}}))
     return writeR['nModified'] > 0
+
+def addNewFile(id, newFileId,newFileName):
+    contents = list(mongo.db.students.find({'_id': id}))
+    if len(contents) != 1:
+        return False
+    
+    oldFiles = []
+    for content in contents:
+        oldFiles = content['files']
+
+    oldFiles.append({'filename':newFileName, 'fileId':newFileId})
+    mongo.db.students.update({'_id': id}, {'$set': {'files': oldFiles}})
+
+def getFiles(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    if len(contents) != 1:
+        return False
+    for content in contents:
+         return content['files']
+
 
 def deleteStudent(id):
     result = mongo.db.students.delete_one({'_id': id})
