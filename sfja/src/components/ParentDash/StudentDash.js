@@ -113,6 +113,7 @@ class StudentDash extends React.Component {
       }
     },
     );
+    this.refreshStudentForms(this.state.formId);
   }
 
   // eslint-disable-next-line require-jsdoc
