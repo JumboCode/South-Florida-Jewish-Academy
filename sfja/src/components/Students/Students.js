@@ -76,10 +76,10 @@ class Students extends React.Component {
       this.state = {
         students: null,
         originalStudents: null,
-        sortBy: cache.sortBy || '',
-        order: cache.order || 'incr',
-        query: cache.query || '',
-        columnToQuery: cache.columnToQuery || 'first_name',
+        sortBy: cache ? cache.sortBy : '',
+        order: cache ? cache.order : 'incr',
+        query: cache ? cache.query : '',
+        columnToQuery: cache ? cache.columnToQuery : 'first_name',
         toArchiveOrUnarchive: {
           student_id: '',
           first_name: '',
@@ -97,8 +97,8 @@ class Students extends React.Component {
             incomplete: false,
           },
           archived: {
-            complete: true,
-            incomplete: false,
+            archived: false,
+            unarchived: true,
           },
         },
       };
@@ -106,13 +106,14 @@ class Students extends React.Component {
     // eslint-disable-next-line require-jsdoc
     componentDidUpdate(prevProps, prevState, snapshot) {
       const {cookies} = this.props;
-      const {sortBy, order, query, columnToQuery} = this.state;
+      const {sortBy, order, query, columnToQuery, filters} = this.state;
       const cache = cookies.get('studentsCache');
       const newCache = {
         sortBy: sortBy,
         order: order,
         query: query,
         columnToQuery: columnToQuery,
+        filters: filters,
       };
       if (JSON.stringify(cache) !== JSON.stringify(newCache)) {
         cookies.set('studentsCache', newCache);
@@ -131,6 +132,20 @@ class Students extends React.Component {
           .then((data) => {
             const cache = cookies.get('studentsCache');
             if (cache) {
+              // combine old + new filters
+              const newFilters = this.makeFilters(data.students);
+              const oldFiltersGrades = cache.filters.grades;
+              const newGrades = {};
+              Object.keys(newFilters.grades).forEach((grade) => {
+                if (Object.keys(oldFiltersGrades).includes(grade)) {
+                  newGrades[grade] = oldFiltersGrades[grade];
+                } else {
+                  newGrades[grade] = newFilters.grades[grade];
+                }
+              });
+              newFilters.grades = newGrades;
+              newFilters.archived = cache.filters.archived;
+              newFilters.completed = cache.filters.completed;
               this.setState({
                 students: data.students,
                 originalStudents: data.students,
@@ -138,7 +153,8 @@ class Students extends React.Component {
                 order: cache.order === 'desc' ? 'asc' : 'desc',
                 query: cache.query,
                 columnToQuery: cache.columnToQuery,
-                filters: this.makeFilters(data.students),
+                filters: newFilters,
+                authorized: data.authorized,
               });
             } else {
               this.setState({
