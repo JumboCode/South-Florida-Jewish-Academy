@@ -127,7 +127,7 @@ def getArchivedStudents():
         })
     return students
 
-def getName(id):
+def getFirstName(id):
     contents = list(mongo.db.students.find({'_id': id}))
     return list(map(str, contents[0]['first_name']))
 

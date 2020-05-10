@@ -171,21 +171,27 @@ def getStudentsOfParent():
 
     student_names = []
     for id in unarchived_student_ids:
-        student_names.append(studentsDOM.getName(ObjectId(id)))
+        student_names.append(studentsDOM.getFirstName(ObjectId(id)))
     return {'student_ids': unarchived_student_ids, 'student_names': student_names}
 
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
-    student_id = request.json['student_id']
-    form_ids = studentsDOM.getAllFormIds(ObjectId(student_id))
+    student_id = ObjectId(request.json['student_id'])
+    form_ids = studentsDOM.getAllFormIds(student_id)
     form_data = []
     for id in form_ids:
-        curr_form = {'form_id' : id,
-                     'form_name' : FormsDOM.getFormName(ObjectId(id)),
-                     'last_updated' : FormsDOM.getLastUpdated(ObjectId(id)),
-                     'last_viewed' : FormsDOM.getLastViewed(ObjectId(id))}
-        form_data.append(curr_form)
-    return {'form_data': form_data}
+        blank_form_data = FormsDOM.getBlankForm(ObjectId(id))
+        if blank_form_data != False:
+            curr_form = {'form_id': id,
+                        'form_name': FormsDOM.getFormName(ObjectId(id)),
+                        'last_updated': FormsDOM.getLastUpdated(ObjectId(id)),
+                        'last_viewed': FormsDOM.getLastViewed(ObjectId(id)),
+                        'completed': len(FormsDOM.getFormData(ObjectId(id))) != 0}
+            form_data.append(curr_form)
+    return {
+        'form_data': form_data,
+        'student_info': studentsDOM.getBasicInfo(student_id),
+    }
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
@@ -292,12 +298,13 @@ def isAuthorized(token, roles):
 @log_action('Get students')
 def getStudents():
     students = studentsDOM.getStudents()
-    forms_completed = 0
     for student in students:
+        forms_completed = 0
         for form in student['form_ids']:
             if FormsDOM.isComplete(form):
                 forms_completed += 1
         student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+        student['completion_rate'] = forms_completed / len(student['form_ids'])
         del student['form_ids']
     return {
         'students': students,
@@ -390,6 +397,7 @@ def getStudentProfile():
         curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
         curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
         curr_form_data['last_updated'] = curr_form_data_raw['last_updated']
+        curr_form_data['completed'] = FormsDOM.isComplete(formId)
         parent_data = parentsDOM.getParentProfile(ObjectId(curr_form_data_raw['parent_id']))
         curr_form_data['p_first_name'] = parent_data['first_name']
         curr_form_data['p_last_name'] = parent_data['last_name']
