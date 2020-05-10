@@ -3,6 +3,7 @@ from flask_pymongo import PyMongo
 from database import blankFormsDOM
 import os
 from bson.objectid import ObjectId
+from datetime import datetime
 
 app = Flask(__name__)
 MONGO_URL = os.environ.get('MONGODB_URI')
@@ -60,6 +61,7 @@ def getParentID(id):
 # Updates form data.
 def updateFormData(id, data):
     writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'form_data': data}}))
+    writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'last_updated': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}}))
     return writeR['nModified'] > 0
 
 
@@ -108,28 +110,17 @@ def getLastViewed(id):
     for content in contents:
         return content['last_viewed']
 
-def getBlankForm(id):
-    contents = list(mongo.db.forms.find({'_id': id}))
-
-    if len(contents) != 1:
-        return False
-    
-    for content in contents:
-        return blankFormsDOM.getFormData(ObjectId(content['blank_forms_id']))
-
-
 def getBlankFormId(id):
     contents = list(mongo.db.forms.find({'_id': id}))
 
-    if len(contents) != 1:
-        return False
+    assert len(contents) == 1
 
     for content in contents:
-        return ObjectId(content['blank_forms_id'])
+        return content['blank_forms_id']
         
 def isComplete(id):
     contents = list(mongo.db.forms.find({'_id':ObjectId(id)}))
     if (len(contents) != 1):
         raise RuntimeError
-    return contents[0]['completed']
+    return len(contents[0]['form_data']) != 0
 
