@@ -8,6 +8,22 @@ import {
   Paper,
 } from '@material-ui/core';
 
+// eslint-disable-next-line require-jsdoc
+function sortGrades(a, b) {
+  const aSplit = a.split('_');
+  const bSplit = b.split('_');
+  if (aSplit.length === 1 && bSplit.length === 1) {
+    if (a < b) {
+      return -1;
+    } else if (a > b) {
+      return 1;
+    } else {
+      return 0;
+    }
+  } else {
+    return aSplit[1] < bSplit[1];
+  }
+}
 
 // eslint-disable-next-line require-jsdoc
 function processOption(s) {
@@ -39,24 +55,9 @@ class Filters extends React.Component {
             <div style={{textAlign: 'left', paddingLeft: 10}}>
               {filter[0].toUpperCase().concat(filter.substring(1)).concat(':')}
             </div>
-
             <List>
-              {Object.keys(filters[filter]).sort((a, b) => {
-                const aSplit = a.split('_');
-                const bSplit = b.split('_');
-                console.log(aSplit, bSplit);
-                if (aSplit.length === 1 && bSplit.length === 1) {
-                  if (a < b) {
-                    return -1;
-                  } else if (a > b) {
-                    return 1;
-                  } else {
-                    return 0;
-                  }
-                } else {
-                  return aSplit[1] < bSplit[1];
-                }
-              }).map((optionKey) => (
+              {/* eslint-disable-next-line max-len */}
+              {Object.keys(filters[filter]).sort(sortGrades).map((optionKey) => (
                 <ListItem key={optionKey} onClick={
                   () => updateFilter(
                       filter,
