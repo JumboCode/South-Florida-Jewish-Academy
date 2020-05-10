@@ -41,8 +41,11 @@ class Filters extends React.Component {
                       optionKey,
                       !filters[filter][optionKey],
                   )
-                }>
-                  <ListItemIcon>
+                }
+                >
+                  <ListItemIcon
+                    style={{cursor: 'pointer'}}
+                  >
                     <Checkbox
                       edge="start"
                       checked={filters[filter][optionKey]}
