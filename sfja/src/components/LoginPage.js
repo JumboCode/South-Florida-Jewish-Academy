@@ -40,6 +40,10 @@ const LoginPage = (props) => {
   // eslint-disable-next-line no-unused-vars
   const [cookies, setCookie] = useCookies();
 
+  if (cookies.studentsCache !== '') {
+    setCookie('studentsCache', '', {path: '/'});
+  }
+
   if (isAuthenticated) {
     getTokenSilently().then((token) => {
       setCookie('token', token, {path: '/'});

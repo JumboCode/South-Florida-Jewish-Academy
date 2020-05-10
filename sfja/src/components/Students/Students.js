@@ -71,13 +71,15 @@ class Students extends React.Component {
     // eslint-disable-next-line require-jsdoc
     constructor(props) {
       super(props);
+      const {cookies} = this.props;
+      const cache = cookies.get('studentsCache');
       this.state = {
         students: null,
         originalStudents: null,
-        sortBy: '',
-        order: 'incr',
-        query: '',
-        columnToQuery: 'first_name',
+        sortBy: cache.sortBy || '',
+        order: cache.order || 'incr',
+        query: cache.query || '',
+        columnToQuery: cache.columnToQuery || 'first_name',
         toArchiveOrUnarchive: {
           student_id: '',
           first_name: '',
@@ -101,7 +103,21 @@ class Students extends React.Component {
         },
       };
     }
-
+    // eslint-disable-next-line require-jsdoc
+    componentDidUpdate(prevProps, prevState, snapshot) {
+      const {cookies} = this.props;
+      const {sortBy, order, query, columnToQuery} = this.state;
+      const cache = cookies.get('studentsCache');
+      const newCache = {
+        sortBy: sortBy,
+        order: order,
+        query: query,
+        columnToQuery: columnToQuery,
+      };
+      if (JSON.stringify(cache) !== JSON.stringify(newCache)) {
+        cookies.set('studentsCache', newCache);
+      }
+    }
     // eslint-disable-next-line require-jsdoc
     componentDidMount() {
       const {cookies} = this.props;
@@ -113,14 +129,31 @@ class Students extends React.Component {
       })
           .then((res) => res.json())
           .then((data) => {
-            this.setState({
-              students: data.students,
-              originalStudents: data.students,
-              filters: this.makeFilters(data.students),
-              authorized: data.authorized,
-            });
-          })
-          .catch(console.log);
+            const cache = cookies.get('studentsCache');
+            if (cache) {
+              this.setState({
+                students: data.students,
+                originalStudents: data.students,
+                sortBy: cache.sortBy,
+                order: cache.order === 'desc' ? 'asc' : 'desc',
+                query: cache.query,
+                columnToQuery: cache.columnToQuery,
+                filters: this.makeFilters(data.students),
+              });
+            } else {
+              this.setState({
+                students: data.students,
+                originalStudents: data.students,
+                filters: this.makeFilters(data.students),
+                authorized: data.authorized,
+              });
+            }
+            return (cache.sortBy);
+          }).then((sortBy) => {
+            if (sortBy) {
+              this.sort(sortBy);
+            }
+          }).catch(console.log);
     }
 
     // eslint-disable-next-line require-jsdoc
@@ -197,14 +230,14 @@ class Students extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
-    sort(whatToSortOn) {
+    sort(sortBy) {
       const {students, order} = this.state;
       const newData = this.stableSort(
           students,
-          this.getComparator(order, whatToSortOn),
+          this.getComparator(order, sortBy),
       );
       this.setState({
-        sortBy: whatToSortOn,
+        sortBy: sortBy,
         students: newData,
         order: order === 'desc' ? 'asc' : 'desc',
       });
