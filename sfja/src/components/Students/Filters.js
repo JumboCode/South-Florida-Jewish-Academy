@@ -80,7 +80,7 @@ class Filters extends React.Component {
                   </ListItemIcon>
                 </ListItem>
               ))}
-              {studentsLength === null ?
+              {filter === 'grades' && studentsLength === null ?
                 // eslint-disable-next-line max-len
                 <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
                   <CircularProgress/>
