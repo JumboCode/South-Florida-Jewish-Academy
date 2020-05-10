@@ -138,7 +138,7 @@ def getAllFormIds(id):
         return False
 
     for content in contents:
-        return list(map(str, content['form_ids']))
+        return content['form_ids']
 
 def addNewFormId(id, newFormId):
     contents = list(mongo.db.students.find({'_id': id}))
