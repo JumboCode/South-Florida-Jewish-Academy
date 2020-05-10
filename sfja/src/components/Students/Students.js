@@ -164,10 +164,13 @@ class Students extends React.Component {
                 authorized: data.authorized,
               });
             }
-            return (cache.sortBy);
-          }).then((sortBy) => {
+            return ({sortBy: cache.sortBy, query: cache.query});
+          }).then(({sortBy, query}) => {
             if (sortBy) {
               this.sort(sortBy);
+            }
+            if (query) {
+              this.updateStudents(query);
             }
           }).catch(console.log);
     }
