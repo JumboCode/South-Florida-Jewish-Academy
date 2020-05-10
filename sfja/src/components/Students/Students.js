@@ -55,6 +55,7 @@ const textSize = {
   },
 };
 
+
 // eslint-disable-next-line require-jsdoc
 class Students extends React.Component {
     static propTypes = {
@@ -90,12 +91,12 @@ class Students extends React.Component {
         filters: {
           grades: {},
           completed: {
-            show_complete: true,
-            show_incomplete: true,
+            complete: false,
+            incomplete: false,
           },
           archived: {
-            show_unarchived: true,
-            show_archived: false,
+            complete: true,
+            incomplete: false,
           },
         },
       };
@@ -122,23 +123,29 @@ class Students extends React.Component {
           .catch(console.log);
     }
 
+    everyTrue(filter) {
+      const {filters} = this.state;
+      console.log(filters)
+      return Object.keys(filters[filter]).every((key) => !filters[filter][key])
+    }
+
     // eslint-disable-next-line require-jsdoc
     makeFilters(students) {
       const filters = {};
       const grades = {};
       students.forEach((student) => {
         if (!Object.keys(grades).includes('grade_' + student.grade)) {
-          grades['grade_' + student.grade] = true;
+          grades['grade_' + student.grade] = false;
         }
       });
       filters.grades = grades;
       const showCompleted = {
-        show_complete: true,
-        show_incomplete: true,
+        complete: false,
+        incomplete: false,
       };
       const showArchived = {
-        show_unarchived: true,
-        show_archived: false,
+        unarchived: true,
+        archived: false,
       };
       filters.completed = showCompleted;
       filters.archived = showArchived;
@@ -364,9 +371,9 @@ class Students extends React.Component {
                   </TableHead>
                   <TableBody>
                     {students.map((student) => {
-                      const showGrades = filters.grades['grade_' + student.grade];
-                      const showArchived = filters.archived.show_archived && student.archived || filters.archived.show_unarchived && !student.archived;
-                      const showComplete = filters.completed.show_complete && student.completion_rate === 1 || filters.completed.show_incomplete && student.completion_rate !== 1;
+                      const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+                      const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+                      const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
                       if (showGrades && showArchived && showComplete) {
                         return (
                           <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>

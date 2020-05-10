@@ -39,7 +39,10 @@ export default function Forms({forms, studentId}) {
           </TableHead>
           <TableBody>
             {forms.map((form) => (
-              <TableRow key={form['_id']}>
+              <TableRow
+                key={form['_id']}
+                style={{cursor: 'pointer'}}
+              >
                 <TableCell>
                   <NavLink to={'/profile/' + studentId + '/' + form['form_id']}>
                     <Typography align="left" style={textSize}>
