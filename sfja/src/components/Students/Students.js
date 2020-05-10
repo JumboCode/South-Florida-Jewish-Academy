@@ -72,8 +72,8 @@ class Students extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        students: [],
-        originalStudents: [],
+        students: null,
+        originalStudents: null,
         sortBy: '',
         order: 'incr',
         query: '',
@@ -293,7 +293,7 @@ class Students extends React.Component {
               <Filters
                 filters={filters}
                 updateFilter={this.updateFilter.bind(this)}
-                studentsLength={students.length}
+                studentsLength={students ? students.length : null}
               />
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
@@ -314,7 +314,7 @@ class Students extends React.Component {
                   </TextField>
                 </MuiThemeProvider>
               </div>
-              {students.length === 0 ?
+              {students === null ?
                 <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
                   <CircularProgress/>
                 </div> :
