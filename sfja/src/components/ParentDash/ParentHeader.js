@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../Header.css';
@@ -18,8 +19,7 @@ class ParentHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      studentIds: [],
-      studentNames: [],
+      students: [],
       hover: '',
       value: null,
       parentKey: this.props.match.params.parentKey,
@@ -37,20 +37,18 @@ class ParentHeader extends React.Component {
     }).then((res) => res.json())
         .then((data) => {
           this.setState({
-            studentIds: data.student_ids,
-            studentNames: data.student_names,
+            students: data.students,
           });
-          console.log(data);
         })
         .catch(console.log);
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {studentIds, studentNames, parentKey, value} = this.state;
-    if (value !== studentIds.indexOf(this.props.match.params.studentId) + 2) {
+    const {students, parentKey, value} = this.state;
+    if (value !== students.map((x) => x.id).indexOf(this.props.match.params.studentId) + 2) {
       this.setState({
-        value: studentIds.indexOf(this.props.match.params.studentId) + 2,
+        value: students.map((x) => x.id).indexOf(this.props.match.params.studentId) + 2,
       });
     }
     return (
@@ -79,13 +77,13 @@ class ParentHeader extends React.Component {
               to={'/parentdash/' + parentKey}
               component={Link}
               style={tabStyle}/>
-            {studentIds.map((value) => {
+            {students.map((student) => {
               return (
                 <Tab
-                  key={value}
+                  key={student.id}
                   icon={<PersonIcon fontSize='medium'/>}
-                  label={studentNames[studentIds.indexOf(value)]}
-                  to={'/parentdash/' + parentKey + '/'+ value}
+                  label={student.name}
+                  to={'/parentdash/' + parentKey + '/'+ student.id}
                   component={Link}
                   style={tabStyle}/>
               );

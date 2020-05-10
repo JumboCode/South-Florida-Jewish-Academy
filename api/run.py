@@ -169,10 +169,13 @@ def getStudentsOfParent():
         if not studentsDOM.isArchived(ObjectId(id)):
             unarchived_student_ids.append(id)
 
-    student_names = []
+    students = []
     for id in unarchived_student_ids:
-        student_names.append(studentsDOM.getFirstName(ObjectId(id)))
-    return {'student_ids': unarchived_student_ids, 'student_names': student_names}
+        currStudent = {}
+        currStudent['id'] = id
+        currStudent['name'] = studentsDOM.getFirstName(ObjectId(id))
+        students.append(currStudent)
+    return {'students': students}
 
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():

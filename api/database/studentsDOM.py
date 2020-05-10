@@ -129,7 +129,7 @@ def getArchivedStudents():
 
 def getFirstName(id):
     contents = list(mongo.db.students.find({'_id': id}))
-    return list(map(str, contents[0]['first_name']))
+    return contents[0]['first_name']
 
 def getAllFormIds(id):
     contents = list(mongo.db.students.find({'_id': id}))
