@@ -39,7 +39,10 @@ export default function Forms({forms, studentId}) {
           </TableHead>
           <TableBody>
             {forms.map((form) => (
-              <TableRow key={form['_id']}>
+              <TableRow
+                key={form['_id']}
+                style={{backgroundColor: form.completed ? 'rgba(76, 209, 27, 0.5)' : '#ffff'}}
+              >
                 <TableCell>
                   <NavLink to={'/profile/' + studentId + '/' + form['form_id']}>
                     <Typography align="left" style={textSize}>

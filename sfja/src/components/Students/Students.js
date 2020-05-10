@@ -216,10 +216,10 @@ class Students extends React.Component {
       if (originalStudents === null) {
         console.log('null');
       }
-      query = query.toLowerCase();
+      query = new RegExp(query, 'ig');
       const filtered = originalStudents.filter((currStudent) =>
-        (currStudent.first_name.toLowerCase().startsWith(query) ||
-            currStudent.last_name.toLowerCase().startsWith(query)));
+        (currStudent.first_name.search(query) !== -1 ||
+            currStudent.last_name.search(query) !== -1));
       this.setState({
         students: filtered,
       });
