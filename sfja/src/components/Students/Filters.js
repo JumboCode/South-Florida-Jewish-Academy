@@ -5,7 +5,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  Paper
+  Paper,
 } from '@material-ui/core';
 
 
@@ -23,7 +23,7 @@ class Filters extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     // eslint-disable-next-line react/prop-types
-    const {filters, updateFilter} = this.props;
+    const {filters, updateFilter, studentsLength} = this.props;
     if (filters === undefined) {
       return (<div>
         <Paper>
@@ -41,7 +41,22 @@ class Filters extends React.Component {
             </div>
 
             <List>
-              {Object.keys(filters[filter]).sort().map((optionKey) => (
+              {Object.keys(filters[filter]).sort((a, b) => {
+                const aSplit = a.split('_');
+                const bSplit = b.split('_');
+                console.log(aSplit, bSplit);
+                if (aSplit.length === 1 && bSplit.length === 1) {
+                  if (a < b) {
+                    return -1;
+                  } else if (a > b) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                } else {
+                  return aSplit[1] < bSplit[1];
+                }
+              }).map((optionKey) => (
                 <ListItem key={optionKey} onClick={
                   () => updateFilter(
                       filter,
@@ -72,6 +87,9 @@ class Filters extends React.Component {
             </List>
           </div>
         ))}
+        <div style={{display: 'flex', fontSize: 13, padding: 10}}>
+          Total student count: {studentsLength}
+        </div>
       </Paper>
     </div>);
   }

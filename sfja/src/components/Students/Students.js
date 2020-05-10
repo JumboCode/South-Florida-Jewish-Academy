@@ -123,10 +123,9 @@ class Students extends React.Component {
           .catch(console.log);
     }
 
-  // eslint-disable-next-line require-jsdoc
+    // eslint-disable-next-line require-jsdoc
     everyTrue(filter) {
       const {filters} = this.state;
-      console.log(filters);
       return Object.keys(filters[filter]).every((key) => !filters[filter][key]);
     }
 
@@ -294,6 +293,7 @@ class Students extends React.Component {
               <Filters
                 filters={filters}
                 updateFilter={this.updateFilter.bind(this)}
+                studentsLength={students.length}
               />
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
@@ -407,10 +407,16 @@ class Students extends React.Component {
                               </TableCell>
                               {authorized ? (
                                 <TableCell align="center" className={tableStyle}>
-                                  {student.archived ? <div>
-                                    <UnarchiveIcon style={{cursor: 'pointer'}} fontSize='large' onClick={() => this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true})}/>
-                                  </div>:<div>
-                                    <ArchiveIcon style={{cursor: 'pointer'}} fontSize='large' onClick={() => this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true})}/>
+                                  {student.archived ? <div
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true})}
+                                  >
+                                    <UnarchiveIcon fontSize='large' />
+                                  </div>:<div
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true})}
+                                  >
+                                    <ArchiveIcon fontSize='large'/>
                                   </div>}
                                 </TableCell>
                               ) : null}
