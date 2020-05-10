@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len,react/prop-types */
 import React from 'react';
 import ProfileEdit from './ProfileEdit';
 import ReceiptIcon from '@material-ui/icons/Receipt';
@@ -16,8 +16,7 @@ import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import ResendForms from './ResendForms';
 import AdminZone from './AdminZone';
-import {CircularProgress} from '@material-ui/core';
-
+import {CircularProgress, Button} from '@material-ui/core';
 
 // eslint-disable-next-line require-jsdoc
 class StudentProfile extends React.Component {
@@ -83,9 +82,19 @@ class StudentProfile extends React.Component {
         </div>
       );
     }
-    // const classes = useStyles();
     return (
       <div>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <div style={{maxWidth: 1000, width: '100%', paddingTop: 10}}>
+            <Button
+              style={{display: 'flex'}}
+              className="button icon-left"
+              variant="contained"
+              onClick={() => this.props.history.goBack()}>
+              Back
+            </Button>
+          </div>
+        </div>
         {basicInfo.archived ?
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
             <MuiAlert
