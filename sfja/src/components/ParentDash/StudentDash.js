@@ -119,8 +119,9 @@ class StudentDash extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {studentId, formData, formFilledData, blankFormData, openSentMessage, 
-           success, studentInfo, selectedName, numIncomplete, submitted} = this.state;
+    const {studentId, formData, formFilledData, blankFormData, openSentMessage,
+      success, studentInfo, selectedName, numIncomplete,
+      submitted} = this.state;
 
     if (studentId !== this.props.match.params.studentId) {
       this.setState({studentId: this.props.match.params.studentId});
