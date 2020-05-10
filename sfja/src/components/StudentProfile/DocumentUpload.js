@@ -9,12 +9,19 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
+import {saveAs} from 'file-saver';
+import {Cookies, withCookies} from 'react-cookie';
+import {instanceOf} from 'prop-types';
 
 const textSize = {
   fontSize: '13px',
 };
 
 class DocumentUpload extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -66,6 +73,25 @@ class DocumentUpload extends React.Component {
     this.setState({openSuccessMessage: true});
   }
 
+  downloadData(file_id, file_name) {
+    const {cookies} = this.props;
+    const body = {
+      file_id: file_id,
+      file_name: file_name
+    };
+    fetch(apiUrl() + '/downloadFile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      body: JSON.stringify(body),
+    }).then((response) => (response.blob()))
+        .then((blob) => {
+          saveAs(blob, file_name);
+        });
+  }
+
   render() {
     console.log(this.state);
     const {openSuccessMessage, files, files2} = this.state;
@@ -73,13 +99,19 @@ class DocumentUpload extends React.Component {
     return (
       <div>
                 DocumentUpload Page
-
-        <input type="file" id="fileUpload" onChange={(e)=>{
-          this.setState({files: e.target.files});
-        }}/>
-        <Button disabled={files === null || files.length !== 1 }onClick={this.handleImageUpload.bind(this)}>
+        <Button
+          variant="contained"
+          component="label"
+        >
+          Choose File
+          <input type="file" id="fileUpload" style={{ display: "none" }} onChange={(e)=>{
+            this.setState({files: e.target.files});
+          }}/>
+        </Button>
+        <Button component="label" variant="contained" disabled={files === null || files.length !== 1 }onClick={this.handleImageUpload.bind(this)}>
                   Upload!
         </Button>
+
         {files2 != null ? (
           <TableContainer component={Paper}>
             <Table size = 'large'>
@@ -92,7 +124,7 @@ class DocumentUpload extends React.Component {
               <TableBody>
                 {files2.map((file) => (
                   <TableRow key={file['file_id']}>
-                    <TableCell style={textSize} align = "left" >{file['file_name']}</TableCell>
+                    <TableCell style={textSize} align = "left" onClick={()=> {this.downloadData(file['file_id'],file['file_name'])}}>{file['file_name']}</TableCell>
                     <TableCell style={textSize} align = "left" >{file['file_id']}</TableCell>
                   </TableRow>))}
               </TableBody>
@@ -116,4 +148,4 @@ class DocumentUpload extends React.Component {
   }
 }
 
-export default DocumentUpload;
+export default withCookies(DocumentUpload);

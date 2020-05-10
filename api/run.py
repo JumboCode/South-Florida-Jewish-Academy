@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory,send_file
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_pymongo import PyMongo
@@ -23,6 +23,8 @@ from werkzeug.utils import secure_filename
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import cgi
+import mimetypes
+import io
 
 
 UPLOAD_FOLDER = './upload'
@@ -629,6 +631,21 @@ def getFiles():
         cleanFiles.append(tempDict)
     
     return{'files': cleanFiles}
+
+@app.route('/downloadFile', methods=['POST'])
+@requires_auth
+def downloadFile():
+    file_id = ObjectId(request.json['file_id'])
+    data = fs.get(file_id)
+    file_name = request.json['file_name']
+    print("this is file name",file_name)
+    file_type = mimetypes.MimeTypes().guess_type(str(file_name))[0]
+
+    fileBytes = data.read()
+
+    return send_file(io.BytesIO(fileBytes),
+                         attachment_filename= file_name,
+                         mimetype=file_type)
 
 @app.route('/forms', methods = ['GET', 'POST'])
 @requires_auth
