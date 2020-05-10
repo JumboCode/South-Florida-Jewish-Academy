@@ -160,6 +160,18 @@ def requires_auth(f):
 '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 
 '''==================== PARENT/STUDENT DASHBOARDS ===================='''
+
+@app.route('/getParentInfo', methods = ['POST'])
+def getParentInfo():
+    currLink = request.json['curr_link']
+    parentId = parentsDOM.get(currLink=currLink)
+    parentInfo = parentsDOM.getParentProfile(parentId)
+    return {
+        'first_name': parentInfo['first_name'],
+        'last_name': parentInfo['last_name'],
+        'email': parentInfo['email'],
+    }
+
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
