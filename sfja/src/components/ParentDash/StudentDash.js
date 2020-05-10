@@ -111,10 +111,9 @@ class StudentDash extends React.Component {
           success: false,
         });
       }
-    },
-    );
-    this.refreshStudentForms();
-    this.refreshFormData(this.state.selected);
+    })
+        .then(this.refreshStudentForms())
+        .then(this.refreshFormData(this.state.selected));
   }
 
   // eslint-disable-next-line require-jsdoc
