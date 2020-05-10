@@ -1,6 +1,16 @@
 import React from 'react';
 import {Checkbox, List, ListItem, ListItemIcon, Paper} from '@material-ui/core';
 
+
+// eslint-disable-next-line require-jsdoc
+function processOption(s) {
+  const list = s.split('_');
+  const resultList = [];
+  for (let i = 0; i < list.length; i++) {
+    resultList.push(list[i][0].toUpperCase() + list[i].substring(1));
+  }
+  return resultList.join(' ');
+}
 // eslint-disable-next-line require-jsdoc
 class Filters extends React.Component {
   // eslint-disable-next-line require-jsdoc
@@ -40,7 +50,7 @@ class Filters extends React.Component {
                       disableRipple
                       inputProps={{'aria-labelledby': optionKey}}
                     />
-                    {optionKey}
+                    {processOption(optionKey)}
                   </ListItemIcon>
                 </ListItem>
               ))}

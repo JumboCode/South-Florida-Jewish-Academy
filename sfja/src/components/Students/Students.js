@@ -65,12 +65,6 @@ class Students extends React.Component {
       order: PropTypes.any,
       query: PropTypes.any,
       columnToQuery: PropTypes.any,
-      filters: {
-        grades: {},
-        archived: {
-          show: false,
-        },
-      },
     };
 
     // eslint-disable-next-line require-jsdoc
@@ -93,6 +87,17 @@ class Students extends React.Component {
         showUnArchiveConfirmation: false,
         openSuccessMessage: false,
         openFailureMessage: false,
+        filters: {
+          grades: {},
+          completed: {
+            show_complete: true,
+            show_incomplete: true,
+          },
+          archived: {
+            show_unarchived: true,
+            show_archived: false,
+          },
+        },
       };
     }
 
@@ -122,15 +127,21 @@ class Students extends React.Component {
       const filters = {};
       const grades = {};
       students.forEach((student) => {
-        if (!Object.keys(grades).includes(student.grade)) {
-          grades[student.grade] = true;
+        if (!Object.keys(grades).includes('grade_' + student.grade)) {
+          grades['grade_' + student.grade] = true;
         }
       });
       filters.grades = grades;
-      const archived = {
-        show: false,
+      const showCompleted = {
+        show_complete: true,
+        show_incomplete: true,
       };
-      filters.archived = archived;
+      const showArchived = {
+        show_unarchived: true,
+        show_archived: false,
+      };
+      filters.completed = showCompleted;
+      filters.archived = showArchived;
       return filters;
     }
 
@@ -139,11 +150,12 @@ class Students extends React.Component {
       const filters = {};
       const grades = {};
       students.forEach((student) => {
-        if (!Object.keys(grades).includes(student.grade)) {
-          grades[student.grade] = oldFilters.grades[student.grade];
+        if (!Object.keys(grades).includes('grade_' + student.grade)) {
+          grades['grade_' + student.grade] = oldFilters.grades['grade_' + student.grade];
         }
       });
       filters.grades = grades;
+      filters.completed = oldFilters.completed;
       filters.archived = oldFilters.archived;
       return filters;
     }
@@ -225,6 +237,7 @@ class Students extends React.Component {
         DOB: s.DOB,
         grade: s.grade,
         forms_completed: s.forms_completed,
+        completion_rate: s.completion_rate,
         archived: !s.archived,
       }));
     }
@@ -326,8 +339,8 @@ class Students extends React.Component {
                       </TableCell>
                       <TableCell align="left" className={tableStyle}>
                         <TableSortLabel
-                          onClick={(e) => this.sort('forms_completed')}
-                          active={sortBy === 'forms_completed'}
+                          onClick={(e) => this.sort('completion_rate')}
+                          active={sortBy === 'completion_rate'}
                           direction={order === 'asc' ? 'desc' : 'asc'}
                         />
                                             Completed Forms
@@ -351,8 +364,10 @@ class Students extends React.Component {
                   </TableHead>
                   <TableBody>
                     {students.map((student) => {
-                      // only supporting grade filtering now
-                      if (filters.grades[student.grade] && ((filters.archived.show && student.archived) || !student.archived)) {
+                      const showGrades = filters.grades['grade_' + student.grade];
+                      const showArchived = filters.archived.show_archived && student.archived || filters.archived.show_unarchived && !student.archived;
+                      const showComplete = filters.completed.show_complete && student.completion_rate === 1 || filters.completed.show_incomplete && student.completion_rate !== 1;
+                      if (showGrades && showArchived && showComplete) {
                         return (
                           <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>
                             <TableCell component="th" scope="row"

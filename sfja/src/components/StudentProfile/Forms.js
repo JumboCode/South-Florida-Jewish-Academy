@@ -6,12 +6,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
+import Complete from '../../utils/Complete';
+import Incomplete from '../../utils/Incomplete';
 
 const formStyle = {
   padding: 20,
@@ -49,7 +49,7 @@ export default function Forms({forms, studentId}) {
                 <TableCell style={textSize} align = "left" >{form['p_first_name']} {form['p_last_name']}</TableCell>
                 <TableCell style={textSize} align = "left" >{form['p_email']}</TableCell>
                 <TableCell style={textSize} align = "left">{form['last_updated']=== null ? 'N/A': form['last_updated']}</TableCell>
-                <TableCell style={textSize} align = "right">{form['completed']=== true ? <CheckCircleIcon/> : <HighlightOffIcon/>}</TableCell>
+                <TableCell style={textSize} align = "right">{form['completed']=== true ? <Complete/> : <Incomplete/>}</TableCell>
               </TableRow>))}
           </TableBody>
         </Table>
