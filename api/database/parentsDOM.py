@@ -12,11 +12,6 @@ mongo = PyMongo(app)
 # list student(s) associated with parent
 # if student_id is changed, change here also
 
-def listStudents(curr_link):
-    contents = list(mongo.db.parents.find({'curr_link': curr_link}))
-    return list(map(str, contents[0]['student_ids']))
-
-
 def getParentForm(id, formNum1):
 
     contents = list(mongo.db.parents.find({'_id': id}))
@@ -122,3 +117,8 @@ def getEmail(id):
     contents = list(mongo.db.parents.find({'_id': id}))
     for content in contents:
         return content['email']
+
+def getStudentIds(id):
+    contents = list(mongo.db.parents.find({'_id': id}))
+    for content in contents:
+        return content['student_ids']
