@@ -48,10 +48,14 @@ const LoginPage = (props) => {
     getTokenSilently().then((token) => {
       setCookie('token', token, {path: '/'});
     });
+  }
+
+  if (isAuthenticated && cookies.token !== undefined) {
     return (
       <Redirect to="/students"/>
     );
   }
+
   return (
     <div>
       <h1>
