@@ -553,6 +553,14 @@ def addForm():
 @log_action('Get forms')
 def getForms():
     return {'forms': FormsDOM.getForms()}
+
+@app.route('/getBlankForm', methods = ['GET', 'POST'])
+@requires_auth
+@log_action('Get blank form')
+def getBlankForm():
+    blankForm_id = ObjectId(request.json['form_id'])
+    return {'data': blankFormsDOM.getFormData(blankForm_id)}
+
 '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])
