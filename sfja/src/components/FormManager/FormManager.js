@@ -19,8 +19,6 @@ import {
 } from '@material-ui/core';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {NavLink} from 'react-router-dom';
-import Typography from '@material-ui/core/Typography';
 
 const textSize = {
   fontSize: '13px',
@@ -140,17 +138,12 @@ class FormManager extends React.Component {
                   </TableHead>
                   <TableBody>
                     {allInfoArr.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell component="th" scope="row"
-                          style={{cursor: 'pointer', fontSize: '13px'}}>
-                          <NavLink to={'/formManager/viewer/' + row.id}>
-                            <Typography
-                              align="center"
-                            >
-                              {row.name}
-                            </Typography>
-                          </NavLink>
-                        </TableCell>
+                      <TableRow
+                        key={row.id}
+                        onClick={() => this.props.history.push('/formManager/viewer/' + row.id)}
+                        style={{cursor: 'pointer'}}
+                      >
+                        <TableCell style={textSize} align="left">{row.name}</TableCell>
                         <TableCell style={textSize} align="right">{row.date}</TableCell>
                         <TableCell style={textSize} align="right">
                           <Button onClick={

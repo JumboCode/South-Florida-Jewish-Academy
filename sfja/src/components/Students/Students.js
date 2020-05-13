@@ -1,6 +1,5 @@
-/* eslint-disable max-len,require-jsdoc */
+/* eslint-disable max-len,require-jsdoc,react/prop-types */
 import React from 'react';
-import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   studentPageStyle,
@@ -16,7 +15,6 @@ import Paper from '@material-ui/core/Paper';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import {withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
-import Typography from '@material-ui/core/Typography';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
@@ -425,18 +423,13 @@ class Students extends React.Component {
                         const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
                         if (showGrades && showArchived && showComplete) {
                           return (
-                            <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>
-                              <TableCell component="th" scope="row"
-                                className={tableStyle}>
-                                <NavLink to={'/students/' + student.student_id}>
-                                  <Typography
-                                    align="center"
-                                    className={tableStyle}
-                                  >
-                                    {student.first_name}
-                                  </Typography>
-                                </NavLink>
-                              </TableCell>
+                            <TableRow
+                              key={student.student_id}
+                              style={{cursor: 'pointer', backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}
+                              onClick={() => this.props.history.push('/students/' + student.student_id)}
+                            >
+                              <TableCell align="center" className={tableStyle}>
+                                {student.first_name}</TableCell>
                               <TableCell align="center" className={tableStyle}>
                                 {student.last_name}</TableCell>
                               <TableCell align="center" className={tableStyle}>
