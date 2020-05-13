@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useAuth0} from '../react-auth0-spa';
 import './LoginPage.css';
 import CircleLogo from '../assets/CircleLogo.png';
@@ -39,15 +39,28 @@ const LoginPage = (props) => {
   const {isAuthenticated, loginWithPopup, getTokenSilently} = useAuth0();
   // eslint-disable-next-line no-unused-vars
   const [cookies, setCookie] = useCookies();
+  const [first, setFirst] = useState(true);
+  const [second, setSecond] = useState(true);
 
-  if (isAuthenticated) {
+  // terrible way to do put these operations in order :(
+  if (cookies.studentsCache !== '' && first) {
+    setCookie('studentsCache', '', {path: '/'});
+    setFirst(false);
+  }
+
+  if (isAuthenticated && second) {
     getTokenSilently().then((token) => {
       setCookie('token', token, {path: '/'});
     });
+    setSecond(false);
+  }
+
+  if (isAuthenticated && cookies.token !== undefined) {
     return (
       <Redirect to="/students"/>
     );
   }
+
   return (
     <div>
       <h1>
