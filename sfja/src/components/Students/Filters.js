@@ -34,66 +34,70 @@ function processOption(s) {
   }
   return resultList.join(' ');
 }
-// eslint-disable-next-line require-jsdoc
-class Filters extends React.Component {
-  // eslint-disable-next-line require-jsdoc
-  render() {
-    // eslint-disable-next-line react/prop-types
-    const {filters, updateFilter, studentsLength} = this.props;
-    if (filters === undefined) {
-      return (<div>
-        <Paper>
-          Filters
-        </Paper>
-      </div>);
-    }
+
+// eslint-disable-next-line require-jsdoc,react/prop-types
+export default function Filters({filters, updateFilter, studentsLength}) {
+  const [selected, setSelected] = React.useState(null);
+  if (filters === undefined) {
     return (<div>
       <Paper>
         Filters
-        {Object.keys(filters).map((filter) => (
-          <div key={filter}>
-            <div style={{textAlign: 'left', paddingLeft: 10}}>
-              {filter[0].toUpperCase().concat(filter.substring(1)).concat(':')}
-            </div>
-            <List>
-              {/* eslint-disable-next-line max-len */}
-              {Object.keys(filters[filter]).sort(sortGrades).map((optionKey) => (
-                <ListItem key={optionKey} onClick={
+      </Paper>
+    </div>);
+  }
+  return (<div>
+    <Paper>
+      Filters
+      {Object.keys(filters).map((filter) => (
+        <div key={filter}>
+          <div style={{textAlign: 'left', paddingLeft: 10}}>
+            {filter[0].toUpperCase().concat(filter.substring(1)).concat(':')}
+          </div>
+          <List>
+            {/* eslint-disable-next-line max-len */}
+            {Object.keys(filters[filter]).sort(sortGrades).map((optionKey) => (
+              <ListItem
+                key={optionKey}
+                onClick={
                   () => updateFilter(
                       filter,
                       optionKey,
                       !filters[filter][optionKey],
                   )
                 }
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: selected === filter + optionKey ?
+                    'rgba(211,211,211, 0.7)' :
+                    '#ffffff'}}
+                onMouseEnter={() => setSelected(filter + optionKey)}
+                onMouseLeave={() => setSelected(null)}
+              >
+                <ListItemIcon
+                  style={{cursor: 'pointer'}}
                 >
-                  <ListItemIcon
-                    style={{cursor: 'pointer'}}
-                  >
-                    <Checkbox
-                      edge="start"
-                      checked={filters[filter][optionKey]}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{'aria-labelledby': optionKey}}
-                    />
-                    {processOption(optionKey)}
-                  </ListItemIcon>
-                </ListItem>
-              ))}
-              {filter === 'grades' && studentsLength === null ?
-                // eslint-disable-next-line max-len
-                <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                  <CircularProgress/>
-                </div> : null}
-            </List>
-          </div>
-        ))}
-        <div style={{display: 'flex', fontSize: 13, padding: 10}}>
-          Total student count: {studentsLength}
+                  <Checkbox
+                    edge="start"
+                    checked={filters[filter][optionKey]}
+                    tabIndex={-1}
+                    disableRipple
+                    inputProps={{'aria-labelledby': optionKey}}
+                  />
+                  {processOption(optionKey)}
+                </ListItemIcon>
+              </ListItem>
+            ))}
+            {filter === 'grades' && studentsLength === null ?
+              // eslint-disable-next-line max-len
+              <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+                <CircularProgress/>
+              </div> : null}
+          </List>
         </div>
-      </Paper>
-    </div>);
-  }
+      ))}
+      <div style={{display: 'flex', fontSize: 13, padding: 10}}>
+        Total student count: {studentsLength}
+      </div>
+    </Paper>
+  </div>);
 }
-
-export default Filters;
