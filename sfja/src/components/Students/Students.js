@@ -73,7 +73,7 @@ class Students extends React.Component {
         students: null,
         originalStudents: null,
         sortBy: cache ? cache.sortBy : 'first_name',
-        order: cache ? cache.order : 'asc',
+        order: cache ? cache.order : 'desc',
         query: cache ? cache.query : '',
         columnToQuery: cache ? cache.columnToQuery : 'first_name',
         toArchiveOrUnarchive: {
@@ -121,6 +121,7 @@ class Students extends React.Component {
 
     componentDidMount() {
       const {cookies} = this.props;
+      const {sortBy, query, order} = this.state; // from constructor
       fetch(apiUrl() + '/students', {
         headers: {
           'Content-Type': 'application/json',
@@ -155,6 +156,7 @@ class Students extends React.Component {
                 filters: newFilters,
                 authorized: data.authorized,
               });
+              return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
             } else {
               this.setState({
                 students: data.students,
@@ -162,8 +164,8 @@ class Students extends React.Component {
                 filters: this.makeFilters(data.students),
                 authorized: data.authorized,
               });
+              return ({sortBy: sortBy, query: query, order: order});
             }
-            return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
           }).then(({sortBy, query, order}) => {
             if (sortBy && order) {
               this.sort(sortBy, order);

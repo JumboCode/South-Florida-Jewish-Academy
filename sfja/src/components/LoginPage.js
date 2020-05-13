@@ -46,7 +46,7 @@ const LoginPage = () => {
       <Redirect to="/students"/>
     );
   } else if (cookies.studentsCache !== '') {
-    setCookie('studentsCache', '', {path: '/'});
+    setCookie('studentsCache', '');
   } else if (isAuthenticated) {
     getTokenSilently().then((token) => {
       setCookie('token', token, {path: '/'});
