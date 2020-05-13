@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import './Header.css';
 import {Link, Redirect} from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';

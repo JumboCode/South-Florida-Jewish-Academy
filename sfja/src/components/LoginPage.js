@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useAuth0} from '../react-auth0-spa';
 import './LoginPage.css';
 import CircleLogo from '../assets/CircleLogo.png';
@@ -35,7 +35,7 @@ const buttonStyle = {
 };
 
 
-const LoginPage = (props) => {
+const LoginPage = () => {
   const {isAuthenticated, loginWithPopup, getTokenSilently} = useAuth0();
   // eslint-disable-next-line no-unused-vars
   const [cookies, setCookie] = useCookies();

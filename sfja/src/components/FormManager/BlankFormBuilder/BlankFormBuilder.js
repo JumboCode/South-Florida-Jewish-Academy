@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import {Button} from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -18,19 +19,24 @@ class BlankFormBuilder extends React.Component {
   render() {
     const {setCreateForm} = this.props;
     return (
-      <div className="fm-container">
-        <React.Fragment>
-          <Button
-            variant='contained'
-            onClick={() => setCreateForm(false)}
-            style={{margin: 10}}
-          >
-            back
-          </Button>
-          {/* eslint-disable-next-line max-len */}
-          <DemoBar/>
-          <ReactFormBuilder/>
-        </React.Fragment>
+      // eslint-disable-next-line max-len
+      <div style={{display: 'flex', justifyContent: 'center', marginLeft: '10%'}}>
+        <div style={{width: '100%', maxWidth: 1000}}>
+          <div className="fm-container" >
+            <React.Fragment>
+              <Button
+                variant='contained'
+                onClick={() => this.props.history.goBack()}
+                style={{marginTop: 30}}
+              >
+                back
+              </Button>
+              {/* eslint-disable-next-line max-len */}
+              <DemoBar setCreateForm={setCreateForm} {...this.props}/>
+              <ReactFormBuilder/>
+            </React.Fragment>
+          </div>
+        </div>
       </div>
     );
   }

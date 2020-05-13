@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import history from './utils/history';
 import config from './auth_config';
-import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Header from './components/Header';
 import ParentHeader from './components/ParentDash/ParentHeader';
 import ParentDash from './components/ParentDash/ParentDash';
