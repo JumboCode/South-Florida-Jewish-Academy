@@ -18,7 +18,7 @@ import clsx from 'clsx';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {CircularProgress, TextField} from '@material-ui/core';
+import {CircularProgress, TextField, Button} from '@material-ui/core';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Filters from './Filters';
 import ArchiveIcon from '@material-ui/icons/Archive';
@@ -450,7 +450,8 @@ class Students extends React.Component {
                               </TableCell>
                               {authorized ? (
                                 <TableCell align="center" className={tableStyle}>
-                                  {student.archived ? <div
+                                  {student.archived ? <Button
+                                    variant='contained'
                                     style={{cursor: 'pointer'}}
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -458,7 +459,8 @@ class Students extends React.Component {
                                     }}
                                   >
                                     <UnarchiveIcon fontSize='large' />
-                                  </div>:<div
+                                  </Button>:<Button
+                                    variant='contained'
                                     style={{cursor: 'pointer'}}
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -466,7 +468,7 @@ class Students extends React.Component {
                                     }}
                                   >
                                     <ArchiveIcon fontSize='large'/>
-                                  </div>}
+                                  </Button>}
                                 </TableCell>
                               ) : null}
                             </TableRow>
