@@ -39,28 +39,19 @@ const LoginPage = (props) => {
   const {isAuthenticated, loginWithPopup, getTokenSilently} = useAuth0();
   // eslint-disable-next-line no-unused-vars
   const [cookies, setCookie] = useCookies();
-  const [first, setFirst] = useState(true);
-  const [second, setSecond] = useState(true);
 
-  // terrible way to do put these operations in order :(
-  if (cookies.studentsCache !== '' && first) {
-    setCookie('studentsCache', '', {path: '/'});
-    setFirst(false);
-  }
-
-  if (isAuthenticated && second) {
-    getTokenSilently().then((token) => {
-      setCookie('token', token, {path: '/'});
-    });
-    setSecond(false);
-  }
-
-  if (isAuthenticated && cookies.token !== undefined) {
+  // eslint-disable-next-line max-len
+  if (isAuthenticated && cookies.token !== undefined && cookies.studentsCache !== undefined) {
     return (
       <Redirect to="/students"/>
     );
+  } else if (cookies.studentsCache !== '') {
+    setCookie('studentsCache', '', {path: '/'});
+  } else if (isAuthenticated) {
+    getTokenSilently().then((token) => {
+      setCookie('token', token, {path: '/'});
+    });
   }
-
   return (
     <div>
       <h1>
