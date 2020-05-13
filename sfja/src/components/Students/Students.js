@@ -1,6 +1,5 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len,require-jsdoc,react/prop-types */
 import React from 'react';
-import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   studentPageStyle,
@@ -16,7 +15,6 @@ import Paper from '@material-ui/core/Paper';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import {withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
-import Typography from '@material-ui/core/Typography';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
@@ -56,7 +54,6 @@ const textSize = {
 };
 
 
-// eslint-disable-next-line require-jsdoc
 class Students extends React.Component {
     static propTypes = {
       students: PropTypes.any,
@@ -68,7 +65,6 @@ class Students extends React.Component {
       columnToQuery: PropTypes.any,
     };
 
-    // eslint-disable-next-line require-jsdoc
     constructor(props) {
       super(props);
       const {cookies} = this.props;
@@ -76,8 +72,8 @@ class Students extends React.Component {
       this.state = {
         students: null,
         originalStudents: null,
-        sortBy: cache ? cache.sortBy : '',
-        order: cache ? cache.order : 'incr',
+        sortBy: cache ? cache.sortBy : 'first_name',
+        order: cache ? cache.order : 'desc',
         query: cache ? cache.query : '',
         columnToQuery: cache ? cache.columnToQuery : 'first_name',
         toArchiveOrUnarchive: {
@@ -102,12 +98,12 @@ class Students extends React.Component {
           },
         },
       };
+      this.saveCache = this.saveCache.bind(this);
     }
-    // eslint-disable-next-line require-jsdoc
-    componentDidUpdate(prevProps, prevState, snapshot) {
-      const {cookies} = this.props;
+
+    saveCache() {
       const {sortBy, order, query, columnToQuery, filters} = this.state;
-      const cache = cookies.get('studentsCache');
+      const {cookies} = this.props;
       const newCache = {
         sortBy: sortBy,
         order: order,
@@ -115,13 +111,17 @@ class Students extends React.Component {
         columnToQuery: columnToQuery,
         filters: filters,
       };
-      if (JSON.stringify(cache) !== JSON.stringify(newCache)) {
-        cookies.set('studentsCache', newCache);
-      }
+      cookies.set('studentsCache', newCache);
     }
-    // eslint-disable-next-line require-jsdoc
+
+    componentWillUnmount() {
+      this.saveCache();
+      window.removeEventListener('beforeunload', this.saveCache);
+    }
+
     componentDidMount() {
       const {cookies} = this.props;
+      const {sortBy, query, order} = this.state; // from constructor
       fetch(apiUrl() + '/students', {
         headers: {
           'Content-Type': 'application/json',
@@ -150,12 +150,13 @@ class Students extends React.Component {
                 students: data.students,
                 originalStudents: data.students,
                 sortBy: cache.sortBy,
-                order: cache.order === 'desc' ? 'asc' : 'desc',
+                order: cache.order,
                 query: cache.query,
                 columnToQuery: cache.columnToQuery,
                 filters: newFilters,
                 authorized: data.authorized,
               });
+              return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
             } else {
               this.setState({
                 students: data.students,
@@ -163,25 +164,24 @@ class Students extends React.Component {
                 filters: this.makeFilters(data.students),
                 authorized: data.authorized,
               });
+              return ({sortBy: sortBy, query: query, order: order});
             }
-            return ({sortBy: cache.sortBy, query: cache.query});
-          }).then(({sortBy, query}) => {
-            if (sortBy) {
-              this.sort(sortBy);
+          }).then(({sortBy, query, order}) => {
+            if (sortBy && order) {
+              this.sort(sortBy, order);
             }
             if (query) {
               this.updateStudents(query);
             }
           }).catch(console.log);
+      window.addEventListener('beforeunload', this.saveCache);
     }
 
-    // eslint-disable-next-line require-jsdoc
     everyTrue(filter) {
       const {filters} = this.state;
       return Object.keys(filters[filter]).every((key) => !filters[filter][key]);
     }
 
-    // eslint-disable-next-line require-jsdoc
     makeFilters(students) {
       const filters = {};
       const grades = {};
@@ -204,7 +204,6 @@ class Students extends React.Component {
       return filters;
     }
 
-    // eslint-disable-next-line require-jsdoc
     refreshFilters(students, oldFilters) {
       const filters = {};
       const grades = {};
@@ -219,7 +218,6 @@ class Students extends React.Component {
       return filters;
     }
 
-    // eslint-disable-next-line require-jsdoc
     descendingComparator(a, b, orderBy) {
       if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -230,14 +228,12 @@ class Students extends React.Component {
       return 0;
     }
 
-    // eslint-disable-next-line require-jsdoc
     getComparator(order, orderBy) {
       return order === 'desc' ?
             (a, b) => this.descendingComparator(a, b, orderBy) :
             (a, b) => -this.descendingComparator(a, b, orderBy);
     }
 
-    // eslint-disable-next-line require-jsdoc
     stableSort(array, comparator) {
       const stabilizedThis = array.map((el, index) => [el, index]);
       stabilizedThis.sort((a, b) => {
@@ -248,9 +244,8 @@ class Students extends React.Component {
       return stabilizedThis.map((el) => el[0]);
     }
 
-    // eslint-disable-next-line require-jsdoc
-    sort(sortBy) {
-      const {students, order} = this.state;
+    sort(sortBy, order) {
+      const {students} = this.state;
       const newData = this.stableSort(
           students,
           this.getComparator(order, sortBy),
@@ -258,11 +253,10 @@ class Students extends React.Component {
       this.setState({
         sortBy: sortBy,
         students: newData,
-        order: order === 'desc' ? 'asc' : 'desc',
+        order: order,
       });
     }
 
-    // eslint-disable-next-line require-jsdoc
     updateStudents(query) {
       const {originalStudents} = this.state;
       if (originalStudents === null) {
@@ -277,7 +271,6 @@ class Students extends React.Component {
       });
     }
 
-    // eslint-disable-next-line require-jsdoc
     updateFilter(filterToUpdate, optionToUpdate, set) {
       const {filters} = this.state;
       filters[filterToUpdate][optionToUpdate] = set;
@@ -286,7 +279,6 @@ class Students extends React.Component {
       });
     }
 
-    // eslint-disable-next-line require-jsdoc
     flipArchival(studentId, students) {
       return students.map((s) => (s.student_id !== studentId ? s : {
         student_id: s.student_id,
@@ -300,7 +292,7 @@ class Students extends React.Component {
         archived: !s.archived,
       }));
     }
-    // eslint-disable-next-line require-jsdoc
+
     archivalStudentChanger(studentId, action) {
       const {cookies} = this.props;
       const {students, originalStudents, filters} = this.state;
@@ -332,7 +324,7 @@ class Students extends React.Component {
         });
       });
     }
-    // eslint-disable-next-line require-jsdoc
+
     render() {
       const {students, sortBy, order, filters, authorized, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation} = this.state;
       // eslint-disable-next-line react/prop-types
@@ -376,25 +368,25 @@ class Students extends React.Component {
                       <TableRow>
                         <TableCell className={tableStyle}>
                           <TableSortLabel
-                            onClick={(e) => this.sort('first_name')}
+                            onClick={(e) => this.sort('first_name', order === 'desc' ? 'asc' : 'desc')}
                             active={sortBy === 'first_name'}
-                            direction={order === 'asc' ? 'desc' : 'asc'}
+                            direction={order}
                           />
                           First Name
                         </TableCell>
                         <TableCell align="left" className={tableStyle}>
                           <TableSortLabel
-                            onClick={(e) => this.sort('last_name')}
+                            onClick={(e) => this.sort('last_name', order === 'desc' ? 'asc' : 'desc')}
                             active={sortBy === 'last_name'}
-                            direction={order === 'asc' ? 'desc' : 'asc'}
+                            direction={order}
                           />
                           Last Name
                         </TableCell>
                         <TableCell align="left" className={tableStyle}>
                           <TableSortLabel
-                            onClick={(e) => this.sort('grade')}
+                            onClick={(e) => this.sort('grade', order === 'desc' ? 'asc' : 'desc')}
                             active={sortBy === 'grade'}
-                            direction={order === 'asc' ? 'desc' : 'asc'}
+                            direction={order}
                           />
                           Grade
                         </TableCell>
@@ -403,18 +395,18 @@ class Students extends React.Component {
                         </TableCell>
                         <TableCell align="left" className={tableStyle}>
                           <TableSortLabel
-                            onClick={(e) => this.sort('completion_rate')}
+                            onClick={(e) => this.sort('completion_rate', order === 'desc' ? 'asc' : 'desc')}
                             active={sortBy === 'completion_rate'}
-                            direction={order === 'asc' ? 'desc' : 'asc'}
+                            direction={order}
                           />
                           Completed Forms
                         </TableCell>
                         <TableCell align="center" className={tableStyle}
                         >
                           <TableSortLabel
-                            onClick={(e) => this.sort('archived')}
+                            onClick={(e) => this.sort('archived', order === 'desc' ? 'asc' : 'desc')}
                             active={sortBy === 'archived'}
-                            direction={order === 'asc' ? 'desc' : 'asc'}
+                            direction={order}
                           >
                           </TableSortLabel>
                           Archived?
@@ -433,18 +425,13 @@ class Students extends React.Component {
                         const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
                         if (showGrades && showArchived && showComplete) {
                           return (
-                            <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>
-                              <TableCell component="th" scope="row"
-                                className={tableStyle}>
-                                <NavLink to={'/profile/' + student.student_id}>
-                                  <Typography
-                                    align="center"
-                                    className={tableStyle}
-                                  >
-                                    {student.first_name}
-                                  </Typography>
-                                </NavLink>
-                              </TableCell>
+                            <TableRow
+                              key={student.student_id}
+                              style={{cursor: 'pointer', backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}
+                              onClick={() => this.props.history.push('/students/' + student.student_id)}
+                            >
+                              <TableCell align="center" className={tableStyle}>
+                                {student.first_name}</TableCell>
                               <TableCell align="center" className={tableStyle}>
                                 {student.last_name}</TableCell>
                               <TableCell align="center" className={tableStyle}>
@@ -461,12 +448,18 @@ class Students extends React.Component {
                                 <TableCell align="center" className={tableStyle}>
                                   {student.archived ? <div
                                     style={{cursor: 'pointer'}}
-                                    onClick={() => this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true})}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true});
+                                    }}
                                   >
                                     <UnarchiveIcon fontSize='large' />
                                   </div>:<div
                                     style={{cursor: 'pointer'}}
-                                    onClick={() => this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true})}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true});
+                                    }}
                                   >
                                     <ArchiveIcon fontSize='large'/>
                                   </div>}

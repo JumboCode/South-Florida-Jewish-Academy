@@ -562,7 +562,7 @@ def getForms():
 @log_action('Get blank form')
 def getBlankForm():
     blankForm_id = ObjectId(request.json['form_id'])
-    return {'data': blankFormsDOM.getFormData(blankForm_id)}
+    return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
 
 '''======================  ADD STUDENT ======================'''
 

@@ -126,7 +126,7 @@ class StudentProfile extends React.Component {
                 <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
-                {currTab === 0 && <Forms forms={forms} studentId={basicInfo['_id']}/>}
+                {currTab === 0 && <Forms {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
                 {currTab === 1 && <div>documents</div>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
                 {currTab === 3 &&

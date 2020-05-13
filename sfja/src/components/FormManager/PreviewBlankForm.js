@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len,react/prop-types */
 import React from 'react';
 import fetch from 'isomorphic-fetch';
 import TextField from '@material-ui/core/TextField';
@@ -20,7 +20,7 @@ const textSize = {
 class PreviewBlankForm extends React.Component {
     static propTypes = {
       formsList: PropTypes.any,
-      currentForm: PropTypes.any,
+      currentFormID: PropTypes.any,
       setViewForm: PropTypes.func,
       cookies: instanceOf(Cookies).isRequired,
       openFailureMessage: false,
@@ -30,16 +30,18 @@ class PreviewBlankForm extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        newName: props.currentForm.name,
+        newName: '',
+        currentFormID: props.match.params.id,
         blankFormData: null,
       };
     }
 
     // eslint-disable-next-line require-jsdoc
     componentDidMount() {
-      const {cookies, currentForm} = this.props;
+      const {cookies} = this.props;
+      const {currentFormID} = this.state;
       const body = {
-        form_id: currentForm.id,
+        form_id: currentFormID,
       };
 
       fetch(apiUrl() + '/getBlankForm', {
@@ -53,17 +55,19 @@ class PreviewBlankForm extends React.Component {
           .then((data) => {
             this.setState({
               blankFormData: data.data,
+              newName: data.name,
+              oldName: data.name,
             });
           });
     }
 
     // eslint-disable-next-line require-jsdoc
     updateName() {
-      const {newName} = this.state;
-      const {cookies, currentForm} = this.props;
+      const {newName, currentFormID} = this.state;
+      const {cookies} = this.props;
 
       const body = {
-        form_id: currentForm.id,
+        form_id: currentFormID,
         form_name: newName,
       };
       fetch(apiUrl() + '/updateFormName', {
@@ -77,6 +81,7 @@ class PreviewBlankForm extends React.Component {
         if (response.status === 200) {
           this.setState({
             openSuccessMessage: true,
+            oldName: newName,
           });
         } else {
           this.setState({
@@ -92,14 +97,13 @@ class PreviewBlankForm extends React.Component {
 
     // eslint-disable-next-line require-jsdoc
     render() {
-      const {setViewForm, currentForm} = this.props;
-      const {blankFormData, newName, openSuccessMessage, openFailureMessage}= this.state;
+      const {blankFormData, newName, openSuccessMessage, openFailureMessage, oldName} = this.state;
       return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <div style={{minWidth: 650, marginTop: 10}}>
+          <div style={{minWidth: 650, marginTop: 30}}>
             <Button
               style={{marginBottom: 20}}
-              onClick={() => setViewForm(false)}
+              onClick={() => this.props.history.goBack()}
               variant='contained'
             >
               Back
@@ -123,7 +127,7 @@ class PreviewBlankForm extends React.Component {
                 </TextField>
                 <Button
                   variant='contained'
-                  disabled={currentForm.name === newName}
+                  disabled={oldName === newName}
                   onClick={() => this.updateName()}>Update Name</Button>
               </div>
               {blankFormData !== null ?
