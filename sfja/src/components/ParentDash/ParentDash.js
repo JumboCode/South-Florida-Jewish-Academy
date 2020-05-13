@@ -50,7 +50,7 @@ class ParentDash extends React.Component {
             Email: {email}
           </div>
           <div style={{paddingBottom: 10, fontSize: 15}}>
-            Please on a student tab above to get started.
+            Please click on a student tab above to get started.
           </div>
         </Paper>
       </div>
