@@ -146,11 +146,14 @@ class FormManager extends React.Component {
                         <TableCell style={textSize} align="left">{row.name}</TableCell>
                         <TableCell style={textSize} align="right">{row.date}</TableCell>
                         <TableCell style={textSize} align="right">
-                          <Button onClick={
-                            () => {
-                              this.setState({formToTrash: row.id, showWarning: true});
-                            }
-                          }>Delete</Button>
+                          <Button
+                            variant='contained'
+                            onClick={
+                              (e) => {
+                                e.stopPropagation();
+                                this.setState({formToTrash: row.id, showWarning: true});
+                              }
+                            }>Delete</Button>
                         </TableCell>
                       </TableRow>
                     ))}

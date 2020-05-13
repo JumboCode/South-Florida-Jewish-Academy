@@ -448,12 +448,18 @@ class Students extends React.Component {
                                 <TableCell align="center" className={tableStyle}>
                                   {student.archived ? <div
                                     style={{cursor: 'pointer'}}
-                                    onClick={() => this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true})}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true});
+                                    }}
                                   >
                                     <UnarchiveIcon fontSize='large' />
                                   </div>:<div
                                     style={{cursor: 'pointer'}}
-                                    onClick={() => this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true})}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true});
+                                    }}
                                   >
                                     <ArchiveIcon fontSize='large'/>
                                   </div>}
