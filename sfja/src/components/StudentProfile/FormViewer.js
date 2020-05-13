@@ -127,7 +127,7 @@ class FormViewer extends React.Component {
           {basicInfo && <ProfileHeader basicInfo={basicInfo}/>}
         </div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <div style={{maxWidth: 1000, width: '100%', padding: 20}}>
+          <div style={{maxWidth: 1000, width: '100%', padding: 10}}>
             <Paper elevation={2} style={{padding: 10}}>
               {formInfo && parentProfile && <div>
                 <div style={{fontSize: 16}}>
