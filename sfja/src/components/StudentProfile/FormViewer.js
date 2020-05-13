@@ -11,6 +11,7 @@ import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import MuiAlert from '@material-ui/lab/Alert';
 import {CircularProgress} from '@material-ui/core';
 import Switch from '@material-ui/core/Switch';
+import SnackBarMessage from '../../utils/SnackBarMessage';
 
 // eslint-disable-next-line require-jsdoc
 class FormViewer extends React.Component {
@@ -28,6 +29,8 @@ class FormViewer extends React.Component {
       formInfo: null,
       openDialog: false,
       edit: false,
+      openSnackBar: false,
+      success: false,
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -86,11 +89,29 @@ class FormViewer extends React.Component {
       },
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify(body),
-    }).then((response) => response);
+    }).then((response) => {
+      console.log(response);
+      if (response.status === 200) {
+        this.setState({
+          openSnackBar: true,
+          success: true,
+        });
+      } else {
+        this.setState({
+          openSnackBar: true,
+          success: false,
+        });
+      }
+    }).catch((error) => {
+      this.setState({
+        openSnackBar: true,
+        success: false,
+      });
+    });
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit} = this.state;
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar} = this.state;
     if (!basicInfo) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
@@ -185,6 +206,12 @@ class FormViewer extends React.Component {
           message='You are attempting to overwrite form data. Are you sure?'
           confirmMessage='Yes'
           notConfirmMessage='Back'
+        />
+        <SnackBarMessage
+          open={openSnackBar}
+          closeSnackbar={() => this.setState({openSnackBar: false})}
+          message={success ? 'Parent form data overwritten' : 'There was an error.'}
+          severity={success ? 'success' : 'error'}
         />
       </div>
     );
