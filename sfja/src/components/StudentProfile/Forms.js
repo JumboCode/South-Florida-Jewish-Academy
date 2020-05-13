@@ -44,7 +44,7 @@ export default function Forms({forms, studentId}) {
                 style={{backgroundColor: form.completed ? 'rgba(76, 209, 27, 0.5)' : '#ffff'}}
               >
                 <TableCell>
-                  <NavLink to={'/profile/' + studentId + '/' + form['form_id']}>
+                  <NavLink to={'/students/' + studentId + '/' + form['form_id']}>
                     <Typography align="left" style={textSize}>
                       {form['form_name']}</Typography>
                   </NavLink>

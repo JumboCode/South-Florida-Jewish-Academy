@@ -436,7 +436,7 @@ class Students extends React.Component {
                             <TableRow key={student.student_id} style={{backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}>
                               <TableCell component="th" scope="row"
                                 className={tableStyle}>
-                                <NavLink to={'/profile/' + student.student_id}>
+                                <NavLink to={'/students/' + student.student_id}>
                                   <Typography
                                     align="center"
                                     className={tableStyle}
