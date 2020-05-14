@@ -22,6 +22,7 @@ const textSize = {
 
 // eslint-disable-next-line require-jsdoc
 export default function Forms({forms, studentId, history}) {
+  const [selected, setSelected] = React.useState(null);
   return (
     <div style={formStyle}>
       <TableContainer component={Paper}>
@@ -38,9 +39,11 @@ export default function Forms({forms, studentId, history}) {
           <TableBody>
             {forms.map((form) => (
               <TableRow
-                key={form['_id']}
-                style={{cursor: 'pointer', backgroundColor: form.completed ? 'rgba(76, 209, 27, 0.5)' : '#ffff'}}
+                key={form['form_id']}
+                style={{cursor: 'pointer', backgroundColor: form['completed'] ? 'rgba(76, 209, 27, ' + (selected === form['form_id'] ? '0.7' : '0.5') + ')' : selected === form['form_id'] ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
                 onClick={() => history.push('/students/' + studentId + '/' + form['form_id'])}
+                onMouseEnter={() => setSelected(form['form_id'])}
+                onMouseLeave={() => setSelected(null)}
               >
                 <TableCell style={textSize} align = "left" >{form['form_name']}</TableCell>
                 <TableCell style={textSize} align = "left" >{form['p_first_name']} {form['p_last_name']}</TableCell>

@@ -18,7 +18,7 @@ import clsx from 'clsx';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {CircularProgress, TextField} from '@material-ui/core';
+import {CircularProgress, TextField, Button} from '@material-ui/core';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Filters from './Filters';
 import ArchiveIcon from '@material-ui/icons/Archive';
@@ -86,6 +86,7 @@ class Students extends React.Component {
         showUnArchiveConfirmation: false,
         openSuccessMessage: false,
         openFailureMessage: false,
+        selected: null,
         filters: {
           grades: {},
           completed: {
@@ -326,7 +327,7 @@ class Students extends React.Component {
     }
 
     render() {
-      const {students, sortBy, order, filters, authorized, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation} = this.state;
+      const {students, sortBy, order, filters, authorized, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected} = this.state;
       // eslint-disable-next-line react/prop-types
       const {classes, className} = this.props;
       const tableStyle = clsx(classes.text, className);
@@ -423,12 +424,15 @@ class Students extends React.Component {
                         const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
                         const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
                         const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+                        const opacity = selected === student.student_id ? '0.7' : '0.5';
                         if (showGrades && showArchived && showComplete) {
                           return (
                             <TableRow
                               key={student.student_id}
-                              style={{cursor: 'pointer', backgroundColor: student.archived ? '#FF846E' : '#ffffff'}}
+                              style={{cursor: 'pointer', backgroundColor: student.archived ? 'rgba(219, 103, 103, ' + opacity + ')' : selected === student.student_id ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
                               onClick={() => this.props.history.push('/students/' + student.student_id)}
+                              onMouseEnter={() => this.setState({selected: student.student_id})}
+                              onMouseLeave={() => this.setState({selected: null})}
                             >
                               <TableCell align="center" className={tableStyle}>
                                 {student.first_name}</TableCell>
@@ -446,7 +450,8 @@ class Students extends React.Component {
                               </TableCell>
                               {authorized ? (
                                 <TableCell align="center" className={tableStyle}>
-                                  {student.archived ? <div
+                                  {student.archived ? <Button
+                                    variant='contained'
                                     style={{cursor: 'pointer'}}
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -454,7 +459,8 @@ class Students extends React.Component {
                                     }}
                                   >
                                     <UnarchiveIcon fontSize='large' />
-                                  </div>:<div
+                                  </Button>:<Button
+                                    variant='contained'
                                     style={{cursor: 'pointer'}}
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -462,7 +468,7 @@ class Students extends React.Component {
                                     }}
                                   >
                                     <ArchiveIcon fontSize='large'/>
-                                  </div>}
+                                  </Button>}
                                 </TableCell>
                               ) : null}
                             </TableRow>

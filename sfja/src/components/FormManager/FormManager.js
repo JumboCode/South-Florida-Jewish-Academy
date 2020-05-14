@@ -9,6 +9,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
 import {
   Button,
   Dialog,
@@ -37,6 +38,7 @@ class FormManager extends React.Component {
       formsList: null,
       showWarning: false,
       formToTrash: null,
+      selected: null,
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -95,7 +97,7 @@ class FormManager extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {formsList, showWarning} = this.state;
+    const {formsList, showWarning, selected} = this.state;
 
     if (formsList === null) {
       return (
@@ -141,7 +143,9 @@ class FormManager extends React.Component {
                       <TableRow
                         key={row.id}
                         onClick={() => this.props.history.push('/formManager/viewer/' + row.id)}
-                        style={{cursor: 'pointer'}}
+                        style={{cursor: 'pointer', backgroundColor: selected === row.id ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
+                        onMouseEnter={() => this.setState({selected: row.id})}
+                        onMouseLeave={() => this.setState({selected: null})}
                       >
                         <TableCell style={textSize} align="left">{row.name}</TableCell>
                         <TableCell style={textSize} align="right">{row.date}</TableCell>
@@ -153,7 +157,7 @@ class FormManager extends React.Component {
                                 e.stopPropagation();
                                 this.setState({formToTrash: row.id, showWarning: true});
                               }
-                            }>Delete</Button>
+                            }><DeleteIcon fontSize='large'/></Button>
                         </TableCell>
                       </TableRow>
                     ))}
