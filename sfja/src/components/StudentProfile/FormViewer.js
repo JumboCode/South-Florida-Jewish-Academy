@@ -10,6 +10,8 @@ import Button from '@material-ui/core/Button';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import MuiAlert from '@material-ui/lab/Alert';
 import {CircularProgress} from '@material-ui/core';
+import Switch from '@material-ui/core/Switch';
+import SnackBarMessage from '../../utils/SnackBarMessage';
 
 // eslint-disable-next-line require-jsdoc
 class FormViewer extends React.Component {
@@ -26,6 +28,9 @@ class FormViewer extends React.Component {
       parentProfile: null,
       formInfo: null,
       openDialog: false,
+      edit: false,
+      openSnackBar: false,
+      success: false,
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -84,11 +89,29 @@ class FormViewer extends React.Component {
       },
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify(body),
-    }).then((response) => response);
+    }).then((response) => {
+      console.log(response);
+      if (response.status === 200) {
+        this.setState({
+          openSnackBar: true,
+          success: true,
+        });
+      } else {
+        this.setState({
+          openSnackBar: true,
+          success: false,
+        });
+      }
+    }).catch((error) => {
+      this.setState({
+        openSnackBar: true,
+        success: false,
+      });
+    });
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog} = this.state;
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar} = this.state;
     if (!basicInfo) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
@@ -143,18 +166,36 @@ class FormViewer extends React.Component {
                 </div>
               </div>}
               <div style={{backgroundColor: '#0068af', width: '100%', height: 2, marginTop: 10}}/>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <div style={{display: 'flex', width: 120}}>
+                  Mode: {edit ? 'edit' : 'read-only'}
+                </div>
+                <Switch
+                  checked={edit}
+                  onChange={(event) => {
+                    if (!basicInfo.archived) {
+                      this.setState({edit: event.target.checked});
+                    }
+                  }}
+                  name='Turn on editing mode'
+                  color="primary"
+                />
+              </div>
               {blankFormData !== null ?
-              <ReactFormGenerator
-                onSubmit={(data) => {
-                  if (! basicInfo.archived) {
-                    this.handleSubmit(data);
-                  }
-                }}
-                answer_data={formData}
-                data={blankFormData}
-                read_only={basicInfo.archived}
-                action_name={basicInfo.archived ? 'This student is archived' : 'Override Parent\'s Data'}
-              /> : <div/>}
+                <Paper style={{padding: 20, margin: 20}} elevation={2}>
+                  <ReactFormGenerator
+                    onSubmit={(data) => {
+                      if (!basicInfo.archived && edit) {
+                        this.handleSubmit(data);
+                      }
+                    }}
+                    answer_data={formData}
+                    data={blankFormData}
+                    read_only={basicInfo.archived || !edit}
+                    action_name={basicInfo.archived ? 'This student is archived' : (edit ? 'Override Parent\'s Data' : 'Read-only mode')}
+                  />
+                </Paper> :
+               <div/>}
             </Paper>
           </div>
         </div>
@@ -165,6 +206,12 @@ class FormViewer extends React.Component {
           message='You are attempting to overwrite form data. Are you sure?'
           confirmMessage='Yes'
           notConfirmMessage='Back'
+        />
+        <SnackBarMessage
+          open={openSnackBar}
+          closeSnackbar={() => this.setState({openSnackBar: false})}
+          message={success ? 'Parent form data overwritten' : 'There was an error.'}
+          severity={success ? 'success' : 'error'}
         />
       </div>
     );
