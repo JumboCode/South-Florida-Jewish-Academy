@@ -6,6 +6,9 @@ import {ReactFormBuilder} from 'react-form-builder2';
 import './css/bootstrap.min.css';
 import './css/font-awesome.min.css';
 import DemoBar from './DemoBar';
+import fetch from 'isomorphic-fetch';
+import {Cookies, withCookies} from 'react-cookie';
+import apiUrl from '../../../utils/Env';
 require('./scss/application.scss');
 
 // eslint-disable-next-line require-jsdoc
@@ -14,10 +17,41 @@ class BlankFormBuilder extends React.Component {
   static propTypes = {
     setCreateForm: PropTypes.func,
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentFormID: this.props.history.query,
+      blankFormData: null,
+    };
+  }
+    // eslint-disable-next-line require-jsdoc
+    componentDidMount() {
+      const {cookies} = this.props;
+      const {currentFormID} = this.state;
+      const body = {
+        form_id: currentFormID,
+      };
+      if (currentFormID){
+        fetch(apiUrl() + '/getBlankForm', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${cookies.get('token')}`,
+          },
+          body: JSON.stringify(body),
+        }).then((response) => (response.json()))
+            .then((data) => {
+              this.setState({
+                blankFormData: data.data,
+              });
+            });
+      }
+    }
+
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {setCreateForm} = this.props;
+    const {blankFormData, setCreateForm} = this.props;
     return (
       // eslint-disable-next-line max-len
       <div style={{display: 'flex', justifyContent: 'center', marginLeft: '10%'}}>
@@ -31,9 +65,12 @@ class BlankFormBuilder extends React.Component {
               >
                 back
               </Button>
+              {/* demobar is the bit on the top with name and buttons */}
               {/* eslint-disable-next-line max-len */}
               <DemoBar setCreateForm={setCreateForm} {...this.props}/>
-              <ReactFormBuilder/>
+              {/* conditional render items for if already filled data */}
+              {this.props.history.query ? <ReactFormBuilder data={blankFormData}/> : <ReactFormBuilder/>}
+              }
             </React.Fragment>
           </div>
         </div>
