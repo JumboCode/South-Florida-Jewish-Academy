@@ -20,8 +20,9 @@ class BlankFormBuilder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentFormID: this.props.history.query,
+      currentFormID: this.props.match.params.id,
       blankFormData: null,
+      retrieved: false,
     };
   }
     // eslint-disable-next-line require-jsdoc
@@ -43,15 +44,24 @@ class BlankFormBuilder extends React.Component {
             .then((data) => {
               this.setState({
                 blankFormData: data.data,
+                retrieved: true,
               });
             });
+      } else {
+        this.setState({retrieved: true});
       }
     }
 
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {blankFormData, setCreateForm} = this.props;
+    
+    const { setCreateForm} = this.props;
+    const {blankFormData, retrieved} = this.state;
+    console.log("BLANKFORM ", blankFormData);
+    if (!retrieved){
+      return(<div/>);
+    }
     return (
       // eslint-disable-next-line max-len
       <div style={{display: 'flex', justifyContent: 'center', marginLeft: '10%'}}>
@@ -67,7 +77,7 @@ class BlankFormBuilder extends React.Component {
               </Button>
               {/* demobar is the bit on the top with name and buttons */}
               {/* eslint-disable-next-line max-len */}
-              <DemoBar setCreateForm={setCreateForm} {...this.props}/>
+              <DemoBar data={blankFormData} setCreateForm={setCreateForm} {...this.props}/>
               {/* conditional render items for if already filled data */}
               {this.props.history.query ? <ReactFormBuilder data={blankFormData}/> : <ReactFormBuilder/>}
               }
@@ -80,4 +90,4 @@ class BlankFormBuilder extends React.Component {
 }
 
 
-export default BlankFormBuilder;
+export default withCookies(BlankFormBuilder);
