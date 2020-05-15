@@ -12,29 +12,18 @@ class Auth {
       responseType: 'token',
       scope: 'openid profile',
     });
-    this.getProfile = this.getProfile.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
   }
 
-  getProfile() {
-    return this.profile;
-  }
-
   getToken() {
     return this.token;
   }
 
-  getCallbackURL() {
-    console.log(this)
-    return this.callback;
-  }
-
   isAuthenticated() {
-    return true;
-    // return new Date().getTime() < this.expiresAt;
+    return new Date().getTime() < this.expiresAt;
   }
 
   signIn() {
@@ -44,15 +33,13 @@ class Auth {
   handleAuthentication() {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => {
-        console.log(authResult)
         if (err) return reject(err);
         if (!authResult || !authResult.accessToken) {
           return reject(err);
         }
         this.token = authResult.accessToken;
-        // this.profile = authResult.idTokenPayload;
-        // set the time that the id token will expire at
-        this.expiresAt = authResult.expiresIn * 1000;
+        // set the time that the token will expire at
+        this.expiresAt = new Date().getTime() + authResult.expiresIn * 1000;
         resolve();
       });
     });
@@ -60,7 +47,7 @@ class Auth {
 
   signOut() {
     // clear id token, profile, and expiration
-    this.accessToken = null;
+    this.token = null;
     this.expiresAt = null;
   }
 }
