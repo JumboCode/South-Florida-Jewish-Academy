@@ -77,6 +77,19 @@ def createParent(firstName, lastName, email):
     result = mongo.db.parents.insert_one(initData)
     return result.inserted_id
 
+def getParents():
+    contents = list(mongo.db.parents.find())
+    parents = []
+    for content in contents:
+        info = {
+            'first_name': content['first_name'],
+            'last_name': content['last_name'],
+            'email': content['email'],
+            'student_ids': content['student_ids']
+        }
+        parents.append(info)
+
+    return parents
 
 def addStudentId(id, studentId):
     contents = list(mongo.db.parents.find({'_id': id}))

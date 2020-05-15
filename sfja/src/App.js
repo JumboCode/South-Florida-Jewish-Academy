@@ -9,6 +9,7 @@ import StudentDash from './components/ParentDash/StudentDash';
 import StudentProfile from './components/StudentProfile/StudentProfile';
 // import Dashboard from './components/Dashboard';
 import Students from './components/Students/Students';
+import Parents from './components/Parents/Parents';
 import FormManager from './components/FormManager/FormManager';
 import AddStudent from './components/AddStudent/AddStudent';
 import LoginPage from './components/LoginPage';
@@ -44,12 +45,13 @@ export default function App() {
       >
         <Router>
           <div style={{width: '100vw'}}>
-            <Route path={['/students', '/formManager', '/addStudent', '/audit', '/formViewer', '/administration', '/blankFormBuilder', '/blankFormViewer']} component={Header}/>
+            <Route path={['/students', '/parents', '/formManager', '/addStudent', '/audit', '/formViewer', '/administration', '/blankFormBuilder', '/blankFormViewer']} component={Header}/>
             <Route path={['/parentdash/:parentKey/:studentId', '/parentdash/:parentKey/']} component={ParentHeader} />
             <Switch>
               <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
               <Route exact path="/parentdash/:parentKey/:studentId" component={StudentDash}/>
               <Route exact path="/students" component={Students} />
+              <Route exact path="/parents" component={Parents} />
               <Route exact path="/students/:id" component={StudentProfile} />
               <Route exact path="/students/:studentId/:formId" component={FormViewer} />
               {/* <Route exact path="/dashboard" component={Dashboard} />*/}
