@@ -33,9 +33,8 @@ class DemoBar extends React.Component {
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
-    console.log("constructor", props);
     this.state = {
-      data: props.data,
+      data: [],
       previewVisible: false,
       formName: '',
     };

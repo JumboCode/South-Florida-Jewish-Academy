@@ -77,10 +77,9 @@ class BlankFormBuilder extends React.Component {
               </Button>
               {/* demobar is the bit on the top with name and buttons */}
               {/* eslint-disable-next-line max-len */}
-              <DemoBar data={blankFormData} setCreateForm={setCreateForm} {...this.props}/>
+              <DemoBar setCreateForm={setCreateForm} {...this.props}/>
               {/* conditional render items for if already filled data */}
-              {this.props.history.query ? <ReactFormBuilder data={blankFormData}/> : <ReactFormBuilder/>}
-              }
+              <ReactFormBuilder data={blankFormData}/>
             </React.Fragment>
           </div>
         </div>
