@@ -36,7 +36,7 @@ class DemoBar extends React.Component {
     this.state = {
       data: [],
       previewVisible: false,
-      formName: '',
+      formName: this.props.blankFormName || '',
     };
 
     const update = this._onChange.bind(this);
@@ -74,7 +74,6 @@ class DemoBar extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    console.log("current state render demobar", this.state);
     const {formName, openSuccessSnackBar} = this.state;
     let modalClass = 'modal';
     if (this.state.previewVisible) {
