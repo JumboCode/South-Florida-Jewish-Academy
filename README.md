@@ -39,7 +39,7 @@ Former team members:
 ### Database Priming
 It's necessary to make sure everyone's on the same database version (because people will be adding collections). This makes it necessary for us to reset our databases when we pull new code. This is now as easy as a Python script!
 1. Open your terminal and execute `startDatabase.sh`: `sh startDatabase.sh`
-2. Open up another terminal window and execute `resetDatabase.py`: `python3 resetDatabase.py`
+2. Open up another terminal window and execute `cd bin && python3 resetDatabase.py`
 
 ### Details
 #### Backend
