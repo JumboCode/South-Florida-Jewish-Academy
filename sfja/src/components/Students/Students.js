@@ -25,7 +25,7 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
-
+import auth0Client from '../../utils/Auth';
 const theme = createMuiTheme({
   palette: {
     primary: {main: '#086fb3'},
@@ -66,6 +66,7 @@ class Students extends React.Component {
     };
 
     constructor(props) {
+      console.log('students')
       super(props);
       const {cookies} = this.props;
       const cache = cookies.get('studentsCache');
@@ -126,7 +127,7 @@ class Students extends React.Component {
       fetch(apiUrl() + '/students', {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${auth0Client.getToken()}`,
         },
       })
           .then((res) => res.json())

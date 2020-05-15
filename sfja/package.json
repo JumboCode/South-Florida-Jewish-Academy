@@ -11,6 +11,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.49",
     "@material-ui/pickers": "^3.2.10",
+    "auth0-js": "^9.13.2",
     "beedle": "^0.8.1",
     "bootstrap": "^4.4.1",
     "bootstrap-slider": "^10.6.2",

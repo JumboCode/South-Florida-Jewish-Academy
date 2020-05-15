@@ -273,7 +273,8 @@ def log_action(action):
         @wraps(f)
         def decorated(*args, **kwargs):
             user_info = getUser(get_token_auth_header())
-            usersDOM.createUser(user_info['nickname'], user_info['email'], [])
+            print(user_info)
+            usersDOM.createUser(user_info['nickname'], user_info['name'], [])
             usersDOM.addAction(user_info['nickname'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), action)
             return f(*args, **kwargs)
         return decorated

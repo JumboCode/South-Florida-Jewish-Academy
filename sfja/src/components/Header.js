@@ -11,7 +11,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import {useAuth0} from '../react-auth0-spa';
+import auth0Client from '../utils/Auth';
 /* eslint-disable max-len */
 
 
@@ -22,12 +22,13 @@ const tabs = ['/students', '/formManager', '/addStudent', '/administration'];
 // eslint-disable-next-line require-jsdoc
 export default function Header(props) {
   const [value, setValue] = React.useState(tabs.indexOf(props.match.path) + 1);
-  const {isAuthenticated} = useAuth0();
-  if (isAuthenticated !== undefined && !isAuthenticated) {
-    return (
-      <Redirect to={'/login'}/>
-    );
-  }
+  // if (!auth0Client.isAuthenticated()) {
+  //   auth0Client.signIn();
+  //   return (
+  //     <div/>
+  //     // <Redirect to={'/login'}/>
+  //   );
+  // }
 
   // compatibility for forwards/back buttons
   if (tabs.indexOf(props.match.path) + 1 !== value) {

@@ -20,6 +20,8 @@ import {CookiesProvider} from 'react-cookie';
 import Administration from './components/Administration/Administration';
 import BlankFormBuilder from './components/FormManager/BlankFormBuilder/BlankFormBuilder';
 import PreviewBlankForm from './components/FormManager/PreviewBlankForm';
+import Callback from "./utils/Callback";
+import SecuredRoute from "./utils/SecuredRoute";
 
 // A function that routes the user to the right place
 // after login
@@ -35,36 +37,29 @@ const onRedirectCallback = (appState) => {
 export default function App() {
   return (
     <CookiesProvider>
-      <Auth0Provider
-        domain={config.domain}
-        client_id={config.clientId}
-        redirect_uri={window.location.origin}
-        onRedirectCallback={onRedirectCallback}
-        audience={config.audience}
-      >
-        <Router>
-          <div style={{width: '100vw'}}>
-            <Route path={['/students', '/formManager', '/addStudent', '/audit', '/formViewer', '/administration', '/blankFormBuilder', '/blankFormViewer']} component={Header}/>
-            <Route path={['/parentdash/:parentKey/:studentId', '/parentdash/:parentKey/']} component={ParentHeader} />
-            <Switch>
-              <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
-              <Route exact path="/parentdash/:parentKey/:studentId" component={StudentDash}/>
-              <Route exact path="/students" component={Students} />
-              <Route exact path="/students/:id" component={StudentProfile} />
-              <Route exact path="/students/:studentId/:formId" component={FormViewer} />
-              {/* <Route exact path="/dashboard" component={Dashboard} />*/}
-              <Route exact path="/administration" component={Administration} />
-              <Route exact path="/formManager" component={FormManager} />
-              <Route exact path="/formManager/builder" component={BlankFormBuilder} />
-              <Route exact path="/formManager/viewer/:id" component={PreviewBlankForm} />
-              <Route exact path="/addStudent" component={AddStudent} />
-              <Route exact path="/login" component={LoginPage}/>
-              <Route exact path="/logout" component={Logout}/>
-              <Route component={LoginPage}/>
-            </Switch>
-          </div>
-        </Router>
-      </Auth0Provider>
+      <Router>
+        <div style={{width: '100vw'}}>
+          <Route path={['/students', '/formManager', '/addStudent', '/audit', '/formViewer', '/administration', '/blankFormBuilder', '/blankFormViewer']} component={Header}/>
+          <Route path={['/parentdash/:parentKey/:studentId', '/parentdash/:parentKey/']} component={ParentHeader} />
+          <Switch>
+            <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
+            <Route exact path="/parentdash/:parentKey/:studentId" component={StudentDash}/>
+            <SecuredRoute exact path="/students" component={Students} />
+            <Route exact path="/students/:id" component={StudentProfile} />
+            <Route exact path="/students/:studentId/:formId" component={FormViewer} />
+            {/* <Route exact path="/dashboard" component={Dashboard} />*/}
+            <Route exact path="/administration" component={Administration} />
+            <Route exact path="/formManager" component={FormManager} />
+            <Route exact path="/formManager/builder" component={BlankFormBuilder} />
+            <Route exact path="/formManager/viewer/:id" component={PreviewBlankForm} />
+            <Route exact path="/addStudent" component={AddStudent} />
+            <Route exact path="/login" component={LoginPage}/>
+            <Route exact path="/logout" component={Logout}/>
+            <Route exact path="/callback" component={Callback}/>
+            <Route component={LoginPage}/>
+          </Switch>
+        </div>
+      </Router>
     </CookiesProvider>
 
   );
