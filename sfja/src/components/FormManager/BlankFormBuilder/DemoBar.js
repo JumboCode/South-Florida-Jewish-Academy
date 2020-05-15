@@ -36,7 +36,7 @@ class DemoBar extends React.Component {
     this.state = {
       data: [],
       previewVisible: false,
-      formName: '',
+      formName: this.props.blankFormName || '',
     };
 
     const update = this._onChange.bind(this);
