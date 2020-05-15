@@ -65,7 +65,7 @@ class BlankFormBuilder extends React.Component {
                 <Button
                   variant='contained'
                   onClick={() => this.props.history.goBack()}
-                  style={{marginTop: 30}}
+                  style={{marginTop: 30, marginBottom: 10}}
                 >
                   back
                 </Button>
