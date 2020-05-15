@@ -1,6 +1,5 @@
 import React from 'react';
 import {useAuth0} from '../react-auth0-spa';
-import './LoginPage.css';
 import CircleLogo from '../assets/CircleLogo.png';
 import {Redirect} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
@@ -53,38 +52,66 @@ const LoginPage = () => {
     });
   }
   return (
-    <div>
-      <h1>
-        South Florida Jewish Academy
-      </h1>
-      <h6>
-        Kindergarten to Grade 12, give your child
-        <br/>the best Education
-      </h6>
-      <br/>
-      <div style={boxStyle}>
-        <Paper
-          elevation={5}
-          style={{width: 350}}>
-          <div style={imageStyle}>
-            <img src={CircleLogo}/>
-          </div>
-          <p>Administration Login </p>
-          <hr/>
-          <div style={buttonBoxStyle}>
-            <Button
-              variant={'contained'}
-              size={'large'}
-              style={buttonStyle}
-              onClick={() => loginWithPopup({})}>
-              log in
-            </Button>
-          </div>
-        </Paper>
+    <div style={{
+      fontFamily: 'Futura',
+      textAlign: 'center',
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+      }}>
+        <div style={{
+          marginTop: 40,
+          fontSize: 50,
+          color: '#0068af',
+        }}>
+          South Florida Jewish Academy
+        </div>
+        <div style={{
+          fontSize: 25,
+          marginTop: 30,
+        }}>
+          Kindergarten to Grade 12, give your child
+          <br/>the best Education
+        </div>
+        <br/>
+        <div style={boxStyle}>
+          <Paper
+            elevation={5}
+            style={{width: 350, marginTop: 30}}>
+            <div style={imageStyle}>
+              <img src={CircleLogo}/>
+            </div>
+            <div style={{
+              fontSize: 30,
+              marginTop: 20,
+            }}
+            >Administration Login </div>
+            <hr/>
+            <div style={buttonBoxStyle}>
+              <Button
+                variant={'contained'}
+                size={'large'}
+                style={buttonStyle}
+                onClick={() => loginWithPopup({})}>
+                log in
+              </Button>
+            </div>
+          </Paper>
+        </div>
       </div>
-      <div className="bottom_message">
-        Looking for your student&apos;s form? <br/>
-        Check your email or contact administration for more information.
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+      }}>
+        <div style={{
+          position: 'absolute',
+          bottom: 20,
+        }}>
+          Looking for your student&apos;s form? <br/>
+          Check your email or contact administration for more information.
+        </div>
       </div>
 
     </div>
