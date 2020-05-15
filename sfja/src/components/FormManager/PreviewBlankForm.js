@@ -97,7 +97,7 @@ class PreviewBlankForm extends React.Component {
 
     // eslint-disable-next-line require-jsdoc
     render() {
-      const {blankFormData, newName, openSuccessMessage, openFailureMessage, oldName} = this.state;
+      const {blankFormData, newName, currentFormID, openSuccessMessage, openFailureMessage, oldName} = this.state;
       return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <div style={{minWidth: 650, marginTop: 30}}>
@@ -107,6 +107,13 @@ class PreviewBlankForm extends React.Component {
               variant='contained'
             >
               Back
+            </Button>
+            <Button
+              style={{marginBottom: 20, float: 'right'}}
+              onClick={() => this.props.history.push('/formManager/builder/' + currentFormID)}
+              variant='contained'
+            >
+              Edit Duplicate
             </Button>
             <Paper elevation={2} style={{padding: 20}}>
               <div style={{paddingBottom: 10, fontSize: 25}}>

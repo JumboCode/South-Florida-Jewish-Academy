@@ -74,6 +74,7 @@ class DemoBar extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
+    console.log("current state render demobar", this.state);
     const {formName, openSuccessSnackBar} = this.state;
     let modalClass = 'modal';
     if (this.state.previewVisible) {
