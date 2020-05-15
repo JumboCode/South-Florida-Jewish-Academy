@@ -2,14 +2,14 @@
 import React from 'react';
 import fetch from 'isomorphic-fetch';
 import TextField from '@material-ui/core/TextField';
-import PropTypes, {instanceOf} from 'prop-types';
+import PropTypes from 'prop-types';
 import {Button} from '@material-ui/core';
-import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import Paper from '@material-ui/core/Paper';
 import {ReactFormGenerator} from 'react-form-builder2';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import {CircularProgress} from '@material-ui/core';
+import auth0Client from '../../utils/Auth';
 
 const textSize = {
   style: {fontSize: 15},
@@ -22,7 +22,6 @@ class PreviewBlankForm extends React.Component {
       formsList: PropTypes.any,
       currentFormID: PropTypes.any,
       setViewForm: PropTypes.func,
-      cookies: instanceOf(Cookies).isRequired,
       openFailureMessage: false,
       openSuccessMessage: false,
     };
@@ -38,7 +37,6 @@ class PreviewBlankForm extends React.Component {
 
     // eslint-disable-next-line require-jsdoc
     componentDidMount() {
-      const {cookies} = this.props;
       const {currentFormID} = this.state;
       const body = {
         form_id: currentFormID,
@@ -48,7 +46,7 @@ class PreviewBlankForm extends React.Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${auth0Client.getToken()}`,
         },
         body: JSON.stringify(body),
       }).then((response) => (response.json()))
@@ -74,7 +72,7 @@ class PreviewBlankForm extends React.Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${auth0Client.getToken()}`,
         },
         body: JSON.stringify(body),
       }).then((response) => {
@@ -165,4 +163,4 @@ class PreviewBlankForm extends React.Component {
       );
     }
 }
-export default withCookies(PreviewBlankForm);
+export default PreviewBlankForm;

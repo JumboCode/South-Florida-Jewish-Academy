@@ -45,15 +45,15 @@ export default function App() {
             <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
             <Route exact path="/parentdash/:parentKey/:studentId" component={StudentDash}/>
             <SecuredRoute exact path="/students" component={Students} />
-            <Route exact path="/students/:id" component={StudentProfile} />
-            <Route exact path="/students/:studentId/:formId" component={FormViewer} />
+            <SecuredRoute exact path="/students/:id" component={StudentProfile} />
+            <SecuredRoute exact path="/students/:studentId/:formId" component={FormViewer} />
             {/* <Route exact path="/dashboard" component={Dashboard} />*/}
-            <Route exact path="/administration" component={Administration} />
-            <Route exact path="/formManager" component={FormManager} />
-            <Route exact path="/formManager/builder" component={BlankFormBuilder} />
-            <Route exact path="/formManager/viewer/:id" component={PreviewBlankForm} />
-            <Route exact path="/addStudent" component={AddStudent} />
-            <Route exact path="/login" component={LoginPage}/>
+            <SecuredRoute exact path="/administration" component={Administration} />
+            <SecuredRoute exact path="/formManager" component={FormManager} />
+            <SecuredRoute exact path="/formManager/builder" component={BlankFormBuilder} />
+            <SecuredRoute exact path="/formManager/viewer/:id" component={PreviewBlankForm} />
+            <SecuredRoute exact path="/addStudent" component={AddStudent} />
+            <SecuredRoute exact path="/login" component={LoginPage}/>
             <Route exact path="/logout" component={Logout}/>
             <Route exact path="/callback" component={Callback}/>
             <Route component={LoginPage}/>

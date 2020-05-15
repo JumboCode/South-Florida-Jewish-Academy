@@ -1,18 +1,17 @@
 /* eslint-disable max-len,react/prop-types */
 import React from 'react';
-import PropTypes, {instanceOf} from 'prop-types';
-import {Cookies, withCookies} from 'react-cookie';
+import PropTypes from 'prop-types';
 import apiUrl from '../../utils/Env';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import {Redirect} from 'react-router-dom';
+import auth0Client from '../../utils/Auth';
 
 // eslint-disable-next-line require-jsdoc
 class AdminZone extends React.Component {
   static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
     studentId: PropTypes.string,
   };
   // eslint-disable-next-line require-jsdoc
@@ -28,7 +27,7 @@ class AdminZone extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   deleteStudent() {
-    const {cookies, studentId} = this.props;
+    const {studentId} = this.props;
     const body = {
       id: studentId,
     };
@@ -36,7 +35,7 @@ class AdminZone extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify(body),
@@ -110,4 +109,4 @@ class AdminZone extends React.Component {
   }
 }
 
-export default withCookies(AdminZone);
+export default AdminZone;

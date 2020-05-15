@@ -306,7 +306,7 @@ class Students extends React.Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${auth0Client.getToken()}`,
         },
         body: JSON.stringify(body),
       }).then((x) => {

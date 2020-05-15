@@ -18,8 +18,8 @@ import {
   DialogContentText,
   DialogActions,
 } from '@material-ui/core';
-import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
+import auth0Client from '../../utils/Auth';
 
 const textSize = {
   fontSize: '13px',
@@ -29,7 +29,6 @@ const textSize = {
 class FormManager extends React.Component {
   static propTypes = {
     formsList: PropTypes.any,
-    cookies: instanceOf(Cookies).isRequired,
   };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
@@ -47,11 +46,10 @@ class FormManager extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   fetchData() {
-    const {cookies} = this.props;
     fetch(apiUrl() + '/getBlankFormDetails', {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
     })
         .then((res) => res.json())
@@ -63,7 +61,6 @@ class FormManager extends React.Component {
   // eslint-disable-next-line require-jsdoc
   trashForm() {
     const {formToTrash} = this.state;
-    const {cookies} = this.props;
     const body = {
       form_id: formToTrash,
     };
@@ -71,7 +68,7 @@ class FormManager extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
@@ -207,4 +204,4 @@ class FormManager extends React.Component {
   }
 }
 
-export default withCookies(FormManager);
+export default FormManager;

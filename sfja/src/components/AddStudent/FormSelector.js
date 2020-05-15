@@ -1,13 +1,12 @@
 import React from 'react';
 import {List, ListItem, ListItemIcon, Checkbox} from '@material-ui/core';
-import {instanceOf, PropTypes} from 'prop-types';
-import {withCookies, Cookies} from 'react-cookie';
+import {PropTypes} from 'prop-types';
 import apiUrl from '../../utils/Env';
+import auth0Client from '../../utils/Auth';
 
 // eslint-disable-next-line require-jsdoc
 class FormSelector extends React.Component {
   static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
     submitTime: PropTypes.any,
   };
 
@@ -22,11 +21,10 @@ class FormSelector extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    const {cookies} = this.props;
     fetch(apiUrl() + '/getAllForms', {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
     }).then((res) => res.json()).then((result) => {
       const newForms = [];
@@ -151,4 +149,4 @@ class FormSelector extends React.Component {
   }
 }
 
-export default withCookies(FormSelector);
+export default FormSelector;

@@ -1,17 +1,16 @@
 /* eslint-disable max-len */
 import React from 'react';
-import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import PropTypes, {instanceOf} from 'prop-types';
+import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import {Button} from '@material-ui/core';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
+import auth0Client from '../../utils/Auth';
 
 // eslint-disable-next-line require-jsdoc
 class DeleteArchived extends React.Component {
   static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
     numArchived: PropTypes.number,
   };
 
@@ -28,7 +27,6 @@ class DeleteArchived extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   deleteArchivedStudents() {
-    const {cookies} = this.props;
     this.setState({
       showConfirmation: false,
     });
@@ -36,7 +34,7 @@ class DeleteArchived extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
     }).then((response) => (response.json()))
         .then((data) => {
@@ -97,4 +95,4 @@ class DeleteArchived extends React.Component {
     );
   }
 }
-export default withCookies(DeleteArchived);
+export default DeleteArchived;

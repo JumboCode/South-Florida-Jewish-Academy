@@ -1,4 +1,6 @@
+/* eslint-disable */
 import auth0 from 'auth0-js';
+import uiUrl from "./UIEnv";
 
 
 class Auth {
@@ -8,7 +10,7 @@ class Auth {
       domain: 'sfja.auth0.com',
       audience: 'https://api.sfjaadmin.org',
       clientID: '9HXnU45l0cn7eY1z02NGoGy5cWbiBxRQ',
-      redirectUri: 'http://localhost:3000/callback',
+      redirectUri: uiUrl() + '/callback',
       responseType: 'token',
       scope: 'openid profile',
     });

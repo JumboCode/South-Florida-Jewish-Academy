@@ -1,7 +1,5 @@
 /* eslint-disable max-len,react/prop-types */
 import React from 'react';
-import {instanceOf} from 'prop-types';
-import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import {ReactFormGenerator} from 'react-form-builder2';
@@ -12,12 +10,10 @@ import MuiAlert from '@material-ui/lab/Alert';
 import {CircularProgress} from '@material-ui/core';
 import Switch from '@material-ui/core/Switch';
 import SnackBarMessage from '../../utils/SnackBarMessage';
+import auth0Client from '../../utils/Auth';
 
 // eslint-disable-next-line require-jsdoc
 class FormViewer extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -45,7 +41,7 @@ class FormViewer extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
       body: JSON.stringify(body),
     }).then((res) => res.json())
@@ -85,7 +81,7 @@ class FormViewer extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify(body),
@@ -218,4 +214,4 @@ class FormViewer extends React.Component {
   }
 }
 
-export default withCookies(FormViewer);
+export default FormViewer;

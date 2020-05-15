@@ -1,13 +1,12 @@
 /* eslint-disable max-len */
 import React from 'react';
-import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {instanceOf} from 'prop-types';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import Paper from '@material-ui/core/Paper';
 import {TextField} from '@material-ui/core';
 import {Button} from '@material-ui/core';
+import auth0Client from '../../utils/Auth';
 
 const textSize = {
   style: {fontSize: 15},
@@ -24,10 +23,6 @@ const textWidth = {
 
 // eslint-disable-next-line require-jsdoc
 class ChangeGrades extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
-
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -41,7 +36,6 @@ class ChangeGrades extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   changeGrade() {
-    const {cookies} = this.props;
     const {difference} = this.state;
     const body = {
       difference: difference,
@@ -51,7 +45,7 @@ class ChangeGrades extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
       body: JSON.stringify(body),
     }).then((x) => {
@@ -130,4 +124,4 @@ class ChangeGrades extends React.Component {
     );
   }
 }
-export default withCookies(ChangeGrades);
+export default ChangeGrades;

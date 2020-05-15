@@ -1,7 +1,5 @@
 import React from 'react';
-import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {instanceOf} from 'prop-types';
 import ChangeGrades from './ChangeGrades';
 import AuthMessage from './AuthMessage';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -9,13 +7,10 @@ import DataExports from './DataExports';
 import Audit from './Audit';
 import DeleteArchived from './DeleteArchived';
 import ClearLogins from './ClearLogins';
+import auth0Client from '../../utils/Auth';
 
 // eslint-disable-next-line require-jsdoc
 class Administration extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
-
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -29,11 +24,10 @@ class Administration extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    const {cookies} = this.props;
     fetch(apiUrl() + '/checkRoleAdmin', {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
     }).then((response) => (response.json()))
         .then((data) => {
@@ -120,4 +114,4 @@ class Administration extends React.Component {
     );
   }
 }
-export default withCookies(Administration);
+export default Administration;

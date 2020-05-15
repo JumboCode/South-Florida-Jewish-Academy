@@ -1,7 +1,6 @@
 /* eslint-disable max-len,require-jsdoc */
 import React from 'react';
-import Proptypes, {instanceOf} from 'prop-types';
-import {Cookies, withCookies} from 'react-cookie';
+import Proptypes from 'prop-types';
 import {Button, Checkbox, List, ListItem, ListItemIcon, Paper} from '@material-ui/core';
 import CommentIcon from '@material-ui/icons/Comment';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,6 +11,7 @@ import ConfirmationDialog from './ConfirmationDialog';
 import MessageBox from './MessageBox';
 import CommentDialog from './CommentDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
+import auth0Client from '../../utils/Auth';
 
 // eslint-disable-next-line require-jsdoc
 class ResendForms extends React.Component {
@@ -19,7 +19,6 @@ class ResendForms extends React.Component {
     studentId: Proptypes.string,
     blankForms: Proptypes.array,
     studentForms: Proptypes.array,
-    cookies: instanceOf(Cookies).isRequired,
     parents: Proptypes.array,
     updateStudentProfile: Proptypes.func,
     archived: Proptypes.bool,
@@ -62,7 +61,7 @@ class ResendForms extends React.Component {
   }
   resendForms() {
     const {comments, message, forms} = this.state;
-    const {studentId, cookies, updateStudentProfile} = this.props;
+    const {studentId, updateStudentProfile} = this.props;
     const body = {
       comments: comments,
       message: message,
@@ -73,7 +72,7 @@ class ResendForms extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${auth0Client.getToken()}`,
       },
       body: JSON.stringify(body),
     }).then((response) => {
@@ -275,5 +274,5 @@ class ResendForms extends React.Component {
   }
 }
 
-export default withCookies(ResendForms);
+export default ResendForms;
 
