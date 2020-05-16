@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types,max-len */
 import React from 'react';
-import {Button} from '@material-ui/core';
+import {Button, CircularProgress} from '@material-ui/core';
 import {ReactFormBuilder} from 'react-form-builder2';
 import './css/bootstrap.min.css';
 import './css/font-awesome.min.css';
@@ -53,29 +53,34 @@ class BlankFormBuilder extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {blankFormData, retrieved, blankFormName} = this.state;
-    return (<div>
-      {retrieved &&
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginLeft: '10%'}}>
-          <div style={{width: '100%', maxWidth: 1000}}>
-            <div className="fm-container" >
-              <React.Fragment>
-                <Button
-                  variant='contained'
-                  onClick={() => this.props.history.goBack()}
-                  style={{marginTop: 30, marginBottom: 10}}
-                >
-                  back
-                </Button>
-                <DemoBar blankFormName={blankFormName} {...this.props}/>
-                <ReactFormBuilder data={blankFormData}/>
-              </React.Fragment>
-            </div>
-          </div>
+
+    if (!retrieved) {
+      return (
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 100}}>
+          <CircularProgress/>
         </div>
-      }
+      );
+    }
+    return (<div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      marginLeft: '10%',
+    }}>
+      <div style={{width: '100%', maxWidth: 1000}}>
+        <div className="fm-container">
+          <React.Fragment>
+            <Button
+              variant='contained'
+              onClick={() => this.props.history.goBack()}
+              style={{marginTop: 30, marginBottom: 10}}
+            >
+                      back
+            </Button>
+            <DemoBar blankFormName={blankFormName} {...this.props}/>
+            <ReactFormBuilder data={blankFormData}/>
+          </React.Fragment>
+        </div>
+      </div>
     </div>);
   }
 }
