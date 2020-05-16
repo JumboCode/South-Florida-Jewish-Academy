@@ -21,7 +21,7 @@ function sortGrades(a, b) {
       return 0;
     }
   } else {
-    return aSplit[1] < bSplit[1];
+    return aSplit[1] - bSplit[1];
   }
 }
 
