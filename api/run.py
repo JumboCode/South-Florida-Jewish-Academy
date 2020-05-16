@@ -175,7 +175,11 @@ def getParentInfo():
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    parentId = parentsDOM.get(currLink=curr_link)
+    try:
+        parentId = parentsDOM.get(currLink=curr_link)
+    except AssertionError as e:
+        raise AuthError({'wrong link': True}, 401)
+    
     all_student_ids = parentsDOM.getStudentIds(parentId)
     unarchived_student_ids = []
     for id in all_student_ids:
@@ -193,6 +197,10 @@ def getStudentsOfParent():
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
     student_id = ObjectId(request.json['student_id'])
+
+    if studentsDOM.isArchived(student_id):
+        raise AuthError({'archived': True}, 401)
+
     form_ids = studentsDOM.getAllFormIds(student_id)
     form_data = []
     for id in form_ids:

@@ -24,8 +24,6 @@ class ParentHeader extends React.Component {
       value: null,
       parentKey: this.props.match.params.parentKey,
     };
-
-    console.log(this.props.match);
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -34,7 +32,8 @@ class ParentHeader extends React.Component {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({curr_link: this.state.parentKey}),
-    }).then((res) => res.json())
+    }).then((response) => response.status === 200 ? response : null)
+        .then((res) => res.json())
         .then((data) => {
           this.setState({
             students: data.students,
