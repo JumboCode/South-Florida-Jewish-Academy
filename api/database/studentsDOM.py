@@ -158,7 +158,7 @@ def addNewFormId(id, newFormId):
 def addNewFile(id, newFileId,newFileName):
     contents = list(mongo.db.students.find({'_id': id}))
     if len(contents) != 1:
-        return False
+        assert len(contents) == 1
     
     oldFiles = []
     for content in contents:
@@ -182,7 +182,6 @@ def deleteFile(id, newFileId):
             oldFiles.remove(oldFile)
 
     mongo.db.students.update({'_id': id}, {'$set': {'files': oldFiles}})
-    # print("this is oldFiles ", oldFiles)
     return oldFiles
 
 def getFiles(id):

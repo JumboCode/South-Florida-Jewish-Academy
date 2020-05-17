@@ -99,8 +99,7 @@ class DocumentUpload extends React.Component {
             selectedFile: null,
           });
         })
-        ;
-
+    ;
   }
   // eslint-disable-next-line require-jsdoc
   downloadData(file_id, file_name) {

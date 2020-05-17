@@ -32,7 +32,6 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx'}
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
-# fs = gridfs.GridFS(db)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -48,7 +47,6 @@ ALGORITHMS = ["RS256"]
 
 # we store users here to prevent 429s from Auth0
 tokensAndUsers = {}
-
 
 # big thanks to https://auth0.com/docs/quickstart/backend/python/01-authorization?download=true
 # Format error response and append status code.
@@ -434,10 +432,10 @@ def getStudentProfile():
         forms.append(curr_form_data)
 
 
-        parentIds = studentsDOM.getParents(studentID)
-        parents = []
-        for parentId in parentIds:
-            parents.append(parentsDOM.getParentProfile(parentId))
+    parentIds = studentsDOM.getParents(studentID)
+    parents = []
+    for parentId in parentIds:
+        parents.append(parentsDOM.getParentProfile(parentId))
 
     return {
         'forms': forms,
@@ -591,17 +589,13 @@ def getBlankForm():
     return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
 
 '''====================== UPLOAD FILE ======================'''
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @app.route('/saveImage', methods=['POST'])
 @requires_auth
 @log_action('Uploaded File')
 def saveImg():
     studentId = ObjectId(request.args.get('studentId'))
-    # if request.method == 'POST':
-        # check if the post request has the file part
+
+    # check if the post request has the file part
     if 'file' not in request.files:
         return '0'
     file = request.files['file']
@@ -609,7 +603,7 @@ def saveImg():
     # # submit an empty part without filename
     if file.filename == '':
         return '0'
-    if file and allowed_file(file.filename):
+    if file:
         filename = secure_filename(file.filename)
         file.save(filename)
         with open(filename , "rb") as byteFile:
