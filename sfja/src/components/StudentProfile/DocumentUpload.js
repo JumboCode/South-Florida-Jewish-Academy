@@ -3,7 +3,6 @@
 import React from 'react';
 import apiUrl from '../../utils/Env';
 import SnackBarMessage from '../../utils/SnackBarMessage';
-import {Button} from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -17,6 +16,7 @@ import {instanceOf} from 'prop-types';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
+import {CircularProgress, Button} from '@material-ui/core';
 
 const textSize = {
   fontSize: '13px',
@@ -32,8 +32,8 @@ class DocumentUpload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedFile: null,
       files: null,
-      files2: null,
       openSuccessMessage: false,
       openDeleteMessage: false,
       name: null,
@@ -56,23 +56,20 @@ class DocumentUpload extends React.Component {
         .then((res) => res.json())
         .then((data) => {
           this.setState({
-            files2: data.files,
+            files: data.files,
           });
         })
         .catch(console.log);
   }
   // eslint-disable-next-line require-jsdoc
   handleImageUpload() {
-    const {cookies} = this.props;
-    const {files}= this.state;
-    const {studentId} = this.props;
-    console.log(files);
-    if (files === null || files.length !== 1 ) {
+    const {cookies, studentId} = this.props;
+    const {selectedFile}= this.state;
+    if (selectedFile === null || selectedFile.length !== 1 ) {
       return;
     }
     const formData = new FormData();
-    console.log(files);
-    formData.append('file', files[0]);
+    formData.append('file', selectedFile[0]);
 
     fetch(apiUrl() + '/saveImage?studentId='+ studentId, {
       method: 'POST',
@@ -83,9 +80,8 @@ class DocumentUpload extends React.Component {
     })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           this.setState({
-            files2: data.files,
+            files: data.files,
             openSuccessMessage: true,
             name: null,
             success: true,
@@ -97,8 +93,14 @@ class DocumentUpload extends React.Component {
             openSuccessMessage: true,
           });
           console.error(error);
-        });
-    // this.setState({openSuccessMessage: true, name: null});
+        })
+        .finally(() => {
+          this.setState({
+            selectedFile: null,
+          });
+        })
+        ;
+
   }
   // eslint-disable-next-line require-jsdoc
   downloadData(file_id, file_name) {
@@ -138,9 +140,8 @@ class DocumentUpload extends React.Component {
     })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           this.setState({
-            files2: data.files,
+            files: data.files,
           });
         })
         .catch((error) => {
@@ -151,9 +152,14 @@ class DocumentUpload extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    console.log(this.state);
-    const {success, openSuccessMessage, openDeleteMessage, files, files2, name, openConfirmationDialog} = this.state;
-
+    const {success, openSuccessMessage, openDeleteMessage, files, selectedFile, name, openConfirmationDialog} = this.state;
+    if (!files) {
+      return (
+        <div style={{display: 'flex', justifyContent: 'center', padding: 40}}>
+          <CircularProgress/>
+        </div>
+      );
+    }
     return (
       <div>
         <div
@@ -190,7 +196,7 @@ class DocumentUpload extends React.Component {
             >
               Choose File
               <input type="file" id="fileUpload" style={{display: 'none'}} onChange={(e)=>{
-                this.setState({files: e.target.files, name: e.target.files[0].name});
+                this.setState({selectedFile: e.target.files, name: e.target.files[0].name});
               }}/>
             </Button>
           </div>
@@ -200,13 +206,13 @@ class DocumentUpload extends React.Component {
             style={{
               display: 'flex',
             }}>
-            <Button component="label" variant="contained" size="large" disabled={files === null || files.length !== 1 }onClick={this.handleImageUpload.bind(this)}>
+            <Button component="label" variant="contained" size="large" disabled={selectedFile === null || selectedFile.length !== 1 } onClick={this.handleImageUpload.bind(this)}>
                       Add Document
             </Button>
 
           </div>
         </div>
-        {files2 != null ? (
+        {files != null ? (
           <TableContainer component={Paper} style={{padding: 20}}>
             <Table size = 'large'>
               <TableHead>
@@ -218,7 +224,7 @@ class DocumentUpload extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {files2.map((file) => (
+                {files.map((file) => (
                   <TableRow key={file['file_id']}>
                     <TableCell style={textSize} align = "left">{file['file_name']}</TableCell>
                     <TableCell style={textSize} align = "left" >{file['file_id']}</TableCell>
