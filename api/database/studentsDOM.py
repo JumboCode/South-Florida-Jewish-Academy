@@ -176,12 +176,15 @@ def deleteFile(id, newFileId):
     for content in contents:
         oldFiles = content['files']
 
-    print("this is oldFiles ", oldFiles)
+    
     for oldFile in oldFiles:
         if oldFile['fileId'] == newFileId:
             oldFiles.remove(oldFile)
+
     mongo.db.students.update({'_id': id}, {'$set': {'files': oldFiles}})
+    # print("this is oldFiles ", oldFiles)
     return oldFiles
+
 def getFiles(id):
     contents = list(mongo.db.students.find({'_id': id}))
     if len(contents) != 1:

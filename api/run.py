@@ -576,47 +576,63 @@ def addForm():
     form_name = request.json['formName']
     blankFormsDOM.createForm(form_name, data)
     return '0'
+
+@app.route('/forms', methods = ['GET', 'POST'])
+@requires_auth
+@log_action('Get forms')
+def getForms():
+    return {'forms': FormsDOM.getForms()}
+
+@app.route('/getBlankForm', methods = ['GET', 'POST'])
+@requires_auth
+@log_action('Get blank form')
+def getBlankForm():
+    blankForm_id = ObjectId(request.json['form_id'])
+    return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
+
 '''====================== UPLOAD FILE ======================'''
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/saveImage', methods=['POST'])
-# @requires_auth
+@requires_auth
+@log_action('Uploaded File')
 def saveImg():
     studentId = ObjectId(request.args.get('studentId'))
-    if request.method == 'POST':
+    # if request.method == 'POST':
         # check if the post request has the file part
-        if 'file' not in request.files:
-            return '0'
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            return '0'
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(filename)
-            with open(filename , "rb") as byteFile:
-                f = byteFile.read()
-                fileId = fs.put(f)
-                print(fileId)
-                studentsDOM.addNewFile(studentId, fileId,filename)
-                studentId = ObjectId(request.args.get('studentId'))
-                files = studentsDOM.getFiles(studentId)
+    if 'file' not in request.files:
+        return '0'
+    file = request.files['file']
+    # # if user does not select file, browser also
+    # # submit an empty part without filename
+    if file.filename == '':
+        return '0'
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(filename)
+        with open(filename , "rb") as byteFile:
+            f = byteFile.read()
+            fileId = fs.put(f)
+            print(fileId)
+            studentsDOM.addNewFile(studentId, fileId,filename)
+            studentId = ObjectId(request.args.get('studentId'))
+            files = studentsDOM.getFiles(studentId)
 
-                cleanFiles=[]
+            cleanFiles=[]
 
-                for file in files:
-                    tempDict ={}
-                    tempDict['file_id'] = str(file['fileId'])
-                    tempDict['file_name'] = file['filename']
-                    cleanFiles.append(tempDict)
-                
-                return{'files': cleanFiles}
-    return '0'
+            for file in files:
+                tempDict ={}
+                tempDict['file_id'] = str(file['fileId'])
+                tempDict['file_name'] = file['filename']
+                cleanFiles.append(tempDict)
+            
+            return{'files': cleanFiles}
 
 @app.route('/getFiles', methods=['POST'])
+@requires_auth
+@log_action('Get File')
 def getFiles():
     studentId = ObjectId(request.args.get('studentId'))
     files = studentsDOM.getFiles(studentId)
@@ -648,27 +664,22 @@ def downloadFile():
 
 @app.route('/deleteFile', methods=['POST'])
 @requires_auth
-@log_action('Delted File')
+@log_action('Deleted File')
 def deleteFile():
     print("in here!")
     file_id = ObjectId(request.json['file_id'])
     student_id = ObjectId(request.json['studentId'])
     fs.delete(file_id)
-    new_files = studentsDOM.deleteFile(student_id,file_id)
-    return{'files': new_files}
+    files = studentsDOM.deleteFile(student_id,file_id)
 
-@app.route('/forms', methods = ['GET', 'POST'])
-@requires_auth
-@log_action('Get forms')
-def getForms():
-    return {'forms': FormsDOM.getForms()}
+    cleanFiles=[]
+    for file in files:
+        tempDict = {}
+        tempDict['file_id'] = str(file['fileId'])
+        tempDict['file_name'] = file['filename']
+        cleanFiles.append(tempDict)
 
-@app.route('/getBlankForm', methods = ['GET', 'POST'])
-@requires_auth
-@log_action('Get blank form')
-def getBlankForm():
-    blankForm_id = ObjectId(request.json['form_id'])
-    return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
+    return{'files': cleanFiles}
 
 '''======================  ADD STUDENT ======================'''
 

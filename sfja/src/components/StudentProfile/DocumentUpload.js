@@ -16,6 +16,7 @@ import {Cookies, withCookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ConfirmationDialog from '../../utils/ConfirmationDialog';
 
 const textSize = {
   fontSize: '13px',
@@ -36,13 +37,21 @@ class DocumentUpload extends React.Component {
       openSuccessMessage: false,
       openDeleteMessage: false,
       name: null,
+      toDelete: null,
+      openConfirmationDialog: false,
+      success: false,
     };
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
+    const {cookies} = this.props;
     const {studentId} = this.props;
     fetch(apiUrl() + '/getFiles?studentId='+ studentId, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
     })
         .then((res) => res.json())
         .then((data) => {
@@ -54,6 +63,7 @@ class DocumentUpload extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   handleImageUpload() {
+    const {cookies} = this.props;
     const {files}= this.state;
     const {studentId} = this.props;
     console.log(files);
@@ -66,6 +76,9 @@ class DocumentUpload extends React.Component {
 
     fetch(apiUrl() + '/saveImage?studentId='+ studentId, {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
       body: formData,
     })
         .then((response) => response.json())
@@ -73,13 +86,19 @@ class DocumentUpload extends React.Component {
           console.log(data);
           this.setState({
             files2: data.files,
+            openSuccessMessage: true,
+            name: null,
+            success: true,
           });
         })
         .catch((error) => {
+          this.setState({
+            success: false,
+            openSuccessMessage: true,
+          });
           console.error(error);
         });
-    document.getElementById('fileUpload').value = '';
-    this.setState({openSuccessMessage: true, name: null});
+    // this.setState({openSuccessMessage: true, name: null});
   }
   // eslint-disable-next-line require-jsdoc
   downloadData(file_id, file_name) {
@@ -101,11 +120,11 @@ class DocumentUpload extends React.Component {
         });
   }
   // eslint-disable-next-line require-jsdoc
-  deleteData(file_id) {
+  deleteData() {
     const {cookies} = this.props;
     const {studentId} = this.props;
     const body = {
-      file_id: file_id,
+      file_id: this.state.toDelete,
       studentId: studentId,
     };
 
@@ -133,35 +152,18 @@ class DocumentUpload extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     console.log(this.state);
-    const {openSuccessMessage, openDeleteMessage, files, files2, name} = this.state;
+    const {success, openSuccessMessage, openDeleteMessage, files, files2, name, openConfirmationDialog} = this.state;
 
     return (
       <div>
         <div
           style={{
             display: 'flex',
-            justifyContent: 'center',
+            justifyContent: 'flex-end',
             flexDirection: 'row',
             flexWrap: 'wrap',
             margin: 20,
           }}>
-          <div
-            style={{
-              display: 'flex',
-              marginRight: 20,
-            }}>
-            <Button
-              variant="contained"
-              component="label"
-              size="large"
-            >
-              Choose File
-              <input type="file" id="fileUpload" style={{display: 'none'}} onChange={(e)=>{
-                this.setState({files: e.target.files, name: e.target.files[0].name});
-              }}/>
-            </Button>
-          </div>
-
           <div
             style={{
               display: 'flex',
@@ -181,13 +183,31 @@ class DocumentUpload extends React.Component {
               display: 'flex',
               marginRight: 20,
             }}>
+            <Button
+              variant="contained"
+              component="label"
+              size="large"
+            >
+              Choose File
+              <input type="file" id="fileUpload" style={{display: 'none'}} onChange={(e)=>{
+                this.setState({files: e.target.files, name: e.target.files[0].name});
+              }}/>
+            </Button>
+          </div>
+
+
+          <div
+            style={{
+              display: 'flex',
+            }}>
             <Button component="label" variant="contained" size="large" disabled={files === null || files.length !== 1 }onClick={this.handleImageUpload.bind(this)}>
                       Add Document
             </Button>
+
           </div>
         </div>
         {files2 != null ? (
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} style={{padding: 20}}>
             <Table size = 'large'>
               <TableHead>
                 <TableRow >
@@ -202,23 +222,48 @@ class DocumentUpload extends React.Component {
                   <TableRow key={file['file_id']}>
                     <TableCell style={textSize} align = "left">{file['file_name']}</TableCell>
                     <TableCell style={textSize} align = "left" >{file['file_id']}</TableCell>
-                    <TableCell style={textSize} align = "center" onClick={()=> {
-                      this.downloadData(file['file_id'], file['file_name']);
-                    }}><CloudDownloadIcon fontSize='large'/></TableCell>
-                    <TableCell style={textSize} align = "center" onClick={()=> {
-                      this.deleteData(file['file_id']);
-                    }}><DeleteIcon fontSize='large'/></TableCell>
+                    <TableCell style={textSize} align = "center" >
+                      <Button
+                        variant='contained'
+                        style={{cursor: 'pointer'}}
+                        onClick={()=> {
+                          this.downloadData(file['file_id'], file['file_name']);
+                        }}
+                      >
+                        <CloudDownloadIcon fontSize='large'/>
+                      </Button>
+                    </TableCell>
+                    <TableCell style={textSize} align = "center" >
+                      <Button
+                        variant='contained'
+                        style={{cursor: 'pointer'}}
+                        onClick={()=> {
+                          this.setState({toDelete: file['file_id'], openConfirmationDialog: true});
+                        }}
+                      >
+                        <DeleteIcon fontSize='large'/>
+                      </Button></TableCell>
                   </TableRow>))}
               </TableBody>
             </Table>
           </TableContainer>
         ): null
         }
+
+        <ConfirmationDialog
+          showWarning={openConfirmationDialog}
+          setShowWarning={(newVal) => this.setState({openConfirmationDialog: newVal})}
+          onConfirm={this.deleteData.bind(this)}
+          message={'Are you sure you want to delete this file? This operation cannot be undone.'}
+          confirmMessage='delete'
+          notConfirmMessage='cancel'
+        />
+
         <SnackBarMessage
           open={openSuccessMessage}
           closeSnackbar={() => this.setState({openSuccessMessage: false})}
-          message={'File Successfully Uploaded'}
-          severity='success'
+          message={success ? 'File Successfully Uploaded' : 'Error with Upload'}
+          severity={success ? 'success' : 'error'}
         />
 
         <SnackBarMessage
