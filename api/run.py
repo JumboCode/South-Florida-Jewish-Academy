@@ -582,18 +582,17 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/saveImage', methods=['POST'])
+# @requires_auth
 def saveImg():
     studentId = ObjectId(request.args.get('studentId'))
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
             return '0'
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            flash('No selected file')
             return '0'
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -633,6 +632,7 @@ def getFiles():
 
 @app.route('/downloadFile', methods=['POST'])
 @requires_auth
+@log_action('Downloaded File')
 def downloadFile():
     file_id = ObjectId(request.json['file_id'])
     data = fs.get(file_id)
@@ -648,6 +648,7 @@ def downloadFile():
 
 @app.route('/deleteFile', methods=['POST'])
 @requires_auth
+@log_action('Delted File')
 def deleteFile():
     print("in here!")
     file_id = ObjectId(request.json['file_id'])
