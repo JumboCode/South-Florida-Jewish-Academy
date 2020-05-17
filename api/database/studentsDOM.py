@@ -170,7 +170,7 @@ def addNewFile(id, newFileId,newFileName):
 def deleteFile(id, newFileId):
     contents = list(mongo.db.students.find({'_id': id}))
     if len(contents) != 1:
-        return False
+        assert len(contents) == 1
     
     oldFiles = []
     for content in contents:
@@ -187,7 +187,7 @@ def deleteFile(id, newFileId):
 def getFiles(id):
     contents = list(mongo.db.students.find({'_id': id}))
     if len(contents) != 1:
-        return False
+        assert len(contents) == 1
     for content in contents:
          return content['files']
 
