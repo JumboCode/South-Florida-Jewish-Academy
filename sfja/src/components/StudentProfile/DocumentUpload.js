@@ -12,6 +12,9 @@ import TableBody from '@material-ui/core/TableBody';
 import {saveAs} from 'file-saver';
 import {Cookies, withCookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Typography from '@material-ui/core/Typography';
 
 const textSize = {
   fontSize: '13px',
@@ -28,6 +31,8 @@ class DocumentUpload extends React.Component {
       files: null,
       files2: null,
       openSuccessMessage: false,
+      openDeleteMessage: false,
+      name: null,
     };
   }
   componentDidMount() {
@@ -70,7 +75,7 @@ class DocumentUpload extends React.Component {
           console.error(error);
         });
     document.getElementById('fileUpload').value = '';
-    this.setState({openSuccessMessage: true});
+    this.setState({openSuccessMessage: true, name: null});
   }
 
   downloadData(file_id, file_name) {
@@ -92,26 +97,92 @@ class DocumentUpload extends React.Component {
         });
   }
 
+  deleteData(file_id){
+    const {cookies} = this.props;
+    const {studentId} = this.props;
+    const body = {
+      file_id: file_id,
+      studentId: studentId
+    };
+
+    fetch(apiUrl() + '/deleteFile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        this.setState({
+          files2: data.files,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      this.setState({openDeleteMessage: true});
+  }
+
+
+
   render() {
     console.log(this.state);
-    const {openSuccessMessage, files, files2} = this.state;
+    const {openSuccessMessage,openDeleteMessage, files, files2, name} = this.state;
 
     return (
       <div>
-                DocumentUpload Page
-        <Button
-          variant="contained"
-          component="label"
-        >
-          Choose File
-          <input type="file" id="fileUpload" style={{ display: "none" }} onChange={(e)=>{
-            this.setState({files: e.target.files});
-          }}/>
-        </Button>
-        <Button component="label" variant="contained" disabled={files === null || files.length !== 1 }onClick={this.handleImageUpload.bind(this)}>
-                  Upload!
-        </Button>
+        <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                margin: 20,
+              }}>
+          <div
+                  style={{
+                    display: 'flex',
+                    marginRight: 20,
+                  }}>
+            <Button
+              variant="contained"
+              component="label"
+              size="large"
+            >
+              Choose File
+              <input type="file" id="fileUpload" style={{ display: "none" }} onChange={(e)=>{
+                this.setState({files: e.target.files, name: e.target.files[0].name});
+              }}/>
+            </Button>
+          </div>
 
+          <div
+                  style={{
+                    display: 'flex',
+                    marginRight: 20,
+                  }}>
+            <Button 
+              variant='text'
+              size="large"
+              disabled='true'
+            >
+                {name}
+              </Button>
+          </div>
+
+          <div
+                  style={{
+                    display: 'flex',
+                    marginRight: 20,
+                  }}>
+            <Button component="label" variant="contained" size="large" disabled={files === null || files.length !== 1 }onClick={this.handleImageUpload.bind(this)}>
+                      Add Document
+            </Button>
+          </div>
+          </div>
         {files2 != null ? (
           <TableContainer component={Paper}>
             <Table size = 'large'>
@@ -119,13 +190,17 @@ class DocumentUpload extends React.Component {
                 <TableRow >
                   <TableCell style={textSize} align = "left" >File Name</TableCell>
                   <TableCell style={textSize} align = "left" >File ID</TableCell>
+                  <TableCell style={textSize} align = "center" >Download</TableCell>
+                  <TableCell style={textSize} align = "center" >Delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {files2.map((file) => (
                   <TableRow key={file['file_id']}>
-                    <TableCell style={textSize} align = "left" onClick={()=> {this.downloadData(file['file_id'],file['file_name'])}}>{file['file_name']}</TableCell>
+                    <TableCell style={textSize} align = "left">{file['file_name']}</TableCell>
                     <TableCell style={textSize} align = "left" >{file['file_id']}</TableCell>
+                    <TableCell style={textSize} align = "center" onClick={()=> {this.downloadData(file['file_id'],file['file_name'])}}><CloudDownloadIcon fontSize='large'/></TableCell>
+                    <TableCell style={textSize} align = "center" onClick={()=> {this.deleteData(file['file_id'])}}><DeleteIcon fontSize='large'/></TableCell>
                   </TableRow>))}
               </TableBody>
             </Table>
@@ -141,6 +216,12 @@ class DocumentUpload extends React.Component {
           severity='success'
         />
 
+        <SnackBarMessage
+          open={openDeleteMessage}
+          closeSnackbar={() => this.setState({openDeleteMessage: false})}
+          message={'File Successfully Deleted'}
+          severity='success'
+        />
 
       </div>
 

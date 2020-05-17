@@ -131,7 +131,7 @@ def getArchivedStudents():
 
 def getFirstName(id):
     contents = list(mongo.db.students.find({'_id': id}))
-    return list(map(str, contents[0]['first_name']))
+    return contents[0]['first_name']
 
 def getAllFormIds(id):
     contents = list(mongo.db.students.find({'_id': id}))
@@ -140,7 +140,7 @@ def getAllFormIds(id):
         return False
 
     for content in contents:
-        return list(map(str, content['form_ids']))
+        return content['form_ids']
 
 def addNewFormId(id, newFormId):
     contents = list(mongo.db.students.find({'_id': id}))
@@ -167,6 +167,21 @@ def addNewFile(id, newFileId,newFileName):
     oldFiles.append({'filename':newFileName, 'fileId':newFileId})
     mongo.db.students.update({'_id': id}, {'$set': {'files': oldFiles}})
 
+def deleteFile(id, newFileId):
+    contents = list(mongo.db.students.find({'_id': id}))
+    if len(contents) != 1:
+        return False
+    
+    oldFiles = []
+    for content in contents:
+        oldFiles = content['files']
+
+    print("this is oldFiles ", oldFiles)
+    for oldFile in oldFiles:
+        if oldFile['fileId'] == newFileId:
+            oldFiles.remove(oldFile)
+    mongo.db.students.update({'_id': id}, {'$set': {'files': oldFiles}})
+    return oldFiles
 def getFiles(id):
     contents = list(mongo.db.students.find({'_id': id}))
     if len(contents) != 1:

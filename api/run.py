@@ -28,7 +28,7 @@ import io
 
 
 UPLOAD_FOLDER = './upload'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx'}
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
@@ -193,16 +193,20 @@ def getParentInfo():
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    all_student_ids = parentsDOM.listStudents(curr_link)
+    parentId = parentsDOM.get(currLink=curr_link)
+    all_student_ids = parentsDOM.getStudentIds(parentId)
     unarchived_student_ids = []
     for id in all_student_ids:
-        if not studentsDOM.isArchived(ObjectId(id)):
+        if not studentsDOM.isArchived(id):
             unarchived_student_ids.append(id)
 
-    student_names = []
+    students = []
     for id in unarchived_student_ids:
-        student_names.append(studentsDOM.getFirstName(ObjectId(id)))
-    return {'student_ids': unarchived_student_ids, 'student_names': student_names}
+        students.append({
+            'id': str(id),
+            'name': studentsDOM.getFirstName(id),
+        })
+    return {'students': students}
 
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
@@ -210,14 +214,14 @@ def getStudentForms():
     form_ids = studentsDOM.getAllFormIds(student_id)
     form_data = []
     for id in form_ids:
-        blank_form_data = FormsDOM.getBlankForm(ObjectId(id))
-        if blank_form_data != False:
-            curr_form = {'form_id': id,
-                        'form_name': FormsDOM.getFormName(ObjectId(id)),
-                        'last_updated': FormsDOM.getLastUpdated(ObjectId(id)),
-                        'last_viewed': FormsDOM.getLastViewed(ObjectId(id)),
-                        'completed': len(FormsDOM.getFormData(ObjectId(id))) != 0}
-            form_data.append(curr_form)
+        blank_form_data = FormsDOM.getBlankFormId(id)  # will assert if formid does not exist
+        form_data.append({
+            'form_id': str(id),
+            'form_name': FormsDOM.getFormName(id),
+            'last_updated': FormsDOM.getLastUpdated(id),
+            'last_viewed': FormsDOM.getLastViewed(id),
+            'completed': len(FormsDOM.getFormData(id)) != 0
+        })
     return {
         'form_data': form_data,
         'student_info': studentsDOM.getBasicInfo(student_id),
@@ -225,29 +229,16 @@ def getStudentForms():
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
-    form_id = request.json['form_id']
-    blank_form_data = FormsDOM.getBlankForm(ObjectId(form_id))
-    form_data = FormsDOM.getFormData(ObjectId(form_id))
+    form_id = ObjectId(request.json['form_id'])
+    blank_form_id = FormsDOM.getBlankFormId(form_id)
+    blank_form_data = blankFormsDOM.getFormData(blank_form_id)
+    form_data = FormsDOM.getFormData(form_id)
 
-    return {'blank_form_data' : blank_form_data,
-            'form_data' : form_data}
-
-@app.route('/checkKey', methods = ['GET', 'POST'])
-def checkKey():
-    #checkKey only works with json requests, so you can't test it without the front end
-    print(request.json['key'])
-    result = verifyKey(int(request.json['key']))
-    print(result)
-    if result:
-        return 'success', 200
-    else:
-        return 'denied', 403
-
-    """ retrieve generated key from request parameters
-    check generated key
-    return email iff key exists in database
-    else -> 403 errorr
- """
+    return {
+        'blank_form_data': blank_form_data,
+        'form_data': form_data,
+        'submitted': form_data != [],
+    }
 
 @app.route('/submitForm', methods = ['POST'])
 def submitForm():
@@ -647,6 +638,16 @@ def downloadFile():
                          attachment_filename= file_name,
                          mimetype=file_type)
 
+@app.route('/deleteFile', methods=['POST'])
+@requires_auth
+def deleteFile():
+    print("in here!")
+    file_id = ObjectId(request.json['file_id'])
+    student_id = ObjectId(request.json['studentId'])
+    fs.delete(file_id)
+    new_files = studentsDOM.deleteFile(student_id,file_id)
+    return{'files': new_files}
+
 @app.route('/forms', methods = ['GET', 'POST'])
 @requires_auth
 @log_action('Get forms')
@@ -658,7 +659,7 @@ def getForms():
 @log_action('Get blank form')
 def getBlankForm():
     blankForm_id = ObjectId(request.json['form_id'])
-    return {'data': blankFormsDOM.getFormData(blankForm_id)}
+    return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
 
 '''======================  ADD STUDENT ======================'''
 

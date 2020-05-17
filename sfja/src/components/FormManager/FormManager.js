@@ -1,7 +1,5 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len,react/prop-types */
 import React from 'react';
-import BlankFormBuilder from './BlankFormBuilder/BlankFormBuilder';
-import PreviewBlankForm from './PreviewBlankForm';
 import PropTypes, {instanceOf} from 'prop-types';
 import {CircularProgress} from '@material-ui/core';
 import Table from '@material-ui/core/Table';
@@ -11,6 +9,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
 import {
   Button,
   Dialog,
@@ -36,12 +35,10 @@ class FormManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      createForm: false,
-      currentForm: null,
       formsList: null,
-      viewForm: false,
       showWarning: false,
       formToTrash: null,
+      selected: null,
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -100,7 +97,7 @@ class FormManager extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {createForm, viewForm, formsList, showWarning} = this.state;
+    const {formsList, showWarning, selected} = this.state;
 
     if (formsList === null) {
       return (
@@ -122,50 +119,54 @@ class FormManager extends React.Component {
     }
     return (
       <div style={{padding: 20}}>
-        {createForm ? <BlankFormBuilder setCreateForm={this.setCreateForm.bind(this)} style={{width: '100%', maxWidth: 1000}}/>:
-         viewForm ? <PreviewBlankForm currentForm={this.state.currentForm} setViewForm={this.setViewForm.bind(this)}/>:
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <div style={{width: '100%', maxWidth: 700, marginTop: 10}}>
-              <Button
-                onClick= {() => this.setState({createForm: true})}
-                variant="contained"
-              >
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <div style={{width: '100%', maxWidth: 700, marginTop: 10}}>
+            <Button
+              style={{display: 'flex'}}
+              className="button icon-left"
+              variant="contained"
+              onClick={() => this.props.history.push(`/formManager/builder`)}>
                 Add Form
-              </Button>
-              <div style={{paddingTop: 10}}>
-                <TableContainer component={Paper}>
-                  <Table aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell style={textSize} align="right">Date Created</TableCell>
-                        <TableCell style={textSize} align="right">Delete</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {allInfoArr.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell style={{cursor: 'pointer', fontSize: '13px'}} component="th" scope="row"
-                            onClick={() => this.setState({currentForm: row, viewForm: true})}>
-                            {row.name}
-                          </TableCell>
-                          <TableCell style={textSize} align="right">{row.date}</TableCell>
-                          <TableCell style={textSize} align="right">
-                            <Button onClick={
-                              () => {
+            </Button>
+            <div style={{paddingTop: 10}}>
+              <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell style={textSize} align="right">Date Created</TableCell>
+                      <TableCell style={textSize} align="right">Delete</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {allInfoArr.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        onClick={() => this.props.history.push('/formManager/viewer/' + row.id)}
+                        style={{cursor: 'pointer', backgroundColor: selected === row.id ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
+                        onMouseEnter={() => this.setState({selected: row.id})}
+                        onMouseLeave={() => this.setState({selected: null})}
+                      >
+                        <TableCell style={textSize} align="left">{row.name}</TableCell>
+                        <TableCell style={textSize} align="right">{row.date}</TableCell>
+                        <TableCell style={textSize} align="right">
+                          <Button
+                            variant='contained'
+                            onClick={
+                              (e) => {
+                                e.stopPropagation();
                                 this.setState({formToTrash: row.id, showWarning: true});
                               }
-                            }>Delete</Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
+                            }><DeleteIcon fontSize='large'/></Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
           </div>
-        }
+        </div>
         <Dialog
           open={showWarning}
           onClose={() => {
