@@ -1,11 +1,13 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory,send_file
 from flask_restful import Resource, Api
 from flask_cors import CORS
+from flask_pymongo import PyMongo
 from database.emailKeysDOM import makeUser, verifyKey, verifyUser
 from database.FormsDOM import getForm
 from generateKey import generateKey
 import os
 import json
+import gridfs
 from database import testDB, studentsDOM, usersDOM, FormsDOM, blankFormsDOM, parentsDOM
 from flask import jsonify, request, jsonify, _request_ctx_stack
 import subprocess
@@ -14,17 +16,31 @@ from bson.objectid import ObjectId
 from jose import jwt
 from functools import wraps
 from six.moves.urllib.request import urlopen
+import gridfs
+import werkzeug
 import requests
+from werkzeug.utils import secure_filename
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import cgi
+import mimetypes
+import io
 
+
+UPLOAD_FOLDER = './upload'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx'}
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
 app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put in heroku
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+MONGO_URL = os.environ.get('MONGODB_URI')
+app.config["MONGO_URI"] = MONGO_URL
+mongo = PyMongo(app)
+db = mongo.db
+fs = gridfs.GridFS(db)
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
 ALGORITHMS = ["RS256"]
@@ -175,7 +191,11 @@ def getParentInfo():
 @app.route('/getStudentsOfParent', methods = ['GET', 'POST'])
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
-    parentId = parentsDOM.get(currLink=curr_link)
+    try:
+        parentId = parentsDOM.get(currLink=curr_link)
+    except AssertionError as e:
+        raise AuthError({'wrong link': True}, 401)
+    
     all_student_ids = parentsDOM.getStudentIds(parentId)
     unarchived_student_ids = []
     for id in all_student_ids:
@@ -197,17 +217,23 @@ def getStudentsOfParent():
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
     student_id = ObjectId(request.json['student_id'])
+    parent_id = parentsDOM.get(currLink=request.json['parent_key'])
+
+    if studentsDOM.isArchived(student_id):
+        raise AuthError({'archived': True}, 401)
+
     form_ids = studentsDOM.getAllFormIds(student_id)
     form_data = []
     for id in form_ids:
-        blank_form_data = FormsDOM.getBlankFormId(id)  # will assert if formid does not exist
-        form_data.append({
-            'form_id': str(id),
-            'form_name': FormsDOM.getFormName(id),
-            'last_updated': FormsDOM.getLastUpdated(id),
-            'last_viewed': FormsDOM.getLastViewed(id),
-            'completed': len(FormsDOM.getFormData(id)) != 0
-        })
+        if parent_id == FormsDOM.getParentId(id):
+            blank_form_data = FormsDOM.getBlankFormId(id)  # will assert if formid does not exist
+            form_data.append({
+                'form_id': str(id),
+                'form_name': FormsDOM.getFormName(id),
+                'last_updated': FormsDOM.getLastUpdated(id),
+                'last_viewed': FormsDOM.getLastViewed(id),
+                'completed': len(FormsDOM.getFormData(id)) != 0
+            })
     return {
         'form_data': form_data,
         'student_info': studentsDOM.getBasicInfo(student_id),
@@ -567,6 +593,93 @@ def getForms():
 def getBlankForm():
     blankForm_id = ObjectId(request.json['form_id'])
     return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
+
+'''====================== UPLOAD FILE ======================'''
+@app.route('/saveImage', methods=['POST'])
+@requires_auth
+@log_action('Uploaded File')
+def saveImg():
+    studentId = ObjectId(request.args.get('studentId'))
+
+    # check if the post request has the file part
+    if 'file' not in request.files:
+        return '0'
+    file = request.files['file']
+    # # if user does not select file, browser also
+    # # submit an empty part without filename
+    if file.filename == '':
+        return '0'
+    if file:
+        filename = secure_filename(file.filename)
+        file.save(filename)
+        with open(filename , "rb") as byteFile:
+            f = byteFile.read()
+            fileId = fs.put(f)
+            print(fileId)
+            studentsDOM.addNewFile(studentId, fileId,filename)
+            studentId = ObjectId(request.args.get('studentId'))
+            files = studentsDOM.getFiles(studentId)
+
+            cleanFiles=[]
+
+            for file in files:
+                tempDict ={}
+                tempDict['file_id'] = str(file['fileId'])
+                tempDict['file_name'] = file['filename']
+                cleanFiles.append(tempDict)
+            
+            return{'files': cleanFiles}
+
+@app.route('/getFiles', methods=['POST'])
+@requires_auth
+@log_action('Get File')
+def getFiles():
+    studentId = ObjectId(request.args.get('studentId'))
+    files = studentsDOM.getFiles(studentId)
+
+    cleanFiles=[]
+    for file in files:
+        tempDict = {}
+        tempDict['file_id'] = str(file['fileId'])
+        tempDict['file_name'] = file['filename']
+        cleanFiles.append(tempDict)
+    
+    return{'files': cleanFiles}
+
+@app.route('/downloadFile', methods=['POST'])
+@requires_auth
+@log_action('Downloaded File')
+def downloadFile():
+    file_id = ObjectId(request.json['file_id'])
+    data = fs.get(file_id)
+    file_name = request.json['file_name']
+    print("this is file name",file_name)
+    file_type = mimetypes.MimeTypes().guess_type(str(file_name))[0]
+
+    fileBytes = data.read()
+
+    return send_file(io.BytesIO(fileBytes),
+                         attachment_filename= file_name,
+                         mimetype=file_type)
+
+@app.route('/deleteFile', methods=['POST'])
+@requires_auth
+@log_action('Deleted File')
+def deleteFile():
+    print("in here!")
+    file_id = ObjectId(request.json['file_id'])
+    student_id = ObjectId(request.json['studentId'])
+    fs.delete(file_id)
+    files = studentsDOM.deleteFile(student_id,file_id)
+
+    cleanFiles=[]
+    for file in files:
+        tempDict = {}
+        tempDict['file_id'] = str(file['fileId'])
+        tempDict['file_name'] = file['filename']
+        cleanFiles.append(tempDict)
+
+    return{'files': cleanFiles}
 
 '''======================  ADD STUDENT ======================'''
 

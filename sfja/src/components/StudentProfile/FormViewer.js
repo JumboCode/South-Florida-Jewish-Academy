@@ -114,7 +114,7 @@ class FormViewer extends React.Component {
     const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar} = this.state;
     if (!basicInfo) {
       return (
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
           <CircularProgress/>
         </div>
       );

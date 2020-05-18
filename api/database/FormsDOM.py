@@ -124,3 +124,10 @@ def isComplete(id):
         raise RuntimeError
     return len(contents[0]['form_data']) != 0
 
+def getParentId(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    if (len(contents) != 1):
+        raise RuntimeError
+
+    print(contents[0]['parent_id'])
+    return contents[0]['parent_id']

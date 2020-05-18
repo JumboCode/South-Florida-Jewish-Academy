@@ -56,6 +56,7 @@ export default function App() {
               <Route exact path="/administration" component={Administration} />
               <Route exact path="/formManager" component={FormManager} />
               <Route exact path="/formManager/builder" component={BlankFormBuilder} />
+              <Route exact path="/formManager/builder/:id" component={BlankFormBuilder} />
               <Route exact path="/formManager/viewer/:id" component={PreviewBlankForm} />
               <Route exact path="/addStudent" component={AddStudent} />
               <Route exact path="/login" component={LoginPage}/>

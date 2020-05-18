@@ -1,6 +1,8 @@
 import React from 'react';
 import apiUrl from '../../utils/Env';
 import Paper from '@material-ui/core/Paper';
+import {CircularProgress} from '@material-ui/core';
+import UnauthorizedCard from './UnauthorizedCard';
 
 // eslint-disable-next-line require-jsdoc
 class ParentDash extends React.Component {
@@ -11,6 +13,8 @@ class ParentDash extends React.Component {
       firstName: '',
       lastName: '',
       email: '',
+      loading: true,
+      authorized: false,
     };
   }
 
@@ -21,19 +25,40 @@ class ParentDash extends React.Component {
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify({curr_link: this.props.match.params.parentKey}),
-    }).then((res) => res.json())
+    }).then((response) => response.status === 200 ? response : null)
+        .then((res) => res.json())
         .then((data) => {
           this.setState({
             firstName: data.first_name,
             lastName: data.last_name,
             email: data.email,
+            authorized: true,
+          });
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => {
+          this.setState({
+            loading: false,
           });
         });
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {firstName, lastName, email} = this.state;
+    const {firstName, lastName, email, loading, authorized} = this.state;
+
+    if (loading) {
+      return (
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+          <CircularProgress/>
+        </div>
+      );
+    }
+
+    if (!authorized) {
+      return (<UnauthorizedCard/>);
+    }
+
     return (
       // eslint-disable-next-line max-len
       <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 20}}>

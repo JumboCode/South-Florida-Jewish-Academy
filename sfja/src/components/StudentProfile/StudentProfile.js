@@ -17,6 +17,7 @@ import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import Parents from './Parents';
 import ResendForms from './ResendForms';
+import DocumentUpload from './DocumentUpload';
 import AdminZone from './AdminZone';
 import {CircularProgress, Button} from '@material-ui/core';
 
@@ -79,7 +80,7 @@ class StudentProfile extends React.Component {
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
       return (
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 100}}>
           <CircularProgress/>
         </div>
       );
@@ -87,7 +88,7 @@ class StudentProfile extends React.Component {
     return (
       <div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <div style={{maxWidth: 1000, width: '100%', paddingTop: 10}}>
+          <div style={{maxWidth: 1000, width: '100%', paddingTop: 20}}>
             <Button
               style={{display: 'flex'}}
               className="button icon-left"

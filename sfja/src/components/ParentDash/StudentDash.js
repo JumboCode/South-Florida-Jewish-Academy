@@ -13,6 +13,8 @@ import apiUrl from '../../utils/Env';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import Complete from '../../utils/Complete';
 import Incomplete from '../../utils/Incomplete';
+import UnauthorizedCard from './UnauthorizedCard';
+import {CircularProgress} from '@material-ui/core';
 
 // eslint-disable-next-line require-jsdoc
 class StudentDash extends React.Component {
@@ -31,6 +33,8 @@ class StudentDash extends React.Component {
       submitted: false,
       studentInfo: '',
       numIncomplete: 0,
+      authorized: false,
+      loading: true,
     };
   }
 
@@ -49,17 +53,25 @@ class StudentDash extends React.Component {
     fetch(apiUrl() + '/getStudentForms', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({student_id: this.props.match.params.studentId}),
-    }).then((res) => res.json())
+      body: JSON.stringify({student_id: this.props.match.params.studentId,
+        parent_key: this.props.match.params.parentKey}),
+    }).then((response) => response.status === 200 ? response : null)
+        .then((res) => res.json())
         .then((data) => {
           this.setState({
             formData: data.form_data,
             studentInfo: data.student_info,
             selected: null,
             numIncomplete: data.form_data.filter((form) => !form.completed).length,
+            authorized: true,
           });
-          console.log(data);
-        }).catch(console.log);
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => {
+          this.setState({
+            loading: false,
+          });
+        });
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -120,7 +132,19 @@ class StudentDash extends React.Component {
   render() {
     const {studentId, formData, formFilledData, blankFormData, openSentMessage,
       success, studentInfo, selectedName, numIncomplete,
-      submitted} = this.state;
+      submitted, authorized, loading} = this.state;
+
+    if (loading) {
+      return (
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+          <CircularProgress/>
+        </div>
+      );
+    }
+
+    if (!authorized) {
+      return (<UnauthorizedCard/>);
+    }
 
     if (studentId !== this.props.match.params.studentId) {
       this.setState({studentId: this.props.match.params.studentId});
