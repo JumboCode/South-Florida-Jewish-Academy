@@ -193,17 +193,19 @@ def getStudentsOfParent():
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
     student_id = ObjectId(request.json['student_id'])
+    parent_id = parentsDOM.get(currLink=request.json['parent_key'])
     form_ids = studentsDOM.getAllFormIds(student_id)
     form_data = []
     for id in form_ids:
-        blank_form_data = FormsDOM.getBlankFormId(id)  # will assert if formid does not exist
-        form_data.append({
-            'form_id': str(id),
-            'form_name': FormsDOM.getFormName(id),
-            'last_updated': FormsDOM.getLastUpdated(id),
-            'last_viewed': FormsDOM.getLastViewed(id),
-            'completed': len(FormsDOM.getFormData(id)) != 0
-        })
+        if parent_id == FormsDOM.getParentId(id):
+            blank_form_data = FormsDOM.getBlankFormId(id)  # will assert if formid does not exist
+            form_data.append({
+                'form_id': str(id),
+                'form_name': FormsDOM.getFormName(id),
+                'last_updated': FormsDOM.getLastUpdated(id),
+                'last_viewed': FormsDOM.getLastViewed(id),
+                'completed': len(FormsDOM.getFormData(id)) != 0
+            })
     return {
         'form_data': form_data,
         'student_info': studentsDOM.getBasicInfo(student_id),
