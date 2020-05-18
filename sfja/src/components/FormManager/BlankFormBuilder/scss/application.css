@@ -2778,10 +2778,9 @@
   border-left: 0;
   box-shadow: none;
   top: 0;
-  left: -1000px;
+  left: -1200px;
   height: 100%;
-  width: 715px;
-  transition: 0.5s;
+  width: 500px;
   overflow-y: auto;
 }
 .react-form-builder .react-form-builder-preview .edit-form h4, .react-form-builder .react-form-builder-preview .edit-form .dismiss-edit {

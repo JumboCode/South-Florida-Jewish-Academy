@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len,react/prop-types */
 import React from 'react';
 import {ReactFormGenerator, ElementStore} from 'react-form-builder2';
 import {Button, TextField} from '@material-ui/core';
@@ -36,7 +36,7 @@ class DemoBar extends React.Component {
     this.state = {
       data: [],
       previewVisible: false,
-      formName: '',
+      formName: this.props.blankFormName || '',
     };
 
     const update = this._onChange.bind(this);
@@ -125,9 +125,10 @@ class DemoBar extends React.Component {
         }
         <Snackbar
           open={openSuccessSnackBar}
-          autoHideDuration={6000}
+          autoHideDuration={1000}
           onClose={() => {
             this.setState({openSuccessSnackBar: false});
+            this.props.history.goBack();
           }}>
           <MuiAlert
             elevation={6}

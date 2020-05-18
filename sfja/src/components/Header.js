@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import './Header.css';
 import {Link, Redirect} from 'react-router-dom';
@@ -16,15 +17,23 @@ import {useAuth0} from '../react-auth0-spa';
 
 const tabStyle = {color: 'grey', fontSize: 10, outline: 'none', textDecoration: 'none', minWidth: 20};
 
+const tabs = ['/students', '/formManager', '/addStudent', '/administration'];
+
 // eslint-disable-next-line require-jsdoc
-export default function Header() {
-  const [value, setValue] = React.useState(1);
+export default function Header(props) {
+  const [value, setValue] = React.useState(tabs.indexOf(props.match.path) + 1);
   const {isAuthenticated} = useAuth0();
-  if (!isAuthenticated) {
+  if (isAuthenticated !== undefined && !isAuthenticated) {
     return (
       <Redirect to={'/login'}/>
     );
   }
+
+  // compatibility for forwards/back buttons
+  if (tabs.indexOf(props.match.path) + 1 !== value) {
+    setValue(tabs.indexOf(props.match.path) + 1);
+  }
+
   return (
     <div>
       <Paper square >

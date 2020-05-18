@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len,react/prop-types */
 import React from 'react';
 import ProfileEdit from './ProfileEdit';
 import ReceiptIcon from '@material-ui/icons/Receipt';
@@ -16,8 +16,7 @@ import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import ResendForms from './ResendForms';
 import AdminZone from './AdminZone';
-import {CircularProgress} from '@material-ui/core';
-
+import {CircularProgress, Button} from '@material-ui/core';
 
 // eslint-disable-next-line require-jsdoc
 class StudentProfile extends React.Component {
@@ -78,14 +77,24 @@ class StudentProfile extends React.Component {
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
       return (
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 100}}>
           <CircularProgress/>
         </div>
       );
     }
-    // const classes = useStyles();
     return (
       <div>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <div style={{maxWidth: 1000, width: '100%', paddingTop: 20}}>
+            <Button
+              style={{display: 'flex'}}
+              className="button icon-left"
+              variant="contained"
+              onClick={() => this.props.history.goBack()}>
+              Back
+            </Button>
+          </div>
+        </div>
         {basicInfo.archived ?
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
             <MuiAlert
@@ -117,7 +126,7 @@ class StudentProfile extends React.Component {
                 <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
-                {currTab === 0 && <Forms forms={forms} studentId={basicInfo['_id']}/>}
+                {currTab === 0 && <Forms {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
                 {currTab === 1 && <div>documents</div>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
                 {currTab === 3 &&
