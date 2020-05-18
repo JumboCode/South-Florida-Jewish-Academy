@@ -54,7 +54,7 @@ class StudentDash extends React.Component {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({student_id: this.props.match.params.studentId,
-                            parent_key: this.props.match.params.parentKey,}),
+        parent_key: this.props.match.params.parentKey}),
     }).then((response) => response.status === 200 ? response : null)
         .then((res) => res.json())
         .then((data) => {
