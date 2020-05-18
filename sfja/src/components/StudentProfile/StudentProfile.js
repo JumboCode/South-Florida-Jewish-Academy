@@ -2,6 +2,7 @@
 import React from 'react';
 import ProfileEdit from './ProfileEdit';
 import ReceiptIcon from '@material-ui/icons/Receipt';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import EditIcon from '@material-ui/icons/Edit';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
@@ -14,6 +15,7 @@ import {instanceOf, PropTypes} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
+import Parents from './Parents';
 import ResendForms from './ResendForms';
 import AdminZone from './AdminZone';
 import {CircularProgress, Button} from '@material-ui/core';
@@ -121,15 +123,17 @@ class StudentProfile extends React.Component {
                 }}
               >
                 <Tab icon={<ReceiptIcon />} label="Forms" />
+                <Tab icon={<PeopleAltIcon />} label="Parents" />
                 <Tab icon={<InsertDriveFileIcon />} label="Documents" />
                 <Tab icon={<EditIcon />} label="Edit Student Info" />
                 <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
                 {currTab === 0 && <Forms {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
-                {currTab === 1 && <div>documents</div>}
-                {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
-                {currTab === 3 &&
+                {currTab === 1 && <Parents parents = {parents} basicInfo={basicInfo}/>}
+                {currTab === 2 && <div>documents</div>}
+                {currTab === 3 && <ProfileEdit basicInfo={basicInfo}/>}
+                {currTab === 4 &&
                 <ResendForms
                   studentForms={forms}
                   blankForms={blankForms}
