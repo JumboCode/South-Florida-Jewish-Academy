@@ -64,8 +64,9 @@ class Parents extends React.Component {
     // eslint-disable-next-line require-jsdoc
     constructor(props) {
       super(props);
+      const {parents} = this.props;
       this.state = {
-        parents: [],
+        parents: parents,
         originalParents: [],
         sortBy: '',
         order: 'incr',
@@ -77,19 +78,19 @@ class Parents extends React.Component {
     // eslint-disable-next-line require-jsdoc
     componentDidMount() {
       const {cookies} = this.props;
-      fetch(apiUrl() + '/parents', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
-        },
-      })
-          .then((res) => res.json())
-          .then((data) => {
-            this.setState({parents: data.parents,
-              originalParents: data.parents});
-            console.log(data);
-          })
-          .catch(console.log);
+      // fetch(apiUrl() + '/getStudentsOfParent', {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${cookies.get('token')}`,
+      //   },
+      // })
+      //     .then((res) => res.json())
+      //     .then((data) => {
+      //       this.setState({parents: data.parents,
+      //         originalParents: data.parents});
+      //       console.log(data);
+      //     })
+      //     .catch(console.log);
     }
 
     // eslint-disable-next-line require-jsdoc
@@ -158,32 +159,12 @@ class Parents extends React.Component {
       return (
         <div>
           <div style={parentPageStyle}>
-            <div style={filterStyle}>
-              <p> Filters </p>
-            </div>
             <div style={{width: '100%', maxWidth: 1000}}>
-              <div style={{paddingTop: 10, paddingBottom: 10}}>
-                <MuiThemeProvider theme={theme}>
-                  <TextField
-                    placeholder='Search by first or last name'
-                    label={'Search'}
-                    value={this.state.query}
-                    inputProps={textSize}
-                    fullWidth
-                    InputLabelProps={textSize}
-                    onChange={(e) => {
-                      this.setState({query: e.target.value});
-                      this.updateParents(e.target.value);
-                    }}
-                  >
-                  </TextField>
-                </MuiThemeProvider>
-              </div>
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell className={tableStyle}>
+                      <TableCell align="center" className={tableStyle}>
                         <TableSortLabel
                           onClick={(e) => this.sort('first_name')}
                           active={sortBy === 'first_name'}
@@ -191,7 +172,7 @@ class Parents extends React.Component {
                         />
                                             First Name
                       </TableCell>
-                      <TableCell align="left" className={tableStyle}>
+                      <TableCell align="center" className={tableStyle}>
                         <TableSortLabel
                           onClick={(e) => this.sort('last_name')}
                           active={sortBy === 'last_name'}
@@ -199,7 +180,7 @@ class Parents extends React.Component {
                         />
                                             Last Name
                       </TableCell>
-                      <TableCell align="left" className={tableStyle}>
+                      <TableCell align="center" className={tableStyle}>
                         <TableSortLabel
                           onClick={(e) => this.sort('email')}
                           active={sortBy === 'email'}
@@ -211,18 +192,15 @@ class Parents extends React.Component {
                   </TableHead>
                   <TableBody>
                     {parents.map((parent) => (
-                      <TableRow key={parent.parent_id}>
-                        <TableCell component="th" scope="row"
+                      <TableRow key={parent['email']}>
+                        <TableCell align="center" component="th" scope="row"
                           className={tableStyle}>
-                          <NavLink to={'/profile/' + parent.parent_id}>
-                            <Typography align="center" className={tableStyle}>
-                              {parent.first_name}</Typography>
-                          </NavLink>
+                              {parent['first_name']}
                         </TableCell>
                         <TableCell align="center" className={tableStyle}>
-                          {parent.last_name}</TableCell>
+                          {parent['last_name']}</TableCell>
                         <TableCell align="center" className={tableStyle}>
-                          {parent.email}</TableCell>
+                          {parent['email']}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
