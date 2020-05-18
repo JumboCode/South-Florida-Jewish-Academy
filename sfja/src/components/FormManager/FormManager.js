@@ -35,7 +35,7 @@ class FormManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formsList: null,
+      formsList: [],
       showWarning: false,
       formToTrash: null,
       selected: null,
