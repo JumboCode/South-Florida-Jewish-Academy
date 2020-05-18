@@ -49,7 +49,8 @@ class StudentDash extends React.Component {
     fetch(apiUrl() + '/getStudentForms', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({student_id: this.props.match.params.studentId}),
+      body: JSON.stringify({student_id: this.props.match.params.studentId,
+                            parent_key: this.props.match.params.parentKey,}),
     }).then((res) => res.json())
         .then((data) => {
           this.setState({
