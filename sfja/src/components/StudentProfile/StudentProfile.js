@@ -15,6 +15,7 @@ import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import ResendForms from './ResendForms';
+import DocumentUpload from './DocumentUpload';
 import AdminZone from './AdminZone';
 import {CircularProgress, Button} from '@material-ui/core';
 
@@ -127,7 +128,7 @@ class StudentProfile extends React.Component {
               </Tabs>
               <div>
                 {currTab === 0 && <Forms {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
-                {currTab === 1 && <div>documents</div>}
+                {currTab === 1 && <DocumentUpload studentId={basicInfo['_id']}/>}
                 {currTab === 2 && <ProfileEdit basicInfo={basicInfo}/>}
                 {currTab === 3 &&
                 <ResendForms
