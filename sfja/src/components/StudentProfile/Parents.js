@@ -1,9 +1,7 @@
 import React from 'react';
-import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   parentPageStyle,
-  filterStyle,
 } from './Styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,18 +13,19 @@ import Paper from '@material-ui/core/Paper';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import {withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
-import Typography from '@material-ui/core/Typography';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
-import apiUrl from '../../utils/Env';
-import {TextField} from '@material-ui/core';
-import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+// import apiUrl from '../../utils/Env';
+// import {TextField} from '@material-ui/core';
+// import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+// import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {main: '#086fb3'},
-  },
-});
+// const theme = createMuiTheme({
+//   palette: {
+//     primary: {main: '#086fb3'},
+//   },
+// });
 
 const useStyles = {
   text: {
@@ -39,15 +38,15 @@ const useStyles = {
   },
 };
 
-const textSize = {
-  style: {
-    fontSize: 17,
-  },
-  autoComplete: 'new-password',
-  form: {
-    autoComplete: 'off',
-  },
-};
+// const textSize = {
+//   style: {
+//     fontSize: 17,
+//   },
+//   autoComplete: 'new-password',
+//   form: {
+//     autoComplete: 'off',
+//   },
+// };
 
 // eslint-disable-next-line require-jsdoc
 class Parents extends React.Component {
@@ -76,22 +75,22 @@ class Parents extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
-    componentDidMount() {
-      const {cookies} = this.props;
-      // fetch(apiUrl() + '/getStudentsOfParent', {
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${cookies.get('token')}`,
-      //   },
-      // })
-      //     .then((res) => res.json())
-      //     .then((data) => {
-      //       this.setState({parents: data.parents,
-      //         originalParents: data.parents});
-      //       console.log(data);
-      //     })
-      //     .catch(console.log);
-    }
+    // componentDidMount() {
+    //   const {cookies} = this.props;
+    //   fetch(apiUrl() + '/getStudentsOfParent', {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': `Bearer ${cookies.get('token')}`,
+    //     },
+    //   })
+    //       .then((res) => res.json())
+    //       .then((data) => {
+    //         this.setState({parents: data.parents,
+    //           originalParents: data.parents});
+    //         console.log(data);
+    //       })
+    //       .catch(console.log);
+    // }
 
     // eslint-disable-next-line require-jsdoc
     descendingComparator(a, b, orderBy) {
@@ -195,7 +194,7 @@ class Parents extends React.Component {
                       <TableRow key={parent['email']}>
                         <TableCell align="center" component="th" scope="row"
                           className={tableStyle}>
-                              {parent['first_name']}
+                          {parent['first_name']}
                         </TableCell>
                         <TableCell align="center" className={tableStyle}>
                           {parent['last_name']}</TableCell>
