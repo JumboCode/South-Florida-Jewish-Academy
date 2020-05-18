@@ -8,7 +8,7 @@ from generateKey import generateKey
 import os
 import json
 import gridfs
-from database import testDB, studentsDOM, usersDOM, FormsDOM, blankFormsDOM, parentsDOM,assets
+from database import testDB, studentsDOM, usersDOM, FormsDOM, blankFormsDOM, parentsDOM
 from flask import jsonify, request, jsonify, _request_ctx_stack
 import subprocess
 from datetime import datetime
