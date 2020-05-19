@@ -210,10 +210,6 @@ def getStudentsOfParent():
         })
     return {'students': students}
 
-# def getParentsofStudent():
-#     student_id = ObjectId(request.json['student_id'])
-#     parents = studentsDOM.getParents(student_id)
-
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
     student_id = ObjectId(request.json['student_id'])
