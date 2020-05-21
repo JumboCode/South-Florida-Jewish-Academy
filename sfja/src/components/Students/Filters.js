@@ -36,7 +36,7 @@ function processOption(s) {
 }
 
 // eslint-disable-next-line require-jsdoc,react/prop-types
-export default function Filters({filters, updateFilter, studentsLength}) {
+export default function Filters({filters, updateFilter, studentsLength, blankForms}) {
   const [selected, setSelected] = React.useState(null);
   if (filters === undefined) {
     return (<div>
@@ -45,59 +45,64 @@ export default function Filters({filters, updateFilter, studentsLength}) {
       </Paper>
     </div>);
   }
-  return (<div>
-    <Paper>
+  return (
+    <div>
+      <Paper>
       Filters
-      {Object.keys(filters).map((filter) => (
-        <div key={filter}>
-          <div style={{textAlign: 'left', paddingLeft: 10}}>
-            {filter[0].toUpperCase().concat(filter.substring(1)).concat(':')}
-          </div>
-          <List>
-            {/* eslint-disable-next-line max-len */}
-            {Object.keys(filters[filter]).sort(sortGrades).map((optionKey) => (
-              <ListItem
-                key={optionKey}
-                onClick={
-                  () => updateFilter(
-                      filter,
-                      optionKey,
-                      !filters[filter][optionKey],
-                  )
-                }
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: selected === filter + optionKey ?
-                    'rgba(211,211,211, 0.7)' :
-                    '#ffffff'}}
-                onMouseEnter={() => setSelected(filter + optionKey)}
-                onMouseLeave={() => setSelected(null)}
-              >
-                <ListItemIcon
-                  style={{cursor: 'pointer'}}
+        {Object.keys(filters).map((filter) => (
+          <div key={filter}>
+            <div style={{textAlign: 'left', paddingLeft: 10}}>
+              {filter[0].toUpperCase().concat(filter.substring(1)).concat(':')}
+            </div>
+            <List>
+              {/* eslint-disable-next-line max-len */}
+              {Object.keys(filters[filter]).sort(sortGrades).map((optionKey) => (
+                <ListItem
+                  key={optionKey}
+                  onClick={
+                    () => updateFilter(
+                        filter,
+                        optionKey,
+                        !filters[filter][optionKey],
+                    )
+                  }
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: selected === filter + optionKey ?
+                      'rgba(211,211,211, 0.7)' :
+                      '#ffffff'}}
+                  onMouseEnter={() => setSelected(filter + optionKey)}
+                  onMouseLeave={() => setSelected(null)}
                 >
-                  <Checkbox
-                    edge="start"
-                    checked={filters[filter][optionKey]}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{'aria-labelledby': optionKey}}
-                  />
-                  {processOption(optionKey)}
-                </ListItemIcon>
-              </ListItem>
-            ))}
-            {filter === 'grades' && studentsLength === null ?
-              // eslint-disable-next-line max-len
-              <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                <CircularProgress/>
-              </div> : null}
-          </List>
+                  <ListItemIcon
+                    style={{cursor: 'pointer'}}
+                  >
+                    <Checkbox
+                      edge="start"
+                      checked={filters[filter][optionKey]}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{'aria-labelledby': optionKey}}
+                    />
+                    {processOption(optionKey)}
+                  </ListItemIcon>
+                </ListItem>
+              ))}
+              {filter === 'grades' && studentsLength === null ?
+                // eslint-disable-next-line max-len
+                <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+                  <CircularProgress/>
+                </div> : null}
+            </List>
+          </div>
+        ))}
+        <div style={{display: 'flex', fontSize: 13, padding: 10}}>
+          Total student count: {studentsLength}
         </div>
-      ))}
-      <div style={{display: 'flex', fontSize: 13, padding: 10}}>
-        Total student count: {studentsLength}
-      </div>
-    </Paper>
-  </div>);
+      </Paper>
+      <Paper>
+        Forms
+        {blankForms.map((form) => (<div>form:{form.name} {form.id}</div>))}
+      </Paper>
+    </div>);
 }

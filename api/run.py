@@ -337,7 +337,8 @@ def getStudents():
         del student['form_ids']
     return {
         'students': students,
-        'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin'])
+        'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin']),
+        'forms': blankFormsDOM.getAll(),
     }
 
 

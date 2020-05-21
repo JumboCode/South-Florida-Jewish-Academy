@@ -98,6 +98,7 @@ class Students extends React.Component {
             unarchived: true,
           },
         },
+        blankForms: [],
       };
       this.saveCache = this.saveCache.bind(this);
     }
@@ -156,6 +157,7 @@ class Students extends React.Component {
                 columnToQuery: cache.columnToQuery,
                 filters: newFilters,
                 authorized: data.authorized,
+                blankForms: this.makeBlankForms(data.forms),
               });
               return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
             } else {
@@ -164,6 +166,7 @@ class Students extends React.Component {
                 originalStudents: data.students,
                 filters: this.makeFilters(data.students),
                 authorized: data.authorized,
+                blankForms: this.makeBlankForms(data.forms),
               });
               return ({sortBy: sortBy, query: query, order: order});
             }
@@ -181,6 +184,10 @@ class Students extends React.Component {
     everyTrue(filter) {
       const {filters} = this.state;
       return Object.keys(filters[filter]).every((key) => !filters[filter][key]);
+    }
+
+    makeBlankForms(forms) {
+      return forms.map((form) => ({id: form.id, name: form.name, selected: false}));
     }
 
     makeFilters(students) {
@@ -327,7 +334,7 @@ class Students extends React.Component {
     }
 
     render() {
-      const {students, sortBy, order, filters, authorized, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected} = this.state;
+      const {students, sortBy, order, filters, authorized, blankForms, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected} = this.state;
       // eslint-disable-next-line react/prop-types
       const {classes, className} = this.props;
       const tableStyle = clsx(classes.text, className);
@@ -339,6 +346,7 @@ class Students extends React.Component {
                 filters={filters}
                 updateFilter={this.updateFilter.bind(this)}
                 studentsLength={students ? students.length : null}
+                blankForms={blankForms}
               />
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
