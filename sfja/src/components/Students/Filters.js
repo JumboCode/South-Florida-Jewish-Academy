@@ -36,7 +36,7 @@ function processOption(s) {
 }
 
 // eslint-disable-next-line require-jsdoc,react/prop-types
-export default function Filters({filters, updateFilter, studentsLength, blankForms}) {
+export default function Filters({filters, updateFilter, updateFormChecked, studentsLength, blankForms}) {
   const [selected, setSelected] = React.useState(null);
   if (filters === undefined) {
     return (<div>
@@ -100,9 +100,29 @@ export default function Filters({filters, updateFilter, studentsLength, blankFor
           Total student count: {studentsLength}
         </div>
       </Paper>
-      <Paper>
+      <Paper style={{marginTop: 20}}>
         Forms
-        {blankForms.map((form) => (<div>form:{form.name} {form.id}</div>))}
+        <List>
+          {blankForms.map((form) => (<ListItem
+            key={form.id}
+            onClick={() => updateFormChecked(form.id, !form.checked)}
+            onMouseEnter={() => setSelected('form' + form.id)}
+            onMouseLeave={() => setSelected(null)}
+            style={{
+              cursor: 'pointer',
+              backgroundColor: selected === 'form' + form.id ?
+                'rgba(211,211,211, 0.7)' :
+                '#ffffff'}}
+          >
+            <ListItemIcon>
+              <Checkbox
+                edge='start'
+                checked={form.checked}
+              />
+              {form.name}
+            </ListItemIcon>
+          </ListItem>))}
+        </List>
       </Paper>
     </div>);
 }

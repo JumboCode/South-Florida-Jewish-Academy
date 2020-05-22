@@ -121,14 +121,20 @@ class Students extends React.Component {
       window.removeEventListener('beforeunload', this.saveCache);
     }
 
-    componentDidMount() {
+    updateData(newBlankForms) {
       const {cookies} = this.props;
-      const {sortBy, query, order} = this.state; // from constructor
+      const {sortBy, query, order, blankForms} = this.state; // from constructor
+      const body = {
+        blankForms: newBlankForms,
+      };
+      console.log(this.state)
       fetch(apiUrl() + '/students', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${cookies.get('token')}`,
         },
+        body: JSON.stringify(body),
       })
           .then((res) => res.json())
           .then((data) => {
@@ -157,7 +163,7 @@ class Students extends React.Component {
                 columnToQuery: cache.columnToQuery,
                 filters: newFilters,
                 authorized: data.authorized,
-                blankForms: this.makeBlankForms(data.forms),
+                blankForms: newBlankForms.length !== 0 ? newBlankForms : this.makeBlankForms(data.forms),
               });
               return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
             } else {
@@ -166,7 +172,7 @@ class Students extends React.Component {
                 originalStudents: data.students,
                 filters: this.makeFilters(data.students),
                 authorized: data.authorized,
-                blankForms: this.makeBlankForms(data.forms),
+                blankForms: newBlankForms.length !== 0 ? newBlankForms : this.makeBlankForms(data.forms),
               });
               return ({sortBy: sortBy, query: query, order: order});
             }
@@ -177,8 +183,13 @@ class Students extends React.Component {
             if (query) {
               this.updateStudents(query);
             }
+            console.log(this.state)
           }).catch(console.log);
       window.addEventListener('beforeunload', this.saveCache);
+    }
+
+    componentDidMount() {
+      this.updateData([]);
     }
 
     everyTrue(filter) {
@@ -187,7 +198,8 @@ class Students extends React.Component {
     }
 
     makeBlankForms(forms) {
-      return forms.map((form) => ({id: form.id, name: form.name, selected: false}));
+      console.log('makeblankforms')
+      return forms.map((form) => ({id: form.id, name: form.name, checked: false}));
     }
 
     makeFilters(students) {
@@ -333,6 +345,16 @@ class Students extends React.Component {
       });
     }
 
+    updateFormChecked(formId, newVal) {
+      console.log('update')
+      const {blankForms} = this.state;
+      const newBlankForms = blankForms.map((form) => (formId === form.id ? {id: form.id, name: form.name, checked: newVal} : form));
+      this.setState({
+        blankForms: newBlankForms,
+      });
+      this.updateData(newBlankForms);
+    }
+
     render() {
       const {students, sortBy, order, filters, authorized, blankForms, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected} = this.state;
       // eslint-disable-next-line react/prop-types
@@ -347,6 +369,7 @@ class Students extends React.Component {
                 updateFilter={this.updateFilter.bind(this)}
                 studentsLength={students ? students.length : null}
                 blankForms={blankForms}
+                updateFormChecked={this.updateFormChecked.bind(this)}
               />
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>

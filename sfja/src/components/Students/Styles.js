@@ -8,7 +8,6 @@ export const studentPageStyle = {
 };
 
 export const filterStyle = {
-  backgroundColor: '#086fb3',
   flex: '0 1 300px',
   borderRadius: '5px',
   margin: '15px',
