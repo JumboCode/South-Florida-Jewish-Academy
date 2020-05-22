@@ -109,7 +109,7 @@ class FormManager extends React.Component {
 
     const allInfoArr = [];
     
-    if (formsList){
+   if (formsList){
       const result = Object.values(formsList);
       for (let i = 0; i < result.length; i++) {
         const form = {
