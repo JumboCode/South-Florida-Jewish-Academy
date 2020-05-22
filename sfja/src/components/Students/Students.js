@@ -53,7 +53,13 @@ const textSize = {
   },
 };
 
-
+// Students Component
+// On unmount, saves filters and forms into cache
+// On mount, uses cache to determine which forms to call for
+//           and applies the correct filters
+// Filters are run on the fly; forms are filtered via the post request
+// Improves performance for filtering and saves frontend computation of done
+// Also reduces size of the request response
 class Students extends React.Component {
     static propTypes = {
       students: PropTypes.any,
@@ -104,7 +110,7 @@ class Students extends React.Component {
     }
 
     saveCache() {
-      const {sortBy, order, query, columnToQuery, filters} = this.state;
+      const {sortBy, order, query, columnToQuery, filters, blankForms} = this.state;
       const {cookies} = this.props;
       const newCache = {
         sortBy: sortBy,
@@ -112,6 +118,7 @@ class Students extends React.Component {
         query: query,
         columnToQuery: columnToQuery,
         filters: filters,
+        blankForms: blankForms,
       };
       cookies.set('studentsCache', newCache);
     }
@@ -121,13 +128,20 @@ class Students extends React.Component {
       window.removeEventListener('beforeunload', this.saveCache);
     }
 
-    updateData(newBlankForms) {
+    updateData(newBlankForms, isNew) {
       const {cookies} = this.props;
-      const {sortBy, query, order, blankForms} = this.state; // from constructor
-      const body = {
-        blankForms: newBlankForms,
-      };
-      console.log(this.state)
+      const {sortBy, query, order} = this.state; // from constructor
+      const cache = cookies.get('studentsCache');
+      var body;
+      if (cache && !isNew) {
+        body = {
+          blankForms: cache.blankForms,
+        };
+      } else {
+        body = {
+          blankForms: newBlankForms,
+        };
+      }
       fetch(apiUrl() + '/students', {
         method: 'POST',
         headers: {
@@ -138,7 +152,6 @@ class Students extends React.Component {
       })
           .then((res) => res.json())
           .then((data) => {
-            const cache = cookies.get('studentsCache');
             if (cache) {
               // combine old + new filters
               const newFilters = this.makeFilters(data.students);
@@ -163,7 +176,7 @@ class Students extends React.Component {
                 columnToQuery: cache.columnToQuery,
                 filters: newFilters,
                 authorized: data.authorized,
-                blankForms: newBlankForms.length !== 0 ? newBlankForms : this.makeBlankForms(data.forms),
+                blankForms: isNew ? newBlankForms : cache.blankForms.length !== data.forms.length ? this.makeBlankForms(data.forms) : cache.blankForms,
               });
               return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
             } else {
@@ -183,13 +196,12 @@ class Students extends React.Component {
             if (query) {
               this.updateStudents(query);
             }
-            console.log(this.state)
           }).catch(console.log);
       window.addEventListener('beforeunload', this.saveCache);
     }
 
     componentDidMount() {
-      this.updateData([]);
+      this.updateData([], false);
     }
 
     everyTrue(filter) {
@@ -198,7 +210,6 @@ class Students extends React.Component {
     }
 
     makeBlankForms(forms) {
-      console.log('makeblankforms')
       return forms.map((form) => ({id: form.id, name: form.name, checked: false}));
     }
 
@@ -346,13 +357,12 @@ class Students extends React.Component {
     }
 
     updateFormChecked(formId, newVal) {
-      console.log('update')
       const {blankForms} = this.state;
       const newBlankForms = blankForms.map((form) => (formId === form.id ? {id: form.id, name: form.name, checked: newVal} : form));
       this.setState({
         blankForms: newBlankForms,
       });
-      this.updateData(newBlankForms);
+      this.updateData(newBlankForms, true);
     }
 
     render() {

@@ -326,17 +326,46 @@ def isAuthorized(token, roles):
 @requires_auth
 @log_action('Get students')
 def getStudents():
+    blankForms = request.json['blankForms']
+    blankFormIds = []
+    for blankForm in blankForms:
+        if blankForm['checked']:
+            blankFormIds.append(ObjectId(blankForm['id']))
+
+    print(blankFormIds)
     students = studentsDOM.getStudents()
+    studentsWithForms = []
     for student in students:
-        forms_completed = 0
-        for form in student['form_ids']:
-            if FormsDOM.isComplete(form):
-                forms_completed += 1
-        student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
-        student['completion_rate'] = forms_completed / len(student['form_ids'])
-        del student['form_ids']
+        if len(blankFormIds) == 0:
+            forms_completed = 0
+            for form in student['form_ids']:
+                if FormsDOM.isComplete(form):
+                    forms_completed += 1
+            student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+            student['completion_rate'] = forms_completed / len(student['form_ids'])
+            del student['form_ids']
+            studentsWithForms.append(student)
+
+        else:
+            forms_completed = 0
+            forms_available = 0
+            print(student['first_name'])
+            for form in student['form_ids']:
+                currFormBlankFormId = FormsDOM.getBlankFormId(form)
+                print (currFormBlankFormId)
+                if currFormBlankFormId in blankFormIds:
+                    if (FormsDOM.isComplete(form)):
+                        forms_completed += 1
+                    forms_available += 1
+
+            print (forms_available)
+            if forms_available > 0:
+                student['forms_completed'] = str(forms_completed) + "/" + str(forms_available)
+                student['completion_rate'] = forms_completed / forms_available
+                del student['form_ids']
+                studentsWithForms.append(student)
     return {
-        'students': students,
+        'students': studentsWithForms,
         'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin']),
         'forms': blankFormsDOM.getAll(),
     }
