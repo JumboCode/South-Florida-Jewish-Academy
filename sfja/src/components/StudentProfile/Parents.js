@@ -7,6 +7,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
+import IconButton from '@material-ui/core/IconButton';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
@@ -15,17 +16,11 @@ import {withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
-// import apiUrl from '../../utils/Env';
-// import {TextField} from '@material-ui/core';
-// import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
-// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-// import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-
-// const theme = createMuiTheme({
-//   palette: {
-//     primary: {main: '#086fb3'},
-//   },
-// });
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Collapse from '@material-ui/core/Collapse';
 
 const useStyles = {
   text: {
@@ -52,9 +47,12 @@ const useStyles = {
 class Parents extends React.Component {
     static propTypes = {
       parents: PropTypes.any,
+      students: PropTypes.any,
       classes: PropTypes.any,
       cookies: instanceOf(Cookies).isRequired,
+      tableCollapse: PropTypes.any,
       sortBy: PropTypes.any,
+      open: PropTypes.any,
       order: PropTypes.any,
       query: PropTypes.any,
       columnToQuery: PropTypes.any,
@@ -64,33 +62,20 @@ class Parents extends React.Component {
     constructor(props) {
       super(props);
       const {parents} = this.props;
+      const tableCollapse = {};
+      parents.forEach((parent) => tableCollapse[parent['id']] = false);
       this.state = {
         parents: parents,
+        students: [],
         originalParents: [],
         sortBy: '',
+        open: false,
+        tableCollapse: tableCollapse,
         order: 'incr',
         query: '',
         columnToQuery: 'first_name',
       };
     }
-
-    // eslint-disable-next-line require-jsdoc
-    // componentDidMount() {
-    //   const {cookies} = this.props;
-    //   fetch(apiUrl() + '/getStudentsOfParent', {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'Authorization': `Bearer ${cookies.get('token')}`,
-    //     },
-    //   })
-    //       .then((res) => res.json())
-    //       .then((data) => {
-    //         this.setState({parents: data.parents,
-    //           originalParents: data.parents});
-    //         console.log(data);
-    //       })
-    //       .catch(console.log);
-    // }
 
     // eslint-disable-next-line require-jsdoc
     descendingComparator(a, b, orderBy) {
@@ -155,6 +140,7 @@ class Parents extends React.Component {
       // eslint-disable-next-line react/prop-types
       const {classes, className} = this.props;
       const tableStyle = clsx(classes.text, className);
+      // eslint-disable-next-line react/jsx-key
       return (
         <div>
           <div style={parentPageStyle}>
@@ -163,6 +149,7 @@ class Parents extends React.Component {
                 <Table>
                   <TableHead>
                     <TableRow>
+                      <TableCell />
                       <TableCell align="center" className={tableStyle}>
                         <TableSortLabel
                           onClick={(e) => this.sort('first_name')}
@@ -191,16 +178,94 @@ class Parents extends React.Component {
                   </TableHead>
                   <TableBody>
                     {parents.map((parent) => (
-                      <TableRow key={parent['email']}>
-                        <TableCell align="center" component="th" scope="row"
-                          className={tableStyle}>
-                          {parent['first_name']}
-                        </TableCell>
-                        <TableCell align="center" className={tableStyle}>
-                          {parent['last_name']}</TableCell>
-                        <TableCell align="center" className={tableStyle}>
-                          {parent['email']}</TableCell>
-                      </TableRow>
+                      <React.Fragment key={parent['id']}>
+                        <TableRow key={parent['id']}>
+                          <TableCell>
+                            <IconButton aria-label="expand row" size="small"
+                              onClick={() => {
+                                const nTableCollapse=this.state.tableCollapse;
+                                nTableCollapse[parent['id']] =
+                                              !nTableCollapse[parent['id']];
+                                this.setState({tableCollapse: nTableCollapse});
+                              }}>
+                              {this.state.tableCollapse[parent['id']] ?
+                              <KeyboardArrowUpIcon />:<KeyboardArrowDownIcon />}
+                            </IconButton>
+                          </TableCell>
+                          <TableCell align="center" component="th"
+                            scope="row" className={tableStyle}>
+                            {parent['first_name']} </TableCell>
+                          <TableCell align="center" className={tableStyle}>
+                            {parent['last_name']} </TableCell>
+                          <TableCell align="center" className={tableStyle}>
+                            {parent['email']} </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell key = {parent['id']}
+                            style = {{paddingBottom: 0, paddingTop: 0}}
+                            colSpan = {6}>
+                            <Collapse
+                              in={this.state.tableCollapse[parent['id']]}
+                              timeout="auto" unmountOnExit>
+                              <Box margin={1}>
+                                <Typography variant="h6"
+                                  gutterBottom component="div">
+                                    Children
+                                  <Table>
+                                    <TableHead>
+                                      <TableRow>
+                                        <TableCell align="center"
+                                          className={tableStyle}>
+                                          Frist Name</TableCell>
+                                        <TableCell align="center"
+                                          className={tableStyle}>
+                                          Last Name</TableCell>
+                                        <TableCell align="center"
+                                          className={tableStyle}>
+                                          Grades</TableCell>
+                                        <TableCell align="center"
+                                          className={tableStyle}>
+                                          DOB</TableCell>
+                                        <TableCell align="center"
+                                          className={tableStyle}>
+                                          Completed Forms</TableCell>
+                                        <TableCell align="center"
+                                          className={tableStyle}>
+                                          Archived?</TableCell>
+                                      </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                      {parent['children'].map((student) =>
+                                        <TableRow key={student.first_name}>
+                                          <TableCell align="center"
+                                            className={tableStyle}>
+                                            {student.first_name}</TableCell>
+                                          <TableCell align="center"
+                                            className={tableStyle}>
+                                            {student.last_name}</TableCell>
+                                          <TableCell align="center"
+                                            className={tableStyle}>
+                                            {student.grade}</TableCell>
+                                          <TableCell align="center"
+                                            className={tableStyle}>
+                                            {student.DOB}</TableCell>
+                                          <TableCell align="center"
+                                            className={tableStyle}>
+                                            {student.forms_completed}
+                                          </TableCell>
+                                          <TableCell align="center"
+                                            className={tableStyle}>
+                                            {student.archived ? 'Y' : 'N'}
+                                          </TableCell>
+                                        </TableRow>)}
+                                    </TableBody>
+                                  </Table>
+                                </Typography>
+                              </Box>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      </React.Fragment>
                     ))}
                   </TableBody>
                 </Table>

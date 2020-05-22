@@ -210,10 +210,6 @@ def getStudentsOfParent():
         })
     return {'students': students}
 
-# def getParentsofStudent():
-#     student_id = ObjectId(request.json['student_id'])
-#     parents = studentsDOM.getParents(student_id)
-
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
     student_id = ObjectId(request.json['student_id'])
@@ -441,8 +437,33 @@ def getStudentProfile():
     parentIds = studentsDOM.getParents(studentID)
     parents = []
     for parentId in parentIds:
-        parents.append(parentsDOM.getParentProfile(parentId))
-
+        parent = parentsDOM.getParentProfile(parentId)
+        studentsOfParent = []
+        for studentID in parent['student_ids']:
+            student = studentsDOM.getFullInfo(studentID)
+            forms_completed = 0
+            for form in student['form_ids']:
+                if FormsDOM.isComplete(form):
+                    forms_completed += 1
+            student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+            student['completion_rate'] = forms_completed / len(student['form_ids'])
+            cleanedStudent = {}
+            cleanedStudent['first_name'] = student['first_name']
+            cleanedStudent['middle_name'] = student['middle_name']
+            cleanedStudent['last_name'] = student['last_name']
+            cleanedStudent['DOB'] = student['DOB']
+            cleanedStudent['grade'] = student['grade']
+            cleanedStudent['archived'] = student['archived']
+            cleanedStudent['forms_completed'] = student['forms_completed']
+            cleanedStudent['completion_rate'] = student['completion_rate']
+            studentsOfParent.append(cleanedStudent)
+        cleanedParent = {}
+        cleanedParent['id'] = str(parentId)
+        cleanedParent['children'] = studentsOfParent
+        cleanedParent['first_name'] = parent['first_name']
+        cleanedParent['last_name'] = parent['last_name']
+        cleanedParent['email'] = parent['email']
+        parents.append(cleanedParent)
     return {
         'forms': forms,
         'basic_info': studentsDOM.getBasicInfo(studentID),

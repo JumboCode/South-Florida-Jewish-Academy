@@ -35,6 +35,7 @@ class StudentProfile extends React.Component {
     this.state = {
       forms: null,
       basicInfo: null,
+      tableCollapse: null,
       currTab: 0,
       value: 0,
       authorized: false,
@@ -132,7 +133,7 @@ class StudentProfile extends React.Component {
               </Tabs>
               <div>
                 {currTab === 0 && <Forms {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
-                {currTab === 1 && <Parents parents = {parents} basicInfo={basicInfo}/>}
+                {currTab === 1 && <Parents parents = {parents}/>}
                 {currTab === 2 && <div>documents</div>}
                 {currTab === 3 && <ProfileEdit basicInfo={basicInfo}/>}
                 {currTab === 4 &&

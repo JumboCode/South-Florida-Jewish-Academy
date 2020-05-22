@@ -124,6 +124,7 @@ def getParentProfile(id):
         cleanedContent['email'] = content['email']
         cleanedContent['first_name'] = content['first_name']
         cleanedContent['last_name'] = content['last_name']
+        cleanedContent['student_ids'] = content['student_ids']
         return cleanedContent
 
 def getEmail(id):
