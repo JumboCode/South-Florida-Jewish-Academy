@@ -62,6 +62,7 @@ def getParentID(id):
 def updateFormData(id, data):
     writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'form_data': data}}))
     writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'last_updated': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}}))
+    mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'completed': True}})
     return writeR['nModified'] > 0
 
 
@@ -77,7 +78,6 @@ def getForms():
         }
         forms.append(info)
     return forms
-
 
 def testCreateForm(data):
     result = mongo.db.forms.insert_one(data)
@@ -122,7 +122,7 @@ def isComplete(id):
     contents = list(mongo.db.forms.find({'_id':ObjectId(id)}))
     if (len(contents) != 1):
         raise RuntimeError
-    return len(contents[0]['form_data']) != 0
+    return contents[0]['completed']
 
 def getParentId(id):
     contents = list(mongo.db.forms.find({'_id': id}))
@@ -131,3 +131,10 @@ def getParentId(id):
 
     print(contents[0]['parent_id'])
     return contents[0]['parent_id']
+
+def changeCompletion(id, status):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    if (len(contents) != 1):
+        raise RuntimeError
+    
+    mongo.db.forms.update({'_id': id}, {'$set': {'completed': not status}})

@@ -31,6 +31,7 @@ class FormViewer extends React.Component {
       edit: false,
       openSnackBar: false,
       success: false,
+      formStatus: false,
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -56,6 +57,7 @@ class FormViewer extends React.Component {
             basicInfo: data.basic_info,
             parentProfile: data.parent_profile,
             formInfo: data.form_info,
+            formStatus: data.status,
           });
         }).catch((error) => {
           console.log(error);
@@ -110,8 +112,37 @@ class FormViewer extends React.Component {
     });
   }
   // eslint-disable-next-line require-jsdoc
+  handleStatusChange() {
+    const {cookies} = this.props;
+    const{formStatus}= this.state
+    const body = {
+      form_id: this.props.match.params.formId,
+      form_status: formStatus,
+    };
+
+    fetch(apiUrl() + '/changeStatus', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      body: JSON.stringify(body),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+          this.setState({
+            formStatus: data.status,
+          });
+          console.log(data.status);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  }
+
+  // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar} = this.state;
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar,formStatus} = this.state;
     if (!basicInfo) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
@@ -161,7 +192,7 @@ class FormViewer extends React.Component {
                   <br/>
                   Last Updated: {formInfo.last_updated === null ? 'Never' : formInfo.last_updated}
                   <br/>
-                  Status: {formInfo.completed ? 'Complete' : 'Not Complete'}
+                  Status: {formStatus ? 'Complete' : 'Not Complete'}
                   <br/>
                 </div>
               </div>}
@@ -180,6 +211,35 @@ class FormViewer extends React.Component {
                   name='Turn on editing mode'
                   color="primary"
                 />
+                <Button
+                  variant='contained'
+                  disabled = {formStatus}
+                  style={{cursor: 'pointer'}}
+                  onClick={()=> {
+                    this.handleStatusChange();
+                  }}
+                >
+                  Mark as complete
+                </Button>
+                <Button
+                  variant='contained'
+                  style={{cursor: 'pointer'}}
+                  disabled = {!formStatus}
+                  onClick={()=> {
+                    this.handleStatusChange();
+                  }}
+                >
+                  Mark as incomplete
+                </Button>
+                <Button
+                  variant='contained'
+                  style={{cursor: 'pointer'}}
+                  // onClick={()=> {
+                  //   this.downloadData(file['file_id'], file['file_name']);
+                  // }}
+                >
+                  Reset Form
+                </Button>
               </div>
               {blankFormData !== null ?
                 <Paper style={{padding: 20, margin: 20}} elevation={2}>

@@ -502,7 +502,8 @@ def getStudentProfileForm():
         'blank_form_data': blank_form_data,
         'basic_info': studentsDOM.getBasicInfo(studentID),
         'parent_profile': cleaned_parent_profile,
-        'form_info': form_info
+        'form_info': form_info,
+        'status': form_info['completed'],
     }
 
 @app.route('/studentProfileUpdate', methods = ['POST'])
@@ -619,6 +620,17 @@ def getForms():
 def getBlankForm():
     blankForm_id = ObjectId(request.json['form_id'])
     return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
+
+@app.route('/changeStatus', methods = ['POST'])
+@requires_auth
+@log_action('Status of form changed')
+def changeStatus():
+    form_id = ObjectId(request.json['form_id'])
+    status = request.json['form_status']
+    FormsDOM.changeCompletion(form_id,status)
+    newStatus = not status
+    print(newStatus)
+    return {'status': newStatus}
 
 '''====================== UPLOAD FILE ======================'''
 @app.route('/saveImage', methods=['POST'])
