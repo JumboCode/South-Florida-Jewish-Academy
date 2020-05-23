@@ -211,6 +211,7 @@ class StudentDash extends React.Component {
               paddingBottom: 40,
               paddingRight: 40,
               minWidth: 750,
+              maxWidth: 1050,
               marginTop: 30}}>
               <div style={{paddingBottom: 10, fontSize: 20, paddingTop: 10}}>
                 {selectedName}

@@ -107,15 +107,18 @@ class FormManager extends React.Component {
       );
     }
 
-    const result = Object.values(formsList);
     const allInfoArr = [];
-    for (let i = 0; i < result.length; i++) {
-      const form = {
-        id: result[i].form_id,
-        name: result[i].form_name,
-        date: result[i].date_created,
-      };
-      allInfoArr.push(form);
+
+    if (formsList) {
+      const result = Object.values(formsList);
+      for (let i = 0; i < result.length; i++) {
+        const form = {
+          id: result[i].form_id,
+          name: result[i].form_name,
+          date: result[i].date_created,
+        };
+        allInfoArr.push(form);
+      }
     }
     return (
       <div style={{padding: 20}}>
@@ -133,7 +136,7 @@ class FormManager extends React.Component {
                 <Table aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Name</TableCell>
+                      <TableCell style={textSize}>Name</TableCell>
                       <TableCell style={textSize} align="right">Date Created</TableCell>
                       <TableCell style={textSize} align="right">Delete</TableCell>
                     </TableRow>

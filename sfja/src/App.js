@@ -44,7 +44,7 @@ export default function App() {
       >
         <Router>
           <div style={{width: '100vw'}}>
-            <Route path={['/students', '/formManager', '/addStudent', '/audit', '/formViewer', '/administration', '/blankFormBuilder', '/blankFormViewer']} component={Header}/>
+            <Route path={['/students', '/parents', '/formManager', '/addStudent', '/audit', '/formViewer', '/administration', '/blankFormBuilder', '/blankFormViewer']} component={Header}/>
             <Route path={['/parentdash/:parentKey/:studentId', '/parentdash/:parentKey/']} component={ParentHeader} />
             <Switch>
               <Route exact path='/parentdash/:parentKey' component={ParentDash}/>
