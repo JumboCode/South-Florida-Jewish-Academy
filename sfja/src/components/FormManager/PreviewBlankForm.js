@@ -139,7 +139,7 @@ class PreviewBlankForm extends React.Component {
               </div>
               {blankFormData !== null ?
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10, paddingBottom: 40}}>
-                  <Paper elevation={2} style={{padding: 40, minWidth: 650, marginTop: 30}}>
+                  <Paper elevation={2} style={{padding: 40, minWidth: 650, maxWidth: 1050, marginTop: 30}}>
                     <ReactFormGenerator
                       download_path=""
                       onSubmit={() => {}}
