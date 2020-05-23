@@ -253,7 +253,7 @@ class DocumentUpload extends React.Component {
                   <TableCell style={textSize} align = "left" >File ID</TableCell>
                   <TableCell style={textSize} align = "center" >Download</TableCell>
                   <TableCell style={textSize} align = "center" >Delete</TableCell>
-                  <TableCell style={textSize} align = "center" >Edit</TableCell>
+                  <TableCell style={textSize} align = "center" >Edit File Name</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
