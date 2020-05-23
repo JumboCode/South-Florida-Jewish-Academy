@@ -7,7 +7,7 @@ import {
   ListItemIcon,
   Paper,
 } from '@material-ui/core';
-import ScaleText from "react-scale-text";
+import ScaleText from 'react-scale-text';
 
 // eslint-disable-next-line require-jsdoc
 function sortGrades(a, b) {
@@ -36,7 +36,7 @@ function processOption(s) {
   return resultList.join(' ');
 }
 
-// eslint-disable-next-line require-jsdoc,react/prop-types
+// eslint-disable-next-line require-jsdoc,react/prop-types,max-len
 export default function Filters({filters, updateFilter, updateFormChecked, studentsLength, blankForms}) {
   const [selected, setSelected] = React.useState(null);
   if (filters === undefined) {
@@ -104,6 +104,7 @@ export default function Filters({filters, updateFilter, updateFormChecked, stude
       <Paper style={{marginTop: 20}}>
         Forms
         <List>
+          {/* eslint-disable-next-line react/prop-types */}
           {blankForms.map((form) => (<ListItem
             key={form.id}
             onClick={() => updateFormChecked(form.id, !form.checked)}

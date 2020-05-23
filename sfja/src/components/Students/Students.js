@@ -132,7 +132,7 @@ class Students extends React.Component {
       const {cookies} = this.props;
       const {sortBy, query, order} = this.state; // from constructor
       const cache = cookies.get('studentsCache');
-      var body;
+      let body;
       if (cache && !isNew) {
         body = {
           blankForms: cache.blankForms,
