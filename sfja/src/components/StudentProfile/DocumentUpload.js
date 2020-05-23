@@ -155,12 +155,12 @@ class DocumentUpload extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  renameFile() {
+  renameFile(newFileName) {
     const {cookies} = this.props;
     const {studentId} = this.props;
     const body = {
       file_id: this.state.toRename,
-      newFileName: this.state.newFileName,
+      newFileName: newFileName,
       studentId: studentId,
     };
     fetch(apiUrl() + '/renameFile', {
@@ -314,11 +314,11 @@ class DocumentUpload extends React.Component {
         <ConfirmationDialogText
           showWarning={openConfirmationDialogRename}
           setShowWarning={(newVal) => this.setState({openConfirmationDialogRename: newVal})}
-          onConfirm={this.renameFile.bind(this)}
+          onConfirm={(newVal) => this.renameFile(newVal)}
           message={'Are you sure you want to rename this file?'}
           confirmMessage='confirm'
           notConfirmMessage='cancel'
-          setNewName = {(newVal) => this.setState({newFileName: newVal})}
+          // setNewName = {(newVal) => this.setState({newFileName: newVal})}
         />
 
         <SnackBarMessage

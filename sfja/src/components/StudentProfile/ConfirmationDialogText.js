@@ -12,7 +12,7 @@ import {
 import PropTypes from 'prop-types';
 
 // eslint-disable-next-line require-jsdoc
-export default function ConfirmationDialog2({showWarning, setShowWarning, onConfirm, message, confirmMessage, notConfirmMessage, setNewName}) {
+export default function ConfirmationDialogText({showWarning, setShowWarning, onConfirm, message, confirmMessage, notConfirmMessage, setNewName}) {
   const [name, setname] = useState(
       'name',
   );
@@ -54,8 +54,7 @@ export default function ConfirmationDialog2({showWarning, setShowWarning, onConf
         </Button>
         <Button onClick={() => {
           setShowWarning(false);
-          setNewName(name);
-          onConfirm();
+          onConfirm(name);
         }}
         autoFocus
         variant='contained'
@@ -67,7 +66,7 @@ export default function ConfirmationDialog2({showWarning, setShowWarning, onConf
   );
 };
 
-ConfirmationDialog2.propTypes = {
+ConfirmationDialogText.propTypes = {
   showWarning: PropTypes.bool,
   setShowWarning: PropTypes.func,
   onConfirm: PropTypes.func,
