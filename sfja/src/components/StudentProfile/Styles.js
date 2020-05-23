@@ -1,10 +1,10 @@
 export const parentPageStyle = {
   display: 'flex',
   maxWidth: '100%',
-  paddingLeft: '15px',
-  paddingRight: '15px',
+  padding: '20px',
   fontFamily: 'Futura',
   justifyContent: 'center',
+  fontSize: '13px',
 };
 
 export const filterStyle = {

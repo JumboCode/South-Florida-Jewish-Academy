@@ -39,6 +39,7 @@ class StudentProfile extends React.Component {
       currTab: 0,
       value: 0,
       authorized: false,
+      id: this.props.match.params.id,
     };
   }
 
@@ -76,8 +77,17 @@ class StudentProfile extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    // force reload if detected different student
+    if (this.state.id !== nextProps.match.params.id) {
+      window.location.reload(false);
+    }
+    return true;
+  }
+
+  // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, basicInfo, currTab, blankForms, parents, authorized} = this.state;
+    const {forms, basicInfo, currTab, blankForms, parents, authorized, id} = this.state;
     // const {classes, children, className, ...other} = this.props;
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
@@ -133,7 +143,7 @@ class StudentProfile extends React.Component {
               </Tabs>
               <div>
                 {currTab === 0 && <Forms {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
-                {currTab === 1 && <Parents parents = {parents}/>}
+                {currTab === 1 && <Parents currId={id} history={this.props.history} parents={parents}/>}
                 {currTab === 2 && <div>documents</div>}
                 {currTab === 3 && <ProfileEdit basicInfo={basicInfo}/>}
                 {currTab === 4 &&

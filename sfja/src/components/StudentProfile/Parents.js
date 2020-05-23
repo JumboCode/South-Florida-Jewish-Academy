@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -33,16 +34,6 @@ const useStyles = {
   },
 };
 
-// const textSize = {
-//   style: {
-//     fontSize: 17,
-//   },
-//   autoComplete: 'new-password',
-//   form: {
-//     autoComplete: 'off',
-//   },
-// };
-
 // eslint-disable-next-line require-jsdoc
 class Parents extends React.Component {
     static propTypes = {
@@ -74,6 +65,7 @@ class Parents extends React.Component {
         order: 'incr',
         query: '',
         columnToQuery: 'first_name',
+        selected: null,
       };
     }
 
@@ -121,24 +113,10 @@ class Parents extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
-    updateParents(query) {
-      const {originalParents} = this.state;
-      if (originalParents === null) {
-        console.log('null');
-      }
-      const filtered = originalParents.filter((currParent) =>
-        (currParent.first_name.startsWith(query) ||
-            currParent.last_name.startsWith(query)));
-      this.setState({
-        parents: filtered,
-      });
-    }
-
-    // eslint-disable-next-line require-jsdoc
     render() {
-      const {parents, sortBy, order} = this.state;
+      const {parents, sortBy, order, selected} = this.state;
       // eslint-disable-next-line react/prop-types
-      const {classes, className} = this.props;
+      const {classes, className, history, currId} = this.props;
       const tableStyle = clsx(classes.text, className);
       // eslint-disable-next-line react/jsx-key
       return (
@@ -216,7 +194,7 @@ class Parents extends React.Component {
                                       <TableRow>
                                         <TableCell align="center"
                                           className={tableStyle}>
-                                          Frist Name</TableCell>
+                                          First Name</TableCell>
                                         <TableCell align="center"
                                           className={tableStyle}>
                                           Last Name</TableCell>
@@ -236,7 +214,18 @@ class Parents extends React.Component {
                                     </TableHead>
                                     <TableBody>
                                       {parent['children'].map((student) =>
-                                        <TableRow key={student.first_name}>
+                                        <TableRow
+                                          key={student.id}
+                                          onMouseEnter={() => this.setState({selected: parent['id'] + student.id})}
+                                          onMouseLeave={() => this.setState({selected: null})}
+                                          style={{cursor: 'pointer', backgroundColor: selected === parent['id'] + student.id ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
+                                          onClick={() => {
+                                            if (currId !== student.id) {
+                                              // eslint-disable-next-line react/prop-types
+                                              history.push('/students/' + student.id);
+                                            }
+                                          }}
+                                        >
                                           <TableCell align="center"
                                             className={tableStyle}>
                                             {student.first_name}</TableCell>

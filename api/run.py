@@ -448,6 +448,7 @@ def getStudentProfile():
             student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
             student['completion_rate'] = forms_completed / len(student['form_ids'])
             cleanedStudent = {}
+            cleanedStudent['id'] = str(student['_id'])
             cleanedStudent['first_name'] = student['first_name']
             cleanedStudent['middle_name'] = student['middle_name']
             cleanedStudent['last_name'] = student['last_name']
@@ -486,6 +487,10 @@ def getStudentProfileForm():
 
     parent_id = FormsDOM.getInfo(form_id, 'parent_id')
     parent_profile = parentsDOM.getParentProfile(parent_id)
+    cleaned_parent_profile = {}
+    cleaned_parent_profile['first_name'] = parent_profile['first_name']
+    cleaned_parent_profile['last_name'] = parent_profile['last_name']
+    cleaned_parent_profile['email'] = parent_profile['email']
 
     form_info = {}
     form_info['name'] = blankFormsDOM.getFormName(blank_form_id)
@@ -496,7 +501,7 @@ def getStudentProfileForm():
         'form_data': form_data,
         'blank_form_data': blank_form_data,
         'basic_info': studentsDOM.getBasicInfo(studentID),
-        'parent_profile': parent_profile,
+        'parent_profile': cleaned_parent_profile,
         'form_info': form_info
     }
 
