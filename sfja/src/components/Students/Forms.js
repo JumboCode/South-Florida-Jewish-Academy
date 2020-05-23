@@ -18,13 +18,15 @@ export default function Forms({updateFormChecked, blankForms}) {
           onMouseEnter={() => setSelected('form' + form.id)}
           onMouseLeave={() => setSelected(null)}
           style={{
+            paddingTop: 1,
+            paddingBottom: 1,
             cursor: 'pointer',
             backgroundColor: selected === 'form' + form.id ?
               'rgba(211,211,211, 0.7)' :
               '#ffffff'}}
         >
           <ListItemIcon
-            style={{width: 300}}
+            style={{width: 150}}
           >
             <Checkbox
               edge='start'
@@ -32,7 +34,7 @@ export default function Forms({updateFormChecked, blankForms}) {
             />
             <ScaleText
               widthOnly={true}
-              maxFontSize={20}
+              maxFontSize={14}
             >
               {form.name}
             </ScaleText>

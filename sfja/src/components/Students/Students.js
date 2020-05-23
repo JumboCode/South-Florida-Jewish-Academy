@@ -18,7 +18,7 @@ import clsx from 'clsx';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {CircularProgress, TextField, Button} from '@material-ui/core';
+import {CircularProgress, TextField, Button, Checkbox} from '@material-ui/core';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Filters from './Filters';
 import ArchiveIcon from '@material-ui/icons/Archive';
@@ -26,6 +26,7 @@ import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
 import Forms from './Forms';
+import ResendForms from './ResendForms';
 
 const theme = createMuiTheme({
   palette: {
@@ -77,8 +78,8 @@ class Students extends React.Component {
       const {cookies} = this.props;
       const cache = cookies.get('studentsCache');
       this.state = {
-        students: null,
-        originalStudents: null,
+        filteredStudents: [],
+        originalStudents: [],
         sortBy: cache ? cache.sortBy : 'first_name',
         order: cache ? cache.order : 'desc',
         query: cache ? cache.query : '',
@@ -106,12 +107,14 @@ class Students extends React.Component {
           },
         },
         blankForms: [],
+        studentsChecked: cache ? cache.studentsChecked : new Set(),
+        showSelectors: cache ? cache.showSelectors : false,
       };
       this.saveCache = this.saveCache.bind(this);
     }
 
     saveCache() {
-      const {sortBy, order, query, columnToQuery, filters, blankForms} = this.state;
+      const {sortBy, order, query, columnToQuery, filters, blankForms, showSelectors, studentsChecked} = this.state;
       const {cookies} = this.props;
       const newCache = {
         sortBy: sortBy,
@@ -120,6 +123,8 @@ class Students extends React.Component {
         columnToQuery: columnToQuery,
         filters: filters,
         blankForms: blankForms,
+        showSelectors: showSelectors,
+        studentsChecked: Array.from(studentsChecked),
       };
       cookies.set('studentsCache', newCache);
     }
@@ -154,6 +159,7 @@ class Students extends React.Component {
           .then((res) => res.json())
           .then((data) => {
             if (cache) {
+              console.log('cache', cache);
               // combine old + new filters
               const newFilters = this.makeFilters(data.students);
               const oldFiltersGrades = cache.filters.grades;
@@ -169,7 +175,7 @@ class Students extends React.Component {
               newFilters.archived = cache.filters.archived;
               newFilters.completed = cache.filters.completed;
               this.setState({
-                students: data.students,
+                filteredStudents: data.students,
                 originalStudents: data.students,
                 sortBy: cache.sortBy,
                 order: cache.order,
@@ -178,11 +184,13 @@ class Students extends React.Component {
                 filters: newFilters,
                 authorized: data.authorized,
                 blankForms: isNew ? newBlankForms : cache.blankForms.length !== data.forms.length ? this.makeBlankForms(data.forms) : cache.blankForms,
+                showSelectors: cache.showSelectors,
+                studentsChecked: new Set(cache.studentsChecked),
               });
               return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
             } else {
               this.setState({
-                students: data.students,
+                filteredStudents: data.students,
                 originalStudents: data.students,
                 filters: this.makeFilters(data.students),
                 authorized: data.authorized,
@@ -197,7 +205,7 @@ class Students extends React.Component {
             if (query) {
               this.updateStudents(query);
             }
-          }).catch(console.log);
+          }).then(() => this.reFilter()).catch(console.log);
       window.addEventListener('beforeunload', this.saveCache);
     }
 
@@ -277,37 +285,54 @@ class Students extends React.Component {
     }
 
     sort(sortBy, order) {
-      const {students} = this.state;
+      const {filteredStudents} = this.state;
       const newData = this.stableSort(
-          students,
+          filteredStudents,
           this.getComparator(order, sortBy),
       );
       this.setState({
         sortBy: sortBy,
-        students: newData,
+        filteredStudents: newData,
         order: order,
       });
     }
 
     updateStudents(query) {
-      const {originalStudents} = this.state;
-      if (originalStudents === null) {
-        console.log('null');
-      }
+      const {filteredStudents} = this.state;
+
       query = new RegExp(query, 'ig');
-      const filtered = originalStudents.filter((currStudent) =>
+      const filtered = filteredStudents.filter((currStudent) =>
         (currStudent.first_name.search(query) !== -1 ||
             currStudent.last_name.search(query) !== -1));
       this.setState({
-        students: filtered,
+        filteredStudents: filtered,
       });
     }
 
     updateFilter(filterToUpdate, optionToUpdate, set) {
-      const {filters} = this.state;
+      const {filters, originalStudents} = this.state;
       filters[filterToUpdate][optionToUpdate] = set;
       this.setState({
         filters: filters,
+        filteredStudents: originalStudents.filter((student) => {
+          const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+          const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+          const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+          return showGrades && showArchived && showComplete;
+        }),
+      });
+    }
+
+    reFilter() {
+      const {filters, originalStudents} = this.state;
+      this.setState({
+        filters: filters,
+        filteredStudents: originalStudents.filter((student) => {
+          const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+          const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+          const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+          return showGrades && showArchived && showComplete;
+        }),
       });
     }
 
@@ -327,7 +352,7 @@ class Students extends React.Component {
 
     archivalStudentChanger(studentId, action) {
       const {cookies} = this.props;
-      const {students, originalStudents, filters} = this.state;
+      const {filteredStudents, originalStudents, filters} = this.state;
       const body = {
         id: studentId,
       };
@@ -342,15 +367,15 @@ class Students extends React.Component {
       }).then((x) => {
         if (x.status === 200) {
           const newOriginalData = this.flipArchival(studentId, originalStudents);
-          const newStudents = this.flipArchival(studentId, students);
+          const newStudents = this.flipArchival(studentId, filteredStudents);
           this.setState({
             openSuccessMessage: true,
             originalStudents: newOriginalData,
-            students: newStudents,
-            filters: this.refreshFilters(students, filters),
+            filteredStudents: newStudents,
+            filters: this.refreshFilters(originalStudents, filters),
           });
         }
-      }).catch((error) => {
+      }).then(() => this.reFilter()).catch((error) => {
         this.setState({
           openFailureMessage: true,
         });
@@ -366,8 +391,12 @@ class Students extends React.Component {
       this.updateData(newBlankForms, true);
     }
 
+    setShowSelectors(newVal) {
+      this.setState({showSelectors: newVal});
+    }
+
     render() {
-      const {students, sortBy, order, filters, authorized, blankForms, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected} = this.state;
+      const {filteredStudents, sortBy, order, filters, authorized, blankForms, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected, showSelectors, studentsChecked} = this.state;
       // eslint-disable-next-line react/prop-types
       const {classes, className} = this.props;
       const tableStyle = clsx(classes.text, className);
@@ -378,12 +407,13 @@ class Students extends React.Component {
               <Filters
                 filters={filters}
                 updateFilter={this.updateFilter.bind(this)}
-                studentsLength={students ? students.length : null}
+                filteredLength={filteredStudents.length}
               />
               <Forms
                 blankForms={blankForms}
                 updateFormChecked={this.updateFormChecked.bind(this)}
               />
+              { blankForms.length !== 0 && <ResendForms blankForms={blankForms} setShowSelectors={(newVal) => this.setShowSelectors(newVal)} showSelectors={showSelectors}/>}
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
               <div style={{paddingTop: 10, paddingBottom: 10}}>
@@ -403,7 +433,7 @@ class Students extends React.Component {
                   </TextField>
                 </MuiThemeProvider>
               </div>
-              {students === null ?
+              {filteredStudents === null ?
                 <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
                   <CircularProgress/>
                 </div> :
@@ -411,6 +441,25 @@ class Students extends React.Component {
                   <Table>
                     <TableHead>
                       <TableRow>
+                        {showSelectors &&
+                          <TableCell
+                            className={tableStyle}
+                          >
+                            <Checkbox
+                              checked={studentsChecked.size === filteredStudents.length}
+                              onChange={(e) => {
+                                if (studentsChecked.size < filteredStudents.length) {
+                                  const newSet = new Set(filteredStudents.map((student) => student.student_id));
+                                  console.log('newSet', newSet);
+                                  this.setState({studentsChecked: newSet});
+                                } else {
+                                  const newSet = new Set();
+                                  this.setState({studentsChecked: newSet});
+                                }
+                              }}
+                            />
+                          </TableCell>
+                        }
                         <TableCell className={tableStyle}>
                           <TableSortLabel
                             onClick={(e) => this.sort('first_name', order === 'desc' ? 'asc' : 'desc')}
@@ -464,60 +513,74 @@ class Students extends React.Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {students.map((student) => {
-                        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
-                        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
-                        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+                      {filteredStudents.map((student) => {
                         const opacity = selected === student.student_id ? '0.7' : '0.5';
-                        if (showGrades && showArchived && showComplete) {
-                          return (
-                            <TableRow
-                              key={student.student_id}
-                              style={{cursor: 'pointer', backgroundColor: student.archived ? 'rgba(219, 103, 103, ' + opacity + ')' : selected === student.student_id ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
-                              onClick={() => this.props.history.push('/students/' + student.student_id)}
-                              onMouseEnter={() => this.setState({selected: student.student_id})}
-                              onMouseLeave={() => this.setState({selected: null})}
-                            >
+                        return (
+                          <TableRow
+                            key={student.student_id}
+                            style={{cursor: 'pointer', backgroundColor: student.archived ? 'rgba(219, 103, 103, ' + opacity + ')' : selected === student.student_id ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
+                            onClick={() => this.props.history.push('/students/' + student.student_id)}
+                            onMouseEnter={() => this.setState({selected: student.student_id})}
+                            onMouseLeave={() => this.setState({selected: null})}
+                          >
+                            {showSelectors && <TableCell align="left"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!studentsChecked.has(student.student_id)) {
+                                  let newSet = new Set(studentsChecked);
+                                  newSet = newSet.add(student.student_id);
+                                  console.log('newset', newSet);
+                                  this.setState({studentsChecked: newSet});
+                                } else {
+                                  const newSet = new Set(studentsChecked);
+                                  newSet.delete(student.student_id);
+                                  console.log('delete', newSet);
+                                  this.setState({studentsChecked: newSet});
+                                }
+                              }
+                              }
+                            ><Checkbox
+                                checked={studentsChecked.has(student.student_id)}
+                              /></TableCell>}
+                            <TableCell align="center" className={tableStyle}>
+                              {student.first_name}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.last_name}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.grade}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.DOB}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.forms_completed}
+                            </TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.archived ? 'Y' : 'N'}
+                            </TableCell>
+                            {authorized ? (
                               <TableCell align="center" className={tableStyle}>
-                                {student.first_name}</TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.last_name}</TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.grade}</TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.DOB}</TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.forms_completed}
+                                {student.archived ? <Button
+                                  variant='contained'
+                                  style={{cursor: 'pointer'}}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true});
+                                  }}
+                                >
+                                  <UnarchiveIcon fontSize='large' />
+                                </Button>:<Button
+                                  variant='contained'
+                                  style={{cursor: 'pointer'}}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true});
+                                  }}
+                                >
+                                  <ArchiveIcon fontSize='large'/>
+                                </Button>}
                               </TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.archived ? 'Y' : 'N'}
-                              </TableCell>
-                              {authorized ? (
-                                <TableCell align="center" className={tableStyle}>
-                                  {student.archived ? <Button
-                                    variant='contained'
-                                    style={{cursor: 'pointer'}}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true});
-                                    }}
-                                  >
-                                    <UnarchiveIcon fontSize='large' />
-                                  </Button>:<Button
-                                    variant='contained'
-                                    style={{cursor: 'pointer'}}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true});
-                                    }}
-                                  >
-                                    <ArchiveIcon fontSize='large'/>
-                                  </Button>}
-                                </TableCell>
-                              ) : null}
-                            </TableRow>
-                          );
-                        }
+                            ) : null}
+                          </TableRow>
+                        );
                       })}
                     </TableBody>
                   </Table>

@@ -36,7 +36,7 @@ function processOption(s) {
 }
 
 // eslint-disable-next-line require-jsdoc,react/prop-types,max-len
-export default function Filters({filters, updateFilter, studentsLength}) {
+export default function Filters({filters, updateFilter, filteredLength}) {
   const [selected, setSelected] = React.useState(null);
   if (filters === undefined) {
     return (<div>
@@ -67,6 +67,8 @@ export default function Filters({filters, updateFilter, studentsLength}) {
                 }
                 style={{
                   cursor: 'pointer',
+                  paddingTop: 1,
+                  paddingBottom: 1,
                   backgroundColor: selected === filter + optionKey ?
                     'rgba(211,211,211, 0.7)' :
                     '#ffffff'}}
@@ -83,11 +85,13 @@ export default function Filters({filters, updateFilter, studentsLength}) {
                     disableRipple
                     inputProps={{'aria-labelledby': optionKey}}
                   />
-                  {processOption(optionKey)}
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    {processOption(optionKey)}
+                  </div>
                 </ListItemIcon>
               </ListItem>
             ))}
-            {filter === 'grades' && studentsLength === null ?
+            {filter === 'grades' && filteredLength === null ?
               // eslint-disable-next-line max-len
               <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
                 <CircularProgress/>
@@ -96,7 +100,7 @@ export default function Filters({filters, updateFilter, studentsLength}) {
         </div>
       ))}
       <div style={{display: 'flex', fontSize: 13, padding: 10}}>
-        Total student count: {studentsLength}
+        Displaying {filteredLength} student{filteredLength === 1 ? '' : 's'}.
       </div>
     </Paper>);
 }
