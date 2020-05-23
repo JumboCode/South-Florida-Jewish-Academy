@@ -144,9 +144,10 @@ class StudentProfile extends React.Component {
               <div>
                 {currTab === 0 && <Forms {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
                 {currTab === 1 && <Parents currId={id} history={this.props.history} parents={parents}/>}
-                {currTab === 2 && <div>documents</div>}
-                {currTab === 3 && <ProfileEdit basicInfo={basicInfo}/>}
-                {currTab === 4 &&
+                {currTab === 2 && <DocumentUpload studentId={basicInfo['_id']}/>}
+                {currTab === 3 && <div>documents</div>}
+                {currTab === 4 && <ProfileEdit basicInfo={basicInfo}/>}
+                {currTab === 5 &&
                 <ResendForms
                   studentForms={forms}
                   blankForms={blankForms}
