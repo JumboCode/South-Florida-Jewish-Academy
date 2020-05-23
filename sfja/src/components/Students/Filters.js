@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   Paper,
 } from '@material-ui/core';
+import ScaleText from "react-scale-text";
 
 // eslint-disable-next-line require-jsdoc
 function sortGrades(a, b) {
@@ -114,12 +115,19 @@ export default function Filters({filters, updateFilter, updateFormChecked, stude
                 'rgba(211,211,211, 0.7)' :
                 '#ffffff'}}
           >
-            <ListItemIcon>
+            <ListItemIcon
+              style={{width: 300}}
+            >
               <Checkbox
                 edge='start'
                 checked={form.checked}
               />
-              {form.name}
+              <ScaleText
+                widthOnly={true}
+                maxFontSize={20}
+              >
+                {form.name}
+              </ScaleText>
             </ListItemIcon>
           </ListItem>))}
         </List>
