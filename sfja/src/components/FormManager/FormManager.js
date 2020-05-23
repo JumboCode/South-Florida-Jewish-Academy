@@ -136,7 +136,7 @@ class FormManager extends React.Component {
                 <Table aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Name</TableCell>
+                      <TableCell style={textSize}>Name</TableCell>
                       <TableCell style={textSize} align="right">Date Created</TableCell>
                       <TableCell style={textSize} align="right">Delete</TableCell>
                     </TableRow>
