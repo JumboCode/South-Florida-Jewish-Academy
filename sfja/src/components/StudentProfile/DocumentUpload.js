@@ -17,7 +17,7 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CreateIcon from '@material-ui/icons/Create';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
-import ConfirmationDialog2 from './ConfirmationDialog2';
+import ConfirmationDialogText from './ConfirmationDialogText';
 import {CircularProgress, Button} from '@material-ui/core';
 
 const textSize = {
@@ -311,7 +311,7 @@ class DocumentUpload extends React.Component {
           notConfirmMessage='cancel'
         />
 
-        <ConfirmationDialog2
+        <ConfirmationDialogText
           showWarning={openConfirmationDialogRename}
           setShowWarning={(newVal) => this.setState({openConfirmationDialogRename: newVal})}
           onConfirm={this.renameFile.bind(this)}
