@@ -208,7 +208,6 @@ def gridFile(id,fileName):
 
     mongo.db.files.update({'_id': id}, {'$set': {'filename': fileName}})
     
-
 def getFiles(id):
     contents = list(mongo.db.students.find({'_id': id}))
     if len(contents) != 1:

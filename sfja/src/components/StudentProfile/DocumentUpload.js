@@ -334,7 +334,7 @@ class DocumentUpload extends React.Component {
           message={'File Successfully Deleted'}
           severity='success'
         />
-
+        
       </div>
 
     );

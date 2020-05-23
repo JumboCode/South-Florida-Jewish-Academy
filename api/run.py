@@ -725,8 +725,6 @@ def renameFile():
 
     return{'files': cleanFiles}
  
-    
-
 '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])
