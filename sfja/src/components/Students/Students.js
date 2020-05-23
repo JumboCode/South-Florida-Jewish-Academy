@@ -25,6 +25,7 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
+import Forms from './Forms';
 
 const theme = createMuiTheme({
   palette: {
@@ -378,6 +379,8 @@ class Students extends React.Component {
                 filters={filters}
                 updateFilter={this.updateFilter.bind(this)}
                 studentsLength={students ? students.length : null}
+              />
+              <Forms
                 blankForms={blankForms}
                 updateFormChecked={this.updateFormChecked.bind(this)}
               />

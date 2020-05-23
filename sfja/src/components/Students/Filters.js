@@ -7,7 +7,6 @@ import {
   ListItemIcon,
   Paper,
 } from '@material-ui/core';
-import ScaleText from 'react-scale-text';
 
 // eslint-disable-next-line require-jsdoc
 function sortGrades(a, b) {
@@ -37,7 +36,7 @@ function processOption(s) {
 }
 
 // eslint-disable-next-line require-jsdoc,react/prop-types,max-len
-export default function Filters({filters, updateFilter, updateFormChecked, studentsLength, blankForms}) {
+export default function Filters({filters, updateFilter, studentsLength}) {
   const [selected, setSelected] = React.useState(null);
   if (filters === undefined) {
     return (<div>
@@ -47,91 +46,57 @@ export default function Filters({filters, updateFilter, updateFormChecked, stude
     </div>);
   }
   return (
-    <div>
-      <Paper>
-      Filters
-        {Object.keys(filters).map((filter) => (
-          <div key={filter}>
-            <div style={{textAlign: 'left', paddingLeft: 10}}>
-              {filter[0].toUpperCase().concat(filter.substring(1)).concat(':')}
-            </div>
-            <List>
-              {/* eslint-disable-next-line max-len */}
-              {Object.keys(filters[filter]).sort(sortGrades).map((optionKey) => (
-                <ListItem
-                  key={optionKey}
-                  onClick={
-                    () => updateFilter(
-                        filter,
-                        optionKey,
-                        !filters[filter][optionKey],
-                    )
-                  }
-                  style={{
-                    cursor: 'pointer',
-                    backgroundColor: selected === filter + optionKey ?
-                      'rgba(211,211,211, 0.7)' :
-                      '#ffffff'}}
-                  onMouseEnter={() => setSelected(filter + optionKey)}
-                  onMouseLeave={() => setSelected(null)}
-                >
-                  <ListItemIcon
-                    style={{cursor: 'pointer'}}
-                  >
-                    <Checkbox
-                      edge="start"
-                      checked={filters[filter][optionKey]}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{'aria-labelledby': optionKey}}
-                    />
-                    {processOption(optionKey)}
-                  </ListItemIcon>
-                </ListItem>
-              ))}
-              {filter === 'grades' && studentsLength === null ?
-                // eslint-disable-next-line max-len
-                <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                  <CircularProgress/>
-                </div> : null}
-            </List>
+    <Paper>
+    Filters
+      {Object.keys(filters).map((filter) => (
+        <div key={filter}>
+          <div style={{textAlign: 'left', paddingLeft: 10}}>
+            {filter[0].toUpperCase().concat(filter.substring(1)).concat(':')}
           </div>
-        ))}
-        <div style={{display: 'flex', fontSize: 13, padding: 10}}>
-          Total student count: {studentsLength}
-        </div>
-      </Paper>
-      <Paper style={{marginTop: 20}}>
-        Forms
-        <List>
-          {/* eslint-disable-next-line react/prop-types */}
-          {blankForms.map((form) => (<ListItem
-            key={form.id}
-            onClick={() => updateFormChecked(form.id, !form.checked)}
-            onMouseEnter={() => setSelected('form' + form.id)}
-            onMouseLeave={() => setSelected(null)}
-            style={{
-              cursor: 'pointer',
-              backgroundColor: selected === 'form' + form.id ?
-                'rgba(211,211,211, 0.7)' :
-                '#ffffff'}}
-          >
-            <ListItemIcon
-              style={{width: 300}}
-            >
-              <Checkbox
-                edge='start'
-                checked={form.checked}
-              />
-              <ScaleText
-                widthOnly={true}
-                maxFontSize={20}
+          <List>
+            {/* eslint-disable-next-line max-len */}
+            {Object.keys(filters[filter]).sort(sortGrades).map((optionKey) => (
+              <ListItem
+                key={optionKey}
+                onClick={
+                  () => updateFilter(
+                      filter,
+                      optionKey,
+                      !filters[filter][optionKey],
+                  )
+                }
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: selected === filter + optionKey ?
+                    'rgba(211,211,211, 0.7)' :
+                    '#ffffff'}}
+                onMouseEnter={() => setSelected(filter + optionKey)}
+                onMouseLeave={() => setSelected(null)}
               >
-                {form.name}
-              </ScaleText>
-            </ListItemIcon>
-          </ListItem>))}
-        </List>
-      </Paper>
-    </div>);
+                <ListItemIcon
+                  style={{cursor: 'pointer'}}
+                >
+                  <Checkbox
+                    edge="start"
+                    checked={filters[filter][optionKey]}
+                    tabIndex={-1}
+                    disableRipple
+                    inputProps={{'aria-labelledby': optionKey}}
+                  />
+                  {processOption(optionKey)}
+                </ListItemIcon>
+              </ListItem>
+            ))}
+            {filter === 'grades' && studentsLength === null ?
+              // eslint-disable-next-line max-len
+              <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+                <CircularProgress/>
+              </div> : null}
+          </List>
+        </div>
+      ))}
+      <div style={{display: 'flex', fontSize: 13, padding: 10}}>
+        Total student count: {studentsLength}
+      </div>
+    </Paper>);
 }
