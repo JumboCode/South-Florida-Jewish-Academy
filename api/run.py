@@ -632,6 +632,22 @@ def changeStatus():
     print(newStatus)
     return {'status': newStatus}
 
+@app.route('/resetForm', methods = ['POST'])
+@requires_auth
+@log_action('Form Data Reset')
+def resetForm():
+    form_id = ObjectId(request.json['form_id'])
+    newData = FormsDOM.clearForm(form_id)
+    print(newData)
+
+    newData['_id'] = str(newData['_id'])
+    newData['blank_forms_id'] = str(newData['blank_forms_id'])
+    newData['parent_id'] = str(newData['parent_id'])
+    print(newData)
+    return {'new_form_info':newData,
+            'status':newData['completed'],
+            'formData': newData['form_data']}
+
 '''====================== UPLOAD FILE ======================'''
 @app.route('/saveImage', methods=['POST'])
 @requires_auth

@@ -136,5 +136,15 @@ def changeCompletion(id, status):
     contents = list(mongo.db.forms.find({'_id': id}))
     if (len(contents) != 1):
         raise RuntimeError
-    
+
     mongo.db.forms.update({'_id': id}, {'$set': {'completed': not status}})
+
+def clearForm(id):
+    contents = list(mongo.db.forms.find({'_id': id}))
+    if (len(contents) != 1):
+        raise RuntimeError
+
+    newFormData=[]
+    mongo.db.forms.update({'_id': id}, {'$set': {'completed': False, 'form_data':newFormData,'last_updated': None, 'last_viewed':None}})
+    contents = list(mongo.db.forms.find({'_id': id}))
+    return contents[0]

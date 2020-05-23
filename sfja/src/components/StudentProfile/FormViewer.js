@@ -97,6 +97,7 @@ class FormViewer extends React.Component {
         this.setState({
           openSnackBar: true,
           success: true,
+          formStatus:true,
         });
       } else {
         this.setState({
@@ -114,7 +115,7 @@ class FormViewer extends React.Component {
   // eslint-disable-next-line require-jsdoc
   handleStatusChange() {
     const {cookies} = this.props;
-    const{formStatus}= this.state
+    const{formStatus}= this.state;
     const body = {
       form_id: this.props.match.params.formId,
       form_status: formStatus,
@@ -134,6 +135,34 @@ class FormViewer extends React.Component {
             formStatus: data.status,
           });
           console.log(data.status);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  handleReset() {
+    const {cookies} = this.props;
+    const body = {
+      form_id: this.props.match.params.formId,
+    };
+
+    fetch(apiUrl() + '/resetForm', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      body: JSON.stringify(body),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+          this.setState({
+            formInfo: data.new_form_info,
+            formStatus:data.status,
+            formData:data.formData,
+          });
         })
         .catch((error) => {
           console.error(error);
@@ -234,9 +263,9 @@ class FormViewer extends React.Component {
                 <Button
                   variant='contained'
                   style={{cursor: 'pointer'}}
-                  // onClick={()=> {
-                  //   this.downloadData(file['file_id'], file['file_name']);
-                  // }}
+                  onClick={()=> {
+                    this.handleReset();
+                  }}
                 >
                   Reset Form
                 </Button>
