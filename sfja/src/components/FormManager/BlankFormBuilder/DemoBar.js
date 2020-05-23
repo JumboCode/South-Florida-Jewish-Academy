@@ -98,13 +98,6 @@ class DemoBar extends React.Component {
         >
           Add Form
         </Button>
-        <Button
-          variant='contained'
-          className="btn btn-primary pull-right"
-          style={{marginRight: '10px', marginTop: 10}}
-          onClick={this.showPreview.bind(this)}>
-          Preview Form
-        </Button>
 
         { this.state.previewVisible &&
         <div className={modalClass}>
