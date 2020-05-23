@@ -692,7 +692,6 @@ def downloadFile():
 @requires_auth
 @log_action('Deleted File')
 def deleteFile():
-    print("in here!")
     file_id = ObjectId(request.json['file_id'])
     student_id = ObjectId(request.json['studentId'])
     fs.delete(file_id)
@@ -706,6 +705,27 @@ def deleteFile():
         cleanFiles.append(tempDict)
 
     return{'files': cleanFiles}
+
+@app.route('/renameFile', methods=['POST'])
+@requires_auth
+@log_action('Renamed File')
+def renameFile():
+    file_id = ObjectId(request.json['file_id'])
+    student_id = ObjectId(request.json['studentId'])
+    new_file_name = request.json['newFileName']
+    studentsDOM.gridFile(file_id,new_file_name)
+    files = studentsDOM.renameFile(student_id,file_id,new_file_name)
+
+    cleanFiles=[]
+    for file in files:
+        tempDict = {}
+        tempDict['file_id'] = str(file['fileId'])
+        tempDict['file_name'] = file['filename']
+        cleanFiles.append(tempDict)
+
+    return{'files': cleanFiles}
+ 
+    
 
 '''======================  ADD STUDENT ======================'''
 
