@@ -134,7 +134,7 @@ class Students extends React.Component {
       window.removeEventListener('beforeunload', this.saveCache);
     }
 
-    updateData(newBlankForms, isNew) {
+    updateData(newBlankForms, studentsChecked, isNew) {
       const {cookies} = this.props;
       const {sortBy, query, order} = this.state; // from constructor
       const cache = cookies.get('studentsCache');
@@ -159,7 +159,6 @@ class Students extends React.Component {
           .then((res) => res.json())
           .then((data) => {
             if (cache) {
-              console.log('cache', cache);
               // combine old + new filters
               const newFilters = this.makeFilters(data.students);
               const oldFiltersGrades = cache.filters.grades;
@@ -185,7 +184,7 @@ class Students extends React.Component {
                 authorized: data.authorized,
                 blankForms: isNew ? newBlankForms : cache.blankForms.length !== data.forms.length ? this.makeBlankForms(data.forms) : cache.blankForms,
                 showSelectors: cache.showSelectors,
-                studentsChecked: new Set(cache.studentsChecked),
+                studentsChecked: isNew ? newBlankForms : new Set(cache.studentsChecked),
               });
               return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
             } else {
@@ -210,7 +209,7 @@ class Students extends React.Component {
     }
 
     componentDidMount() {
-      this.updateData([], false);
+      this.updateData([], new Set(), false);
     }
 
     everyTrue(filter) {
@@ -389,12 +388,12 @@ class Students extends React.Component {
     }
 
     updateFormChecked(formId, newVal) {
-      const {blankForms} = this.state;
+      const {blankForms, studentsChecked} = this.state;
       const newBlankForms = blankForms.map((form) => (formId === form.id ? {id: form.id, name: form.name, checked: newVal} : form));
       this.setState({
         blankForms: newBlankForms,
       });
-      this.updateData(newBlankForms, true);
+      this.updateData(newBlankForms, studentsChecked, true);
     }
 
     setShowSelectors(newVal) {
@@ -462,7 +461,6 @@ class Students extends React.Component {
                               onChange={(e) => {
                                 if (studentsChecked.size < filteredStudents.length) {
                                   const newSet = new Set(filteredStudents.map((student) => student.student_id));
-                                  console.log('newSet', newSet);
                                   this.setState({studentsChecked: newSet});
                                 } else {
                                   const newSet = new Set();
@@ -541,12 +539,10 @@ class Students extends React.Component {
                                 if (!studentsChecked.has(student.student_id)) {
                                   let newSet = new Set(studentsChecked);
                                   newSet = newSet.add(student.student_id);
-                                  console.log('newset', newSet);
                                   this.setState({studentsChecked: newSet});
                                 } else {
                                   const newSet = new Set(studentsChecked);
                                   newSet.delete(student.student_id);
-                                  console.log('delete', newSet);
                                   this.setState({studentsChecked: newSet});
                                 }
                               }
