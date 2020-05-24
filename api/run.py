@@ -462,8 +462,8 @@ def getStudentProfile():
     for parentId in parentIds:
         parent = parentsDOM.getParentProfile(parentId)
         studentsOfParent = []
-        for studentID in parent['student_ids']:
-            student = studentsDOM.getFullInfo(studentID)
+        for currStudentID in parent['student_ids']:
+            student = studentsDOM.getFullInfo(currStudentID)
             forms_completed = 0
             for form in student['form_ids']:
                 if FormsDOM.isComplete(form):
