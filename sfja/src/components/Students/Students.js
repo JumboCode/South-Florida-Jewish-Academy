@@ -136,7 +136,7 @@ class Students extends React.Component {
 
     updateData(newBlankForms, studentsChecked, isNew) {
       const {cookies} = this.props;
-      const {sortBy, query, order} = this.state; // from constructor
+      const {sortBy, order} = this.state; // from constructor
       const cache = cookies.get('studentsCache');
       let body;
       if (cache && !isNew) {
