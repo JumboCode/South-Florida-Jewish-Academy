@@ -15,7 +15,9 @@ import {Cookies, withCookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CreateIcon from '@material-ui/icons/Create';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
+import ConfirmationDialogText from './ConfirmationDialogText';
 import {CircularProgress, Button} from '@material-ui/core';
 
 const textSize = {
@@ -40,6 +42,9 @@ class DocumentUpload extends React.Component {
       toDelete: null,
       openConfirmationDialog: false,
       success: false,
+      newFileName: null,
+      openConfirmationDialogRename: false,
+      toRename: null,
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -150,8 +155,36 @@ class DocumentUpload extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
+  renameFile(newFileName) {
+    const {cookies} = this.props;
+    const {studentId} = this.props;
+    const body = {
+      file_id: this.state.toRename,
+      newFileName: newFileName,
+      studentId: studentId,
+    };
+    fetch(apiUrl() + '/renameFile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      body: JSON.stringify(body),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+          this.setState({
+            files: data.files,
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  }
+
+  // eslint-disable-next-line require-jsdoc
   render() {
-    const {success, openSuccessMessage, openDeleteMessage, files, selectedFile, name, openConfirmationDialog} = this.state;
+    const {success, openSuccessMessage, openDeleteMessage, files, selectedFile, name, openConfirmationDialog, openConfirmationDialogRename} = this.state;
     if (!files) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', padding: 40}}>
@@ -220,12 +253,13 @@ class DocumentUpload extends React.Component {
                   <TableCell style={textSize} align = "left" >File ID</TableCell>
                   <TableCell style={textSize} align = "center" >Download</TableCell>
                   <TableCell style={textSize} align = "center" >Delete</TableCell>
+                  <TableCell style={textSize} align = "center" >Edit File Name</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {files.map((file) => (
                   <TableRow key={file['file_id']}>
-                    <TableCell style={textSize} align = "left">{file['file_name']}</TableCell>
+                    <TableCell style={textSize} align = "left">{file['file_name'] }</TableCell>
                     <TableCell style={textSize} align = "left" >{file['file_id']}</TableCell>
                     <TableCell style={textSize} align = "center" >
                       <Button
@@ -238,6 +272,7 @@ class DocumentUpload extends React.Component {
                         <CloudDownloadIcon fontSize='large'/>
                       </Button>
                     </TableCell>
+
                     <TableCell style={textSize} align = "center" >
                       <Button
                         variant='contained'
@@ -248,6 +283,18 @@ class DocumentUpload extends React.Component {
                       >
                         <DeleteIcon fontSize='large'/>
                       </Button></TableCell>
+
+                    <TableCell style={textSize} align = "center" >
+                      <Button
+                        variant='contained'
+                        style={{cursor: 'pointer'}}
+                        onClick={()=> {
+                          this.setState({toRename: file['file_id'], openConfirmationDialogRename: true});
+                        }}
+                      >
+                        <CreateIcon fontSize='large'/>
+                      </Button>
+                    </TableCell>
                   </TableRow>))}
               </TableBody>
             </Table>
@@ -262,6 +309,16 @@ class DocumentUpload extends React.Component {
           message={'Are you sure you want to delete this file? This operation cannot be undone.'}
           confirmMessage='delete'
           notConfirmMessage='cancel'
+        />
+
+        <ConfirmationDialogText
+          showWarning={openConfirmationDialogRename}
+          setShowWarning={(newVal) => this.setState({openConfirmationDialogRename: newVal})}
+          onConfirm={(newVal) => this.renameFile(newVal)}
+          message={'Are you sure you want to rename this file?'}
+          confirmMessage='confirm'
+          notConfirmMessage='cancel'
+          // setNewName = {(newVal) => this.setState({newFileName: newVal})}
         />
 
         <SnackBarMessage
