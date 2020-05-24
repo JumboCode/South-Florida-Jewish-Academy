@@ -32,12 +32,15 @@ export default function Forms({updateFormChecked, blankForms}) {
               edge='start'
               checked={form.checked}
             />
-            <ScaleText
-              widthOnly={true}
-              maxFontSize={14}
-            >
-              {form.name}
-            </ScaleText>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+              <ScaleText
+                widthOnly={true}
+                maxFontSize={14}
+              >
+                {form.name}
+              </ScaleText>
+            </div>
+
           </ListItemIcon>
         </ListItem>))}
       </List>

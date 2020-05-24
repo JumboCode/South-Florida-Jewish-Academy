@@ -413,7 +413,13 @@ class Students extends React.Component {
                 blankForms={blankForms}
                 updateFormChecked={this.updateFormChecked.bind(this)}
               />
-              { blankForms.length !== 0 && <ResendForms blankForms={blankForms} setShowSelectors={(newVal) => this.setShowSelectors(newVal)} showSelectors={showSelectors}/>}
+              { blankForms.length !== 0 &&
+                <ResendForms
+                  blankForms={blankForms}
+                  setShowSelectors={(newVal) => this.setShowSelectors(newVal)}
+                  showSelectors={showSelectors}
+                  studentsChecked={studentsChecked}
+                />}
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
               <div style={{paddingTop: 10, paddingBottom: 10}}>

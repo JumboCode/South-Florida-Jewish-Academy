@@ -45,10 +45,10 @@ class ResendForms extends React.Component {
 
   render() {
     const {openDialog, selected, blankForms} = this.state;
-    const {setShowSelectors, showSelectors} = this.props;
+    const {setShowSelectors, showSelectors, studentsChecked} = this.props;
     return (
       <Paper
-        style={{marginTop: 20}}
+        style={{marginTop: 20, height: 120}}
       >
         <div>
           Resend Forms
@@ -67,6 +67,9 @@ class ResendForms extends React.Component {
         >
           Resend Forms
         </Button>
+        { showSelectors && <div style={{paddingTop: 10}}>
+          Selected {studentsChecked.size} student{studentsChecked.size === 1 ? '' : 's'}.
+        </div>}
         <Dialog
           open={openDialog}
           onClose={() => this.setOpenDialog(false)}
