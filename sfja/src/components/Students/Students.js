@@ -310,29 +310,35 @@ class Students extends React.Component {
     }
 
     updateFilter(filterToUpdate, optionToUpdate, set) {
-      const {filters, originalStudents} = this.state;
+      const {filters, originalStudents, studentsChecked} = this.state;
       filters[filterToUpdate][optionToUpdate] = set;
+      const filteredStudents = originalStudents.filter((student) => {
+        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+        return showGrades && showArchived && showComplete;
+      });
+      const filteredIds = new Set(filteredStudents.map((student) => student.student_id));
       this.setState({
         filters: filters,
-        filteredStudents: originalStudents.filter((student) => {
-          const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
-          const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
-          const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
-          return showGrades && showArchived && showComplete;
-        }),
+        filteredStudents: filteredStudents,
+        studentsChecked: new Set(Array.from(studentsChecked).filter((student) => filteredIds.has(student))),
       });
     }
 
     reFilter() {
-      const {filters, originalStudents} = this.state;
+      const {filters, originalStudents, studentsChecked} = this.state;
+      const filteredStudents = originalStudents.filter((student) => {
+        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+        return showGrades && showArchived && showComplete;
+      });
+      const filteredIds = new Set(filteredStudents.map((student) => student.student_id));
       this.setState({
         filters: filters,
-        filteredStudents: originalStudents.filter((student) => {
-          const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
-          const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
-          const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
-          return showGrades && showArchived && showComplete;
-        }),
+        filteredStudents: filteredStudents,
+        studentsChecked: new Set(Array.from(studentsChecked).filter((student) => filteredIds.has(student))),
       });
     }
 
