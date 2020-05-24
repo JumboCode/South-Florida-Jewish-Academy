@@ -13,7 +13,6 @@ import {
   Switch,
 } from '@material-ui/core';
 import {withCookies} from 'react-cookie';
-import ScaleText from 'react-scale-text';
 import MessageBox from '../StudentProfile/MessageBox';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import apiUrl from '../../utils/Env';
@@ -183,12 +182,7 @@ class ResendForms extends React.Component {
                         checked={blankForms.every((form) => form.checked)}
                       />
                       <div style={{display: 'flex', alignItems: 'center'}}>
-                        <ScaleText
-                          widthOnly={true}
-                          maxFontSize={14}
-                        >
                           Select All
-                        </ScaleText>
                       </div>
 
                     </ListItemIcon>
@@ -215,12 +209,7 @@ class ResendForms extends React.Component {
                         checked={form.checked}
                       />
                       <div style={{display: 'flex', alignItems: 'center'}}>
-                        <ScaleText
-                          widthOnly={true}
-                          maxFontSize={14}
-                        >
-                          {form.name}
-                        </ScaleText>
+                        {form.name}
                       </div>
 
                     </ListItemIcon>

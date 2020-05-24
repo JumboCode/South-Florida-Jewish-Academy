@@ -1,6 +1,5 @@
 import React from 'react';
 import {Checkbox, List, ListItem, ListItemIcon, Paper} from '@material-ui/core';
-import ScaleText from 'react-scale-text';
 
 // eslint-disable-next-line require-jsdoc,react/prop-types,max-len
 export default function Forms({updateFormChecked, blankForms}) {
@@ -33,14 +32,8 @@ export default function Forms({updateFormChecked, blankForms}) {
               checked={form.checked}
             />
             <div style={{display: 'flex', alignItems: 'center'}}>
-              <ScaleText
-                widthOnly={true}
-                maxFontSize={14}
-              >
-                {form.name}
-              </ScaleText>
+              {form.name}
             </div>
-
           </ListItemIcon>
         </ListItem>))}
       </List>
