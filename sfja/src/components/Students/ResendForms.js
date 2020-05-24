@@ -16,6 +16,8 @@ import {withCookies} from 'react-cookie';
 import ScaleText from 'react-scale-text';
 import MessageBox from '../StudentProfile/MessageBox';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
+import apiUrl from '../../utils/Env';
+import SnackBarMessage from '../../utils/SnackBarMessage';
 
 class ResendForms extends React.Component {
   constructor(props) {
@@ -27,6 +29,8 @@ class ResendForms extends React.Component {
       blankForms: this.cleanBlankForms(props.blankForms),
       message: 'Please note the new changes made on your student\'s forms.\n\nThank you for your attention.',
       showWarning: false,
+      success: false,
+      openSnackBar: false,
     };
   }
 
@@ -59,8 +63,41 @@ class ResendForms extends React.Component {
     });
   }
 
+  sendEmails() {
+    const {cookies, filteredStudents} = this.props;
+    const {blankForms} = this.state;
+    const body = {
+      students: filteredStudents,
+      blankForms: blankForms.filter((form) => form.checked),
+    };
+
+    fetch(apiUrl() + '/bulkResendEmails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.get('token')}`,
+      },
+      body: JSON.stringify(body),
+    }).then((x) => {
+      if (x.status === 200) {
+        this.setState({
+          success: true,
+          openDialog: false,
+        });
+      }
+    }).catch((error) => {
+      this.setState({
+        success: false,
+      });
+    }).finally(() => {
+      this.setState({
+        openSnackBar: true,
+      });
+    });
+  }
+
   render() {
-    const {openDialog, selected, blankForms, message, showWarning} = this.state;
+    const {openDialog, selected, blankForms, message, showWarning, openSnackBar, success} = this.state;
     const {setShowSelectors, showSelectors, studentsChecked} = this.props;
     return (
       <Paper
@@ -184,6 +221,7 @@ class ResendForms extends React.Component {
                   <Button
                     variant='contained'
                     onClick={() => this.setState({showWarning: true})}
+                    disabled={!blankForms.some((form) => form.checked)}
                   >
                     Send Emails
                   </Button>
@@ -202,10 +240,18 @@ class ResendForms extends React.Component {
         <ConfirmationDialog
           showWarning={showWarning}
           setShowWarning={(newVal) => this.setState({showWarning: newVal})}
-          // onConfirm: PropTypes.func,
+          onConfirm={this.sendEmails.bind(this)}
           message={'Are you sure you want to send emails to parents of ' + studentsChecked.size.toString() + ' student' + (studentsChecked.size === 1 ? '?' : 's?')}
           confirmMessage='yes'
           notConfirmMessage='back'
+        />
+        <SnackBarMessage
+          open={openSnackBar}
+          closeSnackbar={() => {
+            this.setState({openSnackBar: false});
+          }}
+          severity={success ? 'success' : 'error'}
+          message={success ? 'Parents of ' + studentsChecked.size.toString() + ' student' + (studentsChecked.size === 1 ? '' : 's') + ' emailed' : 'An error occurred.'}
         />
       </Paper>
     );
