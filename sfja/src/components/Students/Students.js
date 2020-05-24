@@ -141,11 +141,11 @@ class Students extends React.Component {
       let body;
       if (cache && !isNew) {
         body = {
-          blankForms: cache.blankForms,
+          blankForms: cache.blankForms.filter((form) => (form.checked)),
         };
       } else {
         body = {
-          blankForms: newBlankForms,
+          blankForms: newBlankForms.filter((form) => (form.checked)),
         };
       }
       fetch(apiUrl() + '/students', {

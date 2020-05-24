@@ -326,16 +326,13 @@ def isAuthorized(token, roles):
 @requires_auth
 @log_action('Get students')
 def getStudents():
-    blankForms = request.json['blankForms']
-    blankFormIds = []
-    for blankForm in blankForms:
-        if blankForm['checked']:
-            blankFormIds.append(ObjectId(blankForm['id']))
+    blankFormIds = list(map(lambda currForm: ObjectId(currForm['id']), request.json['blankForms']))
+    noBlankFormFilter = len(blankFormIds) == 0 # hoping caching will reduce complexity
 
     students = studentsDOM.getStudents()
     studentsWithForms = []
     for student in students:
-        if len(blankFormIds) == 0:
+        if noBlankFormFilter:
             forms_completed = 0
             for form in student['form_ids']:
                 if FormsDOM.isComplete(form):

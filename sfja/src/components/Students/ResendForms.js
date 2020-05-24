@@ -235,7 +235,7 @@ class ResendForms extends React.Component {
                   <Button
                     variant='contained'
                     onClick={() => this.setState({showWarning: true})}
-                    disabled={!blankForms.some((form) => form.checked)}
+                    disabled={studentsChecked.size === 0}
                   >
                     Send Emails
                   </Button>
