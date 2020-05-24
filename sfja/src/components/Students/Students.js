@@ -184,9 +184,9 @@ class Students extends React.Component {
                 authorized: data.authorized,
                 blankForms: isNew ? newBlankForms : cache.blankForms.length !== data.forms.length ? this.makeBlankForms(data.forms) : cache.blankForms,
                 showSelectors: cache.showSelectors,
-                studentsChecked: isNew ? newBlankForms : new Set(cache.studentsChecked),
+                studentsChecked: isNew ? studentsChecked : new Set(cache.studentsChecked),
               });
-              return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
+              return ({sortBy: cache.sortBy, order: cache.order});
             } else {
               this.setState({
                 filteredStudents: data.students,
@@ -195,16 +195,14 @@ class Students extends React.Component {
                 authorized: data.authorized,
                 blankForms: newBlankForms.length !== 0 ? newBlankForms : this.makeBlankForms(data.forms),
               });
-              return ({sortBy: sortBy, query: query, order: order});
+              return ({sortBy: sortBy, order: order});
             }
-          }).then(({sortBy, query, order}) => {
+          }).then(({sortBy, order}) => {
+            this.reFilter();
             if (sortBy && order) {
               this.sort(sortBy, order);
             }
-            if (query) {
-              this.updateStudents(query);
-            }
-          }).then(() => this.reFilter()).catch(console.log);
+          }).catch(console.log);
       window.addEventListener('beforeunload', this.saveCache);
     }
 
@@ -296,26 +294,16 @@ class Students extends React.Component {
       });
     }
 
-    updateStudents(query) {
-      const {filteredStudents} = this.state;
-
-      query = new RegExp(query, 'ig');
-      const filtered = filteredStudents.filter((currStudent) =>
-        (currStudent.first_name.search(query) !== -1 ||
-            currStudent.last_name.search(query) !== -1));
-      this.setState({
-        filteredStudents: filtered,
-      });
-    }
-
     updateFilter(filterToUpdate, optionToUpdate, set) {
-      const {filters, originalStudents, studentsChecked} = this.state;
+      const {filters, originalStudents, studentsChecked, query} = this.state;
       filters[filterToUpdate][optionToUpdate] = set;
+      const regExp = new RegExp(query, 'ig');
       const filteredStudents = originalStudents.filter((student) => {
         const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
         const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
         const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
-        return showGrades && showArchived && showComplete;
+        const showQuery = (student.first_name.search(regExp) !== -1 || student.last_name.search(regExp) !== -1);
+        return showGrades && showArchived && showComplete && showQuery;
       });
       const filteredIds = new Set(filteredStudents.map((student) => student.student_id));
       this.setState({
@@ -325,13 +313,33 @@ class Students extends React.Component {
       });
     }
 
-    reFilter() {
+    updateQuery(query) {
       const {filters, originalStudents, studentsChecked} = this.state;
+      const regExp = new RegExp(query, 'ig');
       const filteredStudents = originalStudents.filter((student) => {
         const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
         const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
         const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
-        return showGrades && showArchived && showComplete;
+        const showQuery = (student.first_name.search(regExp) !== -1 || student.last_name.search(regExp) !== -1);
+        return showGrades && showArchived && showComplete && showQuery;
+      });
+      const filteredIds = new Set(filteredStudents.map((student) => student.student_id));
+      this.setState({
+        query: query,
+        filteredStudents: filteredStudents,
+        studentsChecked: new Set(Array.from(studentsChecked).filter((student) => filteredIds.has(student))),
+      });
+    }
+
+    reFilter() {
+      const {filters, originalStudents, studentsChecked, query} = this.state;
+      const regExp = new RegExp(query, 'ig');
+      const filteredStudents = originalStudents.filter((student) => {
+        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+        const showQuery = (student.first_name.search(regExp) !== -1 || student.last_name.search(regExp) !== -1);
+        return showGrades && showArchived && showComplete && showQuery;
       });
       const filteredIds = new Set(filteredStudents.map((student) => student.student_id));
       this.setState({
@@ -424,6 +432,8 @@ class Students extends React.Component {
                   setShowSelectors={(newVal) => this.setShowSelectors(newVal)}
                   showSelectors={showSelectors}
                   studentsChecked={studentsChecked}
+                  resetCheckedStudents={() => this.setState({studentsChecked: new Set()})}
+                  updateData={() => this.updateData(blankForms, new Set(), false)}
                 />}
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
@@ -437,8 +447,7 @@ class Students extends React.Component {
                     fullWidth
                     InputLabelProps={textSize}
                     onChange={(e) => {
-                      this.setState({query: e.target.value});
-                      this.updateStudents(e.target.value);
+                      this.updateQuery(e.target.value);
                     }}
                   >
                   </TextField>

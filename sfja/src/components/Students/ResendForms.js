@@ -34,6 +34,13 @@ class ResendForms extends React.Component {
     };
   }
 
+  resetBlankForms() {
+    const {blankForms} = this.props;
+    this.setState({
+      blankForms: this.cleanBlankForms(blankForms),
+    });
+  }
+
   setMessage(newVal) {
     this.setState({message: newVal});
   }
@@ -64,7 +71,7 @@ class ResendForms extends React.Component {
   }
 
   sendEmails() {
-    const {cookies, studentsChecked} = this.props;
+    const {cookies, studentsChecked, updateData, resetCheckedStudents} = this.props;
     const {blankForms, message} = this.state;
     const body = {
       students: Array.from(studentsChecked),
@@ -86,7 +93,7 @@ class ResendForms extends React.Component {
           openDialog: false,
         });
       }
-    }).catch((error) => {
+    }).then((() => resetCheckedStudents())).then(() => updateData()).catch((error) => {
       this.setState({
         success: false,
       });
@@ -115,7 +122,10 @@ class ResendForms extends React.Component {
           />
         </div>
         <Button
-          onClick={() => this.setOpenDialog(true)}
+          onClick={() => {
+            this.setOpenDialog(true);
+            this.resetBlankForms();
+          }}
           variant='contained'
           disabled={!showSelectors}
         >
@@ -133,6 +143,9 @@ class ResendForms extends React.Component {
           <DialogTitle>
             Resend Forms
           </DialogTitle>
+          <DialogContent>
+            Select forms below to choose to send to selected students. If the student already has the form assigned, an email will still be sent to remind their parents. All students without the form previously will now be assigned the form.
+          </DialogContent>
           <DialogContent>
             <Paper
               elevation={3}
@@ -222,7 +235,7 @@ class ResendForms extends React.Component {
                   <Button
                     variant='contained'
                     onClick={() => this.setState({showWarning: true})}
-                    disabled={!blankForms.some((form) => form.checked) || studentsChecked.size === 0}
+                    disabled={!blankForms.some((form) => form.checked)}
                   >
                     Send Emails
                   </Button>
