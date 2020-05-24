@@ -565,7 +565,7 @@ def resendForms():
     message = request.json['message']
     newBlankForms = map(lambda form: ObjectId(form['id']), filter(lambda form: form['checked'], request.json['forms']))
 
-    parentIds = resendForm(studentId, newBlankForms, message, comments)
+    parentIds = resendForm(studentId, newBlankForms)
     for parentId in parentIds:
         emailParent(parentId, comments, message)
 
