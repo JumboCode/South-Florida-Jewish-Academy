@@ -646,7 +646,11 @@ def saveImg():
 
             cleanFiles=[]
 
-        os.remove(filename) # delete the file on the server after saved to mongo
+        try:
+            os.remove(filename) # delete the file on the server after saved to mongo
+        except:
+            print(filename + ' not removable') # should not occur, but safety check
+            
         for file in files:
             tempDict ={}
             tempDict['file_id'] = str(file['fileId'])
