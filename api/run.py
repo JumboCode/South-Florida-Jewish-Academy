@@ -638,23 +638,22 @@ def saveImg():
     if file:
         filename = secure_filename(file.filename)
         file.save(filename)
-        with open(filename , "rb") as byteFile:
+        with open(filename, "rb") as byteFile:
             f = byteFile.read()
             fileId = fs.put(f)
-            print(fileId)
-            studentsDOM.addNewFile(studentId, fileId,filename)
-            studentId = ObjectId(request.args.get('studentId'))
+            studentsDOM.addNewFile(studentId, fileId, filename)
             files = studentsDOM.getFiles(studentId)
 
             cleanFiles=[]
 
-            for file in files:
-                tempDict ={}
-                tempDict['file_id'] = str(file['fileId'])
-                tempDict['file_name'] = file['filename']
-                cleanFiles.append(tempDict)
-            
-            return{'files': cleanFiles}
+        os.remove(filename) # delete the file on the server after saved to mongo
+        for file in files:
+            tempDict ={}
+            tempDict['file_id'] = str(file['fileId'])
+            tempDict['file_name'] = file['filename']
+            cleanFiles.append(tempDict)
+
+        return{'files': cleanFiles}
 
 @app.route('/getFiles', methods=['POST'])
 @requires_auth
