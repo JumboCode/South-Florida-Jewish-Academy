@@ -64,11 +64,12 @@ class ResendForms extends React.Component {
   }
 
   sendEmails() {
-    const {cookies, filteredStudents} = this.props;
-    const {blankForms} = this.state;
+    const {cookies, studentsChecked} = this.props;
+    const {blankForms, message} = this.state;
     const body = {
-      students: filteredStudents,
+      students: Array.from(studentsChecked),
       blankForms: blankForms.filter((form) => form.checked),
+      message: message,
     };
 
     fetch(apiUrl() + '/bulkResendEmails', {
@@ -221,7 +222,7 @@ class ResendForms extends React.Component {
                   <Button
                     variant='contained'
                     onClick={() => this.setState({showWarning: true})}
-                    disabled={!blankForms.some((form) => form.checked)}
+                    disabled={!blankForms.some((form) => form.checked) || studentsChecked.size === 0}
                   >
                     Send Emails
                   </Button>

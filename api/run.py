@@ -567,12 +567,31 @@ def resendForms():
     studentId = ObjectId(request.json['id'])
     comments = request.json['comments']
     message = request.json['message']
-    newBlankForms = request.json['forms']
+    newBlankForms = map(lambda form: ObjectId(form['id']), filter(lambda form: form['checked'], request.json['forms']))
 
-    currFormIds = studentsDOM.getForms(studentId)
-    blankFormIds = []
-    for currFormId in currFormIds:
-        blankFormIds.append(FormsDOM.getBlankFormId(currFormId))
+    resendForm(studentId, newBlankForms, message, comments)
+
+
+    result = {'success': True}
+    return jsonify(result), 200
+
+
+@app.route('/bulkResendEmails', methods=['POST'])
+@requires_auth
+@log_action('Bulk Resend Emails')
+def bulkResendEmails():
+    blankFormIds = list(map(lambda form: ObjectId(form['id']), request.json['blankForms']))
+    students = list(map(lambda student: ObjectId(student), request.json['students']))
+    message = request.json['message']
+
+    for student in students:
+        print(student)
+        resendForm(student, blankFormIds, message, [])
+
+    return '0'
+
+def resendForm(studentId, newBlankFormIds, message, comments):
+    blankFormIds = map(lambda form: FormsDOM.getBlankFormId(form), studentsDOM.getForms(studentId))
 
     uniqueBlankFormIds = set(blankFormIds)
 
@@ -582,11 +601,9 @@ def resendForms():
 
     additionalBlankForms = []
 
-    for newBlankForm in newBlankForms:
-        newBlankFormId = ObjectId(newBlankForm['id'])
-        if newBlankForm['checked'] and newBlankFormId not in uniqueBlankFormIds:
+    for newBlankFormId in newBlankFormIds:
+        if newBlankFormId not in uniqueBlankFormIds:
             for parentId in parentIds:
-                # createForm(id, date, required, comp, data, parentID):
                 currID = FormsDOM.createForm(newBlankFormId, None, None, True, False, [], parentId)
                 formIds.append(currID)
             additionalBlankForms.append(newBlankFormId)
@@ -594,14 +611,9 @@ def resendForms():
     for formId in formIds:
         studentsDOM.addNewFormId(studentId, formId)
 
-    ## send email here!
     # send emails
     for parentId in parentIds:
         emailParent(parentId, comments, message)
-
-    result = {'success': True}
-    return jsonify(result), 200
-
 
 '''====================  FORM MANAGEMENT ===================='''
 
