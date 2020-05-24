@@ -14,6 +14,8 @@ import {
 } from '@material-ui/core';
 import {withCookies} from 'react-cookie';
 import ScaleText from 'react-scale-text';
+import MessageBox from '../StudentProfile/MessageBox';
+import ConfirmationDialog from '../../utils/ConfirmationDialog';
 
 class ResendForms extends React.Component {
   constructor(props) {
@@ -23,7 +25,13 @@ class ResendForms extends React.Component {
       openDialog: false,
       selected: null,
       blankForms: this.cleanBlankForms(props.blankForms),
+      message: 'Please note the new changes made on your student\'s forms.\n\nThank you for your attention.',
+      showWarning: false,
     };
+  }
+
+  setMessage(newVal) {
+    this.setState({message: newVal});
   }
   setSelected(newVal) {
     this.setState({selected: newVal});
@@ -43,8 +51,16 @@ class ResendForms extends React.Component {
     });
   };
 
+  selectAll() {
+    const {blankForms} = this.state;
+    const newVal = !blankForms.every((form) => form.checked);
+    this.setState({
+      blankForms: blankForms.map((form) => ({id: form.id, name: form.name, checked: newVal})),
+    });
+  }
+
   render() {
-    const {openDialog, selected, blankForms} = this.state;
+    const {openDialog, selected, blankForms, message, showWarning} = this.state;
     const {setShowSelectors, showSelectors, studentsChecked} = this.props;
     return (
       <Paper
@@ -73,23 +89,59 @@ class ResendForms extends React.Component {
         <Dialog
           open={openDialog}
           onClose={() => this.setOpenDialog(false)}
+          fullWidth={true}
+          maxWidth='md'
         >
           <DialogTitle>
             Resend Forms
           </DialogTitle>
           <DialogContent>
             <Paper
+              elevation={3}
               style={{
                 display: 'flex',
                 justifyContent: 'center',
                 padding: 20,
                 margin: 20,
+                flexGrow: 1,
               }}
             >
               <Paper
                 style={{margin: 20, padding: 20}}
+                elevation={3}
               >
+                Select Forms:
                 <List>
+                  <ListItem
+                    onClick={this.selectAll.bind(this)}
+                    onMouseEnter={() => this.setSelected('all')}
+                    onMouseLeave={() => this.setSelected(null)}
+                    style={{
+                      paddingTop: 1,
+                      paddingBottom: 1,
+                      cursor: 'pointer',
+                      backgroundColor: selected === 'all' ?
+                        'rgba(211,211,211, 0.7)' :
+                        '#ffffff'}}
+                  >
+                    <ListItemIcon
+                      style={{width: 150}}
+                    >
+                      <Checkbox
+                        edge='start'
+                        checked={blankForms.every((form) => form.checked)}
+                      />
+                      <div style={{display: 'flex', alignItems: 'center'}}>
+                        <ScaleText
+                          widthOnly={true}
+                          maxFontSize={14}
+                        >
+                          Select All
+                        </ScaleText>
+                      </div>
+
+                    </ListItemIcon>
+                  </ListItem>
                   {/* eslint-disable-next-line react/prop-types */}
                   {blankForms.map((form) => (<ListItem
                     key={form.id}
@@ -97,36 +149,64 @@ class ResendForms extends React.Component {
                     onMouseEnter={() => this.setSelected(form.id)}
                     onMouseLeave={() => this.setSelected(null)}
                     style={{
+                      paddingTop: 1,
+                      paddingBottom: 1,
                       cursor: 'pointer',
                       backgroundColor: selected === form.id ?
                         'rgba(211,211,211, 0.7)' :
                         '#ffffff'}}
                   >
                     <ListItemIcon
-                      style={{width: 300}}
+                      style={{width: 150}}
                     >
                       <Checkbox
                         edge='start'
                         checked={form.checked}
                       />
-                      <ScaleText
-                        widthOnly={true}
-                        maxFontSize={20}
-                      >
-                        {form.name}
-                      </ScaleText>
+                      <div style={{display: 'flex', alignItems: 'center'}}>
+                        <ScaleText
+                          widthOnly={true}
+                          maxFontSize={14}
+                        >
+                          {form.name}
+                        </ScaleText>
+                      </div>
+
                     </ListItemIcon>
                   </ListItem>))}
                 </List>
               </Paper>
-              <br/>
-              <Paper
-                style={{margin: 20, padding: 20}}
+              <div
+                style={{margin: 20, padding: 20, minWidth: 300}}
               >
-              </Paper>
+                <MessageBox disabled={false} message={message} updateMessage={this.setMessage.bind(this)}/>
+                <div style={{display: 'flex', flexDirection: 'row-reverse', marginTop: 20, alignItems: 'center'}}>
+                  <Button
+                    variant='contained'
+                    onClick={() => this.setState({showWarning: true})}
+                  >
+                    Send Emails
+                  </Button>
+                  <div
+                    style={{
+                      marginRight: 10,
+                    }}
+                  >
+                    Selected {studentsChecked.size} student{studentsChecked.size === 1 ? '' : 's'}.
+                  </div>
+                </div>
+              </div>
             </Paper>
           </DialogContent>
         </Dialog>
+        <ConfirmationDialog
+          showWarning={showWarning}
+          setShowWarning={(newVal) => this.setState({showWarning: newVal})}
+          // onConfirm: PropTypes.func,
+          message={'Are you sure you want to send emails to parents of ' + studentsChecked.size.toString() + ' student' + (studentsChecked.size === 1 ? '?' : 's?')}
+          confirmMessage='yes'
+          notConfirmMessage='back'
+        />
       </Paper>
     );
   }
