@@ -12,4 +12,4 @@ def generateKey():
 	# 	else:
 	# 		key = key + str(random.randint(0,9))
 	# print(key)
-	return secrets.token_hex(10)
+	return secrets.token_hex(1024)
