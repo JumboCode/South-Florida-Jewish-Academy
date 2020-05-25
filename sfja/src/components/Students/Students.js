@@ -25,6 +25,7 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 
 const theme = createMuiTheme({
   palette: {
@@ -121,12 +122,12 @@ class Students extends React.Component {
     }
 
     componentDidMount() {
-      const {cookies} = this.props;
+      const {cookies, token} = this.props;
       const {sortBy, query, order} = this.state; // from constructor
       fetch(apiUrl() + '/students', {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
       })
           .then((res) => res.json())
@@ -295,7 +296,7 @@ class Students extends React.Component {
     }
 
     archivalStudentChanger(studentId, action) {
-      const {cookies} = this.props;
+      const {token} = this.props;
       const {students, originalStudents, filters} = this.state;
       const body = {
         id: studentId,
@@ -305,7 +306,7 @@ class Students extends React.Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       }).then((x) => {
@@ -515,4 +516,4 @@ class Students extends React.Component {
     }
 }
 
-export default withCookies(withStyles(useStyles)(Students));
+export default withAuth0(withCookies(withStyles(useStyles)(Students)));

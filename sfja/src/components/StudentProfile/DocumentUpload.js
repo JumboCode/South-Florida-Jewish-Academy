@@ -11,8 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import {saveAs} from 'file-saver';
-import {Cookies, withCookies} from 'react-cookie';
-import {instanceOf} from 'prop-types';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CreateIcon from '@material-ui/icons/Create';
@@ -26,10 +25,6 @@ const textSize = {
 
 // eslint-disable-next-line require-jsdoc
 class DocumentUpload extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
-
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -49,13 +44,13 @@ class DocumentUpload extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const {studentId} = this.props;
     fetch(apiUrl() + '/getFiles?studentId='+ studentId, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
     })
         .then((res) => res.json())
@@ -68,7 +63,7 @@ class DocumentUpload extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   handleImageUpload() {
-    const {cookies, studentId} = this.props;
+    const {token, studentId} = this.props;
     const {selectedFile}= this.state;
     if (selectedFile === null || selectedFile.length !== 1 ) {
       return;
@@ -79,7 +74,7 @@ class DocumentUpload extends React.Component {
     fetch(apiUrl() + '/saveImage?studentId='+ studentId, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: formData,
     })
@@ -108,7 +103,7 @@ class DocumentUpload extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   downloadData(file_id, file_name) {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const body = {
       file_id: file_id,
       file_name: file_name,
@@ -117,7 +112,7 @@ class DocumentUpload extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     }).then((response) => (response.blob()))
@@ -127,7 +122,7 @@ class DocumentUpload extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   deleteData() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const {studentId} = this.props;
     const body = {
       file_id: this.state.toDelete,
@@ -138,7 +133,7 @@ class DocumentUpload extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     })
@@ -156,7 +151,7 @@ class DocumentUpload extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   renameFile(newFileName) {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const {studentId} = this.props;
     const body = {
       file_id: this.state.toRename,
@@ -167,7 +162,7 @@ class DocumentUpload extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     })
@@ -341,4 +336,4 @@ class DocumentUpload extends React.Component {
   }
 }
 
-export default withCookies(DocumentUpload);
+export default withAuth0(DocumentUpload);

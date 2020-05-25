@@ -1,16 +1,11 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import {List, ListItem, ListItemIcon, Checkbox} from '@material-ui/core';
-import {instanceOf, PropTypes} from 'prop-types';
-import {withCookies, Cookies} from 'react-cookie';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 
 // eslint-disable-next-line require-jsdoc
 class FormSelector extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-    submitTime: PropTypes.any,
-  };
-
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -22,11 +17,12 @@ class FormSelector extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    const {cookies} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {token} = this.props;
     fetch(apiUrl() + '/getAllForms', {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
     }).then((res) => res.json()).then((result) => {
       const newForms = [];
@@ -151,4 +147,4 @@ class FormSelector extends React.Component {
   }
 }
 
-export default withCookies(FormSelector);
+export default withAuth0(FormSelector);

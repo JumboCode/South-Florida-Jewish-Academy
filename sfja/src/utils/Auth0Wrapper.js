@@ -2,7 +2,6 @@ import {useAuth0} from '../react-auth0-spa';
 import React, {useState} from 'react';
 
 
-
 // eslint-disable-next-line require-jsdoc
 export function withAuth0(Component) {
   return function WrappedComponent(props) {
