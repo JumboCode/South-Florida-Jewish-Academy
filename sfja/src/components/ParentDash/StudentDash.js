@@ -15,6 +15,7 @@ import Complete from '../../utils/Complete';
 import Incomplete from '../../utils/Incomplete';
 import UnauthorizedCard from './UnauthorizedCard';
 import {CircularProgress} from '@material-ui/core';
+import ExpiredCard from './ExpiredCard';
 
 // eslint-disable-next-line require-jsdoc
 class StudentDash extends React.Component {
@@ -35,6 +36,7 @@ class StudentDash extends React.Component {
       numIncomplete: 0,
       authorized: false,
       loading: true,
+      expired: false,
     };
   }
 
@@ -55,9 +57,9 @@ class StudentDash extends React.Component {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({student_id: this.props.match.params.studentId,
         parent_key: this.props.match.params.parentKey}),
-    }).then((response) => response.status === 200 ? response : null)
-        .then((res) => res.json())
-        .then((data) => {
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((data) => {
           this.setState({
             formData: data.form_data,
             studentInfo: data.student_info,
@@ -65,13 +67,18 @@ class StudentDash extends React.Component {
             numIncomplete: data.form_data.filter((form) => !form.completed).length,
             authorized: true,
           });
-        }).catch((error) => {
-          console.log(error);
-        }).finally(() => {
-          this.setState({
-            loading: false,
-          });
         });
+      } else if (response.status === 426) {
+        this.setState({
+          authorized: true,
+          expired: true,
+        });
+      }
+    }).finally(() => {
+      this.setState({
+        loading: false,
+      });
+    });
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -132,7 +139,7 @@ class StudentDash extends React.Component {
   render() {
     const {studentId, formData, formFilledData, blankFormData, openSentMessage,
       success, studentInfo, selectedName, numIncomplete,
-      submitted, authorized, loading} = this.state;
+      submitted, authorized, loading, expired} = this.state;
 
     if (loading) {
       return (
@@ -144,6 +151,10 @@ class StudentDash extends React.Component {
 
     if (!authorized) {
       return (<UnauthorizedCard/>);
+    }
+
+    if (expired) {
+      return <ExpiredCard/>;
     }
 
     if (studentId !== this.props.match.params.studentId) {
