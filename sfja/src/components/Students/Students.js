@@ -425,11 +425,22 @@ class Students extends React.Component {
                         const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
                         const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
                         const opacity = selected === student.student_id ? '0.7' : '0.5';
+                        let backgroundColor = '#ffffff';
+                        if (selected === student.student_id) {
+                          backgroundColor = 'rgba(211,211,211, 0.7)';
+                        } else {
+                          if (student.completion_rate === 1) {
+                            backgroundColor = 'rgba(76, 209, 27, ' + opacity + ')';
+                          }
+                          if (student.archived) {
+                            backgroundColor = 'rgba(219, 103, 103, ' + opacity + ')';
+                          }
+                        }
                         if (showGrades && showArchived && showComplete) {
                           return (
                             <TableRow
                               key={student.student_id}
-                              style={{cursor: 'pointer', backgroundColor: student.archived ? 'rgba(219, 103, 103, ' + opacity + ')' : selected === student.student_id ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
+                              style={{cursor: 'pointer', backgroundColor: backgroundColor}}
                               onClick={() => this.props.history.push('/students/' + student.student_id)}
                               onMouseEnter={() => this.setState({selected: student.student_id})}
                               onMouseLeave={() => this.setState({selected: null})}
