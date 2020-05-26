@@ -46,7 +46,14 @@ export default function Header(props) {
           TabIndicatorProps={{style: {background: '#0068af'}}}
           aria-label="icon tabs example"
         >
-          <div>
+          <div
+            style={{cursor: 'pointer'}}
+            onClick={() => {
+              if (props.match.path !== '/students') {
+                props.history.push('/students');
+              }
+            }}
+          >
             <div id='toptitle'>
               South Florida Jewish Academy
             </div>

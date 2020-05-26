@@ -167,6 +167,23 @@ def addNewFile(id, newFileId,newFileName):
     oldFiles.append({'filename':newFileName, 'fileId':newFileId})
     mongo.db.students.update({'_id': id}, {'$set': {'files': oldFiles}})
 
+def renameFile(id, fileId, newFileName):
+    contents = list(mongo.db.students.find({'_id': id}))
+    if len(contents) != 1:
+        assert len(contents) == 1
+
+    oldFiles = []
+    for content in contents:
+        oldFiles = content['files']
+
+    
+    for oldFile in oldFiles:
+        if oldFile['fileId'] == fileId:
+            oldFile['filename'] = newFileName
+
+    mongo.db.students.update({'_id': id}, {'$set': {'files': oldFiles}})
+    return oldFiles
+
 def deleteFile(id, newFileId):
     contents = list(mongo.db.students.find({'_id': id}))
     if len(contents) != 1:
@@ -184,6 +201,13 @@ def deleteFile(id, newFileId):
     mongo.db.students.update({'_id': id}, {'$set': {'files': oldFiles}})
     return oldFiles
 
+def gridFile(id,fileName):
+    contents = list(mongo.db.fs.files.find({'_id': id}))
+    if len(contents) != 1:
+        assert len(contents) == 1
+
+    mongo.db.files.update({'_id': id}, {'$set': {'filename': fileName}})
+    
 def getFiles(id):
     contents = list(mongo.db.students.find({'_id': id}))
     if len(contents) != 1:
