@@ -97,7 +97,7 @@ class FormViewer extends React.Component {
         this.setState({
           openSnackBar: true,
           success: true,
-          formStatus:true,
+          formStatus: true,
         });
       } else {
         this.setState({
@@ -115,7 +115,7 @@ class FormViewer extends React.Component {
   // eslint-disable-next-line require-jsdoc
   handleStatusChange() {
     const {cookies} = this.props;
-    const{formStatus}= this.state;
+    const {formStatus}= this.state;
     const body = {
       form_id: this.props.match.params.formId,
       form_status: formStatus,
@@ -160,18 +160,19 @@ class FormViewer extends React.Component {
         .then((data) => {
           this.setState({
             formInfo: data.new_form_info,
-            formStatus:data.status,
-            formData:data.formData,
+            formStatus: data.status,
+            formData: data.formData,
           });
         })
         .catch((error) => {
           console.error(error);
         });
+    window.location.reload(false);
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar,formStatus} = this.state;
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar, formStatus} = this.state;
     if (!basicInfo) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
@@ -210,11 +211,11 @@ class FormViewer extends React.Component {
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <div style={{maxWidth: 1000, width: '100%', padding: 10}}>
             <Paper elevation={2} style={{padding: 10}}>
-              {formInfo && parentProfile && <div>
-                <div style={{fontSize: 16}}>
+              {formInfo && parentProfile && <div style={{display: 'flex', flexDirection: 'column', padding: 20}}>
+                <div style={{display: 'flex', fontSize: 16}}>
                   Form Name: {formInfo.name}
                 </div>
-                <div style={{fontSize: 13}}>
+                <div style={{display: 'flex', fontSize: 13}}>
                   Parent: {parentProfile.first_name} {parentProfile.last_name}
                   <br/>
                   Parent Email: {parentProfile.email}
@@ -225,51 +226,90 @@ class FormViewer extends React.Component {
                   <br/>
                 </div>
               </div>}
-              <div style={{backgroundColor: '#0068af', width: '100%', height: 2, marginTop: 10}}/>
-              <div style={{display: 'flex', alignItems: 'center'}}>
-                <div style={{display: 'flex', width: 120}}>
-                  Mode: {edit ? 'edit' : 'read-only'}
-                </div>
-                <Switch
-                  checked={edit}
-                  onChange={(event) => {
-                    if (!basicInfo.archived) {
-                      this.setState({edit: event.target.checked});
-                    }
-                  }}
-                  name='Turn on editing mode'
-                  color="primary"
-                />
-                <Button
-                  variant='contained'
-                  disabled = {formStatus}
-                  style={{cursor: 'pointer'}}
-                  onClick={()=> {
-                    this.handleStatusChange();
-                  }}
-                >
-                  Mark as complete
-                </Button>
-                <Button
-                  variant='contained'
-                  style={{cursor: 'pointer'}}
-                  disabled = {!formStatus}
-                  onClick={()=> {
-                    this.handleStatusChange();
-                  }}
-                >
-                  Mark as incomplete
-                </Button>
-                <Button
-                  variant='contained'
-                  style={{cursor: 'pointer'}}
-                  onClick={()=> {
-                    this.handleReset();
-                  }}
-                >
-                  Reset Form
-                </Button>
+              <div style={{display: 'flex', justifyContent: 'center'}}>
+                <div style={{display: 'flex', backgroundColor: '#0068af', width: '95%', height: 2, marginTop: 10}}></div>
               </div>
+              <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
+                  <div style={{display: 'flex', paddingLeft: 20}}>
+                    Mode: {edit ? 'edit' : 'read-only'}
+                  </div>
+                  <div style={{display: 'flex'}}>
+                    <Switch
+                      checked={edit}
+                      onChange={(event) => {
+                        if (!basicInfo.archived) {
+                          this.setState({edit: event.target.checked});
+                        }
+                      }}
+                      name='Turn on editing mode'
+                      color="primary"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    margin: 20,
+                  }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      marginRight: 20,
+                    }}
+                  >
+                    <Button
+                      variant='contained'
+                      disabled = {formStatus}
+                      style={{cursor: 'pointer'}}
+                      onClick={()=> {
+                        this.handleStatusChange();
+                      }}
+                    >
+                        Mark as complete
+                    </Button>
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      marginRight: 20,
+                    }}
+                  >
+                    <Button
+                      variant='contained'
+                      style={{cursor: 'pointer'}}
+                      disabled = {!formStatus}
+                      onClick={()=> {
+                        this.handleStatusChange();
+                      }}
+                    >
+                        Mark as incomplete
+                    </Button>
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                    }}
+                  >
+                    <Button
+                      variant='contained'
+                      style={{cursor: 'pointer'}}
+                      onClick={()=> {
+                        this.handleReset();
+                      }}
+                    >
+                        Reset Form
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
               {blankFormData !== null ?
                 <Paper style={{padding: 20, margin: 20}} elevation={2}>
                   <ReactFormGenerator
