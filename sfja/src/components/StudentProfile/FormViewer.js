@@ -31,6 +31,7 @@ class FormViewer extends React.Component {
       edit: false,
       openSnackBar: false,
       success: false,
+      authorized: false,
     };
   }
   // eslint-disable-next-line require-jsdoc
@@ -57,9 +58,22 @@ class FormViewer extends React.Component {
             parentProfile: data.parent_profile,
             formInfo: data.form_info,
           });
-        }).catch((error) => {
-          console.log(error);
+          return fetch(apiUrl() + '/checkRoleAdmin', {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${cookies.get('token')}`,
+            },
+          });
+        })
+        .then((response) => (response.json()))
+        .then((data) => {
+          this.setState({
+            authorized: data.isAuthorized,
+          });
         });
+    // .catch((error) => {
+    //   console.log(error);
+    // });
   }
   // eslint-disable-next-line require-jsdoc
   setOpenDialog(newBool) {
@@ -111,7 +125,7 @@ class FormViewer extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar} = this.state;
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar, authorized} = this.state;
     if (!basicInfo) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
@@ -172,6 +186,7 @@ class FormViewer extends React.Component {
                 </div>
                 <Switch
                   checked={edit}
+                  disabled={!authorized}
                   onChange={(event) => {
                     if (!basicInfo.archived) {
                       this.setState({edit: event.target.checked});
