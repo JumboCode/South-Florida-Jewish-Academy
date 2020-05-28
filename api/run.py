@@ -498,7 +498,6 @@ def getStudentProfileForm():
     form_info['completed'] = FormsDOM.isComplete(form_id)
 
     isAuthorizedBool = isAuthorized(get_token_auth_header(), ['developer', 'admin'])
-    print(isAuthorizedBool)
     return {
         'form_data': form_data,
         'blank_form_data': blank_form_data,
