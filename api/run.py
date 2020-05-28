@@ -439,8 +439,8 @@ def getStudentProfile():
     for parentId in parentIds:
         parent = parentsDOM.getParentProfile(parentId)
         studentsOfParent = []
-        for studentID in parent['student_ids']:
-            student = studentsDOM.getFullInfo(studentID)
+        for currStudentID in parent['student_ids']:
+            student = studentsDOM.getFullInfo(currStudentID)
             forms_completed = 0
             for form in student['form_ids']:
                 if FormsDOM.isComplete(form):
@@ -639,23 +639,26 @@ def saveImg():
     if file:
         filename = secure_filename(file.filename)
         file.save(filename)
-        with open(filename , "rb") as byteFile:
+        with open(filename, "rb") as byteFile:
             f = byteFile.read()
             fileId = fs.put(f)
-            print(fileId)
-            studentsDOM.addNewFile(studentId, fileId,filename)
-            studentId = ObjectId(request.args.get('studentId'))
+            studentsDOM.addNewFile(studentId, fileId, filename)
             files = studentsDOM.getFiles(studentId)
 
             cleanFiles=[]
 
-            for file in files:
-                tempDict ={}
-                tempDict['file_id'] = str(file['fileId'])
-                tempDict['file_name'] = file['filename']
-                cleanFiles.append(tempDict)
+        try:
+            os.remove(filename) # delete the file on the server after saved to mongo
+        except:
+            print(filename + ' not removable') # should not occur, but safety check
             
-            return{'files': cleanFiles}
+        for file in files:
+            tempDict ={}
+            tempDict['file_id'] = str(file['fileId'])
+            tempDict['file_name'] = file['filename']
+            cleanFiles.append(tempDict)
+
+        return{'files': cleanFiles}
 
 @app.route('/getFiles', methods=['POST'])
 @requires_auth
@@ -693,7 +696,6 @@ def downloadFile():
 @requires_auth
 @log_action('Deleted File')
 def deleteFile():
-    print("in here!")
     file_id = ObjectId(request.json['file_id'])
     student_id = ObjectId(request.json['studentId'])
     fs.delete(file_id)
@@ -708,6 +710,25 @@ def deleteFile():
 
     return{'files': cleanFiles}
 
+@app.route('/renameFile', methods=['POST'])
+@requires_auth
+@log_action('Renamed File')
+def renameFile():
+    file_id = ObjectId(request.json['file_id'])
+    student_id = ObjectId(request.json['studentId'])
+    new_file_name = request.json['newFileName']
+    studentsDOM.gridFile(file_id,new_file_name)
+    files = studentsDOM.renameFile(student_id,file_id,new_file_name)
+
+    cleanFiles=[]
+    for file in files:
+        tempDict = {}
+        tempDict['file_id'] = str(file['fileId'])
+        tempDict['file_name'] = file['filename']
+        cleanFiles.append(tempDict)
+
+    return{'files': cleanFiles}
+ 
 '''======================  ADD STUDENT ======================'''
 
 @app.route('/getAllForms', methods=['GET'])

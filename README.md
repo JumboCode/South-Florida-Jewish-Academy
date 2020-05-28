@@ -3,6 +3,7 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/JumboCode/South-Florida-Jewish-Academy)
 ## Welcome
 Welcome to the South Florida Jewish Academy project, a project run through [Tufts JumboCode](https://www.jumbocode.org). Here are some steps to get you started.
+
 ## The team
 Current team members:
 - PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)
