@@ -497,12 +497,15 @@ def getStudentProfileForm():
     form_info['last_updated'] = FormsDOM.getLastUpdated(form_id)
     form_info['completed'] = FormsDOM.isComplete(form_id)
 
+    isAuthorizedBool = isAuthorized(get_token_auth_header(), ['developer', 'admin'])
+    print(isAuthorizedBool)
     return {
         'form_data': form_data,
         'blank_form_data': blank_form_data,
         'basic_info': studentsDOM.getBasicInfo(studentID),
         'parent_profile': cleaned_parent_profile,
-        'form_info': form_info
+        'form_info': form_info,
+        'isAuthorized': isAuthorizedBool,
     }
 
 @app.route('/studentProfileUpdate', methods = ['POST'])

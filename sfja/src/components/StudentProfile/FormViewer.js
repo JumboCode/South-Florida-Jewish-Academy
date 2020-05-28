@@ -57,23 +57,13 @@ class FormViewer extends React.Component {
             basicInfo: data.basic_info,
             parentProfile: data.parent_profile,
             formInfo: data.form_info,
-          });
-          return fetch(apiUrl() + '/checkRoleAdmin', {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${cookies.get('token')}`,
-            },
-          });
-        })
-        .then((response) => (response.json()))
-        .then((data) => {
-          this.setState({
             authorized: data.isAuthorized,
           });
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
         });
-    // .catch((error) => {
-    //   console.log(error);
-    // });
   }
   // eslint-disable-next-line require-jsdoc
   setOpenDialog(newBool) {
