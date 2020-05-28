@@ -524,15 +524,6 @@ def studentProfileUpdate():
 
     return '0'
 
-@app.route('/submitFormAuth', methods = ['POST'])
-@requires_auth
-@log_action('Submit form')
-def submitFormAuth():
-    form_id = request.json['form_id']
-    answer_data = request.json['answer_data']
-    FormsDOM.updateFormData(form_id, answer_data)
-    return '0'
-
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
 @log_action('Resend forms')
@@ -881,5 +872,15 @@ def clearLogins():
     return {
         'success': True,
     }
+
+@app.route('/submitFormAuth', methods = ['POST'])
+@requires_auth
+@log_action('Submit form')
+@specific_roles(['admin', 'developer'])
+def submitFormAuth():
+    form_id = request.json['form_id']
+    answer_data = request.json['answer_data']
+    FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
 if __name__ == '__main__':
     app.run(debug=True)
