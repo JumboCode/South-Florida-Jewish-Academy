@@ -629,7 +629,6 @@ def changeStatus():
     status = request.json['form_status']
     FormsDOM.changeCompletion(form_id,status)
     newStatus = not status
-    print(newStatus)
     return {'status': newStatus}
 
 @app.route('/resetForm', methods = ['POST'])
@@ -638,12 +637,11 @@ def changeStatus():
 def resetForm():
     form_id = ObjectId(request.json['form_id'])
     newData = FormsDOM.clearForm(form_id)
-    print(newData)
 
     newData['_id'] = str(newData['_id'])
     newData['blank_forms_id'] = str(newData['blank_forms_id'])
     newData['parent_id'] = str(newData['parent_id'])
-    print(newData)
+    
     return {'new_form_info':newData,
             'status':newData['completed'],
             'formData': newData['form_data']}

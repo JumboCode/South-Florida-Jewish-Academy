@@ -60,9 +60,9 @@ def getParentID(id):
 
 # Updates form data.
 def updateFormData(id, data):
-    writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'form_data': data}}))
-    writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'last_updated': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}}))
-    mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'completed': True}})
+    writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'form_data': data,'last_updated': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),'completed': True}}))
+    # writeR = dict(mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'last_updated': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}}))
+    # mongo.db.forms.update({'_id': ObjectId(id)}, {'$set': {'completed': True}})
     return writeR['nModified'] > 0
 
 
