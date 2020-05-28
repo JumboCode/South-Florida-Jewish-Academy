@@ -8,7 +8,7 @@ from generateKey import generateKey
 import os
 import json
 import gridfs
-from database import testDB, studentsDOM, usersDOM, FormsDOM, blankFormsDOM, parentsDOM
+from database import testDB, studentsDOM, usersDOM, FormsDOM, blankFormsDOM, parentsDOM, utilitiesDOM
 from flask import jsonify, request, jsonify, _request_ctx_stack
 import subprocess
 from datetime import datetime
@@ -606,6 +606,7 @@ def addForm():
     form_name = request.json['formName']
     form_year = request.json['formYear']
     blankFormsDOM.createForm(form_name, form_year, data)
+    utilitiesDOM.updateTags(form_year)
     return '0'
 
 @app.route('/forms', methods = ['GET', 'POST'])
