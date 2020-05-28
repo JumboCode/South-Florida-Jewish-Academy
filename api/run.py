@@ -503,7 +503,6 @@ def getStudentProfileForm():
         'basic_info': studentsDOM.getBasicInfo(studentID),
         'parent_profile': cleaned_parent_profile,
         'form_info': form_info,
-        'status': form_info['completed'],
     }
 
 @app.route('/studentProfileUpdate', methods = ['POST'])
@@ -642,9 +641,7 @@ def resetForm():
     newData['blank_forms_id'] = str(newData['blank_forms_id'])
     newData['parent_id'] = str(newData['parent_id'])
     
-    return {'new_form_info':newData,
-            'status':newData['completed'],
-            'formData': newData['form_data']}
+    return {'new_form_info':newData,}
 
 '''====================== UPLOAD FILE ======================'''
 @app.route('/saveImage', methods=['POST'])

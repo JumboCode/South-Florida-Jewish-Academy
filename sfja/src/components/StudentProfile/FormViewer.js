@@ -57,7 +57,7 @@ class FormViewer extends React.Component {
             basicInfo: data.basic_info,
             parentProfile: data.parent_profile,
             formInfo: data.form_info,
-            formStatus: data.status,
+            formStatus: data.form_info.completed,
           });
         }).catch((error) => {
           console.log(error);
@@ -160,8 +160,8 @@ class FormViewer extends React.Component {
         .then((data) => {
           this.setState({
             formInfo: data.new_form_info,
-            formStatus: data.status,
-            formData: data.formData,
+            formStatus: data.new_form_info.completed,
+            formData: data.new_form_info.form_data,
           });
         })
         .catch((error) => {
