@@ -16,6 +16,7 @@ import {withCookies, Cookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import Parents from './Parents';
+import FormsTab from './FormsTab';
 import ResendForms from './ResendForms';
 // eslint-disable-next-line no-unused-vars
 import DocumentUpload from './DocumentUpload';
@@ -142,7 +143,7 @@ class StudentProfile extends React.Component {
                 <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
-                {currTab === 0 && <Forms {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
+                {currTab === 0 && <FormsTab {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
                 {currTab === 1 && <Parents currId={id} history={this.props.history} parents={parents}/>}
                 {currTab === 2 && <div>documents</div>}
                 {currTab === 3 && <ProfileEdit basicInfo={basicInfo}/>}

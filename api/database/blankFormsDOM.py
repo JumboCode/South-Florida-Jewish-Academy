@@ -10,11 +10,12 @@ app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 # Creates new form.
-def createForm(formName, data):
+def createForm(formName, formYear, data):
     initData = {
                 'form_name': formName,
                 'form_data': data,
-                'date_created': datetime.now(timezone('US/Eastern'))
+                'form_year': formYear,
+                'date_created': datetime.now(timezone('US/Eastern')),
                 }
     result = mongo.db.blankForms.insert_one(initData)
     return result.inserted_id

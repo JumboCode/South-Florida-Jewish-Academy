@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 // eslint-disable-next-line require-jsdoc
-function post(url, data, token, formName) {
+function post(url, data, token, formName, formYear) {
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -18,6 +18,7 @@ function post(url, data, token, formName) {
     body: JSON.stringify({
       data: data,
       formName: formName,
+      formYear: formYear,
     }),
     // eslint-disable-next-line arrow-parens
   }).then(response => response);
@@ -37,6 +38,7 @@ class DemoBar extends React.Component {
       data: [],
       previewVisible: false,
       formName: this.props.blankFormName || '',
+      formYear: '',
     };
 
     const update = this._onChange.bind(this);
@@ -65,16 +67,16 @@ class DemoBar extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  _onSubmit(data, formName) {
+  _onSubmit(data, formName, formYear) {
     const {cookies} = this.props;
-    post(apiUrl() + '/newform', data, cookies.get('token'), formName).then(() => {
+    post(apiUrl() + '/newform', data, cookies.get('token'), formName, formYear).then(() => {
       this.setState({formName: '', data: [], openSuccessSnackBar: true});
     });
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {formName, openSuccessSnackBar} = this.state;
+    const {formName, formYear, openSuccessSnackBar} = this.state;
     let modalClass = 'modal';
     if (this.state.previewVisible) {
       modalClass += ' show';
@@ -90,10 +92,19 @@ class DemoBar extends React.Component {
           label="Form Name"
           required={true}
         />
+        <TextField
+          error={formYear === ''}
+          onChange={(ev) => this.setState({formYear: ev.target.value})}
+          value={formYear}
+          variant='outlined'
+          id="standard-basic"
+          label="School Year"
+          required={true}
+        />
         <Button className="btn btn-primary pull-right"
           style={{marginRight: '10px', marginTop: 10}}
           variant='contained'
-          onClick={() => this._onSubmit(this.state.data, formName)}
+          onClick={() => this._onSubmit(this.state.data, formName, formYear)}
           disabled={formName === '' || this.state.data.length === 0}
         >
           Add Form

@@ -19,7 +19,6 @@ const textSize = {
   fontSize: '13px',
 };
 
-
 // eslint-disable-next-line require-jsdoc
 export default function Forms({forms, studentId, history}) {
   const [selected, setSelected] = React.useState(null);

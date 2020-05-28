@@ -604,7 +604,8 @@ def updateFormName():
 def addForm():
     data = request.json['data']
     form_name = request.json['formName']
-    blankFormsDOM.createForm(form_name, data)
+    form_year = request.json['formYear']
+    blankFormsDOM.createForm(form_name, form_year, data)
     return '0'
 
 @app.route('/forms', methods = ['GET', 'POST'])
