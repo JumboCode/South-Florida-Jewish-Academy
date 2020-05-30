@@ -96,6 +96,7 @@ class ProfileEdit extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {basicInfo, openSuccessMessage, disableButton} = this.state;
+    // eslint-disable-next-line react/prop-types
     const {authorized} = this.props;
     return (
       <div style={{padding: 20}}>
