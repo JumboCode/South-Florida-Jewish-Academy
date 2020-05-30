@@ -137,7 +137,7 @@ class StudentProfile extends React.Component {
                 <Tab icon={<ReceiptIcon />} label="Forms" />
                 <Tab icon={<PeopleAltIcon />} label="Parents" />
                 <Tab icon={<InsertDriveFileIcon />} label="Documents" />
-                <Tab icon={<EditIcon />} label="Edit Student Info" />
+                <Tab icon={<EditIcon />} label="Edit Info" />
                 <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
