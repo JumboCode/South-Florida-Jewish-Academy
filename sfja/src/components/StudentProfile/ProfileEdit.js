@@ -101,7 +101,7 @@ class ProfileEdit extends React.Component {
       <div style={{padding: 20}}>
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* eslint-disable-next-line max-len */}
-          {Object.keys(basicInfo).filter((key) => (key !== '_id' && key !== 'DOB')).map((key) => (
+          {Object.keys(basicInfo).filter((key) => (key === 'first_name' || key === 'last_name' || key === 'middle_name' || key === 'grade')).map((key) => (
             <div key={key}>
               {/* eslint-disable-next-line max-len */}
               <TextField onChange={(event) => this.updateValue(key, event.target.value)} disabled={basicInfo.archived || !authorized} value={basicInfo[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
