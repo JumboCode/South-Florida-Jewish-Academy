@@ -27,6 +27,7 @@ import SnackBarMessage from '../../utils/SnackBarMessage';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
 import Forms from './Forms';
 import ResendForms from './ResendForms';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 
 const theme = createMuiTheme({
   palette: {
@@ -135,8 +136,8 @@ class Students extends React.Component {
     }
 
     updateData(newBlankForms, studentsChecked, isNew) {
-      const {cookies} = this.props;
-      const {sortBy, order} = this.state; // from constructor
+      const {cookies, token} = this.props;
+      const {sortBy, order, query} = this.state; // from constructor
       const cache = cookies.get('studentsCache');
       let body;
       if (cache && !isNew) {
@@ -148,11 +149,12 @@ class Students extends React.Component {
           blankForms: newBlankForms.filter((form) => (form.checked)),
         };
       }
+
       fetch(apiUrl() + '/students', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       })
@@ -364,8 +366,9 @@ class Students extends React.Component {
     }
 
     archivalStudentChanger(studentId, action) {
-      const {cookies} = this.props;
+      const {token} = this.props;
       const {filteredStudents, originalStudents, filters} = this.state;
+
       const body = {
         id: studentId,
       };
@@ -374,7 +377,7 @@ class Students extends React.Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       }).then((x) => {
@@ -639,4 +642,4 @@ class Students extends React.Component {
     }
 }
 
-export default withCookies(withStyles(useStyles)(Students));
+export default withAuth0(withCookies(withStyles(useStyles)(Students)));

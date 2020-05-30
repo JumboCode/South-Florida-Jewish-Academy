@@ -3,17 +3,12 @@ import Input from './Input';
 import FormSelector from './FormSelector';
 import {Button, Paper} from '@material-ui/core';
 import SuccessMessage from './SuccessMessage';
-import {withCookies, Cookies} from 'react-cookie';
-import {instanceOf} from 'prop-types';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 // eslint-disable max-len
 
 // eslint-disable-next-line require-jsdoc
 class AddStudent extends React.PureComponent {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
-
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -43,7 +38,8 @@ class AddStudent extends React.PureComponent {
 
   // eslint-disable-next-line require-jsdoc
   submit() {
-    const {cookies} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {token} = this.props;
     const {inputData, formData} = this.state;
     const studentData = {
       firstName: inputData.firstNameStudent,
@@ -66,7 +62,7 @@ class AddStudent extends React.PureComponent {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
@@ -153,4 +149,4 @@ class AddStudent extends React.PureComponent {
   }
 }
 
-export default withCookies(AddStudent);
+export default withAuth0(AddStudent);

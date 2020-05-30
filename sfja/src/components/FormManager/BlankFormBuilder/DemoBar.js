@@ -3,10 +3,11 @@ import React from 'react';
 import {ReactFormGenerator, ElementStore} from 'react-form-builder2';
 import {Button, TextField} from '@material-ui/core';
 import apiUrl from '../../../utils/Env';
-import {Cookies, withCookies} from 'react-cookie';
 import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import {withAuth0} from '../../../utils/Auth0Wrapper';
+
 // eslint-disable-next-line require-jsdoc
 function post(url, data, token, formName) {
   return fetch(url, {
@@ -27,7 +28,6 @@ function post(url, data, token, formName) {
 class DemoBar extends React.Component {
   static propTypes = {
     setCreateForm: PropTypes.func,
-    cookies: PropTypes.instanceOf(Cookies),
     openSuccessSnackBar: false,
   };
   // eslint-disable-next-line require-jsdoc
@@ -66,8 +66,8 @@ class DemoBar extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   _onSubmit(data, formName) {
-    const {cookies} = this.props;
-    post(apiUrl() + '/newform', data, cookies.get('token'), formName).then(() => {
+    const {token} = this.props;
+    post(apiUrl() + '/newform', data, token, formName).then(() => {
       this.setState({formName: '', data: [], openSuccessSnackBar: true});
     });
   }
@@ -139,4 +139,4 @@ class DemoBar extends React.Component {
   }
 }
 
-export default withCookies(DemoBar);
+export default withAuth0(DemoBar);

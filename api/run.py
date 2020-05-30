@@ -520,12 +520,14 @@ def getStudentProfileForm():
     form_info['last_updated'] = FormsDOM.getLastUpdated(form_id)
     form_info['completed'] = FormsDOM.isComplete(form_id)
 
+    isAuthorizedBool = isAuthorized(get_token_auth_header(), ['developer', 'admin'])
     return {
         'form_data': form_data,
         'blank_form_data': blank_form_data,
         'basic_info': studentsDOM.getBasicInfo(studentID),
         'parent_profile': cleaned_parent_profile,
-        'form_info': form_info
+        'form_info': form_info,
+        'isAuthorized': isAuthorizedBool,
     }
 
 @app.route('/studentProfileUpdate', methods = ['POST'])
@@ -542,15 +544,6 @@ def studentProfileUpdate():
             value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
         studentsDOM.updateInfo(studentID, key, value)
 
-    return '0'
-
-@app.route('/submitFormAuth', methods = ['POST'])
-@requires_auth
-@log_action('Submit form')
-def submitFormAuth():
-    form_id = request.json['form_id']
-    answer_data = request.json['answer_data']
-    FormsDOM.updateFormData(form_id, answer_data)
     return '0'
 
 @app.route('/resendForms', methods = ['POST'])
@@ -918,5 +911,15 @@ def clearLogins():
     return {
         'success': True,
     }
+
+@app.route('/submitFormAuth', methods = ['POST'])
+@requires_auth
+@log_action('Submit form')
+@specific_roles(['admin', 'developer'])
+def submitFormAuth():
+    form_id = request.json['form_id']
+    answer_data = request.json['answer_data']
+    FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
 if __name__ == '__main__':
     app.run(debug=True)

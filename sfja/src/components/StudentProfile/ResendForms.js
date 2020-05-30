@@ -1,7 +1,7 @@
 /* eslint-disable max-len,require-jsdoc */
 import React from 'react';
-import Proptypes, {instanceOf} from 'prop-types';
-import {Cookies, withCookies} from 'react-cookie';
+import Proptypes from 'prop-types';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import {Button, Checkbox, List, ListItem, ListItemIcon, Paper} from '@material-ui/core';
 import CommentIcon from '@material-ui/icons/Comment';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,7 +19,6 @@ class ResendForms extends React.Component {
     studentId: Proptypes.string,
     blankForms: Proptypes.array,
     studentForms: Proptypes.array,
-    cookies: instanceOf(Cookies).isRequired,
     parents: Proptypes.array,
     updateStudentProfile: Proptypes.func,
     archived: Proptypes.bool,
@@ -62,7 +61,8 @@ class ResendForms extends React.Component {
   }
   resendForms() {
     const {comments, message, forms} = this.state;
-    const {studentId, cookies, updateStudentProfile} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {studentId, token, updateStudentProfile} = this.props;
     const body = {
       comments: comments,
       message: message,
@@ -73,7 +73,7 @@ class ResendForms extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     }).then((response) => {
@@ -275,5 +275,5 @@ class ResendForms extends React.Component {
   }
 }
 
-export default withCookies(ResendForms);
+export default withAuth0(ResendForms);
 
