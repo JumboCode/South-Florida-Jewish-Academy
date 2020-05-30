@@ -27,7 +27,7 @@ class FormViewer extends React.Component {
       openDialogReset: false,
       edit: false,
       openSnackBar: false,
-      openSnackBar2: false,
+      openSnackBarStatus: false,
       success: false,
       success2: false,
       formStatus: false,
@@ -136,7 +136,7 @@ class FormViewer extends React.Component {
         .then((data) => {
           this.setState({
             formStatus: data.status,
-            openSnackBar2: true,
+            openSnackBarStatus: true,
             success2: true,
           });
           console.log(data.status);
@@ -177,7 +177,7 @@ class FormViewer extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, openDialogReset, edit, success, success2, openSnackBar, openSnackBar2, authorized, formStatus} = this.state;
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, openDialogReset, edit, success, success2, openSnackBar, openSnackBarStatus, authorized, formStatus} = this.state;
     if (!basicInfo) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
@@ -359,8 +359,8 @@ class FormViewer extends React.Component {
           severity={success ? 'success' : 'error'}
         />
         <SnackBarMessage
-          open={openSnackBar2}
-          closeSnackbar={() => this.setState({openSnackBar2: false})}
+          open={openSnackBarStatus}
+          closeSnackbar={() => this.setState({openSnackBarStatus: false})}
           message={success2 ? 'Form Status Successfully Changed' : 'There was an error.'}
           severity={success2 ? 'success' : 'error'}
         />
