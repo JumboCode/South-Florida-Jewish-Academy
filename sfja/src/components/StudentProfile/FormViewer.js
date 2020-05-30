@@ -24,9 +24,12 @@ class FormViewer extends React.Component {
       parentProfile: null,
       formInfo: null,
       openDialog: false,
+      openDialogReset: false,
       edit: false,
       openSnackBar: false,
+      openSnackBar2: false,
       success: false,
+      success2: false,
       formStatus: false,
       authorized: false,
     };
@@ -133,6 +136,8 @@ class FormViewer extends React.Component {
         .then((data) => {
           this.setState({
             formStatus: data.status,
+            openSnackBar2: true,
+            success2: true,
           });
           console.log(data.status);
         })
@@ -172,7 +177,7 @@ class FormViewer extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar, authorized, formStatus} = this.state;
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, openDialogReset, edit, success, success2, openSnackBar, openSnackBar2, authorized, formStatus} = this.state;
     if (!basicInfo) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
@@ -235,17 +240,17 @@ class FormViewer extends React.Component {
                     Mode: {edit ? 'edit' : 'read-only'}
                   </div>
                   <div style={{display: 'flex'}}>
-                  <Switch
-                  checked={edit}
-                  disabled={!authorized}
-                  onChange={(event) => {
-                    if (!basicInfo.archived) {
-                      this.setState({edit: event.target.checked});
-                    }
-                  }}
-                  name='Turn on editing mode'
-                  color="primary"
-                />
+                    <Switch
+                      checked={edit}
+                      disabled={!authorized}
+                      onChange={(event) => {
+                        if (!basicInfo.archived) {
+                          this.setState({edit: event.target.checked});
+                        }
+                      }}
+                      name='Turn on editing mode'
+                      color="primary"
+                    />
                   </div>
                 </div>
 
@@ -265,7 +270,7 @@ class FormViewer extends React.Component {
                   >
                     <Button
                       variant='contained'
-                      disabled = {formStatus}
+                      disabled = {formStatus || !authorized}
                       style={{cursor: 'pointer'}}
                       onClick={()=> {
                         this.handleStatusChange();
@@ -284,7 +289,7 @@ class FormViewer extends React.Component {
                     <Button
                       variant='contained'
                       style={{cursor: 'pointer'}}
-                      disabled = {!formStatus}
+                      disabled = {!formStatus || !authorized}
                       onClick={()=> {
                         this.handleStatusChange();
                       }}
@@ -300,16 +305,17 @@ class FormViewer extends React.Component {
                   >
                     <Button
                       variant='contained'
+                      disabled={!authorized}
                       style={{cursor: 'pointer'}}
                       onClick={()=> {
-                        this.handleReset();
+                        this.setState({openDialogReset: true});
                       }}
                     >
                         Reset Form
                     </Button>
                   </div>
                 </div>
-                
+
               </div>
 
               {blankFormData !== null ?
@@ -323,7 +329,7 @@ class FormViewer extends React.Component {
                     answer_data={formData}
                     data={blankFormData}
                     read_only={basicInfo.archived || !edit}
-                    action_name={basicInfo.archived ? 'This student is archived' : (edit ? 'Override Parent\'s Data' : 'Read-only mode')}
+                    action_name={basicInfo.archived ? 'This student is archived' : (edit ? 'Overwrite Parent\'s Data' : 'Read-only mode')}
                   />
                 </Paper> :
                <div/>}
@@ -338,11 +344,25 @@ class FormViewer extends React.Component {
           confirmMessage='Yes'
           notConfirmMessage='Back'
         />
+        <ConfirmationDialog
+          showWarning={openDialogReset}
+          setShowWarning={(newVal) => this.setState({openDialogReset: newVal})}
+          onConfirm={this.handleReset.bind(this)}
+          message='You are attempting to erase ALL form data. Are you sure?'
+          confirmMessage='Yes'
+          notConfirmMessage='cancel'
+        />
         <SnackBarMessage
           open={openSnackBar}
           closeSnackbar={() => this.setState({openSnackBar: false})}
           message={success ? 'Parent form data overwritten' : 'There was an error.'}
           severity={success ? 'success' : 'error'}
+        />
+        <SnackBarMessage
+          open={openSnackBar2}
+          closeSnackbar={() => this.setState({openSnackBar2: false})}
+          message={success2 ? 'Form Status Successfully Changed' : 'There was an error.'}
+          severity={success2 ? 'success' : 'error'}
         />
       </div>
     );

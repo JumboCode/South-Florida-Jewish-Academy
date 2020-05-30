@@ -237,7 +237,7 @@ def getStudentForms():
                 'form_name': FormsDOM.getFormName(id),
                 'last_updated': FormsDOM.getLastUpdated(id),
                 'last_viewed': FormsDOM.getLastViewed(id),
-                'completed': len(FormsDOM.getFormData(id)) != 0
+                'completed': FormsDOM.isComplete(id)
             })
     return {
         'form_data': form_data,
