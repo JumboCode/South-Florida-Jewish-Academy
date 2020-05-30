@@ -537,46 +537,55 @@ class Students extends React.Component {
                     <TableBody>
                       {filteredStudents.map((student) => {
                         const opacity = selected === student.student_id ? '0.7' : '0.5';
-                        return (
-                          <TableRow
-                            key={student.student_id}
-                            style={{cursor: 'pointer', backgroundColor: student.archived ? 'rgba(219, 103, 103, ' + opacity + ')' : selected === student.student_id ? 'rgba(211,211,211, 0.7)': '#ffffff'}}
-                            onClick={() => this.props.history.push('/students/' + student.student_id)}
-                            onMouseEnter={() => this.setState({selected: student.student_id})}
-                            onMouseLeave={() => this.setState({selected: null})}
-                          >
-                            {showSelectors && <TableCell align="left"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (!studentsChecked.has(student.student_id)) {
-                                  let newSet = new Set(studentsChecked);
-                                  newSet = newSet.add(student.student_id);
-                                  this.setState({studentsChecked: newSet});
-                                } else {
-                                  const newSet = new Set(studentsChecked);
-                                  newSet.delete(student.student_id);
-                                  this.setState({studentsChecked: newSet});
-                                }
+                        let backgroundColor = '#ffffff';
+                        if (selected === student.student_id) {
+                          backgroundColor = 'rgba(211,211,211, 0.7)';
+                        } else {
+                          if (student.completion_rate === 1) {
+                            backgroundColor = 'rgba(76, 209, 27, ' + opacity + ')';
+                          }
+                          if (student.archived) {
+                            backgroundColor = 'rgba(219, 103, 103, ' + opacity + ')';
+                          }
+                        }
+                        if (showGrades && showArchived && showComplete) {
+                          return (
+                            <TableRow
+                              key={student.student_id}
+                              style={{cursor: 'pointer', backgroundColor: backgroundColor}}
+                              onClick={() => this.props.history.push('/students/' + student.student_id)}
+                              onMouseEnter={() => this.setState({selected: student.student_id})}
+                              onMouseLeave={() => this.setState({selected: null})}
+                            >
+                              {showSelectors && 
+                               <TableCell align="left"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (!studentsChecked.has(student.student_id)) {
+                                              let newSet = new Set(studentsChecked);
+                                              newSet = newSet.add(student.student_id);
+                                              this.setState({studentsChecked: newSet});
+                                            } else {
+                                              const newSet = new Set(studentsChecked);
+                                              newSet.delete(student.student_id);
+                                              this.setState({studentsChecked: newSet});
+                                            }
+                                          }
                               }
-                              }
-                            ><Checkbox
-                                checked={studentsChecked.has(student.student_id)}
-                              /></TableCell>}
-                            <TableCell align="center" className={tableStyle}>
-                              {student.first_name}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.last_name}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.grade}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.DOB}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.forms_completed}
-                            </TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.archived ? 'Y' : 'N'}
-                            </TableCell>
-                            {authorized ? (
+                              >
+                                <Checkbox checked={studentsChecked.has(student.student_id)}/>
+                              </TableCell>}
+                              <TableCell align="center" className={tableStyle}>
+                                {student.first_name}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.last_name}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.grade}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.DOB}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.forms_completed}
+                              </TableCell>
                               <TableCell align="center" className={tableStyle}>
                                 {student.archived ? <Button
                                   variant='contained'
