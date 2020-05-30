@@ -35,22 +35,19 @@ const buttonStyle = {
 
 
 const LoginPage = () => {
-  const {isAuthenticated, loginWithPopup, getTokenSilently} = useAuth0();
+  const {isAuthenticated, loginWithPopup} = useAuth0();
   // eslint-disable-next-line no-unused-vars
   const [cookies, setCookie] = useCookies();
 
   // eslint-disable-next-line max-len
-  if (isAuthenticated && cookies.token !== undefined && cookies.studentsCache !== undefined) {
+  if (isAuthenticated && cookies.studentsCache !== undefined) {
     return (
       <Redirect to="/students"/>
     );
   } else if (cookies.studentsCache !== '') {
     setCookie('studentsCache', '');
-  } else if (isAuthenticated) {
-    getTokenSilently().then((token) => {
-      setCookie('token', token, {path: '/'});
-    });
   }
+
   return (
     <div style={{
       fontFamily: 'Futura',

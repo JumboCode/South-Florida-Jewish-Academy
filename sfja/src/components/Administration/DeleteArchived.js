@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import React from 'react';
-import {Cookies, withCookies} from 'react-cookie';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
-import PropTypes, {instanceOf} from 'prop-types';
+import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import {Button} from '@material-ui/core';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
@@ -11,7 +11,6 @@ import SnackBarMessage from '../../utils/SnackBarMessage';
 // eslint-disable-next-line require-jsdoc
 class DeleteArchived extends React.Component {
   static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
     numArchived: PropTypes.number,
   };
 
@@ -28,7 +27,8 @@ class DeleteArchived extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   deleteArchivedStudents() {
-    const {cookies} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {token} = this.props;
     this.setState({
       showConfirmation: false,
     });
@@ -36,7 +36,7 @@ class DeleteArchived extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
     }).then((response) => (response.json()))
         .then((data) => {
@@ -97,4 +97,4 @@ class DeleteArchived extends React.Component {
     );
   }
 }
-export default withCookies(DeleteArchived);
+export default withAuth0(DeleteArchived);

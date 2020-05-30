@@ -10,7 +10,6 @@ const Logout = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
   logout();
   removeCookie('studentsCache');
-  removeCookie('token');
   return (
     <div >
       Logging out...

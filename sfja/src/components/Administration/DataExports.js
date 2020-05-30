@@ -1,18 +1,13 @@
 /* eslint-disable max-len */
 import React from 'react';
-import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {instanceOf} from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import {Button} from '@material-ui/core';
 import {saveAs} from 'file-saver';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 
 // eslint-disable-next-line require-jsdoc
 class DataExports extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
-
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -21,7 +16,8 @@ class DataExports extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   downloadData(toDownload) {
-    const {cookies} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {token} = this.props;
     const body = {
       toDownload: toDownload,
     };
@@ -29,7 +25,7 @@ class DataExports extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     }).then((response) => (response.blob()))
@@ -71,4 +67,4 @@ class DataExports extends React.Component {
     );
   }
 }
-export default withCookies(DataExports);
+export default withAuth0(DataExports);

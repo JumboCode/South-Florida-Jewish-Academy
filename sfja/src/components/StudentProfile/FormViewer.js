@@ -1,7 +1,6 @@
 /* eslint-disable max-len,react/prop-types */
 import React from 'react';
-import {instanceOf} from 'prop-types';
-import {Cookies, withCookies} from 'react-cookie';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import {ReactFormGenerator} from 'react-form-builder2';
@@ -15,9 +14,6 @@ import SnackBarMessage from '../../utils/SnackBarMessage';
 
 // eslint-disable-next-line require-jsdoc
 class FormViewer extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -36,7 +32,7 @@ class FormViewer extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const body = {
       student_id: this.props.match.params.studentId,
       form_id: this.props.match.params.formId,
@@ -46,7 +42,7 @@ class FormViewer extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     }).then((res) => res.json())
@@ -79,7 +75,7 @@ class FormViewer extends React.Component {
   // eslint-disable-next-line require-jsdoc
   handleSubmitForm() {
     const {formData} = this.state;
-    const {cookies} = this.props;
+    const {token} = this.props;
     const body = {
       // eslint-disable-next-line react/prop-types
       form_id: this.props.match.params.formId,
@@ -89,7 +85,7 @@ class FormViewer extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify(body),
@@ -223,4 +219,4 @@ class FormViewer extends React.Component {
   }
 }
 
-export default withCookies(FormViewer);
+export default withAuth0(FormViewer);

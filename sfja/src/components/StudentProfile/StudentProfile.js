@@ -11,8 +11,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import MuiAlert from '@material-ui/lab/Alert';
 import Paper from '@material-ui/core/Paper';
-import {instanceOf, PropTypes} from 'prop-types';
-import {withCookies, Cookies} from 'react-cookie';
+import PropTypes, {instanceOf} from 'prop-types';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import Parents from './Parents';
@@ -25,7 +25,6 @@ import {CircularProgress, Button} from '@material-ui/core';
 // eslint-disable-next-line require-jsdoc
 class StudentProfile extends React.Component {
   static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
     match: instanceOf(PropTypes.any),
   };
 
@@ -45,7 +44,7 @@ class StudentProfile extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   updateStudentProfile() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const body = {
       id: this.props.match.params.id,
     };
@@ -54,7 +53,7 @@ class StudentProfile extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     }).then((res) => res.json())
@@ -169,4 +168,4 @@ class StudentProfile extends React.Component {
 }
 
 // export default withStyles(useStyles)(StudentProfile);
-export default withCookies(StudentProfile);
+export default withAuth0(StudentProfile);
