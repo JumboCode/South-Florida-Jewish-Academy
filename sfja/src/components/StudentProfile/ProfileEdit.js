@@ -96,6 +96,7 @@ class ProfileEdit extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {basicInfo, openSuccessMessage, disableButton} = this.state;
+    const {authorized} = this.props;
     return (
       <div style={{padding: 20}}>
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
@@ -103,12 +104,12 @@ class ProfileEdit extends React.Component {
           {Object.keys(basicInfo).filter((key) => (key !== '_id' && key !== 'DOB')).map((key) => (
             <div key={key}>
               {/* eslint-disable-next-line max-len */}
-              <TextField onChange={(event) => this.updateValue(key, event.target.value)} disabled={basicInfo.archived} value={basicInfo[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
+              <TextField onChange={(event) => this.updateValue(key, event.target.value)} disabled={basicInfo.archived || !authorized} value={basicInfo[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
             </div>
           ))}
           <MuiPickersUtilsProvider utils={DateFnsUtils} >
             <KeyboardDatePicker
-              disabled={basicInfo.archived}
+              disabled={basicInfo.archived || !authorized}
               error={basicInfo.DOB === null}
               required={true}
               inputProps={textSize}
@@ -137,7 +138,7 @@ class ProfileEdit extends React.Component {
             variant='contained'
             size='large'
             onClick={this.sendUpdate.bind(this)}
-            disabled={disableButton || basicInfo.archived}>
+            disabled={disableButton || basicInfo.archived || !authorized}>
             Update
           </Button>
         </div>
