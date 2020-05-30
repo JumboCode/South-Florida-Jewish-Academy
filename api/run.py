@@ -522,6 +522,8 @@ def getStudentProfileForm():
 def studentProfileUpdate():
     studentID = ObjectId(request.json['id'])
     basicInfo = request.json['basicInfo']
+    parents = request.json['parents']
+    parentID = ObjectId(request.json['parentId'])
 
     for key, value in basicInfo.items():
         if key == '_id':
@@ -529,6 +531,13 @@ def studentProfileUpdate():
         if key == 'DOB':
             value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
         studentsDOM.updateInfo(studentID, key, value)
+
+    for key, value in parents.items():
+        if key == 'children':
+            continue
+        if key == 'id':
+            continue
+        parentsDOM.updateInfoBasic(parentID,key,value)
 
     return '0'
 
@@ -684,7 +693,6 @@ def downloadFile():
     file_id = ObjectId(request.json['file_id'])
     data = fs.get(file_id)
     file_name = request.json['file_name']
-    print("this is file name",file_name)
     file_type = mimetypes.MimeTypes().guess_type(str(file_name))[0]
 
     fileBytes = data.read()
