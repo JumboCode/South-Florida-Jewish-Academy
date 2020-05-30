@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_pymongo import PyMongo
+from datetime import datetime
+from datetime import timedelta
 import os
 
 app = Flask(__name__)
@@ -44,8 +46,19 @@ def removeForm(id, formNum):
 
 
 def updateKey(id, newLink):
-    writR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'curr_link' : newLink}}))
+    writR = dict(mongo.db.parents.update({'_id': id}, {
+        '$set': {
+            'curr_link': newLink,
+            'link_gen_time': datetime.utcnow(),
+        }
+    }))
     return writR['nModified'] == 1
+
+
+def isExpired(id):
+    contents = list(mongo.db.parents.find({'_id': id}))
+    assert len(contents) == 1
+    return contents[0]['link_gen_time'] + timedelta(weeks=1) < datetime.utcnow()
 
 
 def get(email=None, firstName=None, lastName=None, currLink=None):

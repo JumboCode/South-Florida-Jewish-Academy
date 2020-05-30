@@ -1,7 +1,6 @@
 /* eslint-disable max-len,react/prop-types */
 import React from 'react';
-import {instanceOf} from 'prop-types';
-import {Cookies, withCookies} from 'react-cookie';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 import ProfileHeader from './ProfileHeader';
 import {ReactFormGenerator} from 'react-form-builder2';
@@ -15,9 +14,6 @@ import SnackBarMessage from '../../utils/SnackBarMessage';
 
 // eslint-disable-next-line require-jsdoc
 class FormViewer extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -32,11 +28,12 @@ class FormViewer extends React.Component {
       openSnackBar: false,
       success: false,
       formStatus: false,
+      authorized: false,
     };
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const body = {
       student_id: this.props.match.params.studentId,
       form_id: this.props.match.params.formId,
@@ -46,7 +43,7 @@ class FormViewer extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     }).then((res) => res.json())
@@ -58,8 +55,11 @@ class FormViewer extends React.Component {
             parentProfile: data.parent_profile,
             formInfo: data.form_info,
             formStatus: data.form_info.completed,
+            authorized: data.isAuthorized,
           });
-        }).catch((error) => {
+          console.log(data);
+        })
+        .catch((error) => {
           console.log(error);
         });
   }
@@ -77,7 +77,7 @@ class FormViewer extends React.Component {
   // eslint-disable-next-line require-jsdoc
   handleSubmitForm() {
     const {formData} = this.state;
-    const {cookies} = this.props;
+    const {token} = this.props;
     const body = {
       // eslint-disable-next-line react/prop-types
       form_id: this.props.match.params.formId,
@@ -87,7 +87,7 @@ class FormViewer extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify(body),
@@ -114,7 +114,7 @@ class FormViewer extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   handleStatusChange() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const {formStatus}= this.state;
     const body = {
       form_id: this.props.match.params.formId,
@@ -125,7 +125,7 @@ class FormViewer extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     })
@@ -143,7 +143,7 @@ class FormViewer extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   handleReset() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const body = {
       form_id: this.props.match.params.formId,
     };
@@ -152,7 +152,7 @@ class FormViewer extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     })
@@ -172,7 +172,7 @@ class FormViewer extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar, formStatus} = this.state;
+    const {basicInfo, blankFormData, formData, formInfo, parentProfile, openDialog, edit, success, openSnackBar, authorized, formStatus} = this.state;
     if (!basicInfo) {
       return (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
@@ -235,16 +235,17 @@ class FormViewer extends React.Component {
                     Mode: {edit ? 'edit' : 'read-only'}
                   </div>
                   <div style={{display: 'flex'}}>
-                    <Switch
-                      checked={edit}
-                      onChange={(event) => {
-                        if (!basicInfo.archived) {
-                          this.setState({edit: event.target.checked});
-                        }
-                      }}
-                      name='Turn on editing mode'
-                      color="primary"
-                    />
+                  <Switch
+                  checked={edit}
+                  disabled={!authorized}
+                  onChange={(event) => {
+                    if (!basicInfo.archived) {
+                      this.setState({edit: event.target.checked});
+                    }
+                  }}
+                  name='Turn on editing mode'
+                  color="primary"
+                />
                   </div>
                 </div>
 
@@ -308,6 +309,7 @@ class FormViewer extends React.Component {
                     </Button>
                   </div>
                 </div>
+                
               </div>
 
               {blankFormData !== null ?
@@ -347,4 +349,4 @@ class FormViewer extends React.Component {
   }
 }
 
-export default withCookies(FormViewer);
+export default withAuth0(FormViewer);

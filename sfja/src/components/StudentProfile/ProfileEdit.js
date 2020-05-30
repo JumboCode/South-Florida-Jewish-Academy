@@ -5,8 +5,7 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import {instanceOf} from 'prop-types';
-import {Cookies, withCookies} from 'react-cookie';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 
@@ -25,9 +24,6 @@ const textWidth = {
 
 // eslint-disable-next-line require-jsdoc
 class ProfileEdit extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -44,7 +40,8 @@ class ProfileEdit extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   sendUpdate() {
-    const {cookies} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {token} = this.props;
     const {basicInfo} = this.state;
     this.setState({
       disableButton: true,
@@ -58,7 +55,7 @@ class ProfileEdit extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     }).then((x) => {
@@ -156,4 +153,4 @@ class ProfileEdit extends React.Component {
   }
 }
 
-export default withCookies(ProfileEdit);
+export default withAuth0(ProfileEdit);

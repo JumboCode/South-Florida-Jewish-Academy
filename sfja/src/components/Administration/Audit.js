@@ -8,8 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import {withCookies, Cookies} from 'react-cookie';
-import {instanceOf} from 'prop-types';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -17,10 +16,6 @@ import {CircularProgress} from '@material-ui/core';
 
 // eslint-disable-next-line require-jsdoc
 class Audit extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
-  };
-
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
     super(props);
@@ -76,12 +71,13 @@ class Audit extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    const {cookies} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {token} = this.props;
     fetch(apiUrl() + '/users', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       // eslint-disable-next-line arrow-parens
     })
@@ -184,4 +180,4 @@ class Audit extends React.Component {
   }
 }
 
-export default withCookies(Audit);
+export default withAuth0(Audit);

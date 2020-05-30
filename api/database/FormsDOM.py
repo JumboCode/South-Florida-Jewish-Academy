@@ -128,8 +128,7 @@ def getParentId(id):
     contents = list(mongo.db.forms.find({'_id': id}))
     if (len(contents) != 1):
         raise RuntimeError
-
-    print(contents[0]['parent_id'])
+    
     return contents[0]['parent_id']
 
 def changeCompletion(id, status):

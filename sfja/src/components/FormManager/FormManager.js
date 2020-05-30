@@ -1,6 +1,6 @@
 /* eslint-disable max-len,react/prop-types */
 import React from 'react';
-import PropTypes, {instanceOf} from 'prop-types';
+import PropTypes from 'prop-types';
 import {CircularProgress} from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -18,7 +18,7 @@ import {
   DialogContentText,
   DialogActions,
 } from '@material-ui/core';
-import {Cookies, withCookies} from 'react-cookie';
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 
 const textSize = {
@@ -29,7 +29,6 @@ const textSize = {
 class FormManager extends React.Component {
   static propTypes = {
     formsList: PropTypes.any,
-    cookies: instanceOf(Cookies).isRequired,
   };
   // eslint-disable-next-line require-jsdoc
   constructor(props) {
@@ -47,11 +46,11 @@ class FormManager extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   fetchData() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     fetch(apiUrl() + '/getBlankFormDetails', {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
     })
         .then((res) => res.json())
@@ -63,7 +62,7 @@ class FormManager extends React.Component {
   // eslint-disable-next-line require-jsdoc
   trashForm() {
     const {formToTrash} = this.state;
-    const {cookies} = this.props;
+    const {token} = this.props;
     const body = {
       form_id: formToTrash,
     };
@@ -71,7 +70,7 @@ class FormManager extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
@@ -210,4 +209,4 @@ class FormManager extends React.Component {
   }
 }
 
-export default withCookies(FormManager);
+export default withAuth0(FormManager);
