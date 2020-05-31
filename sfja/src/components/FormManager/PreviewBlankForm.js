@@ -96,7 +96,7 @@ class PreviewBlankForm extends React.Component {
       });
     }
 
-  // eslint-disable-next-line require-jsdoc
+    // eslint-disable-next-line require-jsdoc
     updateYear() {
       const {newYear, currentFormID} = this.state;
       const {token} = this.props;

@@ -12,7 +12,7 @@ import {
   Checkbox,
   Switch,
 } from '@material-ui/core';
-import {withAuth0} from "../../utils/Auth0Wrapper";
+import {withAuth0} from '../../utils/Auth0Wrapper';
 import MessageBox from '../StudentProfile/MessageBox';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import apiUrl from '../../utils/Env';
