@@ -153,7 +153,7 @@ class Input extends React.Component {
         </div>
         <div>
           {/* eslint-disable-next-line max-len */}
-          <TextField error={gradeStudent === ''} onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
+          <TextField error={gradeStudent === '' || !gradeStudent.match(/^[0-9]+$/)} onChange={(ev) => this.setState({gradeStudent: ev.target.value})} value={gradeStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Grade" required={true}/>
           {/* eslint-disable-next-line max-len */}
           <TextField error={classStudent === ''} onChange={(ev) => this.setState({classStudent: ev.target.value})} value={classStudent} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Class" required={true}/>
           <MuiPickersUtilsProvider utils={DateFnsUtils} >

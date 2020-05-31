@@ -90,6 +90,7 @@ class AddStudent extends React.PureComponent {
     if (inputData.firstNameStudent === '' ||
       inputData.lastNameStudent === '' ||
       inputData.gradeStudent === '' ||
+      !inputData.gradeStudent.match(/^[0-9]+$/) ||
       inputData.dob === null ||
       inputData.classStudent === ''
     ) {
@@ -100,7 +101,8 @@ class AddStudent extends React.PureComponent {
         return true;
       }
     });
-    if (inputData.parents[0].email === '') {
+    // eslint-disable-next-line max-len
+    if (inputData.parents[0].email === '' || !inputData.parents[0].email.match(/.+@.+/)) {
       return true;
     }
 
