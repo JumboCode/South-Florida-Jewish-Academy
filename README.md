@@ -6,8 +6,8 @@ Welcome to the South Florida Jewish Academy project, a project run through [Tuft
 
 ## The team
 Current team members:
-- PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)
 - Maintainer: [Anthony Tranduc](https://github.com/Antranduc) (he/him/his)
+- PM: [Lawrence Chan](https://www.github.com/chanlawrencet) (he/him/his)
 - Developer: [Janny Huang](https://github.com/jhuang09) (she/her/hers)
 - Developer: [Jacqueline Chin](https://github.com/jchin01) (she/her/hers)
 - Developer: [Talia Kee](https://github.com/taliakee) (she/her/hers)
