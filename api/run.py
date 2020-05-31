@@ -748,7 +748,7 @@ def addStudent():
 
 
     dateOfBirth = datetime.strptime(student['dob'], '%m/%d/%Y')
-    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, int(student['grade']), formIds, parentIds)
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, int(student['grade']), formIds, parentIds, student['class'])
 
     for parentId in parentIds:
         parentsDOM.addStudentId(parentId, studentId)
