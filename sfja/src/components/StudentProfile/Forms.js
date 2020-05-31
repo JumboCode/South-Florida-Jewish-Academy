@@ -19,7 +19,6 @@ const textSize = {
   fontSize: '13px',
 };
 
-
 // eslint-disable-next-line require-jsdoc
 export default function Forms({forms, studentId, history}) {
   const [selected, setSelected] = React.useState(null);
@@ -33,6 +32,7 @@ export default function Forms({forms, studentId, history}) {
               <TableCell style={textSize} align = "left" >Parent Name</TableCell>
               <TableCell style={textSize} align = "left" >Parent Email</TableCell>
               <TableCell style={textSize} align = "left" >Last Updated</TableCell>
+              <TableCell style={textSize} align = "left" >Form Year</TableCell>
               <TableCell style={textSize} align = "right" >Status</TableCell>
             </TableRow>
           </TableHead>
@@ -49,6 +49,7 @@ export default function Forms({forms, studentId, history}) {
                 <TableCell style={textSize} align = "left" >{form['p_first_name']} {form['p_last_name']}</TableCell>
                 <TableCell style={textSize} align = "left" >{form['p_email']}</TableCell>
                 <TableCell style={textSize} align = "left">{form['last_updated']=== null ? 'N/A': form['last_updated']}</TableCell>
+                <TableCell style={textSize} align = "left" >{form['form_year']}</TableCell>
                 <TableCell style={textSize} align = "right">{form['completed']=== true ? <Complete/> : <Incomplete/>}</TableCell>
               </TableRow>))}
           </TableBody>

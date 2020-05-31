@@ -98,6 +98,7 @@ class Students extends React.Component {
         selected: null,
         filters: {
           grades: {},
+          classes: {},
           completed: {
             complete: false,
             incomplete: false,
@@ -230,6 +231,15 @@ class Students extends React.Component {
         }
       });
       filters.grades = grades;
+
+      const classes = {};
+      students.forEach((student) => {
+        if (!Object.keys(classes).includes('class_' + student.class)) {
+          classes['class_' + student.class] = false;
+        }
+      });
+      filters.classes = classes;
+
       const showCompleted = {
         complete: false,
         incomplete: false,
@@ -252,6 +262,13 @@ class Students extends React.Component {
         }
       });
       filters.grades = grades;
+      const classes = {};
+      students.forEach((student) => {
+        if (!Object.keys(classes).includes('class_' + student.class)) {
+          classes['class_' + student.class] = oldFilters.classes['class_' + student.class];
+        }
+      });
+      filters.classes = classes;
       filters.completed = oldFilters.completed;
       filters.archived = oldFilters.archived;
       return filters;
@@ -359,6 +376,7 @@ class Students extends React.Component {
         last_name: s.last_name,
         DOB: s.DOB,
         grade: s.grade,
+        class: s.class,
         forms_completed: s.forms_completed,
         completion_rate: s.completion_rate,
         archived: !s.archived,
@@ -507,6 +525,14 @@ class Students extends React.Component {
                           />
                           Grade
                         </TableCell>
+                        <TableCell align="left" className={tableStyle}>
+                          <TableSortLabel
+                            onClick={(e) => this.sort('class', order === 'desc' ? 'asc' : 'desc')}
+                            active={sortBy === 'class'}
+                            direction={order}
+                          />
+                          Class
+                        </TableCell>
                         <TableCell align="center" className={tableStyle}>
                           DOB
                         </TableCell>
@@ -537,6 +563,10 @@ class Students extends React.Component {
                     </TableHead>
                     <TableBody>
                       {filteredStudents.map((student) => {
+                        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+                        const showClasses = filters.classes['class_' + student.class] || this.everyTrue('classes');
+                        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+                        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
                         const opacity = selected === student.student_id ? '0.7' : '0.5';
                         let backgroundColor = '#ffffff';
                         if (selected === student.student_id) {
@@ -549,15 +579,16 @@ class Students extends React.Component {
                             backgroundColor = 'rgba(219, 103, 103, ' + opacity + ')';
                           }
                         }
-                        return (
-                          <TableRow
-                            key={student.student_id}
-                            style={{cursor: 'pointer', backgroundColor: backgroundColor}}
-                            onClick={() => this.props.history.push('/students/' + student.student_id)}
-                            onMouseEnter={() => this.setState({selected: student.student_id})}
-                            onMouseLeave={() => this.setState({selected: null})}
-                          >
-                            {showSelectors &&
+                        if (showGrades && showArchived && showComplete && showClasses) {
+                          return (
+                            <TableRow
+                              key={student.student_id}
+                              style={{cursor: 'pointer', backgroundColor: backgroundColor}}
+                              onClick={() => this.props.history.push('/students/' + student.student_id)}
+                              onMouseEnter={() => this.setState({selected: student.student_id})}
+                              onMouseLeave={() => this.setState({selected: null})}
+                            >
+                              {showSelectors &&
                               <TableCell align="left"
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -570,48 +601,52 @@ class Students extends React.Component {
                                     newSet.delete(student.student_id);
                                     this.setState({studentsChecked: newSet});
                                   }
-                                }
-                                }
+                                }}
                               >
                                 <Checkbox checked={studentsChecked.has(student.student_id)} />
                               </TableCell>}
-                            <TableCell align="center" className={tableStyle}>
-                              {student.first_name}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.last_name}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.grade}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.DOB}</TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.forms_completed}
-                            </TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.archived ? 'Y' : 'N'}
-                            </TableCell>
-                            <TableCell align="center" className={tableStyle}>
-                              {student.archived ? <Button
-                                variant='contained'
-                                style={{cursor: 'pointer'}}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true});
-                                }}
-                              >
-                                <UnarchiveIcon fontSize='large' />
-                              </Button>:<Button
-                                variant='contained'
-                                style={{cursor: 'pointer'}}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true});
-                                }}
-                              >
-                                <ArchiveIcon fontSize='large'/>
-                              </Button>}
-                            </TableCell>
-                          </TableRow>
-                        );
+                              <TableCell align="center" className={tableStyle}>
+                                {student.first_name}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.last_name}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.grade}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.class}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.DOB}</TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.forms_completed}
+                              </TableCell>
+                              <TableCell align="center" className={tableStyle}>
+                                {student.archived ? 'Y' : 'N'}
+                              </TableCell>
+                              {authorized ? (
+                                <TableCell align="center" className={tableStyle}>
+                                  {student.archived ? <Button
+                                    variant='contained'
+                                    style={{cursor: 'pointer'}}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true});
+                                    }}
+                                  >
+                                    <UnarchiveIcon fontSize='large' />
+                                  </Button>:<Button
+                                    variant='contained'
+                                    style={{cursor: 'pointer'}}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true});
+                                    }}
+                                  >
+                                    <ArchiveIcon fontSize='large'/>
+                                  </Button>}
+                                </TableCell>
+                              ) : null}
+                            </TableRow>
+                          );
+                        }
                       })}
                     </TableBody>
                   </Table>

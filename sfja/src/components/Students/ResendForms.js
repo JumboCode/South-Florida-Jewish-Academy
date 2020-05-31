@@ -254,7 +254,7 @@ class ResendForms extends React.Component {
             this.setState({openSnackBar: false});
           }}
           severity={success ? 'success' : 'error'}
-          message={success ? 'Parents of ' + studentsChecked.size.toString() + ' student' + (studentsChecked.size === 1 ? '' : 's') + ' emailed' : 'An error occurred.'}
+          message={success ? 'Parents of students' + (studentsChecked.size === 1 ? '' : 's') + ' emailed' : 'An error occurred.'}
         />
       </Paper>
     );

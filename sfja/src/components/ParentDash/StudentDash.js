@@ -173,6 +173,8 @@ class StudentDash extends React.Component {
               DOB: {studentInfo.DOB}
               <br/>
               Grade: {studentInfo.grade}
+              <br/>
+              Class: {studentInfo.class}
             </div>
             <div style={{paddingBottom: 10, fontSize: 15}}>
               Number of forms to complete: {numIncomplete === 0 ? '0 - Nice work! You\'re all set.' : numIncomplete}
