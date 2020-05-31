@@ -6,31 +6,35 @@ import PropTypes from 'prop-types';
 import Chip from '@material-ui/core/Chip';
 
 const chipDivStyle = {
-  display: "flex",
-  justifyContent: "center",
+  display: 'flex',
+  justifyContent: 'center',
   flexWrap: 'wrap',
-}
+};
 
 const chipStyle = {
   marginLeft: 5,
-}
+};
 
+// eslint-disable-next-line require-jsdoc
 class FormsTab extends React.Component {
     static propTypes = {
       forms: PropTypes.object,
       studentId: PropTypes.string,
       history: PropTypes.object,
+      cookies: PropTypes.any,
     };
 
+    // eslint-disable-next-line require-jsdoc
     constructor(props) {
       super(props);
       this.state = {
         selectedTags: [],
         allTags: [],
         forms: this.props.forms,
-      }
+      };
     }
 
+    // eslint-disable-next-line require-jsdoc
     componentDidMount() {
       const {cookies} = this.props;
 
@@ -50,35 +54,45 @@ class FormsTab extends React.Component {
           });
     }
 
+    // eslint-disable-next-line require-jsdoc
     onChipClick(tag) {
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         selectedTags: [...prevState.selectedTags, tag],
       }));
     }
+
+    // eslint-disable-next-line require-jsdoc
     onChipDelete(tag) {
-      var selected = [...this.state.selectedTags];
-      var index = selected.indexOf(tag)
+      const selected = [...this.state.selectedTags];
+      const index = selected.indexOf(tag);
       if (index !== -1) {
         selected.splice(index, 1);
         this.setState({selectedTags: selected});
       }
     }
 
+    // eslint-disable-next-line require-jsdoc
     render() {
       const {selectedTags, allTags, forms} = this.state;
 
-      return(
+      return (
         <div>
           <div style={chipDivStyle}>
-            {selectedTags.sort().map((tag) => {
-              return(
-                <Chip label={tag} onDelete={() => {this.onChipDelete(tag)}} color="primary" style={chipStyle}/>
-              );
-            })}
+            {// eslint-disable-next-line react/jsx-key
+              selectedTags.sort().map((tag) => {
+                return (
+                  // eslint-disable-next-line react/jsx-key
+                  <Chip label={tag} onDelete={() => {
+                    this.onChipDelete(tag);
+                  }} color="primary" style={chipStyle}/>
+                );
+              })}
             {allTags.sort().map((tag) => {
               if (!selectedTags.includes(tag)) {
-                return(
-                  <Chip label={tag} onClick={() => {this.onChipClick(tag)}} variant="outline" color="primary" style={chipStyle}/>
+                return (
+                  <Chip label={tag} onClick={() => {
+                    this.onChipClick(tag);
+                  }} variant="outline" color="primary" style={chipStyle}/>
                 );
               }
             })}

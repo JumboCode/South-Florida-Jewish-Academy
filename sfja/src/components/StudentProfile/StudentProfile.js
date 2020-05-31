@@ -6,7 +6,6 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import EditIcon from '@material-ui/icons/Edit';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import Forms from './Forms';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import MuiAlert from '@material-ui/lab/Alert';
