@@ -18,13 +18,15 @@ import clsx from 'clsx';
 import {instanceOf} from 'prop-types';
 import {Cookies, withCookies} from 'react-cookie';
 import apiUrl from '../../utils/Env';
-import {CircularProgress, TextField, Button} from '@material-ui/core';
+import {CircularProgress, TextField, Button, Checkbox} from '@material-ui/core';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Filters from './Filters';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import SnackBarMessage from '../../utils/SnackBarMessage';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
+import Forms from './Forms';
+import ResendForms from './ResendForms';
 import {withAuth0} from '../../utils/Auth0Wrapper';
 
 const theme = createMuiTheme({
@@ -54,7 +56,13 @@ const textSize = {
   },
 };
 
-
+// Students Component
+// On unmount, saves filters and forms into cache
+// On mount, uses cache to determine which forms to call for
+//           and applies the correct filters
+// Filters are run on the fly; forms are filtered via the post request
+// Improves performance for filtering and saves frontend computation of done
+// Also reduces size of the request response
 class Students extends React.Component {
     static propTypes = {
       students: PropTypes.any,
@@ -71,8 +79,8 @@ class Students extends React.Component {
       const {cookies} = this.props;
       const cache = cookies.get('studentsCache');
       this.state = {
-        students: null,
-        originalStudents: null,
+        filteredStudents: [],
+        originalStudents: [],
         sortBy: cache ? cache.sortBy : 'first_name',
         order: cache ? cache.order : 'desc',
         query: cache ? cache.query : '',
@@ -100,12 +108,15 @@ class Students extends React.Component {
             unarchived: true,
           },
         },
+        blankForms: [],
+        studentsChecked: cache ? cache.studentsChecked : new Set(),
+        showSelectors: cache ? cache.showSelectors : false,
       };
       this.saveCache = this.saveCache.bind(this);
     }
 
     saveCache() {
-      const {sortBy, order, query, columnToQuery, filters} = this.state;
+      const {sortBy, order, query, columnToQuery, filters, blankForms, showSelectors, studentsChecked} = this.state;
       const {cookies} = this.props;
       const newCache = {
         sortBy: sortBy,
@@ -113,6 +124,9 @@ class Students extends React.Component {
         query: query,
         columnToQuery: columnToQuery,
         filters: filters,
+        blankForms: blankForms,
+        showSelectors: showSelectors,
+        studentsChecked: Array.from(studentsChecked),
       };
       cookies.set('studentsCache', newCache);
     }
@@ -122,18 +136,31 @@ class Students extends React.Component {
       window.removeEventListener('beforeunload', this.saveCache);
     }
 
-    componentDidMount() {
+    updateData(newBlankForms, studentsChecked, isNew) {
       const {cookies, token} = this.props;
-      const {sortBy, query, order} = this.state; // from constructor
+      const {sortBy, order} = this.state; // from constructor
+      const cache = cookies.get('studentsCache');
+      let body;
+      if (cache && !isNew) {
+        body = {
+          blankForms: cache.blankForms.filter((form) => (form.checked)),
+        };
+      } else {
+        body = {
+          blankForms: newBlankForms.filter((form) => (form.checked)),
+        };
+      }
+
       fetch(apiUrl() + '/students', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
+        body: JSON.stringify(body),
       })
           .then((res) => res.json())
           .then((data) => {
-            const cache = cookies.get('studentsCache');
             if (cache) {
               // combine old + new filters
               const newFilters = this.makeFilters(data.students);
@@ -150,7 +177,7 @@ class Students extends React.Component {
               newFilters.archived = cache.filters.archived;
               newFilters.completed = cache.filters.completed;
               this.setState({
-                students: data.students,
+                filteredStudents: data.students,
                 originalStudents: data.students,
                 sortBy: cache.sortBy,
                 order: cache.order,
@@ -158,31 +185,41 @@ class Students extends React.Component {
                 columnToQuery: cache.columnToQuery,
                 filters: newFilters,
                 authorized: data.authorized,
+                blankForms: isNew ? newBlankForms : cache.blankForms.length !== data.forms.length ? this.makeBlankForms(data.forms) : cache.blankForms,
+                showSelectors: cache.showSelectors,
+                studentsChecked: isNew ? studentsChecked : new Set(cache.studentsChecked),
               });
-              return ({sortBy: cache.sortBy, query: cache.query, order: cache.order});
+              return ({sortBy: cache.sortBy, order: cache.order});
             } else {
               this.setState({
-                students: data.students,
+                filteredStudents: data.students,
                 originalStudents: data.students,
                 filters: this.makeFilters(data.students),
                 authorized: data.authorized,
+                blankForms: newBlankForms.length !== 0 ? newBlankForms : this.makeBlankForms(data.forms),
               });
-              return ({sortBy: sortBy, query: query, order: order});
+              return ({sortBy: sortBy, order: order});
             }
-          }).then(({sortBy, query, order}) => {
+          }).then(({sortBy, order}) => {
+            this.reFilter();
             if (sortBy && order) {
               this.sort(sortBy, order);
-            }
-            if (query) {
-              this.updateStudents(query);
             }
           }).catch(console.log);
       window.addEventListener('beforeunload', this.saveCache);
     }
 
+    componentDidMount() {
+      this.updateData([], new Set(), false);
+    }
+
     everyTrue(filter) {
       const {filters} = this.state;
       return Object.keys(filters[filter]).every((key) => !filters[filter][key]);
+    }
+
+    makeBlankForms(forms) {
+      return forms.map((form) => ({id: form.id, name: form.name, checked: false}));
     }
 
     makeFilters(students) {
@@ -264,37 +301,70 @@ class Students extends React.Component {
     }
 
     sort(sortBy, order) {
-      const {students} = this.state;
+      const {filteredStudents} = this.state;
       const newData = this.stableSort(
-          students,
+          filteredStudents,
           this.getComparator(order, sortBy),
       );
       this.setState({
         sortBy: sortBy,
-        students: newData,
+        filteredStudents: newData,
         order: order,
       });
     }
 
-    updateStudents(query) {
-      const {originalStudents} = this.state;
-      if (originalStudents === null) {
-        console.log('null');
-      }
-      query = new RegExp(query, 'ig');
-      const filtered = originalStudents.filter((currStudent) =>
-        (currStudent.first_name.search(query) !== -1 ||
-            currStudent.last_name.search(query) !== -1));
+    updateFilter(filterToUpdate, optionToUpdate, set) {
+      const {filters, originalStudents, studentsChecked, query} = this.state;
+      filters[filterToUpdate][optionToUpdate] = set;
+      const regExp = new RegExp(query, 'ig');
+      const filteredStudents = originalStudents.filter((student) => {
+        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+        const showQuery = (student.first_name.search(regExp) !== -1 || student.last_name.search(regExp) !== -1);
+        return showGrades && showArchived && showComplete && showQuery;
+      });
+      const filteredIds = new Set(filteredStudents.map((student) => student.student_id));
       this.setState({
-        students: filtered,
+        filters: filters,
+        filteredStudents: filteredStudents,
+        studentsChecked: new Set(Array.from(studentsChecked).filter((student) => filteredIds.has(student))),
       });
     }
 
-    updateFilter(filterToUpdate, optionToUpdate, set) {
-      const {filters} = this.state;
-      filters[filterToUpdate][optionToUpdate] = set;
+    updateQuery(query) {
+      const {filters, originalStudents, studentsChecked} = this.state;
+      const regExp = new RegExp(query, 'ig');
+      const filteredStudents = originalStudents.filter((student) => {
+        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+        const showQuery = (student.first_name.search(regExp) !== -1 || student.last_name.search(regExp) !== -1);
+        return showGrades && showArchived && showComplete && showQuery;
+      });
+      const filteredIds = new Set(filteredStudents.map((student) => student.student_id));
+      this.setState({
+        query: query,
+        filteredStudents: filteredStudents,
+        studentsChecked: new Set(Array.from(studentsChecked).filter((student) => filteredIds.has(student))),
+      });
+    }
+
+    reFilter() {
+      const {filters, originalStudents, studentsChecked, query} = this.state;
+      const regExp = new RegExp(query, 'ig');
+      const filteredStudents = originalStudents.filter((student) => {
+        const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
+        const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
+        const showComplete = (filters.completed.complete && student.completion_rate === 1) || (filters.completed.incomplete && student.completion_rate !== 1) || this.everyTrue('completed');
+        const showQuery = (student.first_name.search(regExp) !== -1 || student.last_name.search(regExp) !== -1);
+        return showGrades && showArchived && showComplete && showQuery;
+      });
+      const filteredIds = new Set(filteredStudents.map((student) => student.student_id));
       this.setState({
         filters: filters,
+        filteredStudents: filteredStudents,
+        studentsChecked: new Set(Array.from(studentsChecked).filter((student) => filteredIds.has(student))),
       });
     }
 
@@ -315,7 +385,8 @@ class Students extends React.Component {
 
     archivalStudentChanger(studentId, action) {
       const {token} = this.props;
-      const {students, originalStudents, filters} = this.state;
+      const {filteredStudents, originalStudents, filters} = this.state;
+
       const body = {
         id: studentId,
       };
@@ -330,25 +401,38 @@ class Students extends React.Component {
       }).then((x) => {
         if (x.status === 200) {
           const newOriginalData = this.flipArchival(studentId, originalStudents);
-          const newStudents = this.flipArchival(studentId, students);
+          const newStudents = this.flipArchival(studentId, filteredStudents);
           this.setState({
             openSuccessMessage: true,
             originalStudents: newOriginalData,
-            students: newStudents,
-            filters: this.refreshFilters(students, filters),
+            filteredStudents: newStudents,
+            filters: this.refreshFilters(originalStudents, filters),
           });
         }
-      }).catch((error) => {
+      }).then(() => this.reFilter()).catch((error) => {
         this.setState({
           openFailureMessage: true,
         });
       });
     }
 
+    updateFormChecked(formId, newVal) {
+      const {blankForms, studentsChecked} = this.state;
+      const newBlankForms = blankForms.map((form) => (formId === form.id ? {id: form.id, name: form.name, checked: newVal} : form));
+      this.setState({
+        blankForms: newBlankForms,
+      });
+      this.updateData(newBlankForms, studentsChecked, true);
+    }
+
+    setShowSelectors(newVal) {
+      this.setState({showSelectors: newVal});
+    }
+
     render() {
-      const {students, sortBy, order, filters, authorized, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected} = this.state;
+      const {filteredStudents, sortBy, order, filters, authorized, blankForms, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected, showSelectors, studentsChecked} = this.state;
       // eslint-disable-next-line react/prop-types
-      const {classes, className} = this.props;
+      const {classes, className, token} = this.props;
       const tableStyle = clsx(classes.text, className);
       return (
         <div>
@@ -357,8 +441,22 @@ class Students extends React.Component {
               <Filters
                 filters={filters}
                 updateFilter={this.updateFilter.bind(this)}
-                studentsLength={students ? students.length : null}
+                filteredLength={filteredStudents.length}
               />
+              <Forms
+                blankForms={blankForms}
+                updateFormChecked={this.updateFormChecked.bind(this)}
+              />
+              { blankForms.length !== 0 &&
+                <ResendForms
+                  blankForms={blankForms}
+                  setShowSelectors={(newVal) => this.setShowSelectors(newVal)}
+                  showSelectors={showSelectors}
+                  studentsChecked={studentsChecked}
+                  resetCheckedStudents={() => this.setState({studentsChecked: new Set()})}
+                  updateData={() => this.updateData(blankForms, new Set(), false)}
+                  token={token}
+                />}
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
               <div style={{paddingTop: 10, paddingBottom: 10}}>
@@ -371,14 +469,13 @@ class Students extends React.Component {
                     fullWidth
                     InputLabelProps={textSize}
                     onChange={(e) => {
-                      this.setState({query: e.target.value});
-                      this.updateStudents(e.target.value);
+                      this.updateQuery(e.target.value);
                     }}
                   >
                   </TextField>
                 </MuiThemeProvider>
               </div>
-              {students === null ?
+              {filteredStudents === null ?
                 <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
                   <CircularProgress/>
                 </div> :
@@ -386,6 +483,24 @@ class Students extends React.Component {
                   <Table>
                     <TableHead>
                       <TableRow>
+                        {showSelectors &&
+                          <TableCell
+                            className={tableStyle}
+                          >
+                            <Checkbox
+                              checked={studentsChecked.size === filteredStudents.length}
+                              onChange={(e) => {
+                                if (studentsChecked.size < filteredStudents.length) {
+                                  const newSet = new Set(filteredStudents.map((student) => student.student_id));
+                                  this.setState({studentsChecked: newSet});
+                                } else {
+                                  const newSet = new Set();
+                                  this.setState({studentsChecked: newSet});
+                                }
+                              }}
+                            />
+                          </TableCell>
+                        }
                         <TableCell className={tableStyle}>
                           <TableSortLabel
                             onClick={(e) => this.sort('first_name', order === 'desc' ? 'asc' : 'desc')}
@@ -447,7 +562,7 @@ class Students extends React.Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {students.map((student) => {
+                      {filteredStudents.map((student) => {
                         const showGrades = filters.grades['grade_' + student.grade] || this.everyTrue('grades');
                         const showClasses = filters.classes['class_' + student.class] || this.everyTrue('classes');
                         const showArchived = (filters.archived.archived && student.archived) || (filters.archived.unarchived && !student.archived) || this.everyTrue('archived');
@@ -473,6 +588,23 @@ class Students extends React.Component {
                               onMouseEnter={() => this.setState({selected: student.student_id})}
                               onMouseLeave={() => this.setState({selected: null})}
                             >
+                              {showSelectors &&
+                              <TableCell align="left"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (!studentsChecked.has(student.student_id)) {
+                                    let newSet = new Set(studentsChecked);
+                                    newSet = newSet.add(student.student_id);
+                                    this.setState({studentsChecked: newSet});
+                                  } else {
+                                    const newSet = new Set(studentsChecked);
+                                    newSet.delete(student.student_id);
+                                    this.setState({studentsChecked: newSet});
+                                  }
+                                }}
+                              >
+                                <Checkbox checked={studentsChecked.has(student.student_id)} />
+                              </TableCell>}
                               <TableCell align="center" className={tableStyle}>
                                 {student.first_name}</TableCell>
                               <TableCell align="center" className={tableStyle}>
