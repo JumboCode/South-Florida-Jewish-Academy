@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, TextField} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
@@ -29,12 +30,17 @@ class ProfileEdit extends React.Component {
     super(props);
     // eslint-disable-next-line react/prop-types
     const {basicInfo} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {parents} = this.props;
     const oldBasicInfo = JSON.parse(JSON.stringify(basicInfo));
+    const oldParentsInfo = JSON.parse(JSON.stringify(parents));
     this.state = {
       oldBasicInfo: oldBasicInfo,
       basicInfo: basicInfo,
       openSuccessMessage: false,
       disableButton: true,
+      oldParentsInfo: oldParentsInfo,
+      parents: parents,
     };
   }
 
@@ -43,12 +49,15 @@ class ProfileEdit extends React.Component {
     // eslint-disable-next-line react/prop-types
     const {token} = this.props;
     const {basicInfo} = this.state;
+    const {parents} = this.state;
     this.setState({
       disableButton: true,
     });
     const body = {
       basicInfo: basicInfo,
       id: basicInfo['_id'],
+      parents: parents,
+      parentId: parents['id'],
     };
 
     fetch(apiUrl() + '/studentProfileUpdate', {
@@ -62,6 +71,7 @@ class ProfileEdit extends React.Component {
       if (x.status === 200) {
         this.setState({
           oldBasicInfo: JSON.parse(JSON.stringify(basicInfo)),
+          oldParentsInfo: JSON.parse(JSON.stringify(parents)),
           openSuccessMessage: true,
         });
       }
@@ -90,17 +100,43 @@ class ProfileEdit extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
+  updateValueParent(key, value) {
+    const {parents} = this.state;
+    parents[key] = value;
+    this.setState({
+      parents: parents,
+      disableButton: !this.isDifferenceParent(),
+    });
+  }
+  // eslint-disable-next-line require-jsdoc
+  isDifferenceParent() {
+    const {parents, oldParentsInfo} = this.state;
+    let difference = false;
+    Object.keys(oldParentsInfo).forEach((key) => {
+      if (oldParentsInfo[key] !== parents[key]) {
+        difference = true;
+      }
+    });
+    return difference;
+  }
+
+  // eslint-disable-next-line require-jsdoc
   titleFormatter(str) {
     return str[0].toUpperCase() + str.replace('_', ' ').substring(1);
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, openSuccessMessage, disableButton} = this.state;
+    const {basicInfo, openSuccessMessage, disableButton, parents} = this.state;
     return (
       <div style={{padding: 20}}>
+        <div style={{margin: 14}}>
+          <Typography variant="h5">
+            Student Information
+          </Typography>
+        </div>
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* eslint-disable-next-line max-len */}
-          {Object.keys(basicInfo).filter((key) => (key !== '_id' && key !== 'DOB')).map((key) => (
+          {Object.keys(basicInfo).filter((key) => (key !== '_id' && key !== 'DOB' && key !== 'archived')).map((key) => (
             <div key={key}>
               {/* eslint-disable-next-line max-len */}
               <TextField onChange={(event) => this.updateValue(key, event.target.value)} disabled={basicInfo.archived} value={basicInfo[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
@@ -130,6 +166,20 @@ class ProfileEdit extends React.Component {
               }}
             />
           </MuiPickersUtilsProvider>
+        </div>
+        <div style={{margin: 14}}>
+          <Typography variant="h5">
+            Parent Information
+          </Typography>
+        </div>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+          {/* eslint-disable-next-line max-len */}
+          {Object.keys(parents).filter((key) => (key !== 'id' && key !== 'children')).map((key) => (
+            <div key={key}>
+              {/* eslint-disable-next-line max-len */}
+              <TextField onChange={(event) => this.updateValueParent(key, event.target.value)} disabled={basicInfo.archived} value={parents[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
+            </div>
+          ))}
         </div>
         {/* eslint-disable-next-line max-len */}
         <div style={{display: 'flex', flexDirection: 'row-reverse'}}>

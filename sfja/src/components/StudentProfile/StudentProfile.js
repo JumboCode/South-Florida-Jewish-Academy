@@ -137,14 +137,14 @@ class StudentProfile extends React.Component {
                 <Tab icon={<ReceiptIcon />} label="Forms" />
                 <Tab icon={<PeopleAltIcon />} label="Parents" />
                 <Tab icon={<InsertDriveFileIcon />} label="Documents" />
-                <Tab icon={<EditIcon />} label="Edit Student Info" />
+                <Tab icon={<EditIcon />} label="Edit Info" />
                 <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
                 {currTab === 0 && <FormsTab {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
                 {currTab === 1 && <Parents currId={id} history={this.props.history} parents={parents}/>}
                 {currTab === 2 && <DocumentUpload studentId={basicInfo['_id']}/>}
-                {currTab === 3 && <ProfileEdit basicInfo={basicInfo}/>}
+                {currTab === 3 && <ProfileEdit basicInfo={basicInfo} parents={parents[0]}/>}
                 {currTab === 4 &&
                 <ResendForms
                   studentForms={forms}
