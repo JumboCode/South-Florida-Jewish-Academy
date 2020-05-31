@@ -429,8 +429,10 @@ def emailParent(parentId, comments=None, message=None):
             print(response.status_code)
             print(response.body)
             print(response.headers)
+            return []
         except Exception as e:
             print(e)
+            return [send_to]
 
 
 '''====================  AUDITING ===================='''
@@ -836,10 +838,14 @@ def addStudent():
         parentsDOM.addStudentId(parentId, studentId)
 
     # send emails
-    for parentId in parentIds:
-        emailParent(parentId)
+    failed = []
 
-    return '0'
+    for parentId in parentIds:
+        failed = failed + emailParent(parentId)
+
+    return {
+        'failed': failed,
+    }
 
 '''======================  HIGHER ROLE ENDPOINTS ======================'''
 @app.route('/checkRoleAdmin', methods = ['GET'])
