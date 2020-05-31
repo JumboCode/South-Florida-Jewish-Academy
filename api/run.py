@@ -519,30 +519,6 @@ def getStudentProfileForm():
         'isAuthorized': isAuthorizedBool,
     }
 
-@app.route('/studentProfileUpdate', methods = ['POST'])
-@requires_auth
-@log_action('Update Profile')
-def studentProfileUpdate():
-    studentID = ObjectId(request.json['id'])
-    basicInfo = request.json['basicInfo']
-    parents = request.json['parents']
-    parentID = ObjectId(request.json['parentId'])
-
-    for key, value in basicInfo.items():
-        if key == '_id':
-            continue
-        if key == 'DOB':
-            value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
-        studentsDOM.updateInfo(studentID, key, value)
-
-    for key, value in parents.items():
-        if key == 'children':
-            continue
-        if key == 'id':
-            continue
-        parentsDOM.updateInfoBasic(parentID,key,value)
-
-    return '0'
 
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
@@ -947,6 +923,8 @@ def submitFormAuth():
 def studentProfileUpdate():
     studentID = ObjectId(request.json['id'])
     basicInfo = request.json['basicInfo']
+    parents = request.json['parents']
+    parentID = ObjectId(request.json['parentId'])
 
     for key, value in basicInfo.items():
         if key == '_id':
@@ -957,6 +935,12 @@ def studentProfileUpdate():
             value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
         studentsDOM.updateInfo(studentID, key, value)
 
+    for key, value in parents.items():
+        if key == 'children':
+            continue
+        if key == 'id':
+            continue
+        parentsDOM.updateInfoBasic(parentID, key, value)
     return '0'
 if __name__ == '__main__':
     app.run(debug=True)
