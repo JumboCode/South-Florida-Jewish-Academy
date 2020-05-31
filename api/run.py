@@ -237,7 +237,7 @@ def getStudentForms():
                 'form_name': FormsDOM.getFormName(id),
                 'last_updated': FormsDOM.getLastUpdated(id),
                 'last_viewed': FormsDOM.getLastViewed(id),
-                'completed': len(FormsDOM.getFormData(id)) != 0
+                'completed': FormsDOM.isComplete(id)
             })
     return {
         'form_data': form_data,
@@ -605,6 +605,29 @@ def getForms():
 def getBlankForm():
     blankForm_id = ObjectId(request.json['form_id'])
     return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
+
+@app.route('/changeStatus', methods = ['POST'])
+@requires_auth
+@log_action('Status of form changed')
+def changeStatus():
+    form_id = ObjectId(request.json['form_id'])
+    status = request.json['form_status']
+    FormsDOM.changeCompletion(form_id,status)
+    newStatus = not status
+    return {'status': newStatus}
+
+@app.route('/resetForm', methods = ['POST'])
+@requires_auth
+@log_action('Form Data Reset')
+def resetForm():
+    form_id = ObjectId(request.json['form_id'])
+    newData = FormsDOM.clearForm(form_id)
+
+    newData['_id'] = str(newData['_id'])
+    newData['blank_forms_id'] = str(newData['blank_forms_id'])
+    newData['parent_id'] = str(newData['parent_id'])
+    
+    return {'new_form_info':newData,}
 
 '''====================== UPLOAD FILE ======================'''
 @app.route('/saveImage', methods=['POST'])
