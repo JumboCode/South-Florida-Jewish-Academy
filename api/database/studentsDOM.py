@@ -41,12 +41,15 @@ def getInfo(id, key):
 def getBasicInfo(id):
     contents = list(mongo.db.students.find({'_id': id}))
     for content in contents:
-        del content['parent_ids']
-        del content['form_ids']
-        del content['files']
-        content['_id'] = str(content['_id'])
-        content['DOB'] = content['DOB'].strftime("%m/%d/%Y")
-        return content
+        student = dict()
+        student['_id'] = str(content['_id'])
+        student['first_name'] = content['first_name']
+        student['middle_name'] = content['middle_name']
+        student['last_name'] = content['last_name']
+        student['grade'] = content['grade']
+        student['class'] = content['class']
+        student['DOB'] = content['DOB'].strftime("%m/%d/%Y")
+        return student
 
 # Gets forms of a student.
 def getForms(id):
