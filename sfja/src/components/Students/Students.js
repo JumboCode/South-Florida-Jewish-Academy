@@ -137,7 +137,7 @@ class Students extends React.Component {
 
     updateData(newBlankForms, studentsChecked, isNew) {
       const {cookies, token} = this.props;
-      const {sortBy, order, query} = this.state; // from constructor
+      const {sortBy, order} = this.state; // from constructor
       const cache = cookies.get('studentsCache');
       let body;
       if (cache && !isNew) {
@@ -414,7 +414,7 @@ class Students extends React.Component {
     render() {
       const {filteredStudents, sortBy, order, filters, authorized, blankForms, showArchiveConfirmation, toArchiveOrUnarchive, openSuccessMessage, openFailureMessage, showUnArchiveConfirmation, selected, showSelectors, studentsChecked} = this.state;
       // eslint-disable-next-line react/prop-types
-      const {classes, className} = this.props;
+      const {classes, className, token} = this.props;
       const tableStyle = clsx(classes.text, className);
       return (
         <div>
@@ -437,6 +437,7 @@ class Students extends React.Component {
                   studentsChecked={studentsChecked}
                   resetCheckedStudents={() => this.setState({studentsChecked: new Set()})}
                   updateData={() => this.updateData(blankForms, new Set(), false)}
+                  token={token}
                 />}
             </div>
             <div style={{width: '100%', maxWidth: 1000}}>
@@ -548,66 +549,67 @@ class Students extends React.Component {
                             backgroundColor = 'rgba(219, 103, 103, ' + opacity + ')';
                           }
                         }
-                        if (showGrades && showArchived && showComplete) {
-                          return (
-                            <TableRow
-                              key={student.student_id}
-                              style={{cursor: 'pointer', backgroundColor: backgroundColor}}
-                              onClick={() => this.props.history.push('/students/' + student.student_id)}
-                              onMouseEnter={() => this.setState({selected: student.student_id})}
-                              onMouseLeave={() => this.setState({selected: null})}
-                            >
-                              {showSelectors && 
-                               <TableCell align="left"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            if (!studentsChecked.has(student.student_id)) {
-                                              let newSet = new Set(studentsChecked);
-                                              newSet = newSet.add(student.student_id);
-                                              this.setState({studentsChecked: newSet});
-                                            } else {
-                                              const newSet = new Set(studentsChecked);
-                                              newSet.delete(student.student_id);
-                                              this.setState({studentsChecked: newSet});
-                                            }
-                                          }
-                              }
+                        return (
+                          <TableRow
+                            key={student.student_id}
+                            style={{cursor: 'pointer', backgroundColor: backgroundColor}}
+                            onClick={() => this.props.history.push('/students/' + student.student_id)}
+                            onMouseEnter={() => this.setState({selected: student.student_id})}
+                            onMouseLeave={() => this.setState({selected: null})}
+                          >
+                            {showSelectors &&
+                              <TableCell align="left"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (!studentsChecked.has(student.student_id)) {
+                                    let newSet = new Set(studentsChecked);
+                                    newSet = newSet.add(student.student_id);
+                                    this.setState({studentsChecked: newSet});
+                                  } else {
+                                    const newSet = new Set(studentsChecked);
+                                    newSet.delete(student.student_id);
+                                    this.setState({studentsChecked: newSet});
+                                  }
+                                }
+                                }
                               >
-                                <Checkbox checked={studentsChecked.has(student.student_id)}/>
+                                <Checkbox checked={studentsChecked.has(student.student_id)} />
                               </TableCell>}
-                              <TableCell align="center" className={tableStyle}>
-                                {student.first_name}</TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.last_name}</TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.grade}</TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.DOB}</TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.forms_completed}
-                              </TableCell>
-                              <TableCell align="center" className={tableStyle}>
-                                {student.archived ? <Button
-                                  variant='contained'
-                                  style={{cursor: 'pointer'}}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true});
-                                  }}
-                                >
-                                  <UnarchiveIcon fontSize='large' />
-                                </Button>:<Button
-                                  variant='contained'
-                                  style={{cursor: 'pointer'}}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true});
-                                  }}
-                                >
-                                  <ArchiveIcon fontSize='large'/>
-                                </Button>}
-                              </TableCell>
-                            ) : null}
+                            <TableCell align="center" className={tableStyle}>
+                              {student.first_name}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.last_name}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.grade}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.DOB}</TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.forms_completed}
+                            </TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.archived ? 'Y' : 'N'}
+                            </TableCell>
+                            <TableCell align="center" className={tableStyle}>
+                              {student.archived ? <Button
+                                variant='contained'
+                                style={{cursor: 'pointer'}}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  this.setState({toArchiveOrUnarchive: student, showUnArchiveConfirmation: true});
+                                }}
+                              >
+                                <UnarchiveIcon fontSize='large' />
+                              </Button>:<Button
+                                variant='contained'
+                                style={{cursor: 'pointer'}}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  this.setState({toArchiveOrUnarchive: student, showArchiveConfirmation: true});
+                                }}
+                              >
+                                <ArchiveIcon fontSize='large'/>
+                              </Button>}
+                            </TableCell>
                           </TableRow>
                         );
                       })}

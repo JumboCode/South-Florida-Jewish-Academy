@@ -12,7 +12,7 @@ import {
   Checkbox,
   Switch,
 } from '@material-ui/core';
-import {withCookies} from 'react-cookie';
+import {withAuth0} from "../../utils/Auth0Wrapper";
 import MessageBox from '../StudentProfile/MessageBox';
 import ConfirmationDialog from '../../utils/ConfirmationDialog';
 import apiUrl from '../../utils/Env';
@@ -70,7 +70,7 @@ class ResendForms extends React.Component {
   }
 
   sendEmails() {
-    const {cookies, studentsChecked, updateData, resetCheckedStudents} = this.props;
+    const {studentsChecked, updateData, resetCheckedStudents, token} = this.props;
     const {blankForms, message} = this.state;
     const body = {
       students: Array.from(studentsChecked),
@@ -82,7 +82,7 @@ class ResendForms extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.get('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     }).then((x) => {
@@ -261,4 +261,4 @@ class ResendForms extends React.Component {
   }
 };
 
-export default withCookies(ResendForms);
+export default withAuth0(ResendForms);

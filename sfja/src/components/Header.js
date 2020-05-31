@@ -22,8 +22,9 @@ const tabs = ['/students', '/formManager', '/addStudent', '/administration'];
 // eslint-disable-next-line require-jsdoc
 export default function Header(props) {
   const [value, setValue] = React.useState(tabs.indexOf(props.match.path) + 1);
-  const {isAuthenticated} = useAuth0();
-  if (isAuthenticated !== undefined && !isAuthenticated) {
+  const {isAuthenticated, loading} = useAuth0();
+
+  if (!loading && !isAuthenticated) {
     return (
       <Redirect to={'/login'}/>
     );
