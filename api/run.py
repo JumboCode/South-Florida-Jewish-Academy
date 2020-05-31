@@ -586,6 +586,16 @@ def updateFormName():
     blankFormsDOM.updateFormName(ObjectId(id), form_name)
     return '0'
 
+@app.route('/updateFormYear', methods=['POST'])
+@requires_auth
+@log_action('Update form year')
+def updateFormYear():
+    id = request.json['form_id']
+    form_year = request.json['form_year']
+    blankFormsDOM.updateFormYear(ObjectId(id), form_year)
+    utilitiesDOM.updateTags(form_year)
+    return '0'
+
 @app.route('/newform', methods = ['POST'])
 @requires_auth
 @log_action('Add form')
@@ -608,7 +618,11 @@ def getForms():
 @log_action('Get blank form')
 def getBlankForm():
     blankForm_id = ObjectId(request.json['form_id'])
-    return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
+    return {
+        'data': blankFormsDOM.getFormData(blankForm_id),
+        'name': blankFormsDOM.getFormName(blankForm_id),
+        'year': blankFormsDOM.getFormYear(blankForm_id)
+    }
 
 @app.route('/changeStatus', methods = ['POST'])
 @requires_auth
