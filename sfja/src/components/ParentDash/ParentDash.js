@@ -3,6 +3,7 @@ import apiUrl from '../../utils/Env';
 import Paper from '@material-ui/core/Paper';
 import {CircularProgress} from '@material-ui/core';
 import UnauthorizedCard from './UnauthorizedCard';
+import ExpiredCard from './ExpiredCard';
 
 // eslint-disable-next-line require-jsdoc
 class ParentDash extends React.Component {
@@ -15,6 +16,7 @@ class ParentDash extends React.Component {
       email: '',
       loading: true,
       authorized: false,
+      expired: false,
     };
   }
 
@@ -25,27 +27,39 @@ class ParentDash extends React.Component {
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify({curr_link: this.props.match.params.parentKey}),
-    }).then((response) => response.status === 200 ? response : null)
-        .then((res) => res.json())
-        .then((data) => {
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((data) => {
           this.setState({
             firstName: data.first_name,
             lastName: data.last_name,
             email: data.email,
             authorized: true,
           });
-        }).catch((error) => {
-          console.log(error);
-        }).finally(() => {
-          this.setState({
-            loading: false,
-          });
         });
+      } else if (response.status === 426) {
+        this.setState({
+          expired: true,
+          authorized: true,
+        });
+      }
+    }).finally(() => {
+      this.setState({
+        loading: false,
+      });
+    });
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {firstName, lastName, email, loading, authorized} = this.state;
+    const {
+      firstName,
+      lastName,
+      email,
+      loading,
+      authorized,
+      expired,
+    } = this.state;
 
     if (loading) {
       return (
@@ -57,6 +71,10 @@ class ParentDash extends React.Component {
 
     if (!authorized) {
       return (<UnauthorizedCard/>);
+    }
+
+    if (expired) {
+      return <ExpiredCard/>;
     }
 
     return (

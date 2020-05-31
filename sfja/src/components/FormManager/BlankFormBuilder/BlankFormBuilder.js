@@ -6,7 +6,7 @@ import './css/bootstrap.min.css';
 import './css/font-awesome.min.css';
 import DemoBar from './DemoBar';
 import fetch from 'isomorphic-fetch';
-import {withCookies} from 'react-cookie';
+import {withAuth0} from '../../../utils/Auth0Wrapper';
 import apiUrl from '../../../utils/Env';
 require('./scss/application.scss');
 
@@ -24,7 +24,7 @@ class BlankFormBuilder extends React.Component {
   }
   // eslint-disable-next-line require-jsdoc
   componentDidMount() {
-    const {cookies} = this.props;
+    const {token} = this.props;
     const {currentFormID} = this.state;
     const body = {
       form_id: currentFormID,
@@ -34,7 +34,7 @@ class BlankFormBuilder extends React.Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.get('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       }).then((response) => (response.json()))
@@ -86,4 +86,4 @@ class BlankFormBuilder extends React.Component {
 }
 
 
-export default withCookies(BlankFormBuilder);
+export default withAuth0(BlankFormBuilder);

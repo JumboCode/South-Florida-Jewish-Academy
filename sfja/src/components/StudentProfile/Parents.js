@@ -15,8 +15,6 @@ import Paper from '@material-ui/core/Paper';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import {withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
-import {instanceOf} from 'prop-types';
-import {Cookies, withCookies} from 'react-cookie';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Typography from '@material-ui/core/Typography';
@@ -40,7 +38,6 @@ class Parents extends React.Component {
       parents: PropTypes.any,
       students: PropTypes.any,
       classes: PropTypes.any,
-      cookies: instanceOf(Cookies).isRequired,
       tableCollapse: PropTypes.any,
       sortBy: PropTypes.any,
       open: PropTypes.any,
@@ -267,4 +264,4 @@ class Parents extends React.Component {
     }
 }
 
-export default withCookies(withStyles(useStyles)(Parents));
+export default withStyles(useStyles)(Parents);

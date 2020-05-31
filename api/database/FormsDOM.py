@@ -129,5 +129,4 @@ def getParentId(id):
     if (len(contents) != 1):
         raise RuntimeError
 
-    print(contents[0]['parent_id'])
     return contents[0]['parent_id']
