@@ -335,18 +335,41 @@ def isAuthorized(token, roles):
 @requires_auth
 @log_action('Get students')
 def getStudents():
+    blankFormIds = list(map(lambda currForm: ObjectId(currForm['id']), request.json['blankForms']))
+    noBlankFormFilter = len(blankFormIds) == 0 # hoping caching will reduce complexity
+
     students = studentsDOM.getStudents()
+    studentsWithForms = []
     for student in students:
-        forms_completed = 0
-        for form in student['form_ids']:
-            if FormsDOM.isComplete(form):
-                forms_completed += 1
-        student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
-        student['completion_rate'] = forms_completed / len(student['form_ids'])
-        del student['form_ids']
+        if noBlankFormFilter:
+            forms_completed = 0
+            for form in student['form_ids']:
+                if FormsDOM.isComplete(form):
+                    forms_completed += 1
+            student['forms_completed'] = str(forms_completed) + "/" + str(len(student['form_ids']))
+            student['completion_rate'] = forms_completed / len(student['form_ids'])
+            del student['form_ids']
+            studentsWithForms.append(student)
+
+        else:
+            forms_completed = 0
+            forms_available = 0
+            for form in student['form_ids']:
+                currFormBlankFormId = FormsDOM.getBlankFormId(form)
+                if currFormBlankFormId in blankFormIds:
+                    if (FormsDOM.isComplete(form)):
+                        forms_completed += 1
+                    forms_available += 1
+
+            if forms_available > 0:
+                student['forms_completed'] = str(forms_completed) + "/" + str(forms_available)
+                student['completion_rate'] = forms_completed / forms_available
+                del student['form_ids']
+                studentsWithForms.append(student)
     return {
-        'students': students,
-        'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin'])
+        'students': studentsWithForms,
+        'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin']),
+        'forms': blankFormsDOM.getAll(),
     }
 
 
@@ -527,12 +550,37 @@ def resendForms():
     studentId = ObjectId(request.json['id'])
     comments = request.json['comments']
     message = request.json['message']
-    newBlankForms = request.json['forms']
+    newBlankForms = map(lambda form: ObjectId(form['id']), filter(lambda form: form['checked'], request.json['forms']))
 
-    currFormIds = studentsDOM.getForms(studentId)
-    blankFormIds = []
-    for currFormId in currFormIds:
-        blankFormIds.append(FormsDOM.getBlankFormId(currFormId))
+    parentIds = resendForm(studentId, newBlankForms)
+    for parentId in parentIds:
+        emailParent(parentId, comments, message)
+
+    result = {'success': True}
+    return jsonify(result), 200
+
+
+@app.route('/bulkResendEmails', methods=['POST'])
+@requires_auth
+@log_action('Bulk Resend Emails')
+def bulkResendEmails():
+    blankFormIds = list(map(lambda form: ObjectId(form['id']), request.json['blankForms']))
+    students = list(map(lambda student: ObjectId(student), request.json['students']))
+    message = request.json['message']
+    uniqueParentIds = set()
+
+    for student in students:
+        for parentId in resendForm(student, blankFormIds):
+            uniqueParentIds.add(parentId)
+
+    # only email parents once
+    for parentId in uniqueParentIds:
+        emailParent(parentId, [], message)
+
+    return '0'
+
+def resendForm(studentId, newBlankFormIds):
+    blankFormIds = map(lambda form: FormsDOM.getBlankFormId(form), studentsDOM.getForms(studentId))
 
     uniqueBlankFormIds = set(blankFormIds)
 
@@ -542,11 +590,9 @@ def resendForms():
 
     additionalBlankForms = []
 
-    for newBlankForm in newBlankForms:
-        newBlankFormId = ObjectId(newBlankForm['id'])
-        if newBlankForm['checked'] and newBlankFormId not in uniqueBlankFormIds:
+    for newBlankFormId in newBlankFormIds:
+        if newBlankFormId not in uniqueBlankFormIds:
             for parentId in parentIds:
-                # createForm(id, date, required, comp, data, parentID):
                 currID = FormsDOM.createForm(newBlankFormId, None, None, True, False, [], parentId)
                 formIds.append(currID)
             additionalBlankForms.append(newBlankFormId)
@@ -554,14 +600,9 @@ def resendForms():
     for formId in formIds:
         studentsDOM.addNewFormId(studentId, formId)
 
-    ## send email here!
-    # send emails
-    for parentId in parentIds:
-        emailParent(parentId, comments, message)
+    # return parentIds
+    return parentIds
 
-    result = {'success': True}
-    return jsonify(result), 200
-    
 '''====================  FORM MANAGEMENT ===================='''
 
 @app.route('/getBlankFormDetails', methods=['GET'])
