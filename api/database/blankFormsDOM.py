@@ -74,3 +74,11 @@ def deleteForm(id):
 def updateFormName(id, name):
     mongo.db.blankForms.update({'_id': id}, {'$set': {'form_name': name}})
 
+def getFormYear(id):
+    contents = list(mongo.db.blankForms.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    return contents[0]['form_year']
+

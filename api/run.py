@@ -421,8 +421,10 @@ def getStudentProfile():
     for formId in students_forms:
         curr_form_data_raw = FormsDOM.getForm(formId)
         formName = blankFormsDOM.getBlankFormName(curr_form_data_raw['blank_forms_id'])
+        formYear = blankFormsDOM.getFormYear(curr_form_data_raw['blank_forms_id'])
         curr_form_data = dict()
         curr_form_data['form_name'] = str(formName)
+        curr_form_data['form_year'] = str(formYear)
         curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
         curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
         curr_form_data['last_updated'] = curr_form_data_raw['last_updated']
@@ -573,6 +575,14 @@ def resendForms():
     return jsonify(result), 200
 
 
+@app.route('/getFormTags', methods = ['GET'])
+@requires_auth
+@log_action('Get form tags')
+def getFormTags():
+    tags = utilitiesDOM.getTags()
+    return {'tags' : tags}
+
+    
 '''====================  FORM MANAGEMENT ===================='''
 
 @app.route('/getBlankFormDetails', methods=['GET'])

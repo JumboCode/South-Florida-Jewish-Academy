@@ -1,21 +1,19 @@
 import React from 'react';
 import Forms from './Forms';
 import {withCookies} from 'react-cookie';
-import {withStyles} from '@material-ui/core/styles';
+import apiUrl from '../../utils/Env';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-      '& > *': {
-        margin: theme.spacing(0.5),
-      },
-    },
-}));
+const chipDivStyle = {
+  display: "flex",
+  justifyContent: "center",
+  flexWrap: 'wrap',
+}
+
+const chipStyle = {
+  marginLeft: 5,
+}
 
 class FormsTab extends React.Component {
     static propTypes = {
@@ -27,16 +25,73 @@ class FormsTab extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        selectedChips: [],
-        allChips: [],
+        selectedTags: [],
+        allTags: [],
+        forms: this.props.forms,
+      }
+    }
+
+    componentDidMount() {
+      const {cookies} = this.props;
+
+      fetch(apiUrl() + '/getFormTags', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.get('token')}`,
+        },
+      }).then((res) => res.json())
+          .then((data) => {
+            this.setState({
+              allTags: data.tags,
+            });
+          }).catch((error) => {
+            console.log(error);
+          });
+    }
+
+    onChipClick(tag) {
+      this.setState(prevState => ({
+        selectedTags: [...prevState.selectedTags, tag],
+      }));
+    }
+    onChipDelete(tag) {
+      var selected = [...this.state.selectedTags];
+      var index = selected.indexOf(tag)
+      if (index !== -1) {
+        selected.splice(index, 1);
+        this.setState({selectedTags: selected});
       }
     }
 
     render() {
+      const {selectedTags, allTags, forms} = this.state;
+
       return(
-          <Forms {...this.props} forms={this.props.forms} studentId={this.props.studentId}/>
+        <div>
+          <div style={chipDivStyle}>
+            {selectedTags.sort().map((tag) => {
+              return(
+                <Chip label={tag} onDelete={() => {this.onChipDelete(tag)}} color="primary" style={chipStyle}/>
+              );
+            })}
+            {allTags.sort().map((tag) => {
+              if (!selectedTags.includes(tag)) {
+                return(
+                  <Chip label={tag} onClick={() => {this.onChipClick(tag)}} variant="outline" color="primary" style={chipStyle}/>
+                );
+              }
+            })}
+          </div>
+          <Forms {...this.props} forms={forms.filter(function(form) {
+            if (selectedTags.length != 0) {
+              return selectedTags.includes(form['form_year']);
+            }
+            return true;
+          })} studentId={this.props.studentId}/>
+        </div>
       );
     }
 }
 
-export default withCookies(withStyles(useStyles)(FormsTab));
+export default withCookies(FormsTab);

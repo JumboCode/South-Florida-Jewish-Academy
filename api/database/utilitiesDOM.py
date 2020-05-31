@@ -10,14 +10,14 @@ app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 def updateTags(tagName):
-    contents = list(mongo.db.utilites.find({'name': 'Tag'}))
+    contents = list(mongo.db.utilities.find({'name': 'Tag'}))
 
     if len(contents) != 1: 
         initData = {
                     'name': 'Tag',
                     'tags': [tagName],
                     }
-        result = mongo.db.utilites.insert_one(initData)
+        result = mongo.db.utilities.insert_one(initData)
         return result.inserted_id
     else:
         for content in contents:
@@ -27,4 +27,13 @@ def updateTags(tagName):
                 return writeR['nModified'] > 0
     
     return content['tags']
+
+def getTags():
+    contents = list(mongo.db.utilities.find({'name': 'Tag'}))
+
+    if len(contents) != 1:
+        return False
+
+    for content in contents:
+        return content['tags']
     
