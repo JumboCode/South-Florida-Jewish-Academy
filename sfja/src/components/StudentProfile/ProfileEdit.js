@@ -127,6 +127,8 @@ class ProfileEdit extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const {basicInfo, openSuccessMessage, disableButton, parents} = this.state;
+    // eslint-disable-next-line react/prop-types
+    const {authorized} = this.props;
     return (
       <div style={{padding: 20}}>
         <div style={{margin: 14}}>
@@ -135,16 +137,29 @@ class ProfileEdit extends React.Component {
           </Typography>
         </div>
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
-          {/* eslint-disable-next-line max-len */}
-          {Object.keys(basicInfo).filter((key) => (key !== '_id' && key !== 'DOB' && key !== 'archived')).map((key) => (
-            <div key={key}>
-              {/* eslint-disable-next-line max-len */}
-              <TextField onChange={(event) => this.updateValue(key, event.target.value)} disabled={basicInfo.archived} value={basicInfo[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
-            </div>
-          ))}
+          <div>
+            {/* eslint-disable-next-line max-len */}
+            <TextField onChange={(event) => this.updateValue('first_name', event.target.value)} disabled={basicInfo.archived || !authorized} value={basicInfo['first_name']} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter('first_name')} required={true}/>
+          </div>
+          <div>
+            {/* eslint-disable-next-line max-len */}
+            <TextField onChange={(event) => this.updateValue('middle_name', event.target.value)} disabled={basicInfo.archived || !authorized} value={basicInfo['middle_name']} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter('middle_name')} required={true}/>
+          </div>
+          <div>
+            {/* eslint-disable-next-line max-len */}
+            <TextField onChange={(event) => this.updateValue('last_name', event.target.value)} disabled={basicInfo.archived || !authorized} value={basicInfo['last_name']} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter('last_name')} required={true}/>
+          </div>
+          <div>
+            {/* eslint-disable-next-line max-len */}
+            <TextField onChange={(event) => this.updateValue('grade', event.target.value)} disabled={basicInfo.archived || !authorized} value={basicInfo['grade']} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter('grade')} required={true}/>
+          </div>
+          <div>
+            {/* eslint-disable-next-line max-len */}
+            <TextField onChange={(event) => this.updateValue('class', event.target.value)} disabled={basicInfo.archived || !authorized} value={basicInfo['class']} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter('class')} required={true}/>
+          </div>
           <MuiPickersUtilsProvider utils={DateFnsUtils} >
             <KeyboardDatePicker
-              disabled={basicInfo.archived}
+              disabled={basicInfo.archived || !authorized}
               error={basicInfo.DOB === null}
               required={true}
               inputProps={textSize}
@@ -177,7 +192,7 @@ class ProfileEdit extends React.Component {
           {Object.keys(parents).filter((key) => (key !== 'id' && key !== 'children')).map((key) => (
             <div key={key}>
               {/* eslint-disable-next-line max-len */}
-              <TextField onChange={(event) => this.updateValueParent(key, event.target.value)} disabled={basicInfo.archived} value={parents[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
+              <TextField onChange={(event) => this.updateValueParent(key, event.target.value)} disabled={basicInfo.archived || !authorized} value={parents[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
             </div>
           ))}
         </div>
@@ -187,7 +202,7 @@ class ProfileEdit extends React.Component {
             variant='contained'
             size='large'
             onClick={this.sendUpdate.bind(this)}
-            disabled={disableButton || basicInfo.archived}>
+            disabled={disableButton || basicInfo.archived || !authorized}>
             Update
           </Button>
         </div>

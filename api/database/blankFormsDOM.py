@@ -63,7 +63,8 @@ def getBlankFormDetails():
             'form_id': str(content['_id']),
             'form_name': content['form_name'],
             'date_created': content['date_created'],
-            'form_data': content['form_data']
+            'form_data': content['form_data'],
+            'form_year': content['form_year'],
         }
         forms.append(info)
     return forms
@@ -73,6 +74,9 @@ def deleteForm(id):
 
 def updateFormName(id, name):
     mongo.db.blankForms.update({'_id': id}, {'$set': {'form_name': name}})
+
+def updateFormYear(id, name):
+    mongo.db.blankForms.update({'_id': id}, {'$set': {'form_year': name}})
 
 def getFormYear(id):
     contents = list(mongo.db.blankForms.find({'_id': id}))

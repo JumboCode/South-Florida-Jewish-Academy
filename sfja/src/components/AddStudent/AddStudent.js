@@ -46,6 +46,7 @@ class AddStudent extends React.PureComponent {
       middleName: inputData.middleNameStudent,
       lastName: inputData.lastNameStudent,
       grade: inputData.gradeStudent,
+      class: inputData.classStudent,
       dob: inputData.dob,
     };
 
@@ -87,9 +88,10 @@ class AddStudent extends React.PureComponent {
       return true;
     }
     if (inputData.firstNameStudent === '' ||
-        inputData.lastNameStudent === '' ||
-        inputData.gradeStudent === '' ||
-        inputData.dob === null
+      inputData.lastNameStudent === '' ||
+      inputData.gradeStudent === '' ||
+      inputData.dob === null ||
+      inputData.classStudent === ''
     ) {
       return true;
     }

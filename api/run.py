@@ -237,7 +237,7 @@ def getStudentForms():
                 'form_name': FormsDOM.getFormName(id),
                 'last_updated': FormsDOM.getLastUpdated(id),
                 'last_viewed': FormsDOM.getLastViewed(id),
-                'completed': len(FormsDOM.getFormData(id)) != 0
+                'completed': FormsDOM.isComplete(id)
             })
     return {
         'form_data': form_data,
@@ -482,6 +482,7 @@ def getStudentProfile():
         'blank_forms': blankFormsDOM.getAll(),
         'parents': parents,
         'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin']),
+        'tags': utilitiesDOM.getTags(),
     }
 
 @app.route('/studentProfileForm', methods = ['POST'])
@@ -584,15 +585,6 @@ def resendForms():
 
     result = {'success': True}
     return jsonify(result), 200
-
-
-@app.route('/getFormTags', methods = ['GET'])
-@requires_auth
-@log_action('Get form tags')
-def getFormTags():
-    tags = utilitiesDOM.getTags()
-    return {'tags' : tags}
-
     
 '''====================  FORM MANAGEMENT ===================='''
 
@@ -619,6 +611,16 @@ def updateFormName():
     blankFormsDOM.updateFormName(ObjectId(id), form_name)
     return '0'
 
+@app.route('/updateFormYear', methods=['POST'])
+@requires_auth
+@log_action('Update form year')
+def updateFormYear():
+    id = request.json['form_id']
+    form_year = request.json['form_year']
+    blankFormsDOM.updateFormYear(ObjectId(id), form_year)
+    utilitiesDOM.updateTags(form_year)
+    return '0'
+
 @app.route('/newform', methods = ['POST'])
 @requires_auth
 @log_action('Add form')
@@ -641,7 +643,34 @@ def getForms():
 @log_action('Get blank form')
 def getBlankForm():
     blankForm_id = ObjectId(request.json['form_id'])
-    return {'data': blankFormsDOM.getFormData(blankForm_id), 'name': blankFormsDOM.getFormName(blankForm_id)}
+    return {
+        'data': blankFormsDOM.getFormData(blankForm_id),
+        'name': blankFormsDOM.getFormName(blankForm_id),
+        'year': blankFormsDOM.getFormYear(blankForm_id)
+    }
+
+@app.route('/changeStatus', methods = ['POST'])
+@requires_auth
+@log_action('Status of form changed')
+def changeStatus():
+    form_id = ObjectId(request.json['form_id'])
+    status = request.json['form_status']
+    FormsDOM.changeCompletion(form_id,status)
+    newStatus = not status
+    return {'status': newStatus}
+
+@app.route('/resetForm', methods = ['POST'])
+@requires_auth
+@log_action('Form Data Reset')
+def resetForm():
+    form_id = ObjectId(request.json['form_id'])
+    newData = FormsDOM.clearForm(form_id)
+
+    newData['_id'] = str(newData['_id'])
+    newData['blank_forms_id'] = str(newData['blank_forms_id'])
+    newData['parent_id'] = str(newData['parent_id'])
+    
+    return {'new_form_info':newData,}
 
 '''====================== UPLOAD FILE ======================'''
 @app.route('/saveImage', methods=['POST'])
@@ -784,7 +813,7 @@ def addStudent():
 
 
     dateOfBirth = datetime.strptime(student['dob'], '%m/%d/%Y')
-    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, int(student['grade']), formIds, parentIds)
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, int(student['grade']), formIds, parentIds, student['class'])
 
     for parentId in parentIds:
         parentsDOM.addStudentId(parentId, studentId)
@@ -909,6 +938,25 @@ def submitFormAuth():
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
     FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
+
+@app.route('/studentProfileUpdate', methods = ['POST'])
+@requires_auth
+@log_action('Update Profile')
+@specific_roles(['admin', 'developer'])
+def studentProfileUpdate():
+    studentID = ObjectId(request.json['id'])
+    basicInfo = request.json['basicInfo']
+
+    for key, value in basicInfo.items():
+        if key == '_id':
+            continue
+        if key == 'archived':
+            continue
+        if key == 'DOB':
+            value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
+        studentsDOM.updateInfo(studentID, key, value)
+
     return '0'
 if __name__ == '__main__':
     app.run(debug=True)

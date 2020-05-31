@@ -115,6 +115,7 @@ class FormManager extends React.Component {
           id: result[i].form_id,
           name: result[i].form_name,
           date: result[i].date_created,
+          year: result[i].form_year,
         };
         allInfoArr.push(form);
       }
@@ -136,7 +137,8 @@ class FormManager extends React.Component {
                   <TableHead>
                     <TableRow>
                       <TableCell style={textSize}>Name</TableCell>
-                      <TableCell style={textSize} align="right">Date Created</TableCell>
+                      <TableCell style={textSize} align="left">Date Created</TableCell>
+                      <TableCell style={textSize} align="left">Form Year</TableCell>
                       <TableCell style={textSize} align="right">Delete</TableCell>
                     </TableRow>
                   </TableHead>
@@ -150,7 +152,8 @@ class FormManager extends React.Component {
                         onMouseLeave={() => this.setState({selected: null})}
                       >
                         <TableCell style={textSize} align="left">{row.name}</TableCell>
-                        <TableCell style={textSize} align="right">{row.date}</TableCell>
+                        <TableCell style={textSize} align="left">{row.date}</TableCell>
+                        <TableCell style={textSize} align="left">{row.year}</TableCell>
                         <TableCell style={textSize} align="right">
                           <Button
                             variant='contained'
