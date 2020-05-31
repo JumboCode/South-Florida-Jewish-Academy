@@ -63,7 +63,8 @@ def getBlankFormDetails():
             'form_id': str(content['_id']),
             'form_name': content['form_name'],
             'date_created': content['date_created'],
-            'form_data': content['form_data']
+            'form_data': content['form_data'],
+            'form_year': content['form_year'],
         }
         forms.append(info)
     return forms

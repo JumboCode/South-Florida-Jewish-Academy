@@ -482,6 +482,7 @@ def getStudentProfile():
         'blank_forms': blankFormsDOM.getAll(),
         'parents': parents,
         'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin']),
+        'tags': utilitiesDOM.getTags(),
     }
 
 @app.route('/studentProfileForm', methods = ['POST'])
@@ -559,15 +560,6 @@ def resendForms():
 
     result = {'success': True}
     return jsonify(result), 200
-
-
-@app.route('/getFormTags', methods = ['GET'])
-@requires_auth
-@log_action('Get form tags')
-def getFormTags():
-    tags = utilitiesDOM.getTags()
-    return {'tags' : tags}
-
     
 '''====================  FORM MANAGEMENT ===================='''
 

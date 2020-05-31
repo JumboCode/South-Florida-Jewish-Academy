@@ -39,6 +39,7 @@ class StudentProfile extends React.Component {
       value: 0,
       authorized: false,
       id: this.props.match.params.id,
+      tags: [],
     };
   }
 
@@ -64,6 +65,7 @@ class StudentProfile extends React.Component {
             blankForms: data.blank_forms,
             parents: data.parents,
             authorized: data.authorized,
+            tags: data.tags,
           });
         }).catch((error) => {
           console.log(error);
@@ -86,7 +88,7 @@ class StudentProfile extends React.Component {
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {forms, basicInfo, currTab, blankForms, parents, authorized, id} = this.state;
+    const {forms, basicInfo, currTab, blankForms, parents, authorized, id, tags} = this.state;
     // const {classes, children, className, ...other} = this.props;
     // eslint-disable-next-line react/prop-types
     if (!forms || !basicInfo) {
@@ -141,7 +143,7 @@ class StudentProfile extends React.Component {
                 <Tab icon={<MailOutlineIcon/>} label="Resend Forms" />
               </Tabs>
               <div>
-                {currTab === 0 && <FormsTab {...this.props} forms={forms} studentId={basicInfo['_id']}/>}
+                {currTab === 0 && <FormsTab {...this.props} forms={forms} studentId={basicInfo['_id']} tags={tags}/>}
                 {currTab === 1 && <Parents currId={id} history={this.props.history} parents={parents}/>}
                 {currTab === 2 && <DocumentUpload studentId={basicInfo['_id']}/>}
                 {currTab === 3 && <ProfileEdit basicInfo={basicInfo} authorized={authorized}/>}
