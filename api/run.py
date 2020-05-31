@@ -516,22 +516,6 @@ def getStudentProfileForm():
         'isAuthorized': isAuthorizedBool,
     }
 
-@app.route('/studentProfileUpdate', methods = ['POST'])
-@requires_auth
-@log_action('Update Profile')
-def studentProfileUpdate():
-    studentID = ObjectId(request.json['id'])
-    basicInfo = request.json['basicInfo']
-
-    for key, value in basicInfo.items():
-        if key == '_id':
-            continue
-        if key == 'DOB':
-            value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
-        studentsDOM.updateInfo(studentID, key, value)
-
-    return '0'
-
 @app.route('/resendForms', methods = ['POST'])
 @requires_auth
 @log_action('Resend forms')
@@ -787,7 +771,7 @@ def addStudent():
 
 
     dateOfBirth = datetime.strptime(student['dob'], '%m/%d/%Y')
-    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, int(student['grade']), formIds, parentIds)
+    studentId = studentsDOM.createStudent(student['firstName'], student['middleName'], student['lastName'], dateOfBirth, int(student['grade']), formIds, parentIds, student['class'])
 
     for parentId in parentIds:
         parentsDOM.addStudentId(parentId, studentId)
@@ -912,6 +896,25 @@ def submitFormAuth():
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
     FormsDOM.updateFormData(form_id, answer_data)
+    return '0'
+
+@app.route('/studentProfileUpdate', methods = ['POST'])
+@requires_auth
+@log_action('Update Profile')
+@specific_roles(['admin', 'developer'])
+def studentProfileUpdate():
+    studentID = ObjectId(request.json['id'])
+    basicInfo = request.json['basicInfo']
+
+    for key, value in basicInfo.items():
+        if key == '_id':
+            continue
+        if key == 'archived':
+            continue
+        if key == 'DOB':
+            value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
+        studentsDOM.updateInfo(studentID, key, value)
+
     return '0'
 if __name__ == '__main__':
     app.run(debug=True)
