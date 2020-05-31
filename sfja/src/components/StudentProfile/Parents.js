@@ -5,6 +5,8 @@ import {
   parentPageStyle,
 } from './Styles';
 import Table from '@material-ui/core/Table';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -256,6 +258,12 @@ class Parents extends React.Component {
                   </TableBody>
                 </Table>
               </TableContainer>
+            </div>
+            <div style={{display:'flex',paddingTop: 10,justifyContent:'flex-end',}}>
+              <Fab color="primary" aria-label="add" size="medium" variant="extended">
+                <AddIcon />
+                Add Parent
+              </Fab>
             </div>
           </div>
         </div>

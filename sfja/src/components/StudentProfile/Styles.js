@@ -5,6 +5,7 @@ export const parentPageStyle = {
   fontFamily: 'Futura',
   justifyContent: 'center',
   fontSize: '13px',
+  flexDirection:'column'
 };
 
 export const filterStyle = {
