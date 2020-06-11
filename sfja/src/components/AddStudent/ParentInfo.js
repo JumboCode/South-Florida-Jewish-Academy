@@ -37,8 +37,8 @@ class ParentInfo extends React.Component {
             }}
             value={lastName ? lastName : ''}
           />
-          {/* eslint-disable-next-line max-len */}
-          <TextField error={num === 0 && email === ''} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Email" required={num === 0}
+          {/* eslint-disable-next-line max-len,react/prop-types */}
+          <TextField error={num === 0 && (email === '' || !email.match(/.+@.+/))} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label="Email" required={num === 0}
             onChange={(e) => {
               addParentData(num, firstName, e.target.value, lastName);
             }}
