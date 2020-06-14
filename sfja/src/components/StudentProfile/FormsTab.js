@@ -26,41 +26,56 @@ class FormsTab extends React.Component {
     constructor(props) {
       super(props);
       // eslint-disable-next-line react/prop-types
-      const {tags} = props;
+      const {tags, years} = props;
       this.state = {
-        tags: this.makeTags(tags),
+        tags: this.makeChips(tags),
+        years: this.makeChips(years),
       };
     }
 
     // eslint-disable-next-line require-jsdoc
-    makeTags(tags) {
-      return tags.sort().map((tag) => ({
-        year: tag,
+    makeChips(chips) {
+      return chips.sort().map((chip) => ({
+        name: chip,
         clicked: false,
       }));
     }
     // eslint-disable-next-line require-jsdoc
-    onChipClick(clickedTag) {
-      const {tags} = this.state;
+    onChipClick(clickedChip) {
+      const {tags, years} = this.state;
       this.setState({
-        tags: tags.map((tag) => (clickedTag === tag.year ? {year: tag.year, clicked: !tag.clicked} : tag)),
+        tags: tags.map((tag) => (clickedChip === tag.name ? {name: tag.name, clicked: !tag.clicked} : tag)),
+        years: years.map((year) => (clickedChip === year.name ? {name: year.name, clicked: !year.clicked} : year)),
       });
     }
 
     // eslint-disable-next-line require-jsdoc
     render() {
-      const {tags} = this.state;
+      const {tags, years} = this.state;
       const {forms, studentId} = this.props;
-      const noneClicked = tags.every((tag) => !tag.clicked);
+      const noneTagsClicked = tags.every((tag) => !tag.clicked);
+      const noneYearsClicked = years.every((year) => !year.clicked);
       return (
         <div>
           <div style={chipDivStyle}>
+          {years.map((year) => (
+              <Chip
+                key={year.name}
+                label={year.name}
+                onClick={() => {
+                  this.onChipClick(year.name);
+                }}
+                color="primary"
+                style={chipStyle}
+                variant={year.clicked ? 'default' : 'outlined'}
+              />
+            ))}
             {tags.map((tag) => (
               <Chip
-                key={tag.year}
-                label={tag.year}
+                key={tag.name}
+                label={tag.name}
                 onClick={() => {
-                  this.onChipClick(tag.year);
+                  this.onChipClick(tag.name);
                 }}
                 color="primary"
                 style={chipStyle}
@@ -70,7 +85,8 @@ class FormsTab extends React.Component {
           </div>
           <Forms
             {...this.props}
-            forms={forms.filter((form) => ( noneClicked || tags[tags.map((tag) => (tag.year)).indexOf(form.form_year)].clicked))}
+            forms={forms.filter((form) => ( noneYearsClicked || years[years.map((year) => (year.name)).indexOf(form.form_year)].clicked))
+                    .filter((form) => ( noneTagsClicked || tags[tags.map((tag) => (tag.name)).indexOf(form.form_tag)].clicked))}
             studentId={studentId}/>
         </div>
       );
