@@ -58,7 +58,7 @@ class FormsTab extends React.Component {
       return (
         <div>
           <div style={chipDivStyle}>
-          {years.map((year) => (
+            {years.map((year) => (
               <Chip
                 key={year.name}
                 label={year.name}
@@ -86,7 +86,7 @@ class FormsTab extends React.Component {
           <Forms
             {...this.props}
             forms={forms.filter((form) => ( noneYearsClicked || years[years.map((year) => (year.name)).indexOf(form.form_year)].clicked))
-                    .filter((form) => ( noneTagsClicked || tags[tags.map((tag) => (tag.name)).indexOf(form.form_tag)].clicked))}
+                .filter((form) => ( noneTagsClicked || tags[tags.map((tag) => (tag.name)).indexOf(form.form_tag)].clicked))}
             studentId={studentId}/>
         </div>
       );

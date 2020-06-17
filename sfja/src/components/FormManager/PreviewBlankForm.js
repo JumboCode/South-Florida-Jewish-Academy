@@ -168,8 +168,8 @@ class PreviewBlankForm extends React.Component {
 
     // eslint-disable-next-line require-jsdoc
     render() {
-      const {blankFormData, newName, currentFormID, openSuccessMessage, 
-             openFailureMessage, oldName, newYear, oldYear, newTag, oldTag} = this.state;
+      const {blankFormData, newName, currentFormID, openSuccessMessage,
+        openFailureMessage, oldName, newYear, oldYear, newTag, oldTag} = this.state;
       return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <div style={{minWidth: 650, marginTop: 30}}>
