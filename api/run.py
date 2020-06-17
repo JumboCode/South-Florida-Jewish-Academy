@@ -679,7 +679,8 @@ def getBlankForm():
     return {
         'data': blankFormsDOM.getFormData(blankForm_id),
         'name': blankFormsDOM.getFormName(blankForm_id),
-        'year': blankFormsDOM.getFormYear(blankForm_id)
+        'year': blankFormsDOM.getFormYear(blankForm_id),
+        'tag': blankFormsDOM.getFormTag(blankForm_id),
     }
 
 @app.route('/changeStatus', methods = ['POST'])

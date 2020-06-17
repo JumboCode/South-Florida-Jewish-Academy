@@ -45,7 +45,7 @@ def updateYears(year):
                 writeR = dict(mongo.db.utilities.update({'name': 'Year'}, {'$set': {'years': content['years']}}))
                 return writeR['nModified'] > 0
     
-    return content['tags']
+    return content['years']
 
 def getTags():
     contents = list(mongo.db.utilities.find({'name': 'Tag'}))
