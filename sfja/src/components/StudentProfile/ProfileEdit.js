@@ -57,7 +57,6 @@ class ProfileEdit extends React.Component {
       basicInfo: basicInfo,
       id: basicInfo['_id'],
       parents: parents,
-      parentId: parents['id'],
     };
 
     fetch(apiUrl() + '/studentProfileUpdate', {
@@ -100,9 +99,9 @@ class ProfileEdit extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  updateValueParent(key, value) {
+  updateValueParent(key, value, index) {
     const {parents} = this.state;
-    parents[key] = value;
+    parents[index][key] = value;
     this.setState({
       parents: parents,
       disableButton: !this.isDifferenceParent(),
@@ -112,11 +111,20 @@ class ProfileEdit extends React.Component {
   isDifferenceParent() {
     const {parents, oldParentsInfo} = this.state;
     let difference = false;
-    Object.keys(oldParentsInfo).forEach((key) => {
-      if (oldParentsInfo[key] !== parents[key]) {
-        difference = true;
-      }
-    });
+    {oldParentsInfo.map((currOld, index)=>{
+      Object.keys(currOld).forEach((key) => {
+        if (currOld[key] !== parents[index][key]) {
+          difference = true;
+        }
+      });
+    });}
+
+    // Object.keys(oldParentsInfo).forEach((key) => {
+    //   if (oldParentsInfo[key] !== parents[count][key]) {
+    //     difference = true;
+    //   }
+    //   count++;
+    // });
     return difference;
   }
 
@@ -187,14 +195,24 @@ class ProfileEdit extends React.Component {
             Parent Information
           </Typography>
         </div>
-        <div style={{display: 'flex', flexWrap: 'wrap'}}>
-          {/* eslint-disable-next-line max-len */}
-          {Object.keys(parents).filter((key) => (key !== 'id' && key !== 'children')).map((key) => (
-            <div key={key}>
-              {/* eslint-disable-next-line max-len */}
-              <TextField onChange={(event) => this.updateValueParent(key, event.target.value)} disabled={basicInfo.archived || !authorized} value={parents[key]} style={textWidth} inputProps={textSize} variant='outlined' id="standard-basic" label={this.titleFormatter(key)} required={true}/>
-            </div>
-          ))}
+
+        <div>
+          {parents.map((parent, index) =>{
+            return (
+              <div>
+                <Typography>Parent {index+1}</Typography>
+
+                {/* eslint-disable-next-line max-len */}
+                <TextField onChange={(event) => this.updateValueParent('first_name', event.target.value, index)} disabled={basicInfo.archived || !authorized} value={parent['first_name']} style={textWidth} inputProps={textSize} variant='outlined' label={this.titleFormatter('first_name')} id="standard-basic" required={true}/>
+
+                {/* eslint-disable-next-line max-len */}
+                <TextField onChange={(event) => this.updateValueParent('last_name', event.target.value, index)} disabled={basicInfo.archived || !authorized} value={parent['last_name']} style={textWidth} inputProps={textSize} variant='outlined' label={this.titleFormatter('last_name')} id="standard-basic" required={true}/>
+
+                {/* eslint-disable-next-line max-len */}
+                <TextField onChange={(event) => this.updateValueParent('email', event.target.value, index)} disabled={basicInfo.archived || !authorized} value={parent['email']} style={textWidth} inputProps={textSize} variant='outlined' label= "Email" id="standard-basic" required={true}/>
+              </div>
+            );
+          })}
         </div>
         {/* eslint-disable-next-line max-len */}
         <div style={{display: 'flex', flexDirection: 'row-reverse'}}>

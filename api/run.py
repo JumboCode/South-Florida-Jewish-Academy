@@ -971,7 +971,6 @@ def studentProfileUpdate():
     studentID = ObjectId(request.json['id'])
     basicInfo = request.json['basicInfo']
     parents = request.json['parents']
-    parentID = ObjectId(request.json['parentId'])
 
     for key, value in basicInfo.items():
         if key == '_id':
@@ -982,12 +981,14 @@ def studentProfileUpdate():
             value = datetime.strptime(basicInfo['DOB'], '%m/%d/%Y')
         studentsDOM.updateInfo(studentID, key, value)
 
-    for key, value in parents.items():
-        if key == 'children':
-            continue
-        if key == 'id':
-            continue
-        parentsDOM.updateInfoBasic(parentID, key, value)
+    for parent in parents:
+        for key, value in parent.items():
+            parentID = ObjectId(parent['id'])
+            if key == 'children':
+                continue
+            if key == 'id':
+                continue
+            parentsDOM.updateInfoBasic(parentID, key, value)
     return '0'
 if __name__ == '__main__':
     app.run(debug=True)
