@@ -73,6 +73,7 @@ class ProfileEdit extends React.Component {
           oldParentsInfo: JSON.parse(JSON.stringify(parents)),
           openSuccessMessage: true,
         });
+        window.location.reload(false);
       }
     });
   }
