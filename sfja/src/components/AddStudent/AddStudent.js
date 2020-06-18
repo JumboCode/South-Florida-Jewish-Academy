@@ -2,7 +2,7 @@ import React from 'react';
 import Input from './Input';
 import FormSelector from './FormSelector';
 import {Button, Paper} from '@material-ui/core';
-import SuccessMessage from './SuccessMessage';
+import ResultMessage from './ResultMessage';
 import {withAuth0} from '../../utils/Auth0Wrapper';
 import apiUrl from '../../utils/Env';
 // eslint-disable max-len
@@ -17,8 +17,8 @@ class AddStudent extends React.PureComponent {
           inputData: null,
           formData: null,
           submitTime: Date.now(),
-          successMessage: false,
-          successParents: [],
+          showResultMessage: false,
+          failedParents: [],
         };
   }
 
@@ -67,18 +67,18 @@ class AddStudent extends React.PureComponent {
       },
       body: JSON.stringify(body),
       // eslint-disable-next-line arrow-parens
-    }).then(response => {
-      this.setState({
-        submitTime: Date.now(),
-        successMessage: true,
-        successParents: inputData.parents.filter((parent) => (parent.email))
-            .map((parent) => parent.email),
-      });
-    }).then(() => {
-      this.setState({
-        successMessage: false,
-      });
-    });
+    }).then((response) => (response.json()))
+        .then((data) => {
+          this.setState({
+            submitTime: Date.now(),
+            showResultMessage: true,
+            failedParents: data.failed,
+          });
+        }).then(() => {
+          this.setState({
+            showResultMessage: false,
+          });
+        });
   };
 
   // eslint-disable-next-line require-jsdoc
@@ -90,6 +90,7 @@ class AddStudent extends React.PureComponent {
     if (inputData.firstNameStudent === '' ||
       inputData.lastNameStudent === '' ||
       inputData.gradeStudent === '' ||
+      !inputData.gradeStudent.match(/^[0-9]+$/) ||
       inputData.dob === null ||
       inputData.classStudent === ''
     ) {
@@ -100,7 +101,8 @@ class AddStudent extends React.PureComponent {
         return true;
       }
     });
-    if (inputData.parents[0].email === '') {
+    // eslint-disable-next-line max-len
+    if (inputData.parents[0].email === '' || !inputData.parents[0].email.match(/.+@.+/)) {
       return true;
     }
 
@@ -125,7 +127,7 @@ class AddStudent extends React.PureComponent {
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {submitTime, successMessage, successParents} = this.state;
+    const {submitTime, showResultMessage, failedParents} = this.state;
     return (
       <div>
         {/* eslint-disable max-len */}
@@ -145,7 +147,7 @@ class AddStudent extends React.PureComponent {
             </div>
           </Paper>
         </div>
-        <SuccessMessage open={successMessage} successParents={successParents}/>
+        <ResultMessage open={showResultMessage} failedParents={failedParents}/>
       </div>
     );
   }

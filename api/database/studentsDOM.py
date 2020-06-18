@@ -49,6 +49,7 @@ def getBasicInfo(id):
         student['grade'] = content['grade']
         student['class'] = content['class']
         student['DOB'] = content['DOB'].strftime("%m/%d/%Y")
+        student['archived'] = content['archived']
         return student
 
 # Gets forms of a student.
