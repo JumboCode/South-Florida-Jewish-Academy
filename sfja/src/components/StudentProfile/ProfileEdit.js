@@ -199,9 +199,10 @@ class ProfileEdit extends React.Component {
         <div>
           {parents.map((parent, index) =>{
             return (
-              <div>
-                <Typography>Parent {index+1}</Typography>
-
+              <div key={parent['id']}>
+                <div style={{margin: 14}}>
+                  <Typography variant="subtitle1">Parent {index+1}</Typography>
+                </div>
                 {/* eslint-disable-next-line max-len */}
                 <TextField onChange={(event) => this.updateValueParent('first_name', event.target.value, index)} disabled={basicInfo.archived || !authorized} value={parent['first_name']} style={textWidth} inputProps={textSize} variant='outlined' label={this.titleFormatter('first_name')} id="standard-basic" required={true}/>
 
