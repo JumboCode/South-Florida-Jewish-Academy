@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, TextField} from '@material-ui/core';
+import {Button, TextField, Typography} from '@material-ui/core';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
@@ -93,11 +93,13 @@ class ProfileEdit extends React.Component {
   titleFormatter(str) {
     return str[0].toUpperCase() + str.replace('_', ' ').substring(1);
   }
+
   // eslint-disable-next-line require-jsdoc
   render() {
     const {basicInfo, openSuccessMessage, disableButton} = this.state;
     // eslint-disable-next-line react/prop-types
     const {authorized} = this.props;
+    const {parents}= this.props;
     return (
       <div style={{padding: 20}}>
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
@@ -145,6 +147,21 @@ class ProfileEdit extends React.Component {
               }}
             />
           </MuiPickersUtilsProvider>
+        </div>
+        <div>
+          {parents.map((parent,index) =>{
+            return(
+              <div>
+                <Typography>Parent {index+1}</Typography>
+
+                <TextField  disabled={basicInfo.archived || !authorized} value={parent['first_name']} style={textWidth} inputProps={textSize} variant='outlined' label={this.titleFormatter('first_name')} id="standard-basic" required={true}/>
+            
+                <TextField  disabled={basicInfo.archived || !authorized} value={parent['last_name']} style={textWidth} inputProps={textSize} variant='outlined' label={this.titleFormatter('last_name')} id="standard-basic" required={true}/>
+              
+                <TextField  disabled={basicInfo.archived || !authorized} value={parent['email']} style={textWidth} inputProps={textSize} variant='outlined' label= "Email" id="standard-basic" required={true}/>
+              </div>
+            )
+          })}
         </div>
         {/* eslint-disable-next-line max-len */}
         <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
