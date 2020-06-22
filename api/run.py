@@ -179,8 +179,16 @@ def requires_auth(f):
 
 @app.route('/getParentInfo', methods = ['POST'])
 def getParentInfo():
-    currLink = request.json['curr_link']
-    parentId = parentsDOM.get(currLink=currLink)
+    curr_link = request.json['curr_link'] 
+    try:
+        parentId = parentsDOM.get(currLink=curr_link)
+    except AssertionError as e:
+        raise AuthError({'wrong link': True}, 401)
+
+    if parentsDOM.isExpired(parent_id):
+        emailParent(parent_id,'', 'Your updated link is below:')
+        raise AuthError({'expired': True}, 426)
+    
     parentInfo = parentsDOM.getParentProfile(parentId)
 
     if parentsDOM.isExpired(parentId):
@@ -200,6 +208,11 @@ def getStudentsOfParent():
         parentId = parentsDOM.get(currLink=curr_link)
     except AssertionError as e:
         raise AuthError({'wrong link': True}, 401)
+
+    if parentsDOM.isExpired(parent_id):
+        emailParent(parent_id,'', 'Your updated link is below:')
+        raise AuthError({'expired': True}, 426)
+
     
     all_student_ids = parentsDOM.getStudentIds(parentId)
     unarchived_student_ids = []
@@ -218,7 +231,11 @@ def getStudentsOfParent():
 @app.route('/getStudentForms', methods = ['GET', 'POST'])
 def getStudentForms():
     student_id = ObjectId(request.json['student_id'])
-    parent_id = parentsDOM.get(currLink=request.json['parent_key'])
+    curr_link = request.json['parent_key']
+    try:
+        parentId = parentsDOM.get(currLink=curr_link)
+    except AssertionError as e:
+        raise AuthError({'wrong link': True}, 401)
 
     if studentsDOM.isArchived(student_id):
         raise AuthError({'archived': True}, 401)
@@ -246,6 +263,16 @@ def getStudentForms():
 
 @app.route('/getForm', methods=['GET', 'POST'])
 def getForm():
+    curr_link = request.json['curr_link']
+    try:
+        parentId = parentsDOM.get(currLink=curr_link)
+    except AssertionError as e:
+        raise AuthError({'wrong link': True}, 401)
+    
+    if parentsDOM.isExpired(parent_id):
+        emailParent(parent_id,'', 'Your updated link is below:')
+        raise AuthError({'expired': True}, 426)
+
     form_id = ObjectId(request.json['form_id'])
     blank_form_id = FormsDOM.getBlankFormId(form_id)
     blank_form_data = blankFormsDOM.getFormData(blank_form_id)
@@ -259,6 +286,12 @@ def getForm():
 
 @app.route('/submitForm', methods = ['POST'])
 def submitForm():
+    curr_link = request.json['curr_link']
+    try:
+        parentId = parentsDOM.get(currLink=curr_link)
+    except AssertionError as e:
+        raise AuthError({'wrong link': True}, 401)
+
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
     FormsDOM.updateFormData(form_id, answer_data)
