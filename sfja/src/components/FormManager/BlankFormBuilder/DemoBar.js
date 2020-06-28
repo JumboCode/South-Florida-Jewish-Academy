@@ -116,7 +116,7 @@ class DemoBar extends React.Component {
           style={{marginRight: '10px', marginTop: 10}}
           variant='contained'
           onClick={() => this._onSubmit(this.state.data, formName, formYear, formTag)}
-          disabled={formName === '' || this.state.data.length === 0}
+          disabled={formName === '' || formYear === '' || formTag === '' ||this.state.data.length === 0}
         >
           Add Form
         </Button>
