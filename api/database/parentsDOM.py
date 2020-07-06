@@ -34,6 +34,10 @@ def updateInfo(id, key, update):
         return True
     return False
 
+def updateInfoBasic(id, key, value):
+    mongo.db.parents.update({'_id': id}, {'$set': {str(key): value}})
+    return '0'
+
 
 def addForm(id, formNum, formId):
     writeR = dict(mongo.db.parents.update({'_id': id}, {'$set': {'form_ids.' + str(formNum): [str(formId)]}}))
