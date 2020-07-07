@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, TextField} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
@@ -29,12 +30,17 @@ class ProfileEdit extends React.Component {
     super(props);
     // eslint-disable-next-line react/prop-types
     const {basicInfo} = this.props;
+    // eslint-disable-next-line react/prop-types
+    const {parents} = this.props;
     const oldBasicInfo = JSON.parse(JSON.stringify(basicInfo));
+    const oldParentsInfo = JSON.parse(JSON.stringify(parents));
     this.state = {
       oldBasicInfo: oldBasicInfo,
       basicInfo: basicInfo,
       openSuccessMessage: false,
       disableButton: true,
+      oldParentsInfo: oldParentsInfo,
+      parents: parents,
     };
   }
 
@@ -43,12 +49,14 @@ class ProfileEdit extends React.Component {
     // eslint-disable-next-line react/prop-types
     const {token} = this.props;
     const {basicInfo} = this.state;
+    const {parents} = this.state;
     this.setState({
       disableButton: true,
     });
     const body = {
       basicInfo: basicInfo,
       id: basicInfo['_id'],
+      parents: parents,
     };
 
     fetch(apiUrl() + '/studentProfileUpdate', {
@@ -62,8 +70,10 @@ class ProfileEdit extends React.Component {
       if (x.status === 200) {
         this.setState({
           oldBasicInfo: JSON.parse(JSON.stringify(basicInfo)),
+          oldParentsInfo: JSON.parse(JSON.stringify(parents)),
           openSuccessMessage: true,
         });
+        window.location.reload(false);
       }
     });
   }
@@ -90,16 +100,51 @@ class ProfileEdit extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
+  updateValueParent(key, value, index) {
+    const {parents} = this.state;
+    parents[index][key] = value;
+    this.setState({
+      parents: parents,
+      disableButton: !this.isDifferenceParent(),
+    });
+  }
+  // eslint-disable-next-line require-jsdoc
+  isDifferenceParent() {
+    const {parents, oldParentsInfo} = this.state;
+    let difference = false;
+    {oldParentsInfo.map((currOld, index)=>{
+      Object.keys(currOld).forEach((key) => {
+        if (currOld[key] !== parents[index][key]) {
+          difference = true;
+        }
+      });
+    });}
+
+    // Object.keys(oldParentsInfo).forEach((key) => {
+    //   if (oldParentsInfo[key] !== parents[count][key]) {
+    //     difference = true;
+    //   }
+    //   count++;
+    // });
+    return difference;
+  }
+
+  // eslint-disable-next-line require-jsdoc
   titleFormatter(str) {
     return str[0].toUpperCase() + str.replace('_', ' ').substring(1);
   }
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {basicInfo, openSuccessMessage, disableButton} = this.state;
+    const {basicInfo, openSuccessMessage, disableButton, parents} = this.state;
     // eslint-disable-next-line react/prop-types
     const {authorized} = this.props;
     return (
       <div style={{padding: 20}}>
+        <div style={{margin: 14}}>
+          <Typography variant="h5">
+            Student Information
+          </Typography>
+        </div>
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           <div>
             {/* eslint-disable-next-line max-len */}
@@ -145,6 +190,31 @@ class ProfileEdit extends React.Component {
               }}
             />
           </MuiPickersUtilsProvider>
+        </div>
+        <div style={{margin: 14}}>
+          <Typography variant="h5">
+            Parent Information
+          </Typography>
+        </div>
+
+        <div>
+          {parents.map((parent, index) =>{
+            return (
+              <div key={parent['id']}>
+                <div style={{margin: 14}}>
+                  <Typography variant="subtitle1">Parent {index+1}</Typography>
+                </div>
+                {/* eslint-disable-next-line max-len */}
+                <TextField onChange={(event) => this.updateValueParent('first_name', event.target.value, index)} disabled={basicInfo.archived || !authorized} value={parent['first_name']} style={textWidth} inputProps={textSize} variant='outlined' label={this.titleFormatter('first_name')} id="standard-basic" required={true}/>
+
+                {/* eslint-disable-next-line max-len */}
+                <TextField onChange={(event) => this.updateValueParent('last_name', event.target.value, index)} disabled={basicInfo.archived || !authorized} value={parent['last_name']} style={textWidth} inputProps={textSize} variant='outlined' label={this.titleFormatter('last_name')} id="standard-basic" required={true}/>
+
+                {/* eslint-disable-next-line max-len */}
+                <TextField onChange={(event) => this.updateValueParent('email', event.target.value, index)} disabled={basicInfo.archived || !authorized} value={parent['email']} style={textWidth} inputProps={textSize} variant='outlined' label= "Email" id="standard-basic" required={true}/>
+              </div>
+            );
+          })}
         </div>
         {/* eslint-disable-next-line max-len */}
         <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
