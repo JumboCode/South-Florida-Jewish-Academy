@@ -41,7 +41,7 @@ def updateYears(year):
     else:
         for content in contents:
             if year not in content['years']:
-                content['year'].append(year)
+                content['years'].append(year)
                 writeR = dict(mongo.db.utilities.update({'name': 'Year'}, {'$set': {'years': content['years']}}))
                 return writeR['nModified'] > 0
     
