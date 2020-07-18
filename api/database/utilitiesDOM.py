@@ -28,6 +28,25 @@ def updateTags(tagName):
     
     return content['tags']
 
+def updateYears(year):
+    contents = list(mongo.db.utilities.find({'name': 'Year'}))
+
+    if len(contents) != 1: 
+        initData = {
+                    'name': 'Year',
+                    'years': [year],
+                    }
+        result = mongo.db.utilities.insert_one(initData)
+        return result.inserted_id
+    else:
+        for content in contents:
+            if year not in content['years']:
+                content['years'].append(year)
+                writeR = dict(mongo.db.utilities.update({'name': 'Year'}, {'$set': {'years': content['years']}}))
+                return writeR['nModified'] > 0
+    
+    return content['years']
+
 def getTags():
     contents = list(mongo.db.utilities.find({'name': 'Tag'}))
 
@@ -36,4 +55,13 @@ def getTags():
 
     for content in contents:
         return content['tags']
+
+def getYears():
+    contents = list(mongo.db.utilities.find({'name': 'Year'}))
+
+    if len(contents) != 1:
+        return False
+
+    for content in contents:
+        return content['years']
     

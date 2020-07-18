@@ -58,6 +58,8 @@ class PreviewBlankForm extends React.Component {
               oldName: data.name,
               newYear: data.year,
               oldYear: data.year,
+              newTag: data.tag,
+              oldTag: data.tag,
             });
           });
     }
@@ -131,8 +133,43 @@ class PreviewBlankForm extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
+    updateTag() {
+      const {newTag, currentFormID} = this.state;
+      const {token} = this.props;
+
+      const body = {
+        form_id: currentFormID,
+        form_tag: newTag,
+      };
+      fetch(apiUrl() + '/updateFormTag', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            openSuccessMessage: true,
+            oldTag: newTag,
+          });
+        } else {
+          this.setState({
+            openFailureMessage: true,
+          });
+        }
+      }).catch((error) => {
+        this.setState({
+          openFailureMessage: true,
+        });
+      });
+    }
+
+    // eslint-disable-next-line require-jsdoc
     render() {
-      const {blankFormData, newName, currentFormID, openSuccessMessage, openFailureMessage, oldName, newYear, oldYear} = this.state;
+      const {blankFormData, newName, currentFormID, openSuccessMessage,
+        openFailureMessage, oldName, newYear, oldYear, newTag, oldTag} = this.state;
       return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <div style={{minWidth: 650, marginTop: 30}}>
@@ -189,6 +226,24 @@ class PreviewBlankForm extends React.Component {
                   variant='contained'
                   disabled={oldYear === newYear}
                   onClick={() => this.updateYear()}>Update Year</Button>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center', alignContent: 'center'}}>
+                <div style={{fontSize: 15, marginRight: 10}}>
+                  Form Tag:
+                </div>
+                <TextField onChange={(e) => {
+                  this.setState({newTag: e.target.value});
+                }}
+                id="name-field"
+                value={newTag}
+                inputProps={textSize}
+                style={{marginRight: 10}}
+                >
+                </TextField>
+                <Button
+                  variant='contained'
+                  disabled={oldTag === newTag}
+                  onClick={() => this.updateTag()}>Update Tag</Button>
               </div>
               {blankFormData !== null ?
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10, paddingBottom: 40}}>

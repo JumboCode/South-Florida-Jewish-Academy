@@ -10,11 +10,12 @@ app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 # Creates new form.
-def createForm(formName, formYear, data):
+def createForm(formName, formYear, formTag, data):
     initData = {
                 'form_name': formName,
                 'form_data': data,
                 'form_year': formYear,
+                'form_tag': formTag,
                 'date_created': datetime.now(timezone('US/Eastern')),
                 }
     result = mongo.db.blankForms.insert_one(initData)
@@ -65,6 +66,7 @@ def getBlankFormDetails():
             'date_created': content['date_created'],
             'form_data': content['form_data'],
             'form_year': content['form_year'],
+            'form_tag': content['form_tag'],
         }
         forms.append(info)
     return forms
@@ -78,6 +80,9 @@ def updateFormName(id, name):
 def updateFormYear(id, name):
     mongo.db.blankForms.update({'_id': id}, {'$set': {'form_year': name}})
 
+def updateFormTag(id, name):
+    mongo.db.blankForms.update({'_id': id}, {'$set': {'form_tag': name}})
+
 def getFormYear(id):
     contents = list(mongo.db.blankForms.find({'_id': id}))
 
@@ -85,4 +90,12 @@ def getFormYear(id):
         return False
 
     return contents[0]['form_year']
+
+def getFormTag(id):
+    contents = list(mongo.db.blankForms.find({'_id': id}))
+
+    if len(contents) != 1:
+        return False
+
+    return contents[0]['form_tag']
 
