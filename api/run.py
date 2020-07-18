@@ -489,9 +489,11 @@ def getStudentProfile():
         curr_form_data_raw = FormsDOM.getForm(formId)
         formName = blankFormsDOM.getBlankFormName(curr_form_data_raw['blank_forms_id'])
         formYear = blankFormsDOM.getFormYear(curr_form_data_raw['blank_forms_id'])
+        formTag = blankFormsDOM.getFormTag(curr_form_data_raw['blank_forms_id'])
         curr_form_data = dict()
         curr_form_data['form_name'] = str(formName)
         curr_form_data['form_year'] = str(formYear)
+        curr_form_data['form_tag'] = str(formTag)
         curr_form_data['form_id'] = str(curr_form_data_raw['_id'])
         curr_form_data['blank_forms_id'] = str(curr_form_data_raw['blank_forms_id'])
         curr_form_data['last_updated'] = curr_form_data_raw['last_updated']
@@ -541,6 +543,7 @@ def getStudentProfile():
         'parents': parents,
         'authorized': isAuthorized(get_token_auth_header(), ['developer', 'admin']),
         'tags': utilitiesDOM.getTags(),
+        'years': utilitiesDOM.getYears(),
     }
 
 @app.route('/studentProfileForm', methods = ['POST'])
@@ -670,7 +673,17 @@ def updateFormYear():
     id = request.json['form_id']
     form_year = request.json['form_year']
     blankFormsDOM.updateFormYear(ObjectId(id), form_year)
-    utilitiesDOM.updateTags(form_year)
+    utilitiesDOM.updateYears(form_year)
+    return '0'
+
+@app.route('/updateFormTag', methods=['POST'])
+@requires_auth
+@log_action('Update form tag')
+def updateFormTag():
+    id = request.json['form_id']
+    form_tag = request.json['form_tag']
+    blankFormsDOM.updateFormTag(ObjectId(id), form_tag)
+    utilitiesDOM.updateTags(form_tag)
     return '0'
 
 @app.route('/newform', methods = ['POST'])
@@ -680,8 +693,10 @@ def addForm():
     data = request.json['data']
     form_name = request.json['formName']
     form_year = request.json['formYear']
-    blankFormsDOM.createForm(form_name, form_year, data)
-    utilitiesDOM.updateTags(form_year)
+    form_tag = request.json['formTag']
+    blankFormsDOM.createForm(form_name, form_year, form_tag, data)
+    utilitiesDOM.updateYears(form_year)
+    utilitiesDOM.updateTags(form_tag)
     return '0'
 
 @app.route('/forms', methods = ['GET', 'POST'])
@@ -698,7 +713,8 @@ def getBlankForm():
     return {
         'data': blankFormsDOM.getFormData(blankForm_id),
         'name': blankFormsDOM.getFormName(blankForm_id),
-        'year': blankFormsDOM.getFormYear(blankForm_id)
+        'year': blankFormsDOM.getFormYear(blankForm_id),
+        'tag': blankFormsDOM.getFormTag(blankForm_id),
     }
 
 @app.route('/changeStatus', methods = ['POST'])
