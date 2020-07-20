@@ -28,7 +28,7 @@ export const stableSort = (array, comparator) => {
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
-}
+};
 
 export const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -38,13 +38,13 @@ export const descendingComparator = (a, b, orderBy) => {
     return 1;
   }
   return 0;
-}
+};
 
 export const getComparator = (order, orderBy) => {
   return order === 'desc' ?
         (a, b) => descendingComparator(a, b, orderBy) :
         (a, b) => -descendingComparator(a, b, orderBy);
-}
+};
 
 // eslint-disable-next-line require-jsdoc
 export default function Forms({forms, studentId, history}) {
@@ -61,10 +61,10 @@ export default function Forms({forms, studentId, history}) {
     setSortBy(sortBy);
     setOrder(order);
     setSortedForms(newData);
-  }
-  
+  };
+
   React.useEffect(() => {
-    if(forms.length !== sortedForms.length){
+    if (forms.length !== sortedForms.length) {
       sort(sortBy, order);
     }
   });
@@ -77,7 +77,7 @@ export default function Forms({forms, studentId, history}) {
           <TableHead>
             <TableRow >
               <TableCell style={textSize} align = "left" >
-                <TableSortLabel 
+                <TableSortLabel
                   onClick={(e) => sort('form_name', order === 'desc' ? 'asc' : 'desc')}
                   active={sortBy === 'form_name'}
                   direction={order}>
@@ -85,7 +85,7 @@ export default function Forms({forms, studentId, history}) {
                 Form Name
               </TableCell>
               <TableCell style={textSize} align = "left" >
-                <TableSortLabel 
+                <TableSortLabel
                   onClick={(e) => sort('p_first_name', order === 'desc' ? 'asc' : 'desc')}
                   active={sortBy === 'p_first_name'}
                   direction={order}>
@@ -93,7 +93,7 @@ export default function Forms({forms, studentId, history}) {
                 Parent Name
               </TableCell>
               <TableCell style={textSize} align = "left" >
-                <TableSortLabel 
+                <TableSortLabel
                   onClick={(e) => sort('p_email', order === 'desc' ? 'asc' : 'desc')}
                   active={sortBy === 'p_email'}
                   direction={order}>
@@ -101,7 +101,7 @@ export default function Forms({forms, studentId, history}) {
                 Parent Email
               </TableCell>
               <TableCell style={textSize} align = "left" >
-                <TableSortLabel 
+                <TableSortLabel
                   onClick={(e) => sort('last_updated', order === 'desc' ? 'asc' : 'desc')}
                   active={sortBy === 'last_updated'}
                   direction={order}>
@@ -109,7 +109,7 @@ export default function Forms({forms, studentId, history}) {
                 Last Updated
               </TableCell>
               <TableCell style={textSize} align = "left" >
-                <TableSortLabel 
+                <TableSortLabel
                   onClick={(e) => sort('form_year', order === 'desc' ? 'asc' : 'desc')}
                   active={sortBy === 'form_year'}
                   direction={order}>
@@ -117,7 +117,7 @@ export default function Forms({forms, studentId, history}) {
                 Form Year
               </TableCell>
               <TableCell style={textSize} align = "right" >
-                <TableSortLabel 
+                <TableSortLabel
                   onClick={(e) => sort('completed', order === 'desc' ? 'asc' : 'desc')}
                   active={sortBy === 'completed'}
                   direction={order}>
