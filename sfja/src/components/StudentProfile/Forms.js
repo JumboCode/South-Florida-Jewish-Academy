@@ -63,6 +63,12 @@ export default function Forms({forms, studentId, history}) {
     setSortedForms(newData);
   }
   
+  React.useEffect(() => {
+    if(forms.length !== sortedForms.length){
+      sort(sortBy, order);
+    }
+  });
+
 
   return (
     <div style={formStyle}>
