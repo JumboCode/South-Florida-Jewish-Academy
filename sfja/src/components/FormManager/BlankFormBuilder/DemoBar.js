@@ -9,7 +9,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import {withAuth0} from '../../../utils/Auth0Wrapper';
 
 // eslint-disable-next-line require-jsdoc
-function post(url, data, token, formName) {
+function post(url, data, token, formName, formYear, formTag) {
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -19,6 +19,8 @@ function post(url, data, token, formName) {
     body: JSON.stringify({
       data: data,
       formName: formName,
+      formYear: formYear,
+      formTag: formTag,
     }),
     // eslint-disable-next-line arrow-parens
   }).then(response => response);
@@ -37,6 +39,8 @@ class DemoBar extends React.Component {
       data: [],
       previewVisible: false,
       formName: this.props.blankFormName || '',
+      formYear: '',
+      formTag: '',
     };
 
     const update = this._onChange.bind(this);
@@ -65,16 +69,16 @@ class DemoBar extends React.Component {
   }
 
   // eslint-disable-next-line require-jsdoc
-  _onSubmit(data, formName) {
+  _onSubmit(data, formName, formYear, formTag) {
     const {token} = this.props;
-    post(apiUrl() + '/newform', data, token, formName).then(() => {
+    post(apiUrl() + '/newform', data, token, formName, formYear, formTag).then(() => {
       this.setState({formName: '', data: [], openSuccessSnackBar: true});
     });
   }
 
   // eslint-disable-next-line require-jsdoc
   render() {
-    const {formName, openSuccessSnackBar} = this.state;
+    const {formName, formYear, formTag, openSuccessSnackBar} = this.state;
     let modalClass = 'modal';
     if (this.state.previewVisible) {
       modalClass += ' show';
@@ -90,11 +94,29 @@ class DemoBar extends React.Component {
           label="Form Name"
           required={true}
         />
+        <TextField
+          error={formYear === ''}
+          onChange={(ev) => this.setState({formYear: ev.target.value})}
+          value={formYear}
+          variant='outlined'
+          id="standard-basic"
+          label="School Year"
+          required={true}
+        />
+        <TextField
+          error={formTag === ''}
+          onChange={(ev) => this.setState({formTag: ev.target.value})}
+          value={formTag}
+          variant='outlined'
+          id="standard-basic"
+          label="Form Tag"
+          required={true}
+        />
         <Button className="btn btn-primary pull-right"
           style={{marginRight: '10px', marginTop: 10}}
           variant='contained'
-          onClick={() => this._onSubmit(this.state.data, formName)}
-          disabled={formName === '' || this.state.data.length === 0}
+          onClick={() => this._onSubmit(this.state.data, formName, formYear, formTag)}
+          disabled={formName === '' || formYear === '' || formTag === '' ||this.state.data.length === 0}
         >
           Add Form
         </Button>

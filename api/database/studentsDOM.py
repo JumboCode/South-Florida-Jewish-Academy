@@ -10,7 +10,7 @@ mongo = PyMongo(app)
 
 # Creates a new student in the database. Takes pre-made
 # basicInfo and formIds dictionaries.
-def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentIds):
+def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentIds, sClass):
     initData = {
                 'first_name': firstName,
                 'middle_name': middleName,
@@ -21,6 +21,7 @@ def createStudent(firstName, middleName, lastName, DOB, grade, formIds, parentId
                 'form_ids': formIds,
                 'files':[],
                 'archived': False,
+                'class': sClass,
                 }
     result = mongo.db.students.insert_one(initData)
     return result.inserted_id
@@ -40,12 +41,16 @@ def getInfo(id, key):
 def getBasicInfo(id):
     contents = list(mongo.db.students.find({'_id': id}))
     for content in contents:
-        del content['parent_ids']
-        del content['form_ids']
-        del content['files']
-        content['_id'] = str(content['_id'])
-        content['DOB'] = content['DOB'].strftime("%m/%d/%Y")
-        return content
+        student = dict()
+        student['_id'] = str(content['_id'])
+        student['first_name'] = content['first_name']
+        student['middle_name'] = content['middle_name']
+        student['last_name'] = content['last_name']
+        student['grade'] = content['grade']
+        student['class'] = content['class']
+        student['DOB'] = content['DOB'].strftime("%m/%d/%Y")
+        student['archived'] = content['archived']
+        return student
 
 # Gets forms of a student.
 def getForms(id):
@@ -100,6 +105,7 @@ def getStudents():
             'DOB': content['DOB'].strftime("%m/%d/%Y"),
             'form_ids': content['form_ids'],
             'grade': content['grade'],
+            'class': content['class'],
             'archived': content['archived'],
         }
         students.append(info)
@@ -117,6 +123,7 @@ def getFullInfo(id):
             'form_ids': content['form_ids'],
             'grade': content['grade'],
             'archived': content['archived'],
+            'class': content['class'],
         }
 
 def getArchivedStudents():
@@ -229,3 +236,7 @@ def changeGrades(difference):
 def isArchived(id):
     contents = list(mongo.db.students.find({'_id': id}))
     return contents[0]['archived']
+
+def getClass(id):
+    contents = list(mongo.db.students.find({'_id': id}))
+    return contents[0]['class']

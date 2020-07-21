@@ -8,13 +8,13 @@ export const studentPageStyle = {
 };
 
 export const filterStyle = {
-  backgroundColor: '#086fb3',
+  width: 200,
   flex: '0 1 300px',
   borderRadius: '5px',
   margin: '15px',
-  height: 'fit-content',
+  // height: 'fit-content',
   textAlign: 'center',
-  fontSize: '20px',
+  fontSize: '14px',
   color: 'white',
 };
 

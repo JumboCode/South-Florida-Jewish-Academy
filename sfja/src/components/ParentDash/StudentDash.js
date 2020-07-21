@@ -87,7 +87,8 @@ class StudentDash extends React.Component {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
-      body: JSON.stringify({form_id: formId}),
+      body: JSON.stringify({form_id: formId,
+        curr_link: this.props.match.params.parentKey}),
     }).then((res) => res.json())
         .then((data) => {
           this.setState({
@@ -117,7 +118,8 @@ class StudentDash extends React.Component {
       headers: {'Content-Type': 'application/json'},
       // eslint-disable-next-line react/prop-types
       body: JSON.stringify({form_id: selected,
-        answer_data: answerData}),
+        answer_data: answerData,
+        curr_link: this.props.match.params.parentKey}),
     }).then((response) => {
       if (response.ok) {
         this.setState({
@@ -173,6 +175,8 @@ class StudentDash extends React.Component {
               DOB: {studentInfo.DOB}
               <br/>
               Grade: {studentInfo.grade}
+              <br/>
+              Class: {studentInfo.class}
             </div>
             <div style={{paddingBottom: 10, fontSize: 15}}>
               Number of forms to complete: {numIncomplete === 0 ? '0 - Nice work! You\'re all set.' : numIncomplete}

@@ -56,6 +56,10 @@ class PreviewBlankForm extends React.Component {
               blankFormData: data.data,
               newName: data.name,
               oldName: data.name,
+              newYear: data.year,
+              oldYear: data.year,
+              newTag: data.tag,
+              oldTag: data.tag,
             });
           });
     }
@@ -95,8 +99,77 @@ class PreviewBlankForm extends React.Component {
     }
 
     // eslint-disable-next-line require-jsdoc
+    updateYear() {
+      const {newYear, currentFormID} = this.state;
+      const {token} = this.props;
+
+      const body = {
+        form_id: currentFormID,
+        form_year: newYear,
+      };
+      fetch(apiUrl() + '/updateFormYear', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            openSuccessMessage: true,
+            oldYear: newYear,
+          });
+        } else {
+          this.setState({
+            openFailureMessage: true,
+          });
+        }
+      }).catch((error) => {
+        this.setState({
+          openFailureMessage: true,
+        });
+      });
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    updateTag() {
+      const {newTag, currentFormID} = this.state;
+      const {token} = this.props;
+
+      const body = {
+        form_id: currentFormID,
+        form_tag: newTag,
+      };
+      fetch(apiUrl() + '/updateFormTag', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            openSuccessMessage: true,
+            oldTag: newTag,
+          });
+        } else {
+          this.setState({
+            openFailureMessage: true,
+          });
+        }
+      }).catch((error) => {
+        this.setState({
+          openFailureMessage: true,
+        });
+      });
+    }
+
+    // eslint-disable-next-line require-jsdoc
     render() {
-      const {blankFormData, newName, currentFormID, openSuccessMessage, openFailureMessage, oldName} = this.state;
+      const {blankFormData, newName, currentFormID, openSuccessMessage,
+        openFailureMessage, oldName, newYear, oldYear, newTag, oldTag} = this.state;
       return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <div style={{minWidth: 650, marginTop: 30}}>
@@ -136,6 +209,42 @@ class PreviewBlankForm extends React.Component {
                   disabled={oldName === newName}
                   onClick={() => this.updateName()}>Update Name</Button>
               </div>
+              <div style={{display: 'flex', alignItems: 'center', alignContent: 'center'}}>
+                <div style={{fontSize: 15, marginRight: 10}}>
+                  Form Year:
+                </div>
+                <TextField onChange={(e) => {
+                  this.setState({newYear: e.target.value});
+                }}
+                id="name-field"
+                value={newYear}
+                inputProps={textSize}
+                style={{marginRight: 10}}
+                >
+                </TextField>
+                <Button
+                  variant='contained'
+                  disabled={oldYear === newYear}
+                  onClick={() => this.updateYear()}>Update Year</Button>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center', alignContent: 'center'}}>
+                <div style={{fontSize: 15, marginRight: 10}}>
+                  Form Tag:
+                </div>
+                <TextField onChange={(e) => {
+                  this.setState({newTag: e.target.value});
+                }}
+                id="name-field"
+                value={newTag}
+                inputProps={textSize}
+                style={{marginRight: 10}}
+                >
+                </TextField>
+                <Button
+                  variant='contained'
+                  disabled={oldTag === newTag}
+                  onClick={() => this.updateTag()}>Update Tag</Button>
+              </div>
               {blankFormData !== null ?
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10, paddingBottom: 40}}>
                   <Paper elevation={2} style={{padding: 40, minWidth: 650, maxWidth: 1050, marginTop: 30}}>
@@ -158,7 +267,7 @@ class PreviewBlankForm extends React.Component {
           <SnackBarMessage
             open={openSuccessMessage}
             closeSnackbar={() => this.setState({openSuccessMessage: false})}
-            message={'Form renamed.'}
+            message={'Form info updated.'}
             severity='success'
           />
           <SnackBarMessage
