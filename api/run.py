@@ -37,7 +37,7 @@ app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 MONGO_URL = os.environ.get('DB_URI')
-app.config["DB_URI"] = MONGO_URL
+app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 db = mongo.db
 fs = gridfs.GridFS(db)
