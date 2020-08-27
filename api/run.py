@@ -36,7 +36,7 @@ app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put i
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-MONGO_URL = os.environ.get('DB_URI')
+MONGO_URL = os.environ.get('MONGODB_URI')
 app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 db = mongo.db
@@ -181,7 +181,7 @@ def requires_auth(f):
 def getParentInfo():
     curr_link = request.json['curr_link'] 
     try:
-        parentId = parentsDOM.get(currLink=curr_link)
+        parent_id = parentsDOM.get(currLink=curr_link)
     except AssertionError as e:
         raise AuthError({'wrong link': True}, 401)
 
@@ -189,11 +189,7 @@ def getParentInfo():
         emailParent(parent_id,'', 'Your updated link is below:')
         raise AuthError({'expired': True}, 426)
     
-    parentInfo = parentsDOM.getParentProfile(parentId)
-
-    if parentsDOM.isExpired(parentId):
-        emailParent(parentId,'', 'Your updated link is below:')
-        raise AuthError({'expired': True}, 426)
+    parentInfo = parentsDOM.getParentProfile(parent_id)
 
     return {
         'first_name': parentInfo['first_name'],
@@ -205,7 +201,7 @@ def getParentInfo():
 def getStudentsOfParent():
     curr_link = request.json['curr_link']
     try:
-        parentId = parentsDOM.get(currLink=curr_link)
+        parent_id = parentsDOM.get(currLink=curr_link)
     except AssertionError as e:
         raise AuthError({'wrong link': True}, 401)
 
@@ -214,7 +210,7 @@ def getStudentsOfParent():
         raise AuthError({'expired': True}, 426)
 
     
-    all_student_ids = parentsDOM.getStudentIds(parentId)
+    all_student_ids = parentsDOM.getStudentIds(parent_id)
     unarchived_student_ids = []
     for id in all_student_ids:
         if not studentsDOM.isArchived(id):
@@ -233,7 +229,7 @@ def getStudentForms():
     student_id = ObjectId(request.json['student_id'])
     curr_link = request.json['parent_key']
     try:
-        parentId = parentsDOM.get(currLink=curr_link)
+        parent_id = parentsDOM.get(currLink=curr_link)
     except AssertionError as e:
         raise AuthError({'wrong link': True}, 401)
 
@@ -265,7 +261,7 @@ def getStudentForms():
 def getForm():
     curr_link = request.json['curr_link']
     try:
-        parentId = parentsDOM.get(currLink=curr_link)
+        parent_id = parentsDOM.get(currLink=curr_link)
     except AssertionError as e:
         raise AuthError({'wrong link': True}, 401)
     
@@ -288,9 +284,13 @@ def getForm():
 def submitForm():
     curr_link = request.json['curr_link']
     try:
-        parentId = parentsDOM.get(currLink=curr_link)
+        parent_id = parentsDOM.get(currLink=curr_link)
     except AssertionError as e:
         raise AuthError({'wrong link': True}, 401)
+
+    if parentsDOM.isExpired(parent_id):
+        emailParent(parent_id,'', 'Your updated link is below:')
+        raise AuthError({'expired': True}, 426)
 
     form_id = request.json['form_id']
     answer_data = request.json['answer_data']
