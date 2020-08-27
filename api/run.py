@@ -36,7 +36,7 @@ app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY') #to be put i
 app.config['SENDGRID_DEFAULT_FROM'] = 'anthonytranduc@gmail.com'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-MONGO_URL = os.environ.get('MONGODB_URI')
+MONGO_URL = os.environ.get('DB_URI')
 app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 db = mongo.db
