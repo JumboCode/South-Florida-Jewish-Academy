@@ -2,6 +2,8 @@ matrix:
   include:
     - language: python
       python: 3.6
+      env:
+        - DB_URI=mongodb://localhost:27017/sfja
       services:
         - mongodb
       before_install:
