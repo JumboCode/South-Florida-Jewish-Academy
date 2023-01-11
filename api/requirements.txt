@@ -7,7 +7,7 @@ Flask-RESTful==0.3.7
 Flask-SendGrid==0.7.1
 gunicorn==19.9.0
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 pymongo[tls, srv]==3.11.0
 python-http-client==3.2.1
