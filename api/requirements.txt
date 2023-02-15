@@ -16,4 +16,4 @@ pytz==2019.2
 requests==2.23.0
 sendgrid==6.3.0
 six==1.12.0
-Werkzeug==0.16.0
+Werkzeug==2.2.3
